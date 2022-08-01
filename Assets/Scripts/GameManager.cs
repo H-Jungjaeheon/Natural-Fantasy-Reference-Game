@@ -5,6 +5,19 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
+    #region Ω∫≈» µ•¿Ã≈Õ
+    public class GameStatData
+    {
+        public int BasicDamageLevel;
+        public int BasicHealthLevel;
+        public int BasicEnergyLevel;
+        public int ReduceCoolTimeLevel;
+    }
+
+    public GameStatData GSD;
+
+    #endregion
+
     private int gold;
     public int Gold
     {
@@ -32,7 +45,7 @@ public class GameManager : Singleton<GameManager>
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
