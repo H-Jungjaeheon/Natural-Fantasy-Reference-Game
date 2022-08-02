@@ -5,32 +5,32 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
-    #region 스탯 데이터
-    public class GameStatData
+    #region 저장 데이터 모음
+    private class GameSaveData
     {
         public int BasicDamageLevel;
         public int BasicHealthLevel;
         public int BasicEnergyLevel;
         public int ReduceCoolTimeLevel;
+        public int Gold;
     }
-
-    public GameStatData GSD;
-
     #endregion
 
+    #region 재화 및 레벨 변수들
     private int gold;
     public int Gold
     {
-        get
-        {
-            return gold;
-        }
-        set
-        {
-            gold = value;
-        }
+        get { return gold; }
+        set { gold = value; }
     }
 
+    private int reduceCoolTimeLevel;
+    public int ReduceCoolTimeLevel 
+    {
+        get { return reduceCoolTimeLevel; }
+        set { reduceCoolTimeLevel = value; }
+    }
+    #endregion
     private void Awake()
     {
         if (instance == null)
