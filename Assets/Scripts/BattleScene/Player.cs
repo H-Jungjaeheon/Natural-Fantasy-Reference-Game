@@ -119,10 +119,10 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(0.3f);
         while (rigid.gravityScale >= 0.2f)
         {
-            rigid.gravityScale -= Time.deltaTime * 3;
+            rigid.gravityScale -= Time.deltaTime * 2.5f;
             yield return null;
         }
-        rigid.gravityScale = SetJumpGravityScale;
+        rigid.gravityScale = SetJumpGravityScale * 1.5f;
     }
     private void ActionButtonsOff() => ActionButtonsObj.SetActive(false);
     private void ActionButtonsOn() => ActionButtonsObj.SetActive(true);
