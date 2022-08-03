@@ -30,6 +30,27 @@ public class GameManager : Singleton<GameManager>
         get { return reduceCoolTimeLevel; }
         set { reduceCoolTimeLevel = value; }
     }
+
+    private int maxHpUpgradeLevel;
+    public int MaxHpUpgradeLevel
+    {
+        get { return maxHpUpgradeLevel; }
+        set { maxHpUpgradeLevel = value; }
+    }
+
+    private int maxEnergyUpgradeLevel;
+    public int MaxEnergyUpgradeLevel
+    {
+        get { return maxEnergyUpgradeLevel; }
+        set { maxEnergyUpgradeLevel = value; }
+    }
+
+    private int damageUpgradeLevel;
+    public int DamageUpgradeLevel
+    {
+        get { return damageUpgradeLevel; }
+        set { damageUpgradeLevel = value; }
+    }
     #endregion
     private void Awake()
     {
