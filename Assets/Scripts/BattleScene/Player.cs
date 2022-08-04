@@ -205,7 +205,13 @@ public class Player : MonoBehaviour
 
     IEnumerator CloseAttack()
     {
-        yield return new WaitForSeconds(3);
+        WaitForSeconds WFS = new WaitForSeconds(3);
+        while (transform.position.x == BattleSceneManager.Instance.PlayerCharacterCloseRangeAttackPos.x)
+        {
+            
+        }
+        yield return WFS;
+
         isAttacking = false;
         WaitingTimeStart();
     }

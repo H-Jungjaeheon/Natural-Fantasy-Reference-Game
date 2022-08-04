@@ -2008,8 +2008,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c45a53ad6f76cf48a92103a221ed9e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerCharacterCloseRangeAttackPos: {x: -9, y: 1.4}
-  EnemyCharacterCloseRangeAttackPos: {x: 6, y: 1.4}
+  PlayerCharacterCloseRangeAttackPos: {x: 6, y: 1.4}
+  EnemyCharacterCloseRangeAttackPos: {x: -9, y: 1.4}
 --- !u!4 &1076351709
 Transform:
   m_ObjectHideFlags: 0
@@ -2190,6 +2190,7 @@ GameObject:
   - component: {fileID: 1159378197}
   - component: {fileID: 1159378196}
   - component: {fileID: 1159378195}
+  - component: {fileID: 1159378194}
   m_Layer: 0
   m_Name: TestEnemy
   m_TagString: Player
@@ -2197,6 +2198,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1159378194
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1159378193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec4398afe958ef7449aec88f5c3f9f81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!50 &1159378195
 Rigidbody2D:
   serializedVersion: 4
