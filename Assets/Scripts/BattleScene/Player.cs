@@ -136,7 +136,7 @@ public class Player : MonoBehaviour
         MaxEnergy_I = 15 + GameManager.Instance.MaxEnergyUpgradeLevel * 5;
         Energy_I = MaxEnergy_I;
         Damage_I = 2 + GameManager.Instance.DamageUpgradeLevel;
-        BattleSceneManager.Instance.PlayerCharacterCloseRangeAttackPos = new Vector2(-9, -1.4f);
+        BattleSceneManager.Instance.PlayerCharacterPos = transform.position;
     }
     private void UISetting() //대기시간 및 UI세팅 (공통)
     {
@@ -205,13 +205,21 @@ public class Player : MonoBehaviour
 
     IEnumerator CloseAttack()
     {
-        WaitForSeconds WFS = new WaitForSeconds(3);
-        while (transform.position.x == BattleSceneManager.Instance.PlayerCharacterCloseRangeAttackPos.x)
+        Vector3 Movetransform = new Vector3(Speed_F * Time.deltaTime, 0, 0);
+        print(BattleSceneManager.Instance.EnemyCharacterPos.x);
+        while (transform.position.x < BattleSceneManager.Instance.EnemyCharacterPos.x)
         {
-            
+            transform.position += Movetransform;
+            yield return null;
         }
-        yield return WFS;
-
+        transform.position = new Vector2(BattleSceneManager.Instance.EnemyCharacterPos.x, transform.position.y);
+        yield return new WaitForSeconds(4);
+        while (transform.position.x > startPos_Vector.x)
+        {
+            transform.position -= Movetransform;
+            yield return null;
+        }
+        transform.position = startPos_Vector;
         isAttacking = false;
         WaitingTimeStart();
     }
