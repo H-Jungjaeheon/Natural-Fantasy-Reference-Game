@@ -261,12 +261,12 @@ public class Player : MonoBehaviour
                     case 1:
                         yield return new WaitForSeconds(0.1f);
                         nowAttackCount_I++;
-                        StartCoroutine(EnemyAttack(false, nowAttackCount_I, 0.4f)); //두번째 공격
+                        StartCoroutine(EnemyAttack(false, nowAttackCount_I, 0.3f)); //두번째 공격
                         break;
                     case 2:
                         yield return new WaitForSeconds(0.5f);
                         nowAttackCount_I++;
-                        StartCoroutine(EnemyAttack(true, nowAttackCount_I, 0.4f)); //세번째 공격
+                        StartCoroutine(EnemyAttack(true, nowAttackCount_I, 0.3f)); //세번째 공격
                         break;
                 }
             }
