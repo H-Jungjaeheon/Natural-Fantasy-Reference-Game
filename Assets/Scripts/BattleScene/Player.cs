@@ -133,6 +133,8 @@ public class Player : MonoBehaviour
     public Vector2 startPos_Vector;
 
     Camera Cam;
+    Vector3 CamPos = new Vector3(0,0,-10);
+
     Rigidbody2D rigid;
 
     private void Awake()
@@ -217,6 +219,12 @@ public class Player : MonoBehaviour
             transform.position = startPos_Vector;
             rigid.velocity = Vector2.zero;
             rigid.gravityScale = 0;
+        }
+        if (isJumping == true)
+        {
+            CamPos.x = Cam.transform.position.x;
+            CamPos.y = transform.position.y;
+            Cam.transform.position = CamPos;
         }
     }
     IEnumerator JumpDelay()

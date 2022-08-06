@@ -53,7 +53,7 @@ public class CamShake : MonoBehaviour
             else 
             {
                 jumpingShaking.x = Random.insideUnitSphere.x * shakeAmount;
-                jumpingShaking.y = Random.insideUnitSphere.y * (shakeAmount / 2) + transform.position.y;
+                jumpingShaking.y = Random.insideUnitSphere.y * shakeAmount + transform.position.y;
                 transform.position = jumpingShaking;
                 print("점프 실행");
             }
