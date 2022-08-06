@@ -1445,6 +1445,7 @@ GameObject:
   - component: {fileID: 824615373}
   - component: {fileID: 824615372}
   - component: {fileID: 824615371}
+  - component: {fileID: 824615374}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1517,6 +1518,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &824615374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 824615370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce015dafb632efc48bf6b131147107af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerObj: {fileID: 1717870240}
 --- !u!1 &916333782
 GameObject:
   m_ObjectHideFlags: 0
@@ -2105,6 +2119,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerCharacterPos: {x: 0, y: 0}
   EnemyCharacterPos: {x: 8, y: -0.15}
+  Player: {fileID: 1717870240}
+  Enemy: {fileID: 0}
+  unitHpBars:
+  - {fileID: 939537340}
+  - {fileID: 1135723117}
+  unitEnergyBars:
+  - {fileID: 529741880}
+  - {fileID: 994072189}
+  unitDreamyFigureBars:
+  - {fileID: 916333784}
+  - {fileID: 1198872407}
 --- !u!4 &1076351709
 Transform:
   m_ObjectHideFlags: 0
@@ -2831,9 +2856,11 @@ MonoBehaviour:
   rangeInEnemy: []
   isJumping: 0
   hp_F: 0
-  energy_I: 0
-  dreamyFigure_I: 0
-  MaxDreamyFigure_I: 20
+  maxHp_F: 0
+  energy_F: 0
+  maxEnergy_F: 0
+  dreamyFigure_F: 0
+  maxDreamyFigure_F: 0
   damage_I: 0
   Speed_F: 5
   isAttacking: 0

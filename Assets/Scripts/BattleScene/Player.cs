@@ -64,31 +64,53 @@ public class Player : MonoBehaviour
         set { hp_F = value; }
     }
 
-    private float MaxHp_F; //최대 체력
+    [Tooltip("최대 체력")]
+    [SerializeField]
+    private float maxHp_F;
+
+    public float MaxHp_F
+    {
+        get { return maxHp_F; }
+        set { maxHp_F = value; }
+    }
 
     [Tooltip("기력")]
     [SerializeField]
-    private int energy_I;
-    public int Energy_I
+    private float energy_F;
+    public float Energy_F
     {
-        get { return energy_I; }
-        set { energy_I = value; }
+        get { return energy_F; }
+        set { energy_F = value; }
     }
 
-    private int MaxEnergy_I; //최대 기력
+    [Tooltip("최대 기력")]
+    [SerializeField]
+    private float maxEnergy_F; 
+    public float MaxEnergy_F
+    {
+        get { return maxEnergy_F; }
+        set { maxEnergy_F = value; }
+    }
+
 
     [Tooltip("몽환 게이지")]
     [SerializeField]
-    private int dreamyFigure_I;
-    public int DreamyFigure_I
+    private float dreamyFigure_F;
+    public float DreamyFigure_F
     {
-        get { return dreamyFigure_I; }
-        set { dreamyFigure_I = value; }
+        get { return dreamyFigure_F; }
+        set { dreamyFigure_F = value; }
     }
 
     [Tooltip("최대 몽환 게이지")]
     [SerializeField]
-    private int MaxDreamyFigure_I;
+    private float maxDreamyFigure_F;
+    public float MaxDreamyFigure_F
+    {
+        get { return maxDreamyFigure_F; }
+        set { maxDreamyFigure_F = value; }
+    }
+
 
     [Tooltip("공격력")]
     [SerializeField]
@@ -129,6 +151,11 @@ public class Player : MonoBehaviour
     {
         UISetting();
         Jump();
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            var camComponent = Cam.GetComponent<CamShake>();
+            camComponent.CamShakeStart(0.3f, 0.5f);
+        }
     }
     private void StartSetting() //초기 세팅 (일부 공통)
     {
@@ -138,8 +165,9 @@ public class Player : MonoBehaviour
         maxActionCoolTime = 3.5f - GameManager.Instance.ReduceCoolTimeLevel * 0.5f;
         MaxHp_F = 25 + GameManager.Instance.MaxHpUpgradeLevel * 5;
         Hp_F = MaxHp_F;
-        MaxEnergy_I = 15 + GameManager.Instance.MaxEnergyUpgradeLevel * 5;
-        Energy_I = MaxEnergy_I;
+        MaxEnergy_F = 15 + GameManager.Instance.MaxEnergyUpgradeLevel * 5;
+        Energy_F = MaxEnergy_F;
+        MaxDreamyFigure_F = 20;
         Damage_I = 1 + GameManager.Instance.DamageUpgradeLevel;
         nowAttackCount_I = 1;
         BattleSceneManager.Instance.PlayerCharacterPos = transform.position;
@@ -227,10 +255,19 @@ public class Player : MonoBehaviour
     IEnumerator EnemyAttack(bool isLastAttack, int nowAttackCount_I, float attacktimelimit_f) //3연공 재귀로 구현
     {
         isComplete = false;
-
+        var camComponent = Cam.GetComponent<CamShake>();
         if (rangeInEnemy[0] != null)
         {
             print($"공격 {nowAttackCount_I}"); //공격 실행(애니메이션)
+            switch (nowAttackCount_I)
+            {
+                case 1 :
+                    camComponent.CamShakeStart(0.3f, 0.5f);
+                    break;
+                case 3:
+                    camComponent.CamShakeStart(0.3f, 1);
+                    break;
+            }
             for (int nowIndex = 0; nowIndex < rangeInEnemy.Count; nowIndex++)
             {
                 if (rangeInEnemy[nowIndex] != null)
@@ -293,6 +330,7 @@ public class Player : MonoBehaviour
         }
         transform.rotation = Quaternion.identity;
         transform.position = startPos_Vector;
+        nowAttackCount_I = 1;
         isAttacking = false;
         WaitingTimeStart();
     }
