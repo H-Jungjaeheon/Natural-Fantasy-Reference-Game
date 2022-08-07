@@ -3,149 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Player : MonoBehaviour
+public class Player : BasicUnitScript
 {
-    #region 공격 쿨타임 관련 변수 (공통)
-    [Header("공격 쿨타임 관련 변수")]
-    [Tooltip("쿨타임 바들 오브젝트")]
-    [SerializeField]
-    private GameObject actionCoolTimeObj;
-
-    [Tooltip("쿨타임 바 이미지(배경)")]
-    [SerializeField]
-    private Image nullActionCoolTimeImage;
-
-    [Tooltip("쿨타임 바 이미지")]
-    [SerializeField]
-    private Image actionCoolTimeImage;
-
-    [Tooltip("쿨타임 바 Y축 위치 조절")]
-    [SerializeField]
-    private float actionCoolTimeImageYPos_F;
-
-    private float nowActionCoolTime; //현재 쿨타임
-    private float maxActionCoolTime; //최대 쿨타임
-    private bool isWaiting; //대기중
-    #endregion
-
-    #region 행동 관련 변수 (일부 공통)
     [Header("행동 버튼 관련 변수")]
     [Tooltip("행동 버튼들 오브젝트")]
     [SerializeField]
-    private GameObject actionButtonsObj;
-
-    [Header("현재 행동 관련 변수")]
-    [Tooltip("중력값")]
-    [SerializeField]
-    private float setJumpGravityScale_F;
-
-    [Tooltip("점프 파워")]
-    [SerializeField]
-    private float jumpPower_F;
-
-    [Tooltip("현재 공격 범위에 존재하는 적")]
-    public List<GameObject> rangeInEnemy = new List<GameObject>();
-
-    private bool isComplete;
-    private int nowAttackCount_I;
-
-    [HideInInspector]
-    public bool isJumping;
-    #endregion
-
-    #region 스탯 (공통)
-    [Header("스탯 관련 변수")]
-    [Tooltip("체력")]
-    [SerializeField]
-    private float hp_F;
-    public float Hp_F
-    {
-        get { return hp_F; }
-        set { hp_F = value; }
-    }
-
-    [Tooltip("최대 체력")]
-    [SerializeField]
-    private float maxHp_F;
-
-    public float MaxHp_F
-    {
-        get { return maxHp_F; }
-        set { maxHp_F = value; }
-    }
-
-    [Tooltip("기력")]
-    [SerializeField]
-    private float energy_F;
-    public float Energy_F
-    {
-        get { return energy_F; }
-        set { energy_F = value; }
-    }
-
-    [Tooltip("최대 기력")]
-    [SerializeField]
-    private float maxEnergy_F; 
-    public float MaxEnergy_F
-    {
-        get { return maxEnergy_F; }
-        set { maxEnergy_F = value; }
-    }
-
-
-    [Tooltip("몽환 게이지")]
-    [SerializeField]
-    private float dreamyFigure_F;
-    public float DreamyFigure_F
-    {
-        get { return dreamyFigure_F; }
-        set { dreamyFigure_F = value; }
-    }
-
-    [Tooltip("최대 몽환 게이지")]
-    [SerializeField]
-    private float maxDreamyFigure_F;
-    public float MaxDreamyFigure_F
-    {
-        get { return maxDreamyFigure_F; }
-        set { maxDreamyFigure_F = value; }
-    }
-
-
-    [Tooltip("공격력")]
-    [SerializeField]
-    private int damage_I;
-    public int Damage_I
-    {
-        get { return damage_I; }
-        set { damage_I = value; }
-    }
-
-    [Tooltip("이동속도")]
-    [SerializeField]
-    private float Speed_F;
-
-    [HideInInspector]
-    public bool isAttacking;
-    #endregion
-
-    [HideInInspector]
-    public Vector2 startPos_Vector;
-
-    Camera Cam;
-    Vector3 CamPos = new Vector3(0,0,-10);
-
-    Rigidbody2D rigid;
+    protected GameObject actionButtonsObj;
 
     private void Awake()
     {
         StartSetting();
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        nowActionCoolTime = 0;
     }
 
     // Update is called once per frame
@@ -153,28 +20,24 @@ public class Player : MonoBehaviour
     {
         UISetting();
         Jump();
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            var camComponent = Cam.GetComponent<CamShake>();
-            camComponent.CamShakeStart(0.3f, 0.5f);
-        }
     }
-    private void StartSetting() //초기 세팅 (일부 공통)
+
+    protected override void StartSetting() //초기 세팅 (일부 공통)
     {
         Cam = Camera.main;
         rigid = gameObject.GetComponent<Rigidbody2D>();
         startPos_Vector = transform.position;
-        maxActionCoolTime = 3.5f - GameManager.Instance.ReduceCoolTimeLevel * 0.5f;
-        MaxHp_F = 25 + GameManager.Instance.MaxHpUpgradeLevel * 5;
+        maxActionCoolTime -= GameManager.Instance.ReduceCoolTimeLevel * 0.5f;
+        MaxHp_F += GameManager.Instance.MaxHpUpgradeLevel * 5;
         Hp_F = MaxHp_F;
-        MaxEnergy_F = 15 + GameManager.Instance.MaxEnergyUpgradeLevel * 5;
+        MaxEnergy_F += GameManager.Instance.MaxEnergyUpgradeLevel * 5;
         Energy_F = MaxEnergy_F;
-        MaxDreamyFigure_F = 20;
-        Damage_I = 1 + GameManager.Instance.DamageUpgradeLevel;
+        Damage_I += GameManager.Instance.DamageUpgradeLevel;
         nowAttackCount_I = 1;
         BattleSceneManager.Instance.PlayerCharacterPos = transform.position;
     }
-    private void UISetting() //대기시간 및 UI세팅 (공통)
+
+    protected override void UISetting() //대기시간 및 UI세팅 (일부 공통)
     {
         if (isWaiting)
         {
@@ -196,7 +59,7 @@ public class Player : MonoBehaviour
             ActionButtonsSetActive(false);
         }
     }
-    private void WaitingTimeStart() //공격 후의 세팅 (공통) 
+    private void WaitingTimeStart() //공격 후의 세팅 (일부 공통) 
     {
         nowActionCoolTime = 0;
         isWaiting = true;
@@ -219,12 +82,6 @@ public class Player : MonoBehaviour
             transform.position = startPos_Vector;
             rigid.velocity = Vector2.zero;
             rigid.gravityScale = 0;
-        }
-        if (isJumping == true)
-        {
-            CamPos.x = Cam.transform.position.x;
-            CamPos.y = transform.position.y;
-            Cam.transform.position = CamPos;
         }
     }
     IEnumerator JumpDelay()
@@ -280,7 +137,7 @@ public class Player : MonoBehaviour
             {
                 if (rangeInEnemy[nowIndex] != null)
                 {
-                    rangeInEnemy[nowIndex].GetComponent<Enemy>().hp -= Damage_I;
+                    rangeInEnemy[nowIndex].GetComponent<BasicUnitScript>().Hp_F -= Damage_I;
                 }
             }
         }

@@ -40,7 +40,6 @@ public class BattleSceneManager : Singleton<BattleSceneManager>
         Enemy = GameObject.FindGameObjectWithTag("Enemy");
         playerComponent = Player.GetComponent<Player>();
         enemyComponenet = Enemy.GetComponent<Enemy>();
-        //enemyComponenet = Enemy.GetComponent<Enemy>();
     }
 
     // Update is called once per frame

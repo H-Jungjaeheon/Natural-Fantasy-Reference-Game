@@ -2330,7 +2330,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec4398afe958ef7449aec88f5c3f9f81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 100
+  actionCoolTimeObj: {fileID: 1146735694}
+  nullActionCoolTimeImage: {fileID: 154340400}
+  actionCoolTimeImage: {fileID: 1074118521}
+  actionCoolTimeImageYPos_F: 5
+  maxActionCoolTime: 4
+  setJumpGravityScale_F: 2.5
+  jumpPower_F: 12.5
+  rangeInEnemy: []
+  isJumping: 0
+  hp_F: 55
+  maxHp_F: 55
+  energy_F: 30
+  maxEnergy_F: 30
+  isHaveDreamyFigure: 0
+  dreamyFigure_F: 0
+  maxDreamyFigure_F: 20
+  damage_I: 4
+  Speed_F: 3.5
+  isAttacking: 0
+  startPos_Vector: {x: 0, y: 0}
 --- !u!50 &1159378195
 Rigidbody2D:
   serializedVersion: 4
@@ -2850,21 +2869,23 @@ MonoBehaviour:
   nullActionCoolTimeImage: {fileID: 591287213}
   actionCoolTimeImage: {fileID: 445431197}
   actionCoolTimeImageYPos_F: 3
-  actionButtonsObj: {fileID: 1874100341}
+  maxActionCoolTime: 3.5
   setJumpGravityScale_F: 2.5
   jumpPower_F: 12.5
   rangeInEnemy: []
   isJumping: 0
-  hp_F: 0
-  maxHp_F: 0
-  energy_F: 0
-  maxEnergy_F: 0
+  hp_F: 25
+  maxHp_F: 25
+  energy_F: 15
+  maxEnergy_F: 15
+  isHaveDreamyFigure: 0
   dreamyFigure_F: 0
-  maxDreamyFigure_F: 0
-  damage_I: 0
+  maxDreamyFigure_F: 20
+  damage_I: 1
   Speed_F: 5
   isAttacking: 0
   startPos_Vector: {x: 0, y: 0}
+  actionButtonsObj: {fileID: 1874100341}
 --- !u!1 &1788169639
 GameObject:
   m_ObjectHideFlags: 0
