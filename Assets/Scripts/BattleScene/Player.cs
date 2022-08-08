@@ -41,7 +41,6 @@ public class Player : BasicUnitScript
     {
         if (isWaiting)
         {
-            nullActionCoolTimeImage.transform.position = Cam.WorldToScreenPoint(transform.position + new Vector3(0, actionCoolTimeImageYPos_F, 0));
             actionCoolTimeImage.fillAmount = nowActionCoolTime / maxActionCoolTime;
             nowActionCoolTime += Time.deltaTime;
             if (nowActionCoolTime >= maxActionCoolTime)
@@ -52,12 +51,14 @@ public class Player : BasicUnitScript
         }
         if (isWaiting == false && isJumping == false && isAttacking == false)
         {
+            actionCoolTimeObj.SetActive(false);
             ActionButtonsSetActive(true);
         }
         else
         {
             ActionButtonsSetActive(false);
         }
+        nullActionCoolTimeImage.transform.position = Cam.WorldToScreenPoint(transform.position + new Vector3(0, actionCoolTimeImageYPos_F, 0));
     }
     private void WaitingTimeStart() //공격 후의 세팅 (일부 공통) 
     {

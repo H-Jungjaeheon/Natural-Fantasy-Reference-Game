@@ -52,6 +52,9 @@ public class BattleSceneManager : Singleton<BattleSceneManager>
         unitHpBars[(int)UnitKind.Player].fillAmount = playerComponent.Hp_F / playerComponent.MaxHp_F;
         unitEnergyBars[(int)UnitKind.Player].fillAmount = playerComponent.Energy_F / playerComponent.MaxEnergy_F;
         unitDreamyFigureBars[(int)UnitKind.Player].fillAmount = playerComponent.DreamyFigure_F / playerComponent.MaxDreamyFigure_F;
+        unitHpBars[(int)UnitKind.Enemy].fillAmount = enemyComponenet.Hp_F / enemyComponenet.MaxHp_F;
+        unitEnergyBars[(int)UnitKind.Enemy].fillAmount = enemyComponenet.Energy_F / enemyComponenet.MaxEnergy_F;
+        unitDreamyFigureBars[(int)UnitKind.Enemy].fillAmount = enemyComponenet.DreamyFigure_F / enemyComponenet.MaxDreamyFigure_F;
     }
 
 }

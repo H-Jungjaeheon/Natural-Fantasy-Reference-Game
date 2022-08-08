@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Enemy : BasicUnitScript
 {
+    private void Awake()
+    {
+        StartSetting();
+    }
 
     void Update()
     {
@@ -19,6 +23,7 @@ public class Enemy : BasicUnitScript
         startPos_Vector = transform.position;
         nowAttackCount_I = 1;
         BattleSceneManager.Instance.PlayerCharacterPos = transform.position;
+        actionCoolTimeObj.SetActive(true);
         print(isWaiting);
     }
 
@@ -26,7 +31,6 @@ public class Enemy : BasicUnitScript
     {
         if (isWaiting)
         {
-            nullActionCoolTimeImage.transform.position = Cam.WorldToScreenPoint(transform.position + new Vector3(0, actionCoolTimeImageYPos_F, 0));
             actionCoolTimeImage.fillAmount = nowActionCoolTime / maxActionCoolTime;
             nowActionCoolTime += Time.deltaTime;
             if (nowActionCoolTime >= maxActionCoolTime)
@@ -35,5 +39,6 @@ public class Enemy : BasicUnitScript
                 actionCoolTimeObj.SetActive(false);
             }
         }
+        nullActionCoolTimeImage.transform.position = Cam.WorldToScreenPoint(transform.position + new Vector3(0, actionCoolTimeImageYPos_F, 0));
     }
 }
