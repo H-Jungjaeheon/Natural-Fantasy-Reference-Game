@@ -4,15 +4,22 @@ using UnityEngine;
 
 public class Enemy : BasicUnitScript
 {
+
+    void Update()
+    {
+        UISetting();
+    }
+
     protected override void StartSetting()
     {
+        isWaiting = true;
+        nowActionCoolTime = 0;
         Cam = Camera.main;
         rigid = gameObject.GetComponent<Rigidbody2D>();
         startPos_Vector = transform.position;
-        nowActionCoolTime = maxActionCoolTime;
         nowAttackCount_I = 1;
         BattleSceneManager.Instance.PlayerCharacterPos = transform.position;
-        isWaiting = true;
+        print(isWaiting);
     }
 
     protected override void UISetting()
