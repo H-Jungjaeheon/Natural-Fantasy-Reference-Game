@@ -48,14 +48,12 @@ public class CamShake : MonoBehaviour
             if (playerComponent.isJumping == false)
             {
                 transform.position = Random.insideUnitSphere * shakeAmount + initialPosition;
-                print("기본 실행");
             }
             else
             {
                 jumpingShaking.x = Random.insideUnitSphere.x * shakeAmount;
                 jumpingShaking.y = Random.insideUnitSphere.y * shakeAmount + playerObj.transform.position.y;
                 transform.position = jumpingShaking;
-                print("점프 실행");
             }
             shakeTime -= Time.deltaTime;
             if (shakeTime <= 0)

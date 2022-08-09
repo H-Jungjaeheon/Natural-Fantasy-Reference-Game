@@ -2337,6 +2337,7 @@ MonoBehaviour:
   maxActionCoolTime: 4
   setJumpGravityScale_F: 2.5
   jumpPower_F: 12.5
+  nowDefensivePosition_B: 
   rangeInEnemy: []
   isJumping: 0
   hp_F: 55
@@ -2872,6 +2873,7 @@ MonoBehaviour:
   maxActionCoolTime: 3.5
   setJumpGravityScale_F: 2.5
   jumpPower_F: 12.5
+  nowDefensivePosition_B: 000000
   rangeInEnemy: []
   isJumping: 0
   hp_F: 25

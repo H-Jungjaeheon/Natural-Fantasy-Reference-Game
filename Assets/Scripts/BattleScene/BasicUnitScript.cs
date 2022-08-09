@@ -3,6 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum NowDefensePos
+{
+    Left,
+    Right,
+    Up
+}
+
 public abstract class BasicUnitScript : MonoBehaviour
 {
     #region 공격 쿨타임 관련 변수 (공통)
@@ -41,10 +48,13 @@ public abstract class BasicUnitScript : MonoBehaviour
     [SerializeField]
     protected float jumpPower_F;
 
-    [Tooltip("현재 공격 범위에 존재하는 적")]
+    [Header("방어 / 방어 위치 관련 변수")]
+    [Tooltip("현재 방어 위치")]
+    public bool[] nowDefensivePosition_B;
+
+    [Header("공격 범위 내의 적 리스트")]
     public List<GameObject> rangeInEnemy = new List<GameObject>();
 
-    protected bool isComplete;
     protected int nowAttackCount_I;
 
     [HideInInspector]

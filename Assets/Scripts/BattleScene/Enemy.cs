@@ -24,7 +24,6 @@ public class Enemy : BasicUnitScript
         nowAttackCount_I = 1;
         BattleSceneManager.Instance.PlayerCharacterPos = transform.position;
         actionCoolTimeObj.SetActive(true);
-        print(isWaiting);
     }
 
     protected override void UISetting()

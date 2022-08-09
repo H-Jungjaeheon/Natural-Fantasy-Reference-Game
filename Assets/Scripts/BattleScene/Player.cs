@@ -13,6 +13,7 @@ public class Player : BasicUnitScript
     private void Awake()
     {
         StartSetting();
+        nowDefensivePosition_B[(int)NowDefensePos.Up] = true;
     }
 
     // Update is called once per frame
@@ -105,29 +106,42 @@ public class Player : BasicUnitScript
 
     IEnumerator GoToAttack()
     {
-        Vector3 Movetransform = new Vector3(Speed_F * Time.deltaTime, 0, 0); //이동을 위해 더해줄 연산
+        Vector3 Movetransform = new Vector3(Speed_F, 0, 0); //이동을 위해 더해줄 연산
         Vector3 Targettransform = new Vector3(BattleSceneManager.Instance.EnemyCharacterPos.x - 5, transform.position.y); //목표 위치
 
         while (transform.position.x < Targettransform.x) //이동중
         {
-            transform.position += Movetransform;
+            transform.position += Movetransform * Time.deltaTime;
             yield return null;
         }
         transform.position = Targettransform; //이동 완료
 
-        StartCoroutine(EnemyAttack(false, nowAttackCount_I, 0.3f)); //첫번째 공격
+        StartCoroutine(Attacking(false, nowAttackCount_I, 0.2f)); //첫번째 공격 실행
     }
 
-    IEnumerator EnemyAttack(bool isLastAttack, int nowAttackCount_I, float attacktimelimit_f) //3연공 재귀로 구현
+    IEnumerator Attacking(bool isLastAttack, int nowAttackCount_I, float delayTime) //3연공 재귀로 구현
     {
-        isComplete = false;
+        bool isComplete = false;
+        bool isFail = false;
         var camComponent = Cam.GetComponent<CamShake>();
-        if (rangeInEnemy[0] != null)
+        float nowdelayTime = 0;
+        float nowattacktime_f = 0;
+        
+        while (nowdelayTime < delayTime) //연타 방지용
         {
-            print($"공격 {nowAttackCount_I}"); //공격 실행(애니메이션)
-            switch (nowAttackCount_I)
+            if (Input.GetKeyDown(KeyCode.Space))
             {
-                case 1 :
+                isFail = true;
+            }
+            nowdelayTime += Time.deltaTime;
+            yield return null;
+        }
+
+        if (rangeInEnemy[0] != null) //기본공격 실행 함수 및 기본공격 애니메이션 시작
+        {
+            switch (nowAttackCount_I) 
+            {
+                case 1:
                     camComponent.CamShakeStart(0.3f, 0.5f);
                     break;
                 case 3:
@@ -143,55 +157,46 @@ public class Player : BasicUnitScript
             }
         }
 
-        if (isLastAttack == false)
+        while (0.3f > nowattacktime_f) //연공 타이밍 계산
         {
-            float nowattacktime_f = 0;
-            print("눌러");
-            while (attacktimelimit_f > nowattacktime_f) //기본공격 타이밍 계산
+            nowattacktime_f += Time.deltaTime;
+            if (Input.GetKeyDown(KeyCode.Space))
             {
-                nowattacktime_f += Time.deltaTime;
-                if (Input.GetKeyDown(KeyCode.Space))
-                {
-                    isComplete = true;
-                }
-                yield return null;
+                isComplete = true;
             }
+            yield return null;
+        }
 
-            if (isComplete)
+        if (isLastAttack == false && isFail == false && isComplete) 
+        {
+            nowAttackCount_I++;
+            switch (nowAttackCount_I) //공격 실행 애니메이션 시작
             {
-                switch (nowAttackCount_I)
-                {
-                    case 1:
-                        yield return new WaitForSeconds(0.1f);
-                        nowAttackCount_I++;
-                        StartCoroutine(EnemyAttack(false, nowAttackCount_I, 0.3f)); //두번째 공격
-                        break;
-                    case 2:
-                        yield return new WaitForSeconds(0.5f);
-                        nowAttackCount_I++;
-                        StartCoroutine(EnemyAttack(true, nowAttackCount_I, 0.3f)); //세번째 공격
-                        break;
-                }
-            }
-            else //돌아가기
-            {
-                StartCoroutine(Return());
+                case 2:
+                    StartCoroutine(Attacking(false, nowAttackCount_I, 0.1f)); //두번째 공격
+                    break;
+                case 3:
+                    StartCoroutine(Attacking(true, nowAttackCount_I, 0.5f)); //세번째 공격
+                    break;
             }
         }
         else //돌아가기
         {
-            yield return new WaitForSeconds(0.5f);
+            if (isLastAttack == true)
+            {
+                yield return new WaitForSeconds(0.5f);
+            }
             StartCoroutine(Return());
         }
     }
 
     IEnumerator Return()
     {
-        Vector3 Movetransform = new Vector3(Speed_F * Time.deltaTime, 0, 0); //이동을 위해 더해줄 연산
+        Vector3 Movetransform = new Vector3(Speed_F, 0, 0); //이동을 위해 더해줄 연산
         transform.rotation = Quaternion.Euler(0, 180, 0);
         while (transform.position.x > startPos_Vector.x)
         {
-            transform.position -= Movetransform;
+            transform.position -= Movetransform * Time.deltaTime;
             yield return null;
         }
         transform.rotation = Quaternion.identity;
