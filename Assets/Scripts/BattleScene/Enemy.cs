@@ -40,4 +40,8 @@ public class Enemy : BasicUnitScript
         }
         nullActionCoolTimeImage.transform.position = Cam.WorldToScreenPoint(transform.position + new Vector3(0, actionCoolTimeImageYPos_F, 0));
     }
+    protected override void Defense()
+    {
+        
+    }
 }

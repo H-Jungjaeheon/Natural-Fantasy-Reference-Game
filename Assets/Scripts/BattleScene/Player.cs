@@ -13,7 +13,6 @@ public class Player : BasicUnitScript
     private void Awake()
     {
         StartSetting();
-        nowDefensivePosition_B[(int)NowDefensePos.Up] = true;
     }
 
     // Update is called once per frame
@@ -21,6 +20,7 @@ public class Player : BasicUnitScript
     {
         UISetting();
         Jump();
+        Defense();
     }
 
     protected override void StartSetting() //초기 세팅 (일부 공통)
@@ -36,6 +36,29 @@ public class Player : BasicUnitScript
         Damage_I += GameManager.Instance.DamageUpgradeLevel;
         nowAttackCount_I = 1;
         BattleSceneManager.Instance.PlayerCharacterPos = transform.position;
+    }
+
+    protected override void Defense()
+    {
+        if (isJumping == false && isAttacking == false && Input.GetKeyDown(KeyCode.A))
+        {
+            nowDefensivePosition_B[(int)NowDefensePos.Left] = true;
+        }
+        else if (isJumping == false && isAttacking == false && Input.GetKeyDown(KeyCode.D))
+        {
+            nowDefensivePosition_B[(int)NowDefensePos.Right] = true;
+        }
+        else if (isJumping == false && isAttacking == false && Input.GetKeyDown(KeyCode.W))
+        {
+            nowDefensivePosition_B[(int)NowDefensePos.Up] = true;
+        }
+        else
+        {
+            for (int nowDefensePosIndex = 0; nowDefensePosIndex < (int)NowDefensePos.DefensePosCount; nowDefensePosIndex++)
+            {
+                nowDefensivePosition_B[nowDefensePosIndex] = false;
+            }
+        }
     }
 
     protected override void UISetting() //대기시간 및 UI세팅 (일부 공통)
@@ -61,6 +84,7 @@ public class Player : BasicUnitScript
         }
         nullActionCoolTimeImage.transform.position = Cam.WorldToScreenPoint(transform.position + new Vector3(0, actionCoolTimeImageYPos_F, 0));
     }
+
     private void WaitingTimeStart() //공격 후의 세팅 (일부 공통) 
     {
         nowActionCoolTime = 0;
@@ -68,6 +92,7 @@ public class Player : BasicUnitScript
         actionCoolTimeObj.SetActive(true);
         ActionButtonsSetActive(false);
     }
+
     private void Jump() 
     {
         if (isJumping == false && isAttacking == false && Input.GetKey(KeyCode.Space))
@@ -190,9 +215,9 @@ public class Player : BasicUnitScript
         }
     }
 
-    IEnumerator Return()
+    IEnumerator Return() //근접공격 후 돌아오기
     {
-        Vector3 Movetransform = new Vector3(Speed_F, 0, 0); //이동을 위해 더해줄 연산
+        Vector3 Movetransform = new Vector3(Speed_F, 0, 0);
         transform.rotation = Quaternion.Euler(0, 180, 0);
         while (transform.position.x > startPos_Vector.x)
         {

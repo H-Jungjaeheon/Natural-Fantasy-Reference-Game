@@ -7,7 +7,8 @@ public enum NowDefensePos
 {
     Left,
     Right,
-    Up
+    Up,
+    DefensePosCount
 }
 
 public abstract class BasicUnitScript : MonoBehaviour
@@ -150,4 +151,6 @@ public abstract class BasicUnitScript : MonoBehaviour
     protected abstract void StartSetting();
 
     protected abstract void UISetting();
+
+    protected abstract void Defense();
 }
