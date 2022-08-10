@@ -15,12 +15,13 @@ public class Player : BasicUnitScript
         StartSetting();
     }
 
-    // Update is called once per frame
+    
     void Update()
     {
         UISetting();
         Jump();
         Defense();
+        Deflect();
     }
 
     protected override void StartSetting() //초기 세팅 (일부 공통)
@@ -40,25 +41,75 @@ public class Player : BasicUnitScript
 
     protected override void Defense()
     {
-        if (isJumping == false && isAttacking == false && Input.GetKeyDown(KeyCode.A))
+        if (isDefensing == false && isDeflecting == false)
         {
-            nowDefensivePosition_B[(int)NowDefensePos.Left] = true;
+            if (isJumping == false && isAttacking == false && Input.GetKey(KeyCode.A))
+            {
+                SetDefensing((int)NowDefensePos.Left, 180);
+                //방어 애니메이션
+            }
+            else if (isJumping == false && isAttacking == false && Input.GetKey(KeyCode.D))
+            {
+                SetDefensing((int)NowDefensePos.Right, 0);
+                //방어 애니메이션
+            }
+            else if (isJumping == false && isAttacking == false && Input.GetKey(KeyCode.W))
+            {
+                SetDefensing((int)NowDefensePos.Up, 0);
+                //방어 애니메이션
+            }
         }
-        else if (isJumping == false && isAttacking == false && Input.GetKeyDown(KeyCode.D))
+        else if (isDefensing && isDeflecting == false && Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.W))
         {
-            nowDefensivePosition_B[(int)NowDefensePos.Right] = true;
-        }
-        else if (isJumping == false && isAttacking == false && Input.GetKeyDown(KeyCode.W))
-        {
-            nowDefensivePosition_B[(int)NowDefensePos.Up] = true;
-        }
-        else
-        {
+            isDefensing = false;
+            transform.rotation = Quaternion.Euler(0, 0, 0);
             for (int nowDefensePosIndex = 0; nowDefensePosIndex < (int)NowDefensePos.DefensePosCount; nowDefensePosIndex++)
             {
                 nowDefensivePosition_B[nowDefensePosIndex] = false;
             }
         }
+    }
+
+    private void Deflect()
+    {
+        if (isDefensing)
+        {
+            if (nowDefensivePosition_B[(int)NowDefensePos.Right] == true && isDeflecting == false && Input.GetKeyDown(KeyCode.Space))
+            {
+                print("오른쪽 튕겨내기");
+                StartCoroutine(Deflecting((int)NowDefensePos.Right, 0));
+            }
+            else if (nowDefensivePosition_B[(int)NowDefensePos.Left] == true && isDeflecting == false && Input.GetKeyDown(KeyCode.Space))
+            {
+                print("왼쪽 튕겨내기");
+                StartCoroutine(Deflecting((int)NowDefensePos.Left, 180));
+            }
+        }
+    }
+
+    IEnumerator Deflecting(int nowDefensePosIndex, int setRotation)
+    {
+        isDeflecting = true;
+        nowDefensivePosition_B[nowDefensePosIndex] = false;
+        ActionButtonsSetActive(false);
+        transform.rotation = Quaternion.Euler(0, setRotation, 0);
+        //애니 실행
+        yield return new WaitForSeconds(2); //치기 전까지 기다림
+        //범위 내의 반사 가능한 오브젝트 상호작용
+        print("상호작용 타이밍");
+        yield return new WaitForSeconds(2); //애니메이션 종료까지 기다림
+        transform.rotation = Quaternion.Euler(0, 0, 0);
+        ActionButtonsSetActive(true);
+        isDeflecting = false;
+        ActionCoolTimeBarSetActive(true);
+        yield return null;
+    }
+
+    protected override void SetDefensing(int defensingDirectionIndex, float setRotation)
+    {
+        isDefensing = true;
+        nowDefensivePosition_B[defensingDirectionIndex] = true;
+        transform.rotation = Quaternion.Euler(0, setRotation, 0);
     }
 
     protected override void UISetting() //대기시간 및 UI세팅 (일부 공통)
@@ -70,12 +121,12 @@ public class Player : BasicUnitScript
             if (nowActionCoolTime >= maxActionCoolTime)
             {
                 isWaiting = false;
-                actionCoolTimeObj.SetActive(false);
+                ActionCoolTimeBarSetActive(false);
             }
         }
-        if (isWaiting == false && isJumping == false && isAttacking == false)
+        if (isWaiting == false && isJumping == false && isAttacking == false && isDeflecting == false)
         {
-            actionCoolTimeObj.SetActive(false);
+            ActionCoolTimeBarSetActive(false);
             ActionButtonsSetActive(true);
         }
         else
@@ -89,13 +140,13 @@ public class Player : BasicUnitScript
     {
         nowActionCoolTime = 0;
         isWaiting = true;
-        actionCoolTimeObj.SetActive(true);
+        ActionCoolTimeBarSetActive(true);
         ActionButtonsSetActive(false);
     }
 
     private void Jump() 
     {
-        if (isJumping == false && isAttacking == false && Input.GetKey(KeyCode.Space))
+        if (isJumping == false && isAttacking == false && isDefensing == false && isDeflecting == false && Input.GetKey(KeyCode.Space))
         {
             isJumping = true;
             ActionButtonsSetActive(false);
@@ -182,7 +233,7 @@ public class Player : BasicUnitScript
             }
         }
 
-        while (0.3f > nowattacktime_f) //연공 타이밍 계산
+        while (0.2f > nowattacktime_f) //연공 타이밍 계산
         {
             nowattacktime_f += Time.deltaTime;
             if (Input.GetKeyDown(KeyCode.Space))
@@ -198,7 +249,7 @@ public class Player : BasicUnitScript
             switch (nowAttackCount_I) //공격 실행 애니메이션 시작
             {
                 case 2:
-                    StartCoroutine(Attacking(false, nowAttackCount_I, 0.1f)); //두번째 공격
+                    StartCoroutine(Attacking(false, nowAttackCount_I, 0.17f)); //두번째 공격
                     break;
                 case 3:
                     StartCoroutine(Attacking(true, nowAttackCount_I, 0.5f)); //세번째 공격
@@ -232,4 +283,6 @@ public class Player : BasicUnitScript
     }
 
     private void ActionButtonsSetActive(bool SetActive) => actionButtonsObj.SetActive(SetActive);
+
+    private void ActionCoolTimeBarSetActive(bool SetActive) => actionCoolTimeObj.SetActive(SetActive);
 }

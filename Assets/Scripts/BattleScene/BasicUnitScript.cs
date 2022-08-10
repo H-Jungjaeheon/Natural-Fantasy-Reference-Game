@@ -53,6 +53,10 @@ public abstract class BasicUnitScript : MonoBehaviour
     [Tooltip("현재 방어 위치")]
     public bool[] nowDefensivePosition_B;
 
+    protected bool isDefensing;
+
+    protected bool isDeflecting;
+
     [Header("공격 범위 내의 적 리스트")]
     public List<GameObject> rangeInEnemy = new List<GameObject>();
 
@@ -153,4 +157,6 @@ public abstract class BasicUnitScript : MonoBehaviour
     protected abstract void UISetting();
 
     protected abstract void Defense();
+
+    protected abstract void SetDefensing(int defensingDirectionIndex, float setRotation);
 }

@@ -44,4 +44,8 @@ public class Enemy : BasicUnitScript
     {
         
     }
+    protected override void SetDefensing(int defensingDirectionIndex, float setRotation)
+    {
+
+    }
 }
