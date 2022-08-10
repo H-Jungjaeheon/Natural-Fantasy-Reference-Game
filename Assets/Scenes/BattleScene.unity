@@ -1156,7 +1156,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1717870242}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &693950549
 BoxCollider2D:
@@ -1220,6 +1220,7 @@ MonoBehaviour:
   isPlayer: 1
   unitObj: {fileID: 1717870240}
   attackRangeCollider: {fileID: 693950549}
+  setColliderXPos: 1.8
 --- !u!1 &710298923
 GameObject:
   m_ObjectHideFlags: 0
@@ -2802,8 +2803,8 @@ Transform:
   m_LocalPosition: {x: -10, y: 0, z: 0}
   m_LocalScale: {x: 2.3, y: 2.3, z: 1}
   m_Children:
-  - {fileID: 1995803429}
   - {fileID: 693950548}
+  - {fileID: 1995803429}
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3230,7 +3231,7 @@ RectTransform:
   m_Children:
   - {fileID: 159104146}
   m_Father: {fileID: 1717870242}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

@@ -16,7 +16,7 @@ public class Player : BasicUnitScript
     }
 
     
-    void Update()
+    void FixedUpdate()
     {
         UISetting();
         Jump();
@@ -41,8 +41,11 @@ public class Player : BasicUnitScript
 
     protected override void Defense()
     {
+        print($"현재 방어중? {isDefensing}");
+        print($"현재 튕겨내기중? {isDeflecting}");
         if (isDefensing == false && isDeflecting == false)
         {
+            print("방어 조건 충족");
             if (isJumping == false && isAttacking == false && Input.GetKey(KeyCode.A))
             {
                 SetDefensing((int)NowDefensePos.Left, 180);
@@ -59,10 +62,13 @@ public class Player : BasicUnitScript
                 //방어 애니메이션
             }
         }
-        else if (isDefensing && isDeflecting == false && Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.W))
+        else if (isDefensing && isDeflecting == false && Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D))
         {
             isDefensing = false;
-            transform.rotation = Quaternion.Euler(0, 0, 0);
+            if (isDeflecting == false)
+            {
+                transform.rotation = Quaternion.Euler(0, 0, 0);
+            }
             for (int nowDefensePosIndex = 0; nowDefensePosIndex < (int)NowDefensePos.DefensePosCount; nowDefensePosIndex++)
             {
                 nowDefensivePosition_B[nowDefensePosIndex] = false;
@@ -76,12 +82,10 @@ public class Player : BasicUnitScript
         {
             if (nowDefensivePosition_B[(int)NowDefensePos.Right] == true && isDeflecting == false && Input.GetKeyDown(KeyCode.Space))
             {
-                print("오른쪽 튕겨내기");
                 StartCoroutine(Deflecting((int)NowDefensePos.Right, 0));
             }
             else if (nowDefensivePosition_B[(int)NowDefensePos.Left] == true && isDeflecting == false && Input.GetKeyDown(KeyCode.Space))
             {
-                print("왼쪽 튕겨내기");
                 StartCoroutine(Deflecting((int)NowDefensePos.Left, 180));
             }
         }
@@ -98,10 +102,11 @@ public class Player : BasicUnitScript
         //범위 내의 반사 가능한 오브젝트 상호작용
         print("상호작용 타이밍");
         yield return new WaitForSeconds(2); //애니메이션 종료까지 기다림
-        transform.rotation = Quaternion.Euler(0, 0, 0);
         ActionButtonsSetActive(true);
         isDeflecting = false;
         ActionCoolTimeBarSetActive(true);
+        transform.rotation = Quaternion.Euler(0, 0, 0);
+        isDefensing = false;
         yield return null;
     }
 
