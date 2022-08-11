@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class CamShake : MonoBehaviour
 {
+
     private float shakeAmount;
     private float shakeTime;
     private bool isShaking;

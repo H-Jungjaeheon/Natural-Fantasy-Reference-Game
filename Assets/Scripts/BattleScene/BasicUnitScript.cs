@@ -60,6 +60,9 @@ public abstract class BasicUnitScript : MonoBehaviour
     [Header("공격 범위 내의 적 리스트")]
     public List<GameObject> rangeInEnemy = new List<GameObject>();
 
+    [Header("튕겨내기 범위 내의 오브젝트 리스트")]
+    public List<GameObject> rangeInDeflectAbleObj = new List<GameObject>();
+
     protected int nowAttackCount_I;
 
     [HideInInspector]
@@ -144,6 +147,11 @@ public abstract class BasicUnitScript : MonoBehaviour
     [HideInInspector]
     public bool isAttacking;
     #endregion
+
+    [SerializeField]
+    [Header("공격 범위 콜라이더")]
+    [Tooltip("해당 오브젝트 공격 콜라이더")]
+    protected GameObject attackRangeObj;
 
     [HideInInspector]
     public Vector2 startPos_Vector;

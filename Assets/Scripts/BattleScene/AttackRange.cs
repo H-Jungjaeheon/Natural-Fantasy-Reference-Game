@@ -12,9 +12,9 @@ public class AttackRange : MonoBehaviour
     [Tooltip("이 공격 범위를 가진 해당 유닛 오브젝트")]
     private GameObject unitObj;
 
-    [SerializeField]
-    [Tooltip("공격 범위 콜라이더")]
-    private Collider2D attackRangeCollider;
+    //[SerializeField]
+    //[Tooltip("공격 범위 콜라이더")]
+    //private Collider2D attackRangeCollider;
 
     [SerializeField]
     [Tooltip("콜라이더 X 좌표")]
@@ -36,13 +36,13 @@ public class AttackRange : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision) //적이 범위에 들어올 시
     {
-        if (isPlayer && collision.gameObject.CompareTag("Enemy"))
+        if (collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Player") && collision.gameObject != unitObj)
         {
-            unitObj.GetComponent<Player>().rangeInEnemy.Add(collision.gameObject);
+            unitObj.GetComponent<BasicUnitScript>().rangeInEnemy.Add(collision.gameObject);
         }
-        else if(isPlayer == false && collision.gameObject.CompareTag("Player"))
+        else if(collision.gameObject.CompareTag("DeflectAbleObj"))
         {
-            //unitObj.GetComponent<Enemy>().
+            unitObj.GetComponent<BasicUnitScript>().rangeInDeflectAbleObj.Add(collision.gameObject);
         }
     }
 

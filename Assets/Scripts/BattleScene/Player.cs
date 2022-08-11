@@ -41,11 +41,11 @@ public class Player : BasicUnitScript
 
     protected override void Defense()
     {
-        print($"현재 방어중? {isDefensing}");
-        print($"현재 튕겨내기중? {isDeflecting}");
+        //print($"현재 방어중? {isDefensing}");
+        //print($"현재 튕겨내기중? {isDeflecting}");
         if (isDefensing == false && isDeflecting == false)
         {
-            print("방어 조건 충족");
+            //print("방어 조건 충족");
             if (isJumping == false && isAttacking == false && Input.GetKey(KeyCode.A))
             {
                 SetDefensing((int)NowDefensePos.Left, 180);
@@ -62,7 +62,7 @@ public class Player : BasicUnitScript
                 //방어 애니메이션
             }
         }
-        else if (isDefensing && isDeflecting == false && Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D))
+        else if (isDefensing && isDeflecting == false && !Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
         {
             isDefensing = false;
             if (isDeflecting == false)
@@ -93,19 +93,30 @@ public class Player : BasicUnitScript
 
     IEnumerator Deflecting(int nowDefensePosIndex, int setRotation)
     {
+        var attackRangeObjComponent = attackRangeObj.GetComponent<BoxCollider2D>();
         isDeflecting = true;
         nowDefensivePosition_B[nowDefensePosIndex] = false;
         ActionButtonsSetActive(false);
         transform.rotation = Quaternion.Euler(0, setRotation, 0);
+        attackRangeObjComponent.size = new Vector2(0.55f, 2.1f);
+        attackRangeObjComponent.offset = new Vector2(-0.1f, 0f);
         //애니 실행
         yield return new WaitForSeconds(2); //치기 전까지 기다림
         //범위 내의 반사 가능한 오브젝트 상호작용
         print("상호작용 타이밍");
         yield return new WaitForSeconds(2); //애니메이션 종료까지 기다림
+        attackRangeObjComponent.size = new Vector2(0.8f, 2.1f);
+        attackRangeObjComponent.offset = new Vector2(0f, 0f);
         ActionButtonsSetActive(true);
         isDeflecting = false;
-        ActionCoolTimeBarSetActive(true);
-        transform.rotation = Quaternion.Euler(0, 0, 0);
+        if (nowActionCoolTime < maxActionCoolTime)
+        {
+            ActionCoolTimeBarSetActive(true);
+        }
+        if (!Input.GetKey(KeyCode.A))
+        {
+            transform.rotation = Quaternion.Euler(0, 0, 0);
+        }
         isDefensing = false;
         yield return null;
     }
@@ -119,7 +130,7 @@ public class Player : BasicUnitScript
 
     protected override void UISetting() //대기시간 및 UI세팅 (일부 공통)
     {
-        if (isWaiting)
+        if (isWaiting && isDeflecting == false)
         {
             actionCoolTimeImage.fillAmount = nowActionCoolTime / maxActionCoolTime;
             nowActionCoolTime += Time.deltaTime;
@@ -136,6 +147,10 @@ public class Player : BasicUnitScript
         }
         else
         {
+            if (isDeflecting == true)
+            {
+                ActionCoolTimeBarSetActive(false);
+            }
             ActionButtonsSetActive(false);
         }
         nullActionCoolTimeImage.transform.position = Cam.WorldToScreenPoint(transform.position + new Vector3(0, actionCoolTimeImageYPos_F, 0));

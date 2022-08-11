@@ -1182,7 +1182,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.78831035, y: 2.1128373}
+  m_Size: {x: 0.8, y: 2.1}
   m_EdgeRadius: 0
 --- !u!50 &693950550
 Rigidbody2D:
@@ -1219,7 +1219,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isPlayer: 1
   unitObj: {fileID: 1717870240}
-  attackRangeCollider: {fileID: 693950549}
   setColliderXPos: 1.8
 --- !u!1 &710298923
 GameObject:
@@ -2340,6 +2339,7 @@ MonoBehaviour:
   jumpPower_F: 12.5
   nowDefensivePosition_B: 
   rangeInEnemy: []
+  rangeInDeflectAbleObj: []
   isJumping: 0
   hp_F: 55
   maxHp_F: 55
@@ -2351,6 +2351,7 @@ MonoBehaviour:
   damage_I: 4
   Speed_F: 3.5
   isAttacking: 0
+  attackRangeObj: {fileID: 0}
   startPos_Vector: {x: 0, y: 0}
 --- !u!50 &1159378195
 Rigidbody2D:
@@ -2876,6 +2877,7 @@ MonoBehaviour:
   jumpPower_F: 12.5
   nowDefensivePosition_B: 000000
   rangeInEnemy: []
+  rangeInDeflectAbleObj: []
   isJumping: 0
   hp_F: 25
   maxHp_F: 25
@@ -2887,6 +2889,7 @@ MonoBehaviour:
   damage_I: 1
   Speed_F: 5
   isAttacking: 0
+  attackRangeObj: {fileID: 693950547}
   startPos_Vector: {x: 0, y: 0}
   actionButtonsObj: {fileID: 1874100341}
 --- !u!1 &1788169639
