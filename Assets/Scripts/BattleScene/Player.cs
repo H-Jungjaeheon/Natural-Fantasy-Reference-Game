@@ -101,10 +101,10 @@ public class Player : BasicUnitScript
         attackRangeObjComponent.size = new Vector2(0.55f, 2.1f);
         attackRangeObjComponent.offset = new Vector2(-0.1f, 0f);
         //애니 실행
-        yield return new WaitForSeconds(2); //치기 전까지 기다림
+        yield return new WaitForSeconds(0.3f); //치기 전까지 기다림
         //범위 내의 반사 가능한 오브젝트 상호작용
         print("상호작용 타이밍");
-        yield return new WaitForSeconds(2); //애니메이션 종료까지 기다림
+        yield return new WaitForSeconds(0.5f); //애니메이션 종료까지 기다림
         attackRangeObjComponent.size = new Vector2(0.8f, 2.1f);
         attackRangeObjComponent.offset = new Vector2(0f, 0f);
         ActionButtonsSetActive(true);

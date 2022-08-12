@@ -22,6 +22,8 @@ public class AttackRange : MonoBehaviour
 
     private Vector2 colliderPos;
 
+    private bool isLeft;
+
     private void Update()
     {
         PositionSetting();
@@ -32,6 +34,22 @@ public class AttackRange : MonoBehaviour
         colliderPos.x = unitObj.transform.position.x + setColliderXPos;
         colliderPos.y = unitObj.transform.position.y;
         transform.position = colliderPos;
+        if (transform.rotation.y != 0 && isLeft == false)
+        {
+            ChangeRotation(false);
+            
+        }
+        else if(transform.rotation.y == 0 && isLeft)
+        {
+            ChangeRotation(true);
+            isLeft = false;
+        }
+    }
+
+    private void ChangeRotation(bool ChangeRotate)
+    {
+        ;
+        setColliderXPos *= -1;
     }
 
     private void OnTriggerEnter2D(Collider2D collision) //적이 범위에 들어올 시
@@ -48,13 +66,13 @@ public class AttackRange : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision) //적이 범위에 나갈 시
     {
-        if (isPlayer && collision.gameObject.CompareTag("Enemy"))
+        if (collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Player") && collision.gameObject != unitObj)
         {
-            unitObj.GetComponent<Player>().rangeInEnemy.Remove(collision.gameObject);
+            unitObj.GetComponent<BasicUnitScript>().rangeInEnemy.Remove(collision.gameObject);
         }
-        else if(isPlayer == false && collision.gameObject.CompareTag("Player"))
+        else if (collision.gameObject.CompareTag("DeflectAbleObj"))
         {
-            //unitObj.GetComponent<Enemy>().
+            unitObj.GetComponent<BasicUnitScript>().rangeInDeflectAbleObj.Remove(collision.gameObject);
         }
     }
 }
