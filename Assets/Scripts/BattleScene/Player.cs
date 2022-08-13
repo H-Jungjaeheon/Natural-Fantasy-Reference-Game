@@ -15,13 +15,16 @@ public class Player : BasicUnitScript
         StartSetting();
     }
 
-    
+    private void Update()
+    {
+        Defense();
+        Deflect();
+        Jump();
+    }
+
     void FixedUpdate()
     {
         UISetting();
-        Jump();
-        Defense();
-        Deflect();
     }
 
     protected override void StartSetting() //초기 세팅 (일부 공통)
@@ -41,39 +44,42 @@ public class Player : BasicUnitScript
 
     protected override void Defense()
     {
-        //print($"현재 방어중? {isDefensing}");
-        //print($"현재 튕겨내기중? {isDeflecting}");
-        if (isDefensing == false && isDeflecting == false)
+        if (isDefensing == false && isDeflecting == false && isJumping == false && isAttacking == false)
         {
-            //print("방어 조건 충족");
-            if (isJumping == false && isAttacking == false && Input.GetKey(KeyCode.A))
+            if (Input.GetKey(KeyCode.A))
             {
                 SetDefensing((int)NowDefensePos.Left, 180);
                 //방어 애니메이션
             }
-            else if (isJumping == false && isAttacking == false && Input.GetKey(KeyCode.D))
+            else if (Input.GetKey(KeyCode.D))
             {
                 SetDefensing((int)NowDefensePos.Right, 0);
                 //방어 애니메이션
             }
-            else if (isJumping == false && isAttacking == false && Input.GetKey(KeyCode.W))
+            else if (Input.GetKey(KeyCode.W))
             {
                 SetDefensing((int)NowDefensePos.Up, 0);
                 //방어 애니메이션
             }
-        }
-        else if (isDefensing && isDeflecting == false && !Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
-        {
-            isDefensing = false;
-            if (isDeflecting == false)
+            if (nowDefensivePosition_B[(int)NowDefensePos.Left] == false)
             {
                 transform.rotation = Quaternion.Euler(0, 0, 0);
             }
+        }
+        else if (isDefensing && isDeflecting == false && Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D))
+        {
+            isDefensing = false;
             for (int nowDefensePosIndex = 0; nowDefensePosIndex < (int)NowDefensePos.DefensePosCount; nowDefensePosIndex++)
             {
                 nowDefensivePosition_B[nowDefensePosIndex] = false;
             }
         }
+    }
+    protected override void SetDefensing(int defensingDirectionIndex, float setRotation)
+    {
+        isDefensing = true;
+        nowDefensivePosition_B[defensingDirectionIndex] = true;
+        transform.rotation = Quaternion.Euler(0, setRotation, 0);
     }
 
     private void Deflect()
@@ -121,12 +127,6 @@ public class Player : BasicUnitScript
         yield return null;
     }
 
-    protected override void SetDefensing(int defensingDirectionIndex, float setRotation)
-    {
-        isDefensing = true;
-        nowDefensivePosition_B[defensingDirectionIndex] = true;
-        transform.rotation = Quaternion.Euler(0, setRotation, 0);
-    }
 
     protected override void UISetting() //대기시간 및 UI세팅 (일부 공통)
     {

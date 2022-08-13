@@ -37,7 +37,7 @@ public class AttackRange : MonoBehaviour
         if (transform.rotation.y != 0 && isLeft == false)
         {
             ChangeRotation(false);
-            
+            isLeft = true;
         }
         else if(transform.rotation.y == 0 && isLeft)
         {
@@ -48,7 +48,6 @@ public class AttackRange : MonoBehaviour
 
     private void ChangeRotation(bool ChangeRotate)
     {
-        ;
         setColliderXPos *= -1;
     }
 
