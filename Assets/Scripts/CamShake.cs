@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System;
+using Random = UnityEngine.Random;
 
 public class CamShake : MonoBehaviour
 {
-
+    public delegate void CamShakeStarts(float timeInput, float shakeAmountInput);
+    public static CamShakeStarts NowCamShakeStart;
     private float shakeAmount;
     private float shakeTime;
     private bool isShaking;
@@ -21,6 +23,7 @@ public class CamShake : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+        NowCamShakeStart += CamShakeStart;
         StartSetting();
     }
 

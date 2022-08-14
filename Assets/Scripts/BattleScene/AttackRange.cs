@@ -53,19 +53,36 @@ public class AttackRange : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision) //적이 범위에 들어올 시
     {
-        if (collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Player") && collision.gameObject != unitObj)
-        {
-            unitObj.GetComponent<BasicUnitScript>().rangeInEnemy.Add(collision.gameObject);
-        }
-        else if(collision.gameObject.CompareTag("DeflectAbleObj"))
+        if (collision.gameObject.CompareTag("DeflectAbleObj"))
         {
             unitObj.GetComponent<BasicUnitScript>().rangeInDeflectAbleObj.Add(collision.gameObject);
+        }
+        else 
+        {
+            if (collision.gameObject != unitObj)
+            {
+                switch (isPlayer)
+                {
+                    case true:
+                        if (collision.gameObject.CompareTag("Enemy"))
+                        {
+                            unitObj.GetComponent<BasicUnitScript>().rangeInEnemy.Add(collision.gameObject);
+                        }
+                        break;
+                    case false:
+                        if (collision.gameObject.CompareTag("Player"))
+                        {
+                            unitObj.GetComponent<BasicUnitScript>().rangeInEnemy.Add(collision.gameObject);
+                        }
+                        break;
+                }
+            }
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision) //적이 범위에 나갈 시
     {
-        if (collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Player") && collision.gameObject != unitObj)
+        if (collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Player"))
         {
             unitObj.GetComponent<BasicUnitScript>().rangeInEnemy.Remove(collision.gameObject);
         }

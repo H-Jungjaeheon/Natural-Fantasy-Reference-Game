@@ -33,6 +33,7 @@ public class Player : BasicUnitScript
         rigid = gameObject.GetComponent<Rigidbody2D>();
         startPos_Vector = transform.position;
         maxActionCoolTime -= GameManager.Instance.ReduceCoolTimeLevel * 0.5f;
+        nowActionCoolTime = 0;
         MaxHp_F += GameManager.Instance.MaxHpUpgradeLevel * 5;
         Hp_F = MaxHp_F;
         MaxEnergy_F += GameManager.Instance.MaxEnergyUpgradeLevel * 5;
@@ -46,6 +47,7 @@ public class Player : BasicUnitScript
     {
         if (isDefensing == false && isDeflecting == false && isJumping == false && isAttacking == false)
         {
+            print("실행중");
             if (Input.GetKey(KeyCode.A))
             {
                 SetDefensing((int)NowDefensePos.Left, 180);
@@ -66,12 +68,53 @@ public class Player : BasicUnitScript
                 transform.rotation = Quaternion.Euler(0, 0, 0);
             }
         }
-        else if (isDefensing && isDeflecting == false && Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D))
+        else if (isDefensing && isDeflecting == false)
         {
-            isDefensing = false;
-            for (int nowDefensePosIndex = 0; nowDefensePosIndex < (int)NowDefensePos.DefensePosCount; nowDefensePosIndex++)
+            bool isInputDefenseKey = false;
+            if (Input.GetKeyUp(KeyCode.W))
             {
-                nowDefensivePosition_B[nowDefensePosIndex] = false;
+                nowDefensivePosition_B[(int)NowDefensePos.Up] = false;
+                for (int nowDefensePosIndex = 0; nowDefensePosIndex < (int)NowDefensePos.DefensePosCount; nowDefensePosIndex++)
+                {
+                    if (nowDefensivePosition_B[nowDefensePosIndex] == true)
+                    {
+                        isInputDefenseKey = true;
+                    }
+                }
+                if (isInputDefenseKey == false)
+                {
+                    isDefensing = false;
+                }
+            }
+            else if (Input.GetKeyUp(KeyCode.D))
+            {
+                nowDefensivePosition_B[(int)NowDefensePos.Right] = false;
+                for (int nowDefensePosIndex = 0; nowDefensePosIndex < (int)NowDefensePos.DefensePosCount; nowDefensePosIndex++)
+                {
+                    if (nowDefensivePosition_B[nowDefensePosIndex] == true)
+                    {
+                        isInputDefenseKey = true;
+                    }
+                }
+                if (isInputDefenseKey == false)
+                {
+                    isDefensing = false;
+                }
+            }
+            else if (Input.GetKeyUp(KeyCode.A))
+            {
+                nowDefensivePosition_B[(int)NowDefensePos.Left] = false;
+                for (int nowDefensePosIndex = 0; nowDefensePosIndex < (int)NowDefensePos.DefensePosCount; nowDefensePosIndex++)
+                {
+                    if (nowDefensivePosition_B[nowDefensePosIndex] == true)
+                    {
+                        isInputDefenseKey = true;
+                    }
+                }
+                if (isInputDefenseKey == false)
+                {
+                    isDefensing = false;
+                }
             }
         }
     }
@@ -115,7 +158,7 @@ public class Player : BasicUnitScript
         attackRangeObjComponent.offset = new Vector2(0f, 0f);
         ActionButtonsSetActive(true);
         isDeflecting = false;
-        if (nowActionCoolTime < maxActionCoolTime)
+        if (nowActionCoolTime != 0)
         {
             ActionCoolTimeBarSetActive(true);
         }
@@ -137,6 +180,7 @@ public class Player : BasicUnitScript
             if (nowActionCoolTime >= maxActionCoolTime)
             {
                 isWaiting = false;
+                nowActionCoolTime = 0;
                 ActionCoolTimeBarSetActive(false);
             }
         }
@@ -158,7 +202,6 @@ public class Player : BasicUnitScript
 
     private void WaitingTimeStart() //공격 후의 세팅 (일부 공통) 
     {
-        nowActionCoolTime = 0;
         isWaiting = true;
         ActionCoolTimeBarSetActive(true);
         ActionButtonsSetActive(false);
@@ -219,11 +262,10 @@ public class Player : BasicUnitScript
     {
         bool isComplete = false;
         bool isFail = false;
-        var camComponent = Cam.GetComponent<CamShake>();
         float nowdelayTime = 0;
         float nowattacktime_f = 0;
         
-        while (nowdelayTime < delayTime) //연타 방지용
+        while (nowdelayTime < delayTime) //연타 방지용 (기본공격 애니메이션 시작 및 타격 지점까지 딜레이)
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
@@ -233,15 +275,15 @@ public class Player : BasicUnitScript
             yield return null;
         }
 
-        if (rangeInEnemy[0] != null) //기본공격 실행 함수 및 기본공격 애니메이션 시작
+        if (rangeInEnemy.Count != 0) //기본공격 실행 함수 및 공격 애니메이션 타격 지점
         {
             switch (nowAttackCount_I) 
             {
                 case 1:
-                    camComponent.CamShakeStart(0.3f, 0.5f);
+                    CamShake.NowCamShakeStart(0.3f, 0.5f);
                     break;
                 case 3:
-                    camComponent.CamShakeStart(0.3f, 1);
+                    CamShake.NowCamShakeStart(0.3f, 1);
                     break;
             }
             for (int nowIndex = 0; nowIndex < rangeInEnemy.Count; nowIndex++)
@@ -303,6 +345,4 @@ public class Player : BasicUnitScript
     }
 
     private void ActionButtonsSetActive(bool SetActive) => actionButtonsObj.SetActive(SetActive);
-
-    private void ActionCoolTimeBarSetActive(bool SetActive) => actionCoolTimeObj.SetActive(SetActive);
 }

@@ -167,4 +167,6 @@ public abstract class BasicUnitScript : MonoBehaviour
     protected abstract void Defense();
 
     protected abstract void SetDefensing(int defensingDirectionIndex, float setRotation);
+
+    protected void ActionCoolTimeBarSetActive(bool SetActive) => actionCoolTimeObj.SetActive(SetActive);
 }
