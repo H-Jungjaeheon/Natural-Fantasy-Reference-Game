@@ -79,7 +79,15 @@ public class Enemy : BasicUnitScript
             {
                 if (rangeInEnemy[nowIndex] != null)
                 {
-                    rangeInEnemy[nowIndex].GetComponent<BasicUnitScript>().Hp_F -= Damage_I;
+                    switch (rangeInEnemy[nowIndex].GetComponent<BasicUnitScript>().nowDefensivePosition_B[(int)NowDefensePos.Right])
+                    {
+                        case true:
+                            rangeInEnemy[nowIndex].GetComponent<BasicUnitScript>().Energy_F -= 1;
+                            break;
+                        case false:
+                            rangeInEnemy[nowIndex].GetComponent<BasicUnitScript>().Hp_F -= Damage_I;
+                            break;
+                    }
                 }
             }
         }

@@ -67,6 +67,9 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     [HideInInspector]
     public bool isJumping;
+
+    [HideInInspector]
+    public bool isResting;
     #endregion
 
     #region Ω∫≈» (∞¯≈Î)

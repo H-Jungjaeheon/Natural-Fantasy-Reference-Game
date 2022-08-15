@@ -45,9 +45,8 @@ public class Player : BasicUnitScript
 
     protected override void Defense()
     {
-        if (isDefensing == false && isDeflecting == false && isJumping == false && isAttacking == false)
+        if (isDefensing == false && isDeflecting == false && isJumping == false && isAttacking == false && isResting == false)
         {
-            print("실행중");
             if (Input.GetKey(KeyCode.A))
             {
                 SetDefensing((int)NowDefensePos.Left, 180);
@@ -209,7 +208,7 @@ public class Player : BasicUnitScript
 
     private void Jump() 
     {
-        if (isJumping == false && isAttacking == false && isDefensing == false && isDeflecting == false && Input.GetKey(KeyCode.Space))
+        if (isJumping == false && isResting == false && isAttacking == false && isDefensing == false && isDeflecting == false && Input.GetKey(KeyCode.Space))
         {
             isJumping = true;
             ActionButtonsSetActive(false);
@@ -243,6 +242,18 @@ public class Player : BasicUnitScript
         StartCoroutine(GoToAttack());
     }
 
+    public void RestStart()
+    {
+        isResting = true;
+        ActionButtonsSetActive(false);
+        StartCoroutine(Resting());
+    }
+
+    IEnumerator Resting()
+    {
+        yield return null;
+    }
+
     IEnumerator GoToAttack()
     {
         Vector3 Movetransform = new Vector3(Speed_F, 0, 0); //이동을 위해 더해줄 연산
@@ -255,10 +266,10 @@ public class Player : BasicUnitScript
         }
         transform.position = Targettransform; //이동 완료
 
-        StartCoroutine(Attacking(false, nowAttackCount_I, 0.2f)); //첫번째 공격 실행
+        StartCoroutine(Attacking(false, nowAttackCount_I, 0.2f, 0.2f)); //첫번째 공격 실행
     }
 
-    IEnumerator Attacking(bool isLastAttack, int nowAttackCount_I, float delayTime) //3연공 재귀로 구현
+    IEnumerator Attacking(bool isLastAttack, int nowAttackCount_I, float delayTime, float linkedAttacksLimitTime) //3연공 재귀로 구현
     {
         bool isComplete = false;
         bool isFail = false;
@@ -269,6 +280,7 @@ public class Player : BasicUnitScript
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
+                print("실패");
                 isFail = true;
             }
             nowdelayTime += Time.deltaTime;
@@ -295,9 +307,10 @@ public class Player : BasicUnitScript
             }
         }
 
-        while (0.2f > nowattacktime_f) //연공 타이밍 계산
+        while (linkedAttacksLimitTime > nowattacktime_f) //연공 타이밍 계산
         {
             nowattacktime_f += Time.deltaTime;
+            print("지금 눌러");
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 isComplete = true;
@@ -311,10 +324,10 @@ public class Player : BasicUnitScript
             switch (nowAttackCount_I) //공격 실행 애니메이션 시작
             {
                 case 2:
-                    StartCoroutine(Attacking(false, nowAttackCount_I, 0.17f)); //두번째 공격
+                    StartCoroutine(Attacking(false, nowAttackCount_I, 0.2f, 0.25f)); //두번째 공격
                     break;
                 case 3:
-                    StartCoroutine(Attacking(true, nowAttackCount_I, 0.5f)); //세번째 공격
+                    StartCoroutine(Attacking(true, nowAttackCount_I, 0.35f, 0)); //세번째 공격
                     break;
             }
         }

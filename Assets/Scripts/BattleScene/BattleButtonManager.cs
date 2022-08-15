@@ -45,6 +45,6 @@ public class BattleButtonManager : MonoBehaviour
         BasicAttackButton.onClick.AddListener(() => Player.GetComponent<Player>().CloseAttackStart());
         SkillChooseButton.onClick.AddListener(() => print("Choose"));
         //SkillButtons[0].onClick.AddListener(() => print("Skills"));
-        RestButton.onClick.AddListener(() => print("Rest"));
+        RestButton.onClick.AddListener(() => Player.GetComponent<Player>().RestStart());
     }
 }
