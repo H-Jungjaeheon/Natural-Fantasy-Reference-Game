@@ -131,8 +131,10 @@ public class Enemy : BasicUnitScript
     {
         
     }
-    protected override void Faint()
+
+    protected override IEnumerator Fainting()
     {
         //기절 애니 및 이벤트
+        yield return null;
     }
 }

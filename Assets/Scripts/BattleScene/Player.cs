@@ -49,7 +49,7 @@ public class Player : BasicUnitScript
 
     protected override void Defense()
     {
-        if (isDefensing == false && isDeflecting == false && isJumping == false && isAttacking == false && isResting == false)
+        if (isDefensing == false && isDeflecting == false && isJumping == false && isAttacking == false && isResting == false && isFainting == false)
         {
             if (Input.GetKey(KeyCode.A))
             {
@@ -187,7 +187,7 @@ public class Player : BasicUnitScript
                 ActionCoolTimeBarSetActive(false);
             }
         }
-        if (isWaiting == false && isJumping == false && isAttacking == false && isDeflecting == false && isResting == false)
+        if (isWaiting == false && isJumping == false && isAttacking == false && isDeflecting == false && isResting == false && isFainting == false)
         {
             ActionCoolTimeBarSetActive(false);
             ActionButtonsSetActive(true);
@@ -212,7 +212,7 @@ public class Player : BasicUnitScript
 
     private void Jump() 
     {
-        if (isJumping == false && isResting == false && isAttacking == false && isDefensing == false && isDeflecting == false && Input.GetKey(KeyCode.Space))
+        if (isJumping == false && isResting == false && isAttacking == false && isDefensing == false && isDeflecting == false && isFainting == false && Input.GetKey(KeyCode.Space))
         {
             isJumping = true;
             ActionButtonsSetActive(false);
@@ -375,12 +375,18 @@ public class Player : BasicUnitScript
 
     protected override void Dead()
     {
+        print("사망");
         //사망 애니 및 이벤트
     }
 
-    protected override void Faint()
+    protected override IEnumerator Fainting()
     {
-        //기절 애니 및 이벤트
+        isFainting = true;
+        ActionButtonsSetActive(false);
+        yield return new WaitForSeconds(5); //나중에 매개변수로 레벨에 따라서 기절 시간 넣기
+        isFainting = false;
+        ActionButtonsSetActive(true);
+        Energy_F += 8; //나중에 매개변수로 레벨에 따라서 기력 차는 양 증가
     }
 
     private void ActionButtonsSetActive(bool SetActive) => actionButtonsObj.SetActive(SetActive);

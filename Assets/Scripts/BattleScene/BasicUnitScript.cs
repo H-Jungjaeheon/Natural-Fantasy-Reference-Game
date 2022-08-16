@@ -85,11 +85,14 @@ public abstract class BasicUnitScript : MonoBehaviour
         get { return hp_F; }
         set 
         {
-            hp_F = value;
             if (value <= 0)
             {
                 hp_F = 0;
                 Dead();
+            }
+            else 
+            {
+                hp_F = value;
             }
         }
     }
@@ -110,7 +113,18 @@ public abstract class BasicUnitScript : MonoBehaviour
     public float Energy_F
     {
         get { return energy_F; }
-        set { energy_F = value; }
+        set
+        {
+            if (value <= 0)
+            {
+                energy_F = 0;
+                StartCoroutine(Fainting());
+            }
+            else 
+            {
+                energy_F = value;
+            }
+        }
     }
 
     [Tooltip("최대 기력")]
@@ -186,5 +200,5 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     protected abstract void Dead();
 
-    protected abstract void Faint();
+    protected abstract IEnumerator Fainting();
 }
