@@ -127,4 +127,12 @@ public class Enemy : BasicUnitScript
     {
 
     }
+    protected override void Dead()
+    {
+        
+    }
+    protected override void Faint()
+    {
+        //기절 애니 및 이벤트
+    }
 }

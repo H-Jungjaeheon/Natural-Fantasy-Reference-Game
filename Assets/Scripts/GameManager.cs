@@ -17,8 +17,8 @@ public class GameManager : Singleton<GameManager>
     #endregion
 
     #region 재화 및 레벨 변수들
-    private int gold;
-    public int Gold
+    private uint gold;
+    public uint Gold
     {
         get { return gold; }
         set { gold = value; }

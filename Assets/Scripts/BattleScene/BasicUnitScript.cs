@@ -70,6 +70,9 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     [HideInInspector]
     public bool isResting;
+
+    [HideInInspector]
+    public bool isFainting;
     #endregion
 
     #region 스탯 (공통)
@@ -80,7 +83,15 @@ public abstract class BasicUnitScript : MonoBehaviour
     public float Hp_F
     {
         get { return hp_F; }
-        set { hp_F = value; }
+        set 
+        {
+            hp_F = value;
+            if (value <= 0)
+            {
+                hp_F = 0;
+                Dead();
+            }
+        }
     }
 
     [Tooltip("최대 체력")]
@@ -172,4 +183,8 @@ public abstract class BasicUnitScript : MonoBehaviour
     protected abstract void SetDefensing(int defensingDirectionIndex, float setRotation);
 
     protected void ActionCoolTimeBarSetActive(bool SetActive) => actionCoolTimeObj.SetActive(SetActive);
+
+    protected abstract void Dead();
+
+    protected abstract void Faint();
 }

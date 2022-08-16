@@ -2780,44 +2780,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1452340259}
   m_CullTransparentMesh: 1
---- !u!1 &1535812437
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1535812438}
-  m_Layer: 0
-  m_Name: "\uC2A4\uD14C\uBBF8\uB108 \uBAA8\uB450 \uC18C\uBAA8 \uC2DC \uAE30\uC808
-    \uB9CC\uB4E4\uAE30 - \uBC84\uD2BC \uC5C6\uC560\uACE0 \uBC29\uC5B4 / \uC810\uD504
-    \uBABB\uD558\uAC8C \uB9C9\uC74C \uD734\uC2DD \uB9CC\uB4E4\uAE30 (\uBC84\uD2BC
-    \uC0AC\uB77C\uC9D0 \uBC0F \uC544\uBB34 \uD589\uB3D9 \uBD88\uAC00, 3\uCD08\uC5D0
-    \uAC78\uCCD0 \uC2A4\uD14C\uBBF8\uB108 \uCD1D 3 \uC99D\uAC00 (\uD6C4\uC5D0 \uAC15\uD654\uB85C
-    \uB2E4\uB974\uAC8C \uC870\uC808)) \uC2A4\uD0AC \uBC84\uD2BC \uB204\uB974\uBA74
-    \uC2A4\uD0AC\uB4E4 \uB728\uB294 \uAC83 \uB9CC\uB4E4\uAE30 \uAC80\uAE30 \uB0A0\uB9AC\uB294
-    \uC2A4\uD0AC \uB9CC\uB4E4\uAE30 \uAC80\uAE30 \uC2A4\uD0AC \uC544\uC774\uCF58
-    \uC81C\uC791"
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1535812438
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1535812437}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.6929106, y: -3.8265688, z: -32.89648}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 9
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1672928958
 GameObject:
   m_ObjectHideFlags: 0

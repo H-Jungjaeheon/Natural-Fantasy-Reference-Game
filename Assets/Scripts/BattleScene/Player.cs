@@ -25,6 +25,10 @@ public class Player : BasicUnitScript
     void FixedUpdate()
     {
         UISetting();
+        if (Input.GetKey(KeyCode.Q))
+        {
+            Energy_F -= 1;
+        }
     }
 
     protected override void StartSetting() //초기 세팅 (일부 공통)
@@ -183,7 +187,7 @@ public class Player : BasicUnitScript
                 ActionCoolTimeBarSetActive(false);
             }
         }
-        if (isWaiting == false && isJumping == false && isAttacking == false && isDeflecting == false)
+        if (isWaiting == false && isJumping == false && isAttacking == false && isDeflecting == false && isResting == false)
         {
             ActionCoolTimeBarSetActive(false);
             ActionButtonsSetActive(true);
@@ -251,7 +255,21 @@ public class Player : BasicUnitScript
 
     IEnumerator Resting()
     {
-        yield return null;
+        int nowRestingCount = 0;
+        WaitForSeconds RestWaitTime = new WaitForSeconds(1.5f);
+        while (3 > nowRestingCount)
+        {
+            if (Energy_F >= MaxEnergy_F)
+            {
+                Energy_F = MaxEnergy_F;
+                break;
+            }
+            yield return RestWaitTime;
+            Energy_F += 1;
+            nowRestingCount += 1;
+        }
+        isResting = false;
+        ActionButtonsSetActive(true);
     }
 
     IEnumerator GoToAttack()
@@ -280,7 +298,6 @@ public class Player : BasicUnitScript
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                print("실패");
                 isFail = true;
             }
             nowdelayTime += Time.deltaTime;
@@ -310,7 +327,6 @@ public class Player : BasicUnitScript
         while (linkedAttacksLimitTime > nowattacktime_f) //연공 타이밍 계산
         {
             nowattacktime_f += Time.deltaTime;
-            print("지금 눌러");
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 isComplete = true;
@@ -355,6 +371,16 @@ public class Player : BasicUnitScript
         nowAttackCount_I = 1;
         isAttacking = false;
         WaitingTimeStart();
+    }
+
+    protected override void Dead()
+    {
+        //사망 애니 및 이벤트
+    }
+
+    protected override void Faint()
+    {
+        //기절 애니 및 이벤트
     }
 
     private void ActionButtonsSetActive(bool SetActive) => actionButtonsObj.SetActive(SetActive);
