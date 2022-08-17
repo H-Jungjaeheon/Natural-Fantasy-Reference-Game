@@ -31,6 +31,10 @@ public class BattleButtonManager : MonoBehaviour
     [Tooltip("휴식 버튼")]
     [SerializeField]
     private Button RestButton;
+
+    [Tooltip("스킬선택 나가기 버튼")]
+    [SerializeField]
+    private Button OutSkillChooseButton;
     #endregion
 
     [Header("플레이어 오브젝트")]
@@ -68,6 +72,7 @@ public class BattleButtonManager : MonoBehaviour
     {
         BasicAttackButton.onClick.AddListener(() => playerComponent.CloseAttackStart());
         SkillChooseButton.onClick.AddListener(() => ButtonsPageChange(true, false));
+        OutSkillChooseButton.onClick.AddListener(() => ButtonsPageChange(false, true));
         //SkillButtons[0].onClick.AddListener(() => print("Skills"));
         RestButton.onClick.AddListener(() => playerComponent.RestStart());
     }

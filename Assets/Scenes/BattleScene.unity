@@ -177,6 +177,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   RestButton: {fileID: 1995182543}
+  OutSkillChooseButton: {fileID: 1614225774}
   Player: {fileID: 1717870240}
   ButtonPageObjs:
   - {fileID: 1874100341}
