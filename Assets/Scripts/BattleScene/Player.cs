@@ -8,7 +8,9 @@ public class Player : BasicUnitScript
     [Header("행동 버튼 관련 변수")]
     [Tooltip("행동 버튼들 오브젝트")]
     [SerializeField]
-    protected GameObject actionButtonsObj;
+    private GameObject actionButtonsObj;
+
+    public bool isSkillButtonPage;
 
     private void Awake()
     {
@@ -159,7 +161,10 @@ public class Player : BasicUnitScript
         yield return new WaitForSeconds(0.5f); //애니메이션 종료까지 기다림
         attackRangeObjComponent.size = new Vector2(0.8f, 2.1f);
         attackRangeObjComponent.offset = new Vector2(0f, 0f);
-        ActionButtonsSetActive(true);
+        if (isSkillButtonPage == false)
+        { 
+            ActionButtonsSetActive(true);
+        }
         isDeflecting = false;
         if (nowActionCoolTime != 0)
         {
@@ -187,10 +192,10 @@ public class Player : BasicUnitScript
                 ActionCoolTimeBarSetActive(false);
             }
         }
-        if (isWaiting == false && isJumping == false && isAttacking == false && isDeflecting == false && isResting == false && isFainting == false)
+        if (isWaiting == false && isJumping == false && isAttacking == false && isDeflecting == false && isResting == false && isFainting == false && isSkillButtonPage == false)
         {
             ActionCoolTimeBarSetActive(false);
-            ActionButtonsSetActive(true);
+            ActionButtonsSetActive(true); 
         }
         else
         {
