@@ -7,6 +7,10 @@ public class Player : BasicUnitScript
 {
     public bool isSkillButtonPage;
 
+    [Header("공격에 필요한 오브젝트 모음")]
+    [SerializeField]
+    private GameObject swordAuraObj;
+
     private void Awake()
     {
         StartSetting();
