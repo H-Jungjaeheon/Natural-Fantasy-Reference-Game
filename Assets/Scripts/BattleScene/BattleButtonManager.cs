@@ -9,11 +9,17 @@ public enum ButtonPage
     SecondPage
 }
 
-public class BattleButtonManager : MonoBehaviour
+public enum Skills
 {
-    private int nowPage;
-    private int maxPage;
-    private int minPage;
+    FirstSkill
+}
+
+public class BattleButtonManager : Singleton<BattleButtonManager>
+{
+    public int nowPage;
+    public int maxPage;
+    public int minPage;
+
     #region 행동 버튼모음
     [Header("행동 버튼모음")]
     [Tooltip("기본공격 버튼")]
@@ -42,8 +48,7 @@ public class BattleButtonManager : MonoBehaviour
     private GameObject Player;
 
     [Header("각 버튼들 페이지 오브젝트")]
-    [SerializeField]
-    private GameObject[] ButtonPageObjs;
+    public GameObject[] ButtonPageObjs;
 
     Player playerComponent;
 
@@ -73,7 +78,6 @@ public class BattleButtonManager : MonoBehaviour
         BasicAttackButton.onClick.AddListener(() => playerComponent.CloseAttackStart());
         SkillChooseButton.onClick.AddListener(() => ButtonsPageChange(true, false));
         OutSkillChooseButton.onClick.AddListener(() => ButtonsPageChange(false, true));
-        //SkillButtons[0].onClick.AddListener(() => print("Skills"));
         RestButton.onClick.AddListener(() => playerComponent.RestStart());
     }
 

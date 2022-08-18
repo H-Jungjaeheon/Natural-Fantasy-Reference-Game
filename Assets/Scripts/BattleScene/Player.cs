@@ -5,11 +5,6 @@ using UnityEngine.UI;
 
 public class Player : BasicUnitScript
 {
-    [Header("행동 버튼 관련 변수")]
-    [Tooltip("행동 버튼들 오브젝트")]
-    [SerializeField]
-    private GameObject actionButtonsObj;
-
     public bool isSkillButtonPage;
 
     private void Awake()
@@ -157,12 +152,11 @@ public class Player : BasicUnitScript
         //애니 실행
         yield return new WaitForSeconds(0.3f); //치기 전까지 기다림
         //범위 내의 반사 가능한 오브젝트 상호작용
-        print("상호작용 타이밍");
         yield return new WaitForSeconds(0.5f); //애니메이션 종료까지 기다림
         attackRangeObjComponent.size = new Vector2(0.8f, 2.1f);
         attackRangeObjComponent.offset = new Vector2(0f, 0f);
-        if (isSkillButtonPage == false)
-        { 
+        if (isWaiting == false)
+        {
             ActionButtonsSetActive(true);
         }
         isDeflecting = false;
@@ -190,20 +184,17 @@ public class Player : BasicUnitScript
                 isWaiting = false;
                 nowActionCoolTime = 0;
                 ActionCoolTimeBarSetActive(false);
+                ActionButtonsSetActive(true);
             }
         }
         if (isWaiting == false && isJumping == false && isAttacking == false && isDeflecting == false && isResting == false && isFainting == false && isSkillButtonPage == false)
         {
             ActionCoolTimeBarSetActive(false);
-            ActionButtonsSetActive(true); 
+            //ActionButtonsSetActive(true); 
         }
-        else
+        else if (isDeflecting == true)
         {
-            if (isDeflecting == true)
-            {
-                ActionCoolTimeBarSetActive(false);
-            }
-            ActionButtonsSetActive(false);
+            ActionCoolTimeBarSetActive(false);
         }
         nullActionCoolTimeImage.transform.position = Cam.WorldToScreenPoint(transform.position + new Vector3(0, actionCoolTimeImageYPos_F, 0));
     }
@@ -228,6 +219,10 @@ public class Player : BasicUnitScript
         else if (isJumping && transform.position.y < startPos_Vector.y)
         {
             isJumping = false;
+            if (isWaiting == false)
+            {
+                ActionButtonsSetActive(true);
+            }
             transform.position = startPos_Vector;
             rigid.velocity = Vector2.zero;
             rigid.gravityScale = 0;
@@ -378,6 +373,25 @@ public class Player : BasicUnitScript
         WaitingTimeStart();
     }
 
+    public void FirstSkillUse()
+    {
+        if (Energy_F >= 5)
+        {
+            Energy_F -= 5;
+            ActionButtonsSetActive(false);
+            StartCoroutine(SwordAuraSkill());
+        }
+    }
+
+    private IEnumerator SwordAuraSkill()
+    {
+        print("준비");
+        yield return new WaitForSeconds(1.5f);
+        print("히히 검기 발싸!");
+        yield return new WaitForSeconds(0.5f);
+        BattleButtonManager.Instance.ButtonsPageChange(false, true);
+    }
+
     protected override void Dead()
     {
         print("사망");
@@ -394,5 +408,30 @@ public class Player : BasicUnitScript
         Energy_F += 8; //나중에 매개변수로 레벨에 따라서 기력 차는 양 증가
     }
 
-    private void ActionButtonsSetActive(bool SetActive) => actionButtonsObj.SetActive(SetActive);
+    private void ActionButtonsSetActive(bool setActive)
+    {
+        var battleButtonManagerInstance = BattleButtonManager.Instance;
+
+        if (setActive)
+        {
+            isSkillButtonPage = false;
+        }
+        else
+        {
+            isSkillButtonPage = true;
+        }
+
+        for (int nowButtonPage = battleButtonManagerInstance.minPage; 
+        nowButtonPage <= battleButtonManagerInstance.maxPage; nowButtonPage++)
+        {
+            if (setActive && battleButtonManagerInstance.nowPage == nowButtonPage)
+            {
+                battleButtonManagerInstance.ButtonPageObjs[nowButtonPage].SetActive(true);
+            }
+            else 
+            {
+                battleButtonManagerInstance.ButtonPageObjs[nowButtonPage].SetActive(false);
+            }
+        }
+    } 
 }

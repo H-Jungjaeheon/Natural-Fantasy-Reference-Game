@@ -166,6 +166,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10ad1faa3cdd8424095b47ed1a3d48ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nowPage: 0
+  maxPage: 0
+  minPage: 0
   BasicAttackButton: {fileID: 421504899}
   SkillChooseButton: {fileID: 619574704}
   SkillButtons:
@@ -2095,7 +2098,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1021869092}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1717870245}
+        m_TargetAssemblyTypeName: Player, Assembly-CSharp
+        m_MethodName: FirstSkillUse
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1021869092
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3433,7 +3448,6 @@ MonoBehaviour:
   isAttacking: 0
   attackRangeObj: {fileID: 693950547}
   startPos_Vector: {x: 0, y: 0}
-  actionButtonsObj: {fileID: 1874100341}
   isSkillButtonPage: 0
 --- !u!1 &1788169639
 GameObject:
