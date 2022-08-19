@@ -7,7 +7,7 @@ public class Player : BasicUnitScript
 {
     public bool isSkillButtonPage;
 
-    [Header("°ø°İ¿¡ ÇÊ¿äÇÑ ¿ÀºêÁ§Æ® ¸ğÀ½")]
+    [Header("ê³µê²©ì— í•„ìš”í•œ ì˜¤ë¸Œì íŠ¸ ëª¨ìŒ")]
     [SerializeField]
     private GameObject swordAuraObj;
 
@@ -32,7 +32,7 @@ public class Player : BasicUnitScript
         }
     }
 
-    protected override void StartSetting() //ÃÊ±â ¼¼ÆÃ (ÀÏºÎ °øÅë)
+    protected override void StartSetting() //ì´ˆê¸° ì„¸íŒ… (ì¼ë¶€ ê³µí†µ)
     {
         Cam = Camera.main;
         rigid = gameObject.GetComponent<Rigidbody2D>();
@@ -55,17 +55,17 @@ public class Player : BasicUnitScript
             if (Input.GetKey(KeyCode.A))
             {
                 SetDefensing((int)NowDefensePos.Left, 180);
-                //¹æ¾î ¾Ö´Ï¸ŞÀÌ¼Ç
+                //ë°©ì–´ ì• ë‹ˆë©”ì´ì…˜
             }
             else if (Input.GetKey(KeyCode.D))
             {
                 SetDefensing((int)NowDefensePos.Right, 0);
-                //¹æ¾î ¾Ö´Ï¸ŞÀÌ¼Ç
+                //ë°©ì–´ ì• ë‹ˆë©”ì´ì…˜
             }
             else if (Input.GetKey(KeyCode.W))
             {
                 SetDefensing((int)NowDefensePos.Up, 0);
-                //¹æ¾î ¾Ö´Ï¸ŞÀÌ¼Ç
+                //ë°©ì–´ ì• ë‹ˆë©”ì´ì…˜
             }
             if (nowDefensivePosition_B[(int)NowDefensePos.Left] == false)
             {
@@ -153,10 +153,10 @@ public class Player : BasicUnitScript
         transform.rotation = Quaternion.Euler(0, setRotation, 0);
         attackRangeObjComponent.size = new Vector2(0.55f, 2.1f);
         attackRangeObjComponent.offset = new Vector2(-0.1f, 0f);
-        //¾Ö´Ï ½ÇÇà
-        yield return new WaitForSeconds(0.3f); //Ä¡±â Àü±îÁö ±â´Ù¸²
-        //¹üÀ§ ³»ÀÇ ¹İ»ç °¡´ÉÇÑ ¿ÀºêÁ§Æ® »óÈ£ÀÛ¿ë
-        yield return new WaitForSeconds(0.5f); //¾Ö´Ï¸ŞÀÌ¼Ç Á¾·á±îÁö ±â´Ù¸²
+        //ì• ë‹ˆ ì‹¤í–‰
+        yield return new WaitForSeconds(0.3f); //ì¹˜ê¸° ì „ê¹Œì§€ ê¸°ë‹¤ë¦¼
+        //ë²”ìœ„ ë‚´ì˜ ë°˜ì‚¬ ê°€ëŠ¥í•œ ì˜¤ë¸Œì íŠ¸ ìƒí˜¸ì‘ìš©
+        yield return new WaitForSeconds(0.5f); //ì• ë‹ˆë©”ì´ì…˜ ì¢…ë£Œê¹Œì§€ ê¸°ë‹¤ë¦¼
         attackRangeObjComponent.size = new Vector2(0.8f, 2.1f);
         attackRangeObjComponent.offset = new Vector2(0f, 0f);
         if (isWaiting == false)
@@ -177,7 +177,7 @@ public class Player : BasicUnitScript
     }
 
 
-    protected override void UISetting() //´ë±â½Ã°£ ¹× UI¼¼ÆÃ (ÀÏºÎ °øÅë)
+    protected override void UISetting() //ëŒ€ê¸°ì‹œê°„ ë° UIì„¸íŒ… (ì¼ë¶€ ê³µí†µ)
     {
         if (isWaiting && isDeflecting == false)
         {
@@ -202,7 +202,7 @@ public class Player : BasicUnitScript
         nullActionCoolTimeImage.transform.position = Cam.WorldToScreenPoint(transform.position + new Vector3(0, actionCoolTimeImageYPos_F, 0));
     }
 
-    private void WaitingTimeStart() //°ø°İ ÈÄÀÇ ¼¼ÆÃ (ÀÏºÎ °øÅë) 
+    private void WaitingTimeStart() //ê³µê²© í›„ì˜ ì„¸íŒ… (ì¼ë¶€ ê³µí†µ) 
     {
         if (isFaintingReady && isAttacking == false)
         {
@@ -220,7 +220,7 @@ public class Player : BasicUnitScript
         }
     }
 
-    private void Jump() 
+    private void Jump()
     {
         if (isJumping == false && isResting == false && isAttacking == false && isDefensing == false && isDeflecting == false && isFainting == false && Input.GetKey(KeyCode.Space))
         {
@@ -265,7 +265,7 @@ public class Player : BasicUnitScript
 
     public void RestStart()
     {
-        if(isDefensing == false)
+        if (isDefensing == false)
         {
             isResting = true;
             ActionButtonsSetActive(false);
@@ -294,27 +294,27 @@ public class Player : BasicUnitScript
 
     IEnumerator GoToAttack()
     {
-        Vector3 Movetransform = new Vector3(Speed_F, 0, 0); //ÀÌµ¿À» À§ÇØ ´õÇØÁÙ ¿¬»ê
-        Vector3 Targettransform = new Vector3(BattleSceneManager.Instance.EnemyCharacterPos.x - 5, transform.position.y); //¸ñÇ¥ À§Ä¡
+        Vector3 Movetransform = new Vector3(Speed_F, 0, 0); //ì´ë™ì„ ìœ„í•´ ë”í•´ì¤„ ì—°ì‚°
+        Vector3 Targettransform = new Vector3(BattleSceneManager.Instance.EnemyCharacterPos.x - 5, transform.position.y); //ëª©í‘œ ìœ„ì¹˜
 
-        while (transform.position.x < Targettransform.x) //ÀÌµ¿Áß
+        while (transform.position.x < Targettransform.x) //ì´ë™ì¤‘
         {
             transform.position += Movetransform * Time.deltaTime;
             yield return null;
         }
-        transform.position = Targettransform; //ÀÌµ¿ ¿Ï·á
+        transform.position = Targettransform; //ì´ë™ ì™„ë£Œ
 
-        StartCoroutine(Attacking(false, nowAttackCount_I, 0.2f, 0.2f)); //Ã¹¹øÂ° °ø°İ ½ÇÇà
+        StartCoroutine(Attacking(false, nowAttackCount_I, 0.2f, 0.2f)); //ì²«ë²ˆì§¸ ê³µê²© ì‹¤í–‰
     }
 
-    IEnumerator Attacking(bool isLastAttack, int nowAttackCount_I, float delayTime, float linkedAttacksLimitTime) //3¿¬°ø Àç±Í·Î ±¸Çö
+    IEnumerator Attacking(bool isLastAttack, int nowAttackCount_I, float delayTime, float linkedAttacksLimitTime) //3ì—°ê³µ ì¬ê·€ë¡œ êµ¬í˜„
     {
         bool isComplete = false;
         bool isFail = false;
         float nowdelayTime = 0;
         float nowattacktime_f = 0;
-        
-        while (nowdelayTime < delayTime) //¿¬Å¸ ¹æÁö¿ë (±âº»°ø°İ ¾Ö´Ï¸ŞÀÌ¼Ç ½ÃÀÛ ¹× Å¸°İ ÁöÁ¡±îÁö µô·¹ÀÌ)
+
+        while (nowdelayTime < delayTime) //ì—°íƒ€ ë°©ì§€ìš© (ê¸°ë³¸ê³µê²© ì• ë‹ˆë©”ì´ì…˜ ì‹œì‘ ë° íƒ€ê²© ì§€ì ê¹Œì§€ ë”œë ˆì´)
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
@@ -324,9 +324,9 @@ public class Player : BasicUnitScript
             yield return null;
         }
 
-        if (rangeInEnemy.Count != 0) //±âº»°ø°İ ½ÇÇà ÇÔ¼ö ¹× °ø°İ ¾Ö´Ï¸ŞÀÌ¼Ç Å¸°İ ÁöÁ¡
+        if (rangeInEnemy.Count != 0) //ê¸°ë³¸ê³µê²© ì‹¤í–‰ í•¨ìˆ˜ ë° ê³µê²© ì• ë‹ˆë©”ì´ì…˜ íƒ€ê²© ì§€ì 
         {
-            switch (nowAttackCount_I) 
+            switch (nowAttackCount_I)
             {
                 case 1:
                     CamShake.NowCamShakeStart(0.3f, 0.5f);
@@ -344,7 +344,7 @@ public class Player : BasicUnitScript
             }
         }
 
-        while (linkedAttacksLimitTime > nowattacktime_f) //¿¬°ø Å¸ÀÌ¹Ö °è»ê
+        while (linkedAttacksLimitTime > nowattacktime_f) //ì—°ê³µ íƒ€ì´ë° ê³„ì‚°
         {
             nowattacktime_f += Time.deltaTime;
             if (Input.GetKeyDown(KeyCode.Space))
@@ -354,20 +354,20 @@ public class Player : BasicUnitScript
             yield return null;
         }
 
-        if (isLastAttack == false && isFail == false && isComplete) 
+        if (isLastAttack == false && isFail == false && isComplete)
         {
             nowAttackCount_I++;
-            switch (nowAttackCount_I) //°ø°İ ½ÇÇà ¾Ö´Ï¸ŞÀÌ¼Ç ½ÃÀÛ
+            switch (nowAttackCount_I) //ê³µê²© ì‹¤í–‰ ì• ë‹ˆë©”ì´ì…˜ ì‹œì‘
             {
                 case 2:
-                    StartCoroutine(Attacking(false, nowAttackCount_I, 0.2f, 0.25f)); //µÎ¹øÂ° °ø°İ
+                    StartCoroutine(Attacking(false, nowAttackCount_I, 0.2f, 0.25f)); //ë‘ë²ˆì§¸ ê³µê²©
                     break;
                 case 3:
-                    StartCoroutine(Attacking(true, nowAttackCount_I, 0.35f, 0)); //¼¼¹øÂ° °ø°İ
+                    StartCoroutine(Attacking(true, nowAttackCount_I, 0.35f, 0)); //ì„¸ë²ˆì§¸ ê³µê²©
                     break;
             }
         }
-        else //µ¹¾Æ°¡±â
+        else //ëŒì•„ê°€ê¸°
         {
             if (isLastAttack == true)
             {
@@ -377,7 +377,7 @@ public class Player : BasicUnitScript
         }
     }
 
-    IEnumerator Return() //±ÙÁ¢°ø°İ ÈÄ µ¹¾Æ¿À±â
+    IEnumerator Return() //ê·¼ì ‘ê³µê²© í›„ ëŒì•„ì˜¤ê¸°
     {
         Vector3 Movetransform = new Vector3(Speed_F, 0, 0);
         transform.rotation = Quaternion.Euler(0, 180, 0);
@@ -411,9 +411,20 @@ public class Player : BasicUnitScript
 
     private IEnumerator SwordAuraSkill()
     {
-        print("ÁØºñ");
-        yield return new WaitForSeconds(1.5f);
-        print("È÷È÷ °Ë±â ¹ß½Î!");
+        float nowDelayTime = 0;
+        float maxDelayTime = 1f;
+        bool isFailEnchant = false;
+
+        while (nowDelayTime < maxDelayTime)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                isFailEnchant = nowDelayTime < 0.6f;
+            }
+            nowDelayTime += Time.deltaTime;
+            yield return null;
+        }
+
         Instantiate(swordAuraObj, transform.position + (Vector3)new Vector2(2.5f, 0), Quaternion.identity);
         yield return new WaitForSeconds(0.5f);
         isAttacking = false;
@@ -423,17 +434,17 @@ public class Player : BasicUnitScript
 
     protected override void Dead()
     {
-        print("»ç¸Á");
-        //»ç¸Á ¾Ö´Ï ¹× ÀÌº¥Æ®
+        print("ì‚¬ë§");
+        //ì‚¬ë§ ì• ë‹ˆ ë° ì´ë²¤íŠ¸
     }
 
     protected override IEnumerator Fainting()
     {
         isFainting = true;
         ActionButtonsSetActive(false);
-        yield return new WaitForSeconds(5); //³ªÁß¿¡ ¸Å°³º¯¼ö·Î ·¹º§¿¡ µû¶ó¼­ ±âÀı ½Ã°£ ³Ö±â
+        yield return new WaitForSeconds(5); //ë‚˜ì¤‘ì— ë§¤ê°œë³€ìˆ˜ë¡œ ë ˆë²¨ì— ë”°ë¼ì„œ ê¸°ì ˆ ì‹œê°„ ë„£ê¸°
         ActionButtonsSetActive(true);
-        Energy_F += 8; //³ªÁß¿¡ ¸Å°³º¯¼ö·Î ·¹º§¿¡ µû¶ó¼­ ±â·Â Â÷´Â ¾ç Áõ°¡
+        Energy_F += 8; //ë‚˜ì¤‘ì— ë§¤ê°œë³€ìˆ˜ë¡œ ë ˆë²¨ì— ë”°ë¼ì„œ ê¸°ë ¥ ì°¨ëŠ” ì–‘ ì¦ê°€
         isFainting = false;
         nowActionCoolTime = maxActionCoolTime;
         WaitingTimeStart();
@@ -452,17 +463,17 @@ public class Player : BasicUnitScript
             isSkillButtonPage = true;
         }
 
-        for (int nowButtonPage = battleButtonManagerInstance.minPage; 
+        for (int nowButtonPage = battleButtonManagerInstance.minPage;
         nowButtonPage <= battleButtonManagerInstance.maxPage; nowButtonPage++)
         {
             if (setActive && battleButtonManagerInstance.nowPage == nowButtonPage)
             {
                 battleButtonManagerInstance.ButtonPageObjs[nowButtonPage].SetActive(true);
             }
-            else 
+            else
             {
                 battleButtonManagerInstance.ButtonPageObjs[nowButtonPage].SetActive(false);
             }
         }
-    } 
+    }
 }
