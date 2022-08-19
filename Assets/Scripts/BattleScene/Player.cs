@@ -194,7 +194,6 @@ public class Player : BasicUnitScript
         if (isWaiting == false && isJumping == false && isAttacking == false && isDeflecting == false && isResting == false && isFainting == false && isSkillButtonPage == false)
         {
             ActionCoolTimeBarSetActive(false);
-            //ActionButtonsSetActive(true); 
         }
         else if (isDeflecting == true)
         {
@@ -205,9 +204,20 @@ public class Player : BasicUnitScript
 
     private void WaitingTimeStart() //공격 후의 세팅 (일부 공통) 
     {
-        isWaiting = true;
-        ActionCoolTimeBarSetActive(true);
-        ActionButtonsSetActive(false);
+        if (isFaintingReady && isAttacking == false)
+        {
+            isFaintingReady = false;
+            StartCoroutine(Fainting());
+        }
+        else
+        {
+            isWaiting = true;
+            if (nowActionCoolTime < maxActionCoolTime)
+            {
+                ActionCoolTimeBarSetActive(true);
+            }
+            ActionButtonsSetActive(false);
+        }
     }
 
     private void Jump() 
@@ -245,22 +255,28 @@ public class Player : BasicUnitScript
 
     public void CloseAttackStart()
     {
-        isAttacking = true;
-        ActionButtonsSetActive(false);
-        StartCoroutine(GoToAttack());
+        if (isDefensing == false)
+        {
+            isAttacking = true;
+            ActionButtonsSetActive(false);
+            StartCoroutine(GoToAttack());
+        }
     }
 
     public void RestStart()
     {
-        isResting = true;
-        ActionButtonsSetActive(false);
-        StartCoroutine(Resting());
+        if(isDefensing == false)
+        {
+            isResting = true;
+            ActionButtonsSetActive(false);
+            StartCoroutine(Resting());
+        }
     }
 
     IEnumerator Resting()
     {
         int nowRestingCount = 0;
-        WaitForSeconds RestWaitTime = new WaitForSeconds(1.5f);
+        WaitForSeconds RestWaitTime = new WaitForSeconds(1.25f);
         while (3 > nowRestingCount)
         {
             if (Energy_F >= MaxEnergy_F)
@@ -377,13 +393,19 @@ public class Player : BasicUnitScript
         WaitingTimeStart();
     }
 
-    public void FirstSkillUse()
+    public void SkillUse(int nowUseSkillIndex, int nowUseSkillNeedEnergy)
     {
-        if (Energy_F >= 5)
+        if (isDefensing == false && Energy_F >= nowUseSkillNeedEnergy)
         {
-            Energy_F -= 5;
+            isAttacking = true;
+            Energy_F -= nowUseSkillNeedEnergy;
             ActionButtonsSetActive(false);
-            StartCoroutine(SwordAuraSkill());
+            switch (nowUseSkillIndex)
+            {
+                case 1:
+                    StartCoroutine(SwordAuraSkill());
+                    break;
+            }
         }
     }
 
@@ -392,8 +414,11 @@ public class Player : BasicUnitScript
         print("준비");
         yield return new WaitForSeconds(1.5f);
         print("히히 검기 발싸!");
+        Instantiate(swordAuraObj, transform.position + (Vector3)new Vector2(2.5f, 0), Quaternion.identity);
         yield return new WaitForSeconds(0.5f);
+        isAttacking = false;
         BattleButtonManager.Instance.ButtonsPageChange(false, true);
+        WaitingTimeStart();
     }
 
     protected override void Dead()
@@ -407,9 +432,11 @@ public class Player : BasicUnitScript
         isFainting = true;
         ActionButtonsSetActive(false);
         yield return new WaitForSeconds(5); //나중에 매개변수로 레벨에 따라서 기절 시간 넣기
-        isFainting = false;
         ActionButtonsSetActive(true);
         Energy_F += 8; //나중에 매개변수로 레벨에 따라서 기력 차는 양 증가
+        isFainting = false;
+        nowActionCoolTime = maxActionCoolTime;
+        WaitingTimeStart();
     }
 
     private void ActionButtonsSetActive(bool setActive)

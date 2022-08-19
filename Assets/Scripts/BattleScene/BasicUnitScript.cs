@@ -53,9 +53,21 @@ public abstract class BasicUnitScript : MonoBehaviour
     [Tooltip("현재 방어 위치")]
     public bool[] nowDefensivePosition_B;
 
-    protected bool isDefensing;
+    public bool isDefensing;
 
     protected bool isDeflecting;
+
+    [HideInInspector]
+    public bool isJumping;
+
+    [HideInInspector]
+    public bool isResting;
+
+    //[HideInInspector]
+    public bool isFaintingReady;
+
+    //[HideInInspector]
+    public bool isFainting;
 
     [Header("공격 범위 내의 적 리스트")]
     public List<GameObject> rangeInEnemy = new List<GameObject>();
@@ -64,15 +76,6 @@ public abstract class BasicUnitScript : MonoBehaviour
     public List<GameObject> rangeInDeflectAbleObj = new List<GameObject>();
 
     protected int nowAttackCount_I;
-
-    [HideInInspector]
-    public bool isJumping;
-
-    [HideInInspector]
-    public bool isResting;
-
-    [HideInInspector]
-    public bool isFainting;
     #endregion
 
     #region 스탯 (공통)
@@ -118,7 +121,7 @@ public abstract class BasicUnitScript : MonoBehaviour
             if (value <= 0)
             {
                 energy_F = 0;
-                StartCoroutine(Fainting());
+                isFaintingReady = true;
             }
             else 
             {

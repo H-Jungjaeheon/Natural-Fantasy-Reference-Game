@@ -22,10 +22,6 @@ public class BattleButtonManager : Singleton<BattleButtonManager>
 
     #region 행동 버튼모음
     [Header("행동 버튼모음")]
-    [Tooltip("기본공격 버튼")]
-    [SerializeField]
-    private Button BasicAttackButton;
-
     [Tooltip("스킬선택 버튼")]
     [SerializeField]
     private Button SkillChooseButton;
@@ -33,10 +29,6 @@ public class BattleButtonManager : Singleton<BattleButtonManager>
     [Tooltip("스킬버튼들")]
     [SerializeField]
     private Button[] SkillButtons = new Button[7];
-
-    [Tooltip("휴식 버튼")]
-    [SerializeField]
-    private Button RestButton;
 
     [Tooltip("스킬선택 나가기 버튼")]
     [SerializeField]
@@ -75,92 +67,94 @@ public class BattleButtonManager : Singleton<BattleButtonManager>
 
     private void ButtonsSetting()
     {
-        BasicAttackButton.onClick.AddListener(() => playerComponent.CloseAttackStart());
         SkillChooseButton.onClick.AddListener(() => ButtonsPageChange(true, false));
         OutSkillChooseButton.onClick.AddListener(() => ButtonsPageChange(false, true));
-        RestButton.onClick.AddListener(() => playerComponent.RestStart());
+        SkillButtons[(int)Skills.FirstSkill].onClick.AddListener(() => playerComponent.SkillUse(1, 5));
     }
 
     public void ButtonsPageChange(bool isTurnToNextPage, bool isExitSkillButtonPage)
     {
-        if (isExitSkillButtonPage)
+        if (playerComponent.isDefensing == false)
         {
-            playerComponent.isSkillButtonPage = false;
-            ButtonPageObjs[(int)ButtonPage.FirstPage].SetActive(true);
-            for (int nowPageIndex = (int)ButtonPage.SecondPage; nowPageIndex <= maxPage; nowPageIndex++)
+            if (isExitSkillButtonPage)
             {
-                ButtonPageObjs[nowPageIndex].SetActive(false);
-            }
-            nowPage = minPage;
-        }
-        else if (isTurnToNextPage)
-        {
-            playerComponent.isSkillButtonPage = true;
-            int nextPageIndex = nowPage + 1;
-            if (nextPageIndex <= maxPage)
-            {
-                for (int nowPageIndex = (int)ButtonPage.FirstPage; nowPageIndex <= maxPage; nowPageIndex++)
+                playerComponent.isSkillButtonPage = false;
+                ButtonPageObjs[(int)ButtonPage.FirstPage].SetActive(true);
+                for (int nowPageIndex = (int)ButtonPage.SecondPage; nowPageIndex <= maxPage; nowPageIndex++)
                 {
-                    if (nowPageIndex == nextPageIndex)
-                    {
-                        ButtonPageObjs[nowPageIndex].SetActive(true);
-                    }
-                    else
-                    {
-                        ButtonPageObjs[nowPageIndex].SetActive(false);
-                    }
+                    ButtonPageObjs[nowPageIndex].SetActive(false);
                 }
-                nowPage++;
+                nowPage = minPage;
             }
-            else 
+            else if (isTurnToNextPage)
             {
-                ButtonPageObjs[(int)ButtonPage.SecondPage].SetActive(true);
-                for (int nowPageIndex = minPage; nowPageIndex <= maxPage; nowPageIndex++)
+                playerComponent.isSkillButtonPage = true;
+                int nextPageIndex = nowPage + 1;
+                if (nextPageIndex <= maxPage)
                 {
-                    if (nowPageIndex == (int)ButtonPage.SecondPage)
+                    for (int nowPageIndex = (int)ButtonPage.FirstPage; nowPageIndex <= maxPage; nowPageIndex++)
                     {
-                        continue;
+                        if (nowPageIndex == nextPageIndex)
+                        {
+                            ButtonPageObjs[nowPageIndex].SetActive(true);
+                        }
+                        else
+                        {
+                            ButtonPageObjs[nowPageIndex].SetActive(false);
+                        }
                     }
-                    else
-                    {
-                        ButtonPageObjs[nowPageIndex].SetActive(false);
-                    }
+                    nowPage++;
                 }
-                nowPage = (int)ButtonPage.SecondPage;
+                else
+                {
+                    ButtonPageObjs[(int)ButtonPage.SecondPage].SetActive(true);
+                    for (int nowPageIndex = minPage; nowPageIndex <= maxPage; nowPageIndex++)
+                    {
+                        if (nowPageIndex == (int)ButtonPage.SecondPage)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            ButtonPageObjs[nowPageIndex].SetActive(false);
+                        }
+                    }
+                    nowPage = (int)ButtonPage.SecondPage;
+                }
             }
-        }
-        else if(isTurnToNextPage == false)
-        {
-            int nextPageIndex = nowPage - 1;
-            if (nextPageIndex >= minPage)
+            else if (isTurnToNextPage == false)
             {
-                for (int nowPageIndex = (int)ButtonPage.FirstPage; nowPageIndex <= maxPage; nowPageIndex++)
+                int nextPageIndex = nowPage - 1;
+                if (nextPageIndex >= minPage)
                 {
-                    if (nowPageIndex == nextPageIndex)
+                    for (int nowPageIndex = (int)ButtonPage.FirstPage; nowPageIndex <= maxPage; nowPageIndex++)
                     {
-                        ButtonPageObjs[nowPageIndex].SetActive(true);
+                        if (nowPageIndex == nextPageIndex)
+                        {
+                            ButtonPageObjs[nowPageIndex].SetActive(true);
+                        }
+                        else
+                        {
+                            ButtonPageObjs[nowPageIndex].SetActive(false);
+                        }
                     }
-                    else
-                    {
-                        ButtonPageObjs[nowPageIndex].SetActive(false);
-                    }
+                    nowPage--;
                 }
-                nowPage--;
-            }
-            else
-            {
-                for (int nowPageIndex = minPage; nowPageIndex <= maxPage; nowPageIndex++)
+                else
                 {
-                    if (nowPageIndex == maxPage)
+                    for (int nowPageIndex = minPage; nowPageIndex <= maxPage; nowPageIndex++)
                     {
-                        ButtonPageObjs[nowPageIndex].SetActive(true);
+                        if (nowPageIndex == maxPage)
+                        {
+                            ButtonPageObjs[nowPageIndex].SetActive(true);
+                        }
+                        else
+                        {
+                            ButtonPageObjs[nowPageIndex].SetActive(false);
+                        }
                     }
-                    else
-                    {
-                        ButtonPageObjs[nowPageIndex].SetActive(false);
-                    }
+                    nowPage = maxPage;
                 }
-                nowPage = maxPage;
             }
         }
     }
