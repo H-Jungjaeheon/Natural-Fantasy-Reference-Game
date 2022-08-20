@@ -3,13 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum SwordAuraKind
+{
+    UnEnchantedSwordAura,
+    EnchantedSwordAura
+}
+
 public class Player : BasicUnitScript
 {
     public bool isSkillButtonPage;
 
     [Header("공격에 필요한 오브젝트 모음")]
     [SerializeField]
-    private GameObject swordAuraObj;
+    private GameObject[] swordAuraObjs;
 
     private void Awake()
     {
@@ -413,19 +419,28 @@ public class Player : BasicUnitScript
     {
         float nowDelayTime = 0;
         float maxDelayTime = 1f;
-        bool isFailEnchant = false;
+        bool isFailEnchant = true;
 
         while (nowDelayTime < maxDelayTime)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space) && nowDelayTime > 0.65f && nowDelayTime < 0.85f)
             {
-                isFailEnchant = nowDelayTime < 0.6f;
+                isFailEnchant = false;
             }
             nowDelayTime += Time.deltaTime;
             yield return null;
         }
 
-        Instantiate(swordAuraObj, transform.position + (Vector3)new Vector2(2.5f, 0), Quaternion.identity);
+        if (isFailEnchant)
+        {
+            print("강화 실패");
+            Instantiate(swordAuraObjs[(int)SwordAuraKind.UnEnchantedSwordAura], transform.position + (Vector3)new Vector2(2.5f, 0), Quaternion.identity);
+        }
+        else 
+        {
+            print("강화 성공");
+            Instantiate(swordAuraObjs[(int)SwordAuraKind.EnchantedSwordAura], transform.position + (Vector3)new Vector2(2.5f, 0), Quaternion.identity); //강화
+        }
         yield return new WaitForSeconds(0.5f);
         isAttacking = false;
         BattleButtonManager.Instance.ButtonsPageChange(false, true);

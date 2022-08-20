@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,7 +28,7 @@ public class SwordAura : MonoBehaviour
 
     private void StartSetting()
     {
-        damage = 4;
+        damage += 0; //나중에 스킬 강화나 데미지 강화 레벨에 비례해서 증가
         movingPlusVector = new Vector2(speed, 0);
     }
 

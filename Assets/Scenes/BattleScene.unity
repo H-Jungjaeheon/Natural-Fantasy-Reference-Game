@@ -3779,7 +3779,9 @@ MonoBehaviour:
   attackRangeObj: {fileID: 693950547}
   startPos_Vector: {x: 0, y: 0}
   isSkillButtonPage: 0
-  swordAuraObj: {fileID: 416800877848305474, guid: 85a20b6e84648e44a8811b52283438a6, type: 3}
+  swordAuraObjs:
+  - {fileID: 416800877848305474, guid: 85a20b6e84648e44a8811b52283438a6, type: 3}
+  - {fileID: 6797717907919308812, guid: 38482b69e0aa58f48be7a949da6c4ca1, type: 3}
 --- !u!1 &1788169639
 GameObject:
   m_ObjectHideFlags: 0
