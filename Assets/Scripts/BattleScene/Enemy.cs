@@ -12,6 +12,7 @@ public class Enemy : BasicUnitScript
     void Update()
     {
         UISetting();
+        Faint();
     }
 
     protected override void StartSetting()
@@ -50,29 +51,29 @@ public class Enemy : BasicUnitScript
 
     IEnumerator GoToAttack()
     {
-        Vector3 Movetransform = new Vector3(Speed_F, 0, 0); //ÀÌµ¿À» À§ÇØ ´õÇØÁÙ ¿¬»ê
-        Vector3 Targettransform = new Vector3(BattleSceneManager.Instance.PlayerCharacterPos.x + 5, transform.position.y); //¸ñÇ¥ À§Ä¡
+        Vector3 Movetransform = new Vector3(Speed_F, 0, 0); //ì´ë™ì„ ìœ„í•´ ë”í•´ì¤„ ì—°ì‚°
+        Vector3 Targettransform = new Vector3(BattleSceneManager.Instance.PlayerCharacterPos.x + 5.5f, transform.position.y); //ëª©í‘œ ìœ„ì¹˜
 
-        while (transform.position.x > Targettransform.x) //ÀÌµ¿Áß
+        while (transform.position.x > Targettransform.x) //ì´ë™ì¤‘
         {
             transform.position -= Movetransform * Time.deltaTime;
             yield return null;
         }
-        transform.position = Targettransform; //ÀÌµ¿ ¿Ï·á
+        transform.position = Targettransform; //ì´ë™ ì™„ë£Œ
 
-        StartCoroutine(Attacking(true, nowAttackCount_I, 1f)); //Ã¹¹øÂ° °ø°İ ½ÇÇà
+        StartCoroutine(Attacking(true, nowAttackCount_I, 1f)); //ì²«ë²ˆì§¸ ê³µê²© ì‹¤í–‰
     }
 
     IEnumerator Attacking(bool isLastAttack, int nowAttackCount_I, float delayTime)
     {
         float nowdelayTime = 0;
-        //°ø°İ ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
-        while (nowdelayTime < delayTime) //°ø°İ ÁØºñ µ¿ÀÛ
+        //ê³µê²© ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
+        while (nowdelayTime < delayTime) //ê³µê²© ì¤€ë¹„ ë™ì‘
         {
             nowdelayTime += Time.deltaTime;
             yield return null;
         }
-        if (rangeInEnemy.Count != 0) //±âº»°ø°İ ½ÇÇà ÇÔ¼ö ¹× ±âº»°ø°İ ¾Ö´Ï¸ŞÀÌ¼Ç ½ÃÀÛ
+        if (rangeInEnemy.Count != 0) //ê¸°ë³¸ê³µê²© ì‹¤í–‰ í•¨ìˆ˜ ë° ê¸°ë³¸ê³µê²© ì• ë‹ˆë©”ì´ì…˜ ì‹œì‘
         {
             CamShake.NowCamShakeStart(0.3f, 0.5f);
             for (int nowIndex = 0; nowIndex < rangeInEnemy.Count; nowIndex++)
@@ -98,7 +99,7 @@ public class Enemy : BasicUnitScript
         StartCoroutine(Return());
     }
 
-    IEnumerator Return() //±ÙÁ¢°ø°İ ÈÄ µ¹¾Æ¿À±â
+    IEnumerator Return() //ê·¼ì ‘ê³µê²© í›„ ëŒì•„ì˜¤ê¸°
     {
         Vector3 Movetransform = new Vector3(Speed_F, 0, 0);
         transform.rotation = Quaternion.Euler(0, 180, 0);
@@ -113,7 +114,7 @@ public class Enemy : BasicUnitScript
         isAttacking = false;
         WaitingTimeStart();
     }
-    private void WaitingTimeStart() //°ø°İ ÈÄÀÇ ¼¼ÆÃ (ÀÏºÎ °øÅë) 
+    private void WaitingTimeStart() //ê³µê²© í›„ì˜ ì„¸íŒ… (ì¼ë¶€ ê³µí†µ) 
     {
         isWaiting = true;
         ActionCoolTimeBarSetActive(true);
@@ -134,7 +135,15 @@ public class Enemy : BasicUnitScript
 
     protected override IEnumerator Fainting()
     {
-        //±âÀı ¾Ö´Ï ¹× ÀÌº¥Æ®
+        //ê¸°ì ˆ ì• ë‹ˆ ë° ì´ë²¤íŠ¸
         yield return null;
+    }
+    protected override void Faint()
+    {
+        if (isFaintingReady && isAttacking == false)
+        {
+            isFaintingReady = false;
+            StartCoroutine(Fainting());
+        }
     }
 }

@@ -13,44 +13,44 @@ public enum NowDefensePos
 
 public abstract class BasicUnitScript : MonoBehaviour
 {
-    #region °ø°İ ÄğÅ¸ÀÓ °ü·Ã º¯¼ö (°øÅë)
-    [Header("°ø°İ ÄğÅ¸ÀÓ °ü·Ã º¯¼ö")]
-    [Tooltip("ÄğÅ¸ÀÓ ¹Ùµé ¿ÀºêÁ§Æ®")]
+    #region ê³µê²© ì¿¨íƒ€ì„ ê´€ë ¨ ë³€ìˆ˜ (ê³µí†µ)
+    [Header("ê³µê²© ì¿¨íƒ€ì„ ê´€ë ¨ ë³€ìˆ˜")]
+    [Tooltip("ì¿¨íƒ€ì„ ë°”ë“¤ ì˜¤ë¸Œì íŠ¸")]
     [SerializeField]
     protected GameObject actionCoolTimeObj;
 
-    [Tooltip("ÄğÅ¸ÀÓ ¹Ù ÀÌ¹ÌÁö(¹è°æ)")]
+    [Tooltip("ì¿¨íƒ€ì„ ë°” ì´ë¯¸ì§€(ë°°ê²½)")]
     [SerializeField]
     protected Image nullActionCoolTimeImage;
 
-    [Tooltip("ÄğÅ¸ÀÓ ¹Ù ÀÌ¹ÌÁö")]
+    [Tooltip("ì¿¨íƒ€ì„ ë°” ì´ë¯¸ì§€")]
     [SerializeField]
     protected Image actionCoolTimeImage;
 
-    [Tooltip("ÄğÅ¸ÀÓ ¹Ù YÃà À§Ä¡ Á¶Àı")]
+    [Tooltip("ì¿¨íƒ€ì„ ë°” Yì¶• ìœ„ì¹˜ ì¡°ì ˆ")]
     [SerializeField]
     protected float actionCoolTimeImageYPos_F;
 
-    protected float nowActionCoolTime; //ÇöÀç ÄğÅ¸ÀÓ
+    protected float nowActionCoolTime; //í˜„ì¬ ì¿¨íƒ€ì„
 
-    [Tooltip("ÃÖ´ë ÄğÅ¸ÀÓ")]
+    [Tooltip("ìµœëŒ€ ì¿¨íƒ€ì„")]
     public float maxActionCoolTime;
 
-    protected bool isWaiting; //´ë±âÁß
+    protected bool isWaiting; //ëŒ€ê¸°ì¤‘
     #endregion
 
-    #region Çàµ¿ °ü·Ã º¯¼ö
-    [Header("ÇöÀç Çàµ¿ °ü·Ã º¯¼ö")]
-    [Tooltip("Áß·Â°ª")]
+    #region í–‰ë™ ê´€ë ¨ ë³€ìˆ˜
+    [Header("í˜„ì¬ í–‰ë™ ê´€ë ¨ ë³€ìˆ˜")]
+    [Tooltip("ì¤‘ë ¥ê°’")]
     [SerializeField]
     protected float setJumpGravityScale_F;
 
-    [Tooltip("Á¡ÇÁ ÆÄ¿ö")]
+    [Tooltip("ì í”„ íŒŒì›Œ")]
     [SerializeField]
     protected float jumpPower_F;
 
-    [Header("¹æ¾î / ¹æ¾î À§Ä¡ °ü·Ã º¯¼ö")]
-    [Tooltip("ÇöÀç ¹æ¾î À§Ä¡")]
+    [Header("ë°©ì–´ / ë°©ì–´ ìœ„ì¹˜ ê´€ë ¨ ë³€ìˆ˜")]
+    [Tooltip("í˜„ì¬ ë°©ì–´ ìœ„ì¹˜")]
     public bool[] nowDefensivePosition_B;
 
     public bool isDefensing;
@@ -69,18 +69,18 @@ public abstract class BasicUnitScript : MonoBehaviour
     //[HideInInspector]
     public bool isFainting;
 
-    [Header("°ø°İ ¹üÀ§ ³»ÀÇ Àû ¸®½ºÆ®")]
+    [Header("ê³µê²© ë²”ìœ„ ë‚´ì˜ ì  ë¦¬ìŠ¤íŠ¸")]
     public List<GameObject> rangeInEnemy = new List<GameObject>();
 
-    [Header("Æ¨°Ü³»±â ¹üÀ§ ³»ÀÇ ¿ÀºêÁ§Æ® ¸®½ºÆ®")]
+    [Header("íŠ•ê²¨ë‚´ê¸° ë²”ìœ„ ë‚´ì˜ ì˜¤ë¸Œì íŠ¸ ë¦¬ìŠ¤íŠ¸")]
     public List<GameObject> rangeInDeflectAbleObj = new List<GameObject>();
 
     protected int nowAttackCount_I;
     #endregion
 
-    #region ½ºÅÈ (°øÅë)
-    [Header("½ºÅÈ °ü·Ã º¯¼ö")]
-    [Tooltip("Ã¼·Â")]
+    #region ìŠ¤íƒ¯ (ê³µí†µ)
+    [Header("ìŠ¤íƒ¯ ê´€ë ¨ ë³€ìˆ˜")]
+    [Tooltip("ì²´ë ¥")]
     [SerializeField]
     protected float hp_F;
     public float Hp_F
@@ -100,7 +100,7 @@ public abstract class BasicUnitScript : MonoBehaviour
         }
     }
 
-    [Tooltip("ÃÖ´ë Ã¼·Â")]
+    [Tooltip("ìµœëŒ€ ì²´ë ¥")]
     [SerializeField]
     protected float maxHp_F;
 
@@ -110,7 +110,7 @@ public abstract class BasicUnitScript : MonoBehaviour
         set { maxHp_F = value; }
     }
 
-    [Tooltip("±â·Â")]
+    [Tooltip("ê¸°ë ¥")]
     [SerializeField]
     protected float energy_F;
     public float Energy_F
@@ -130,7 +130,7 @@ public abstract class BasicUnitScript : MonoBehaviour
         }
     }
 
-    [Tooltip("ÃÖ´ë ±â·Â")]
+    [Tooltip("ìµœëŒ€ ê¸°ë ¥")]
     [SerializeField]
     protected float maxEnergy_F;
     public float MaxEnergy_F
@@ -139,11 +139,11 @@ public abstract class BasicUnitScript : MonoBehaviour
         set { maxEnergy_F = value; }
     }
 
-    [Tooltip("¸ùÈ¯ °ÔÀÌÁö À¯¹« ÆÇº°")]
+    [Tooltip("ëª½í™˜ ê²Œì´ì§€ ìœ ë¬´ íŒë³„")]
     [SerializeField]
     protected bool isHaveDreamyFigure;
 
-    [Tooltip("¸ùÈ¯ °ÔÀÌÁö")]
+    [Tooltip("ëª½í™˜ ê²Œì´ì§€")]
     [SerializeField]
     protected float dreamyFigure_F;
     public float DreamyFigure_F
@@ -152,7 +152,7 @@ public abstract class BasicUnitScript : MonoBehaviour
         set { dreamyFigure_F = value; }
     }
 
-    [Tooltip("ÃÖ´ë ¸ùÈ¯ °ÔÀÌÁö")]
+    [Tooltip("ìµœëŒ€ ëª½í™˜ ê²Œì´ì§€")]
     [SerializeField]
     protected float maxDreamyFigure_F;
     public float MaxDreamyFigure_F
@@ -162,7 +162,7 @@ public abstract class BasicUnitScript : MonoBehaviour
     }
 
 
-    [Tooltip("°ø°İ·Â")]
+    [Tooltip("ê³µê²©ë ¥")]
     [SerializeField]
     protected int damage_I;
     public int Damage_I
@@ -171,7 +171,7 @@ public abstract class BasicUnitScript : MonoBehaviour
         set { damage_I = value; }
     }
 
-    [Tooltip("ÀÌµ¿¼Óµµ")]
+    [Tooltip("ì´ë™ì†ë„")]
     [SerializeField]
     protected float Speed_F;
 
@@ -180,8 +180,8 @@ public abstract class BasicUnitScript : MonoBehaviour
     #endregion
 
     [SerializeField]
-    [Header("°ø°İ ¹üÀ§ Äİ¶óÀÌ´õ")]
-    [Tooltip("ÇØ´ç ¿ÀºêÁ§Æ® °ø°İ Äİ¶óÀÌ´õ")]
+    [Header("ê³µê²© ë²”ìœ„ ì½œë¼ì´ë”")]
+    [Tooltip("í•´ë‹¹ ì˜¤ë¸Œì íŠ¸ ê³µê²© ì½œë¼ì´ë”")]
     protected GameObject attackRangeObj;
 
     [HideInInspector]
@@ -190,6 +190,8 @@ public abstract class BasicUnitScript : MonoBehaviour
     protected Camera Cam;
 
     protected Rigidbody2D rigid;
+
+    protected abstract void Faint();
 
     protected abstract void StartSetting();
 

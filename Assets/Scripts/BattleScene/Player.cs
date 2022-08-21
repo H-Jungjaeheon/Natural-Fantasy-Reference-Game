@@ -27,6 +27,7 @@ public class Player : BasicUnitScript
         Defense();
         Deflect();
         Jump();
+        Faint();
     }
 
     void FixedUpdate()
@@ -128,6 +129,16 @@ public class Player : BasicUnitScript
             }
         }
     }
+
+    protected override void Faint()
+    {
+        if (isFaintingReady && isAttacking == false)
+        {
+            isFaintingReady = false;
+            StartCoroutine(Fainting());
+        }
+    }
+
     protected override void SetDefensing(int defensingDirectionIndex, float setRotation)
     {
         isDefensing = true;
@@ -185,7 +196,7 @@ public class Player : BasicUnitScript
 
     protected override void UISetting() //대기시간 및 UI세팅 (일부 공통)
     {
-        if (isWaiting && isDeflecting == false)
+        if (isFainting == false && isWaiting && isDeflecting == false)
         {
             actionCoolTimeImage.fillAmount = nowActionCoolTime / maxActionCoolTime;
             nowActionCoolTime += Time.deltaTime;
@@ -208,22 +219,14 @@ public class Player : BasicUnitScript
         nullActionCoolTimeImage.transform.position = Cam.WorldToScreenPoint(transform.position + new Vector3(0, actionCoolTimeImageYPos_F, 0));
     }
 
-    private void WaitingTimeStart() //공격 후의 세팅 (일부 공통) 
+    private void WaitingTimeStart() //공격 후의 세팅 (일부 공통, 한번만 실행) 
     {
-        if (isFaintingReady && isAttacking == false)
+        isWaiting = true;
+        if (nowActionCoolTime < maxActionCoolTime)
         {
-            isFaintingReady = false;
-            StartCoroutine(Fainting());
+            ActionCoolTimeBarSetActive(true);
         }
-        else
-        {
-            isWaiting = true;
-            if (nowActionCoolTime < maxActionCoolTime)
-            {
-                ActionCoolTimeBarSetActive(true);
-            }
-            ActionButtonsSetActive(false);
-        }
+        ActionButtonsSetActive(false);
     }
 
     private void Jump()
@@ -301,7 +304,7 @@ public class Player : BasicUnitScript
     IEnumerator GoToAttack()
     {
         Vector3 Movetransform = new Vector3(Speed_F, 0, 0); //이동을 위해 더해줄 연산
-        Vector3 Targettransform = new Vector3(BattleSceneManager.Instance.EnemyCharacterPos.x - 5, transform.position.y); //목표 위치
+        Vector3 Targettransform = new Vector3(BattleSceneManager.Instance.EnemyCharacterPos.x - 5.5f, transform.position.y); //목표 위치
 
         while (transform.position.x < Targettransform.x) //이동중
         {
@@ -433,7 +436,6 @@ public class Player : BasicUnitScript
 
         if (isFailEnchant)
         {
-            print("강화 실패");
             Instantiate(swordAuraObjs[(int)SwordAuraKind.UnEnchantedSwordAura], transform.position + (Vector3)new Vector2(2.5f, 0), Quaternion.identity);
         }
         else 
@@ -443,8 +445,11 @@ public class Player : BasicUnitScript
         }
         yield return new WaitForSeconds(0.5f);
         isAttacking = false;
-        BattleButtonManager.Instance.ButtonsPageChange(false, true);
-        WaitingTimeStart();
+        if (isFaintingReady == false)
+        {
+            BattleButtonManager.Instance.ButtonsPageChange(false, true);
+            WaitingTimeStart();
+        }
     }
 
     protected override void Dead()
@@ -462,6 +467,7 @@ public class Player : BasicUnitScript
         Energy_F += 8; //나중에 매개변수로 레벨에 따라서 기력 차는 양 증가
         isFainting = false;
         nowActionCoolTime = maxActionCoolTime;
+        BattleButtonManager.Instance.ButtonsPageChange(false, true);
         WaitingTimeStart();
     }
 
