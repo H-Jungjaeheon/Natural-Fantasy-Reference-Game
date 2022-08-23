@@ -11,13 +11,37 @@ public class SwordAura : MonoBehaviour
 
     [SerializeField]
     private int damage;
+
+    private bool isEnchanted;
+
+    public bool IsEnchanted
+    {
+        get
+        {
+            return isEnchanted;
+        }
+        set
+        {
+            if (value == false)
+            {
+                isEnchanted = value;
+            }
+            else 
+            {
+                isEnchanted = false;
+                EnchantedSetting();
+            }
+        }
+    }
     #endregion
 
     Vector2 movingPlusVector;
 
+    private SpriteRenderer SR;
+
     private bool isEnemyHit;
 
-    private void Start()
+    private void Awake()
     {
         StartSetting();
     }
@@ -26,9 +50,18 @@ public class SwordAura : MonoBehaviour
         AuraMove();
     }
 
+    private void EnchantedSetting()
+    {
+        print("강화 완료");
+        SR.material.color = new Color(245, 110, 225);
+        //이미지 교체로 코드 변경
+        damage += 2; //나중에 스킬 강화나 데미지 강화 레벨에 비례해서 증가
+    }
+
     private void StartSetting()
     {
-        damage += 0; //나중에 스킬 강화나 데미지 강화 레벨에 비례해서 증가
+        SR = GetComponent<SpriteRenderer>();
+        damage += (4 + 0); //나중에 스킬 강화나 데미지 강화 레벨에 비례해서 증가
         movingPlusVector = new Vector2(speed, 0);
     }
 
@@ -50,6 +83,8 @@ public class SwordAura : MonoBehaviour
         }
         else if(collision.gameObject.CompareTag("ObjDestroy"))
         {
+            damage = 0;
+            SR.material.color = new Color(144, 0, 123);
             Destroy(gameObject); //ObjectPool 변경
         }
     }

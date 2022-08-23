@@ -3,19 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum SwordAuraKind
-{
-    UnEnchantedSwordAura,
-    EnchantedSwordAura
-}
-
 public class Player : BasicUnitScript
 {
     public bool isSkillButtonPage;
 
     [Header("공격에 필요한 오브젝트 모음")]
     [SerializeField]
-    private GameObject[] swordAuraObjs;
+    private GameObject swordAuraObj;
 
     private void Awake()
     {
@@ -434,15 +428,16 @@ public class Player : BasicUnitScript
             yield return null;
         }
 
-        if (isFailEnchant)
+        if (isFailEnchant == false)
         {
-            Instantiate(swordAuraObjs[(int)SwordAuraKind.UnEnchantedSwordAura], transform.position + (Vector3)new Vector2(2.5f, 0), Quaternion.identity);
+            var enchantedSwordAuraObjs = Instantiate(swordAuraObj, transform.position + (Vector3)new Vector2(2.5f, 0), Quaternion.identity).GetComponent<SwordAura>();
+            enchantedSwordAuraObjs.IsEnchanted = true;
         }
         else 
         {
-            print("강화 성공");
-            Instantiate(swordAuraObjs[(int)SwordAuraKind.EnchantedSwordAura], transform.position + (Vector3)new Vector2(2.5f, 0), Quaternion.identity); //강화
+            Instantiate(swordAuraObj, transform.position + (Vector3)new Vector2(2.5f, 0), Quaternion.identity).GetComponent<SwordAura>();
         }
+
         yield return new WaitForSeconds(0.5f);
         isAttacking = false;
         if (isFaintingReady == false)
