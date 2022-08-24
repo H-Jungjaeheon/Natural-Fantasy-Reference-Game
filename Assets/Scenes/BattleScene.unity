@@ -2057,7 +2057,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1855ff8de88f0c645aefc6be774c4ef5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SwordAuraObj: {fileID: 416800877848305474, guid: 85a20b6e84648e44a8811b52283438a6, type: 3}
+  usePrefabObjs:
+  - {fileID: 416800877848305474, guid: 85a20b6e84648e44a8811b52283438a6, type: 3}
 --- !u!4 &951784404
 Transform:
   m_ObjectHideFlags: 0
@@ -2183,7 +2184,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -250, y: 30}
-  m_SizeDelta: {x: 370, y: 180}
+  m_SizeDelta: {x: 390, y: 185}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1021869091
 MonoBehaviour:
@@ -2261,7 +2262,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: bc594e1da89e457469bf3aa94c4e0ffd, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d294871d6a185ed4189945ee99304b71, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

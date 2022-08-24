@@ -428,14 +428,12 @@ public class Player : BasicUnitScript
             yield return null;
         }
 
+        var enchantedSwordAuraObj = ObjectPool.Instance.GetObject(0);
+        var enchantedSwordAuraObjComponent = enchantedSwordAuraObj.GetComponent<SwordAura>();
+        enchantedSwordAuraObj.transform.position = transform.position + (Vector3)new Vector2(2.5f, 0);
         if (isFailEnchant == false)
         {
-            var enchantedSwordAuraObjs = Instantiate(swordAuraObj, transform.position + (Vector3)new Vector2(2.5f, 0), Quaternion.identity).GetComponent<SwordAura>();
-            enchantedSwordAuraObjs.IsEnchanted = true;
-        }
-        else 
-        {
-            Instantiate(swordAuraObj, transform.position + (Vector3)new Vector2(2.5f, 0), Quaternion.identity).GetComponent<SwordAura>();
+            enchantedSwordAuraObjComponent.IsEnchanted = true;
         }
 
         yield return new WaitForSeconds(0.5f);

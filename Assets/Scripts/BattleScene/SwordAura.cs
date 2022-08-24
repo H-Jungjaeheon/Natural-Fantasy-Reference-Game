@@ -45,6 +45,12 @@ public class SwordAura : MonoBehaviour
     {
         StartSetting();
     }
+
+    private void OnEnable()
+    {
+        OnEnableSetting();
+    }
+
     void FixedUpdate()
     {
         AuraMove();
@@ -58,17 +64,20 @@ public class SwordAura : MonoBehaviour
         damage += 2; //나중에 스킬 강화나 데미지 강화 레벨에 비례해서 증가
     }
 
+    public void OnEnableSetting()
+    {
+        damage = 0;
+        damage += (4 + 0); //나중에 스킬 강화나 데미지 강화 레벨에 비례해서 증가
+        SR.material.color = new Color(144, 0, 123);
+        isEnemyHit = false;
+    }
     private void StartSetting()
     {
         SR = GetComponent<SpriteRenderer>();
-        damage += (4 + 0); //나중에 스킬 강화나 데미지 강화 레벨에 비례해서 증가
         movingPlusVector = new Vector2(speed, 0);
     }
 
-    private void AuraMove()
-    {
-        transform.position += (Vector3)movingPlusVector * Time.deltaTime;
-    }
+    private void AuraMove() => transform.position += (Vector3)movingPlusVector * Time.deltaTime;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -83,9 +92,7 @@ public class SwordAura : MonoBehaviour
         }
         else if(collision.gameObject.CompareTag("ObjDestroy"))
         {
-            damage = 0;
-            SR.material.color = new Color(144, 0, 123);
-            Destroy(gameObject); //ObjectPool 변경
+            ObjectPool.Instance.ReturnObject(gameObject, 0);
         }
     }
 }
