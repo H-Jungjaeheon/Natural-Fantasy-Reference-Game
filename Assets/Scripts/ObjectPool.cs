@@ -23,7 +23,7 @@ public class ObjectPool : Singleton<ObjectPool>
 
     private void Initialize(int count) //시작 생성
     {
-        for (int nowCount = 0; nowCount <= count; nowCount++)
+        for (int nowCount = 0; nowCount < count; nowCount++)
         {
             SwordAuraQueue.Enqueue(CreateNewObjs());
         }
@@ -52,11 +52,5 @@ public class ObjectPool : Singleton<ObjectPool>
         swordAura.gameObject.SetActive(false);
         swordAura.transform.SetParent(transform);
         SwordAuraQueue.Enqueue(swordAura);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
