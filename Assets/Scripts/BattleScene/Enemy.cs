@@ -4,27 +4,14 @@ using UnityEngine;
 
 public class Enemy : BasicUnitScript
 {
-    private void Awake()
-    {
-        StartSetting();
-    }
-
-    void Update()
-    {
-        UISetting();
-        Faint();
-    }
-
     protected override void StartSetting()
     {
         isWaiting = true;
-        nowActionCoolTime = 0;
-        Cam = Camera.main;
-        rigid = gameObject.GetComponent<Rigidbody2D>();
-        startPos_Vector = transform.position;
-        nowAttackCount_I = 1;
-        BattleSceneManager.Instance.PlayerCharacterPos = transform.position;
+        BattleSceneManager.Instance.EnemyCharacterPos = transform.position;
+        BattleSceneManager.Instance.Enemy = gameObject;
         actionCoolTimeObj.SetActive(true);
+        Energy_F = MaxEnergy_F;
+        Hp_F = MaxHp_F;
     }
 
     protected override void UISetting()

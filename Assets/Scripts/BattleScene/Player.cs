@@ -11,42 +11,23 @@ public class Player : BasicUnitScript
     [SerializeField]
     private GameObject swordAuraObj;
 
-    private void Awake()
+    protected override void Update()
     {
-        StartSetting();
-    }
-
-    private void Update()
-    {
+        base.Update();
         Defense();
         Deflect();
         Jump();
-        Faint();
-    }
-
-    void FixedUpdate()
-    {
-        UISetting();
-        if (Input.GetKey(KeyCode.Q))
-        {
-            Energy_F -= 1;
-        }
     }
 
     protected override void StartSetting() //초기 세팅 (일부 공통)
     {
-        Cam = Camera.main;
-        rigid = gameObject.GetComponent<Rigidbody2D>();
-        startPos_Vector = transform.position;
         maxActionCoolTime -= GameManager.Instance.ReduceCoolTimeLevel * 0.5f;
-        nowActionCoolTime = 0;
         MaxHp_F += GameManager.Instance.MaxHpUpgradeLevel * 5;
-        Hp_F = MaxHp_F;
         MaxEnergy_F += GameManager.Instance.MaxEnergyUpgradeLevel * 5;
-        Energy_F = MaxEnergy_F;
         Damage_I += GameManager.Instance.DamageUpgradeLevel;
-        nowAttackCount_I = 1;
         BattleSceneManager.Instance.PlayerCharacterPos = transform.position;
+        Energy_F = MaxEnergy_F;
+        Hp_F = MaxHp_F;
     }
 
     protected override void Defense()

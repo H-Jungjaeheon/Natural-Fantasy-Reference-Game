@@ -63,11 +63,16 @@ public abstract class BasicUnitScript : MonoBehaviour
     [HideInInspector]
     public bool isResting;
 
-    //[HideInInspector]
+    [HideInInspector]
     public bool isFaintingReady;
 
-    //[HideInInspector]
+    [HideInInspector]
     public bool isFainting;
+
+    [HideInInspector]
+    public bool isAttacking;
+
+    private bool isHpDiminishedProduction;
 
     [Header("공격 범위 내의 적 리스트")]
     public List<GameObject> rangeInEnemy = new List<GameObject>();
@@ -75,7 +80,7 @@ public abstract class BasicUnitScript : MonoBehaviour
     [Header("튕겨내기 범위 내의 오브젝트 리스트")]
     public List<GameObject> rangeInDeflectAbleObj = new List<GameObject>();
 
-    protected int nowAttackCount_I;
+    protected int nowAttackCount_I; //연속공격 시 현재 공격 횟수
     #endregion
 
     #region 스탯 (공통)
@@ -88,6 +93,10 @@ public abstract class BasicUnitScript : MonoBehaviour
         get { return hp_F; }
         set 
         {
+            if (value > lightHp_F)
+            {
+                lightHp_F = Hp_F;
+            }
             if (value <= 0)
             {
                 hp_F = 0;
@@ -97,8 +106,14 @@ public abstract class BasicUnitScript : MonoBehaviour
             {
                 hp_F = value;
             }
+            if (isHpDiminishedProduction == false)
+            {
+                StartCoroutine(HpDiminishedProduction());
+            }
         }
     }
+
+    protected float lightHp_F;
 
     [Tooltip("최대 체력")]
     [SerializeField]
@@ -174,15 +189,27 @@ public abstract class BasicUnitScript : MonoBehaviour
     [Tooltip("이동속도")]
     [SerializeField]
     protected float Speed_F;
-
-    [HideInInspector]
-    public bool isAttacking;
     #endregion
 
     [SerializeField]
-    [Header("공격 범위 콜라이더")]
-    [Tooltip("해당 오브젝트 공격 콜라이더")]
+    [Tooltip("해당 유닛 공격 범위 콜라이더")]
     protected GameObject attackRangeObj;
+
+    [SerializeField]
+    [Tooltip("유닛 체력바 이미지")]
+    private Image unitHpBars;
+
+    [SerializeField]
+    [Tooltip("유닛 체력바 연출 이미지")]
+    private Image unitLightHpBars;
+
+    [SerializeField]
+    [Tooltip("유닛 기력바 이미지")]
+    private Image unitEnergyBars;
+
+    [SerializeField]
+    [Tooltip("유닛 몽환 게이지 이미지")]
+    private Image unitDreamyFigureBars;
 
     [HideInInspector]
     public Vector2 startPos_Vector;
@@ -191,9 +218,53 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     protected Rigidbody2D rigid;
 
-    protected abstract void Faint();
+    protected virtual void Awake()
+    {
+        StartSameSetting();
+        StartSetting();
+    }
 
+    protected virtual void Update()
+    {
+        UISetting();
+        Faint();
+        UnitBarsUpdate();
+    }
+
+    protected void StartSameSetting()
+    {
+        Cam = Camera.main;
+        rigid = gameObject.GetComponent<Rigidbody2D>();
+        startPos_Vector = transform.position;
+        nowAttackCount_I = 1;
+        nowActionCoolTime = 0;
+    }
     protected abstract void StartSetting();
+
+    protected void UnitBarsUpdate()
+    {
+        unitHpBars.fillAmount = Hp_F / MaxHp_F;
+        unitEnergyBars.fillAmount = Energy_F / MaxEnergy_F;
+        unitDreamyFigureBars.fillAmount = DreamyFigure_F / MaxDreamyFigure_F;
+        unitLightHpBars.fillAmount = lightHp_F / MaxHp_F;
+    }
+
+    protected IEnumerator HpDiminishedProduction()
+    {
+        float nowReductionSpeed = MaxHp_F / 15;
+        isHpDiminishedProduction = true;
+        yield return new WaitForSeconds(1);
+        while (lightHp_F > Hp_F)
+        {
+            lightHp_F -= Time.deltaTime * nowReductionSpeed;
+            nowReductionSpeed += Time.deltaTime * 2;
+            yield return null;
+        }
+        lightHp_F = Hp_F;
+        isHpDiminishedProduction = false;
+    }
+
+    protected abstract void Faint();
 
     protected abstract void UISetting();
 

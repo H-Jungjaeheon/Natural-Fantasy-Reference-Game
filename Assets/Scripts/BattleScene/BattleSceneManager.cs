@@ -11,50 +11,14 @@ public enum UnitKind
 
 public class BattleSceneManager : Singleton<BattleSceneManager>
 {
-    [Header("±ÙÁ¢°ø°İ µµÂø Æ÷Áö¼Ç")]
-    [Tooltip("ÇÃ·¹ÀÌ¾îÀÇ Æ÷Áö¼Ç")]
-    public Vector2 PlayerCharacterPos;
-    [Tooltip("ÀûÀÇ Æ÷Áö¼Ç")]
-    public Vector2 EnemyCharacterPos;
+    [HideInInspector]
+    public Vector2 PlayerCharacterPos; //í”Œë ˆì´ì–´ í¬ì§€ì…˜
 
-    [SerializeField]
-    private GameObject Player;
+    [HideInInspector]
+    public Vector2 EnemyCharacterPos; //ì  í¬ì§€ì…˜
 
-    [SerializeField]
-    private GameObject Enemy;
+    public GameObject Player;
 
-    [SerializeField]
-    private Image[] unitHpBars;
-
-    [SerializeField]
-    private Image[] unitEnergyBars;
-
-    [SerializeField]
-    private Image[] unitDreamyFigureBars;
-
-    Player playerComponent;
-    Enemy enemyComponenet;
-
-    private void Awake()
-    {
-        Enemy = GameObject.FindGameObjectWithTag("Enemy");
-        playerComponent = Player.GetComponent<Player>();
-        enemyComponenet = Enemy.GetComponent<Enemy>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        UnitBarsUpdate();
-    }
-    private void UnitBarsUpdate()
-    {
-        unitHpBars[(int)UnitKind.Player].fillAmount = playerComponent.Hp_F / playerComponent.MaxHp_F;
-        unitEnergyBars[(int)UnitKind.Player].fillAmount = playerComponent.Energy_F / playerComponent.MaxEnergy_F;
-        unitDreamyFigureBars[(int)UnitKind.Player].fillAmount = playerComponent.DreamyFigure_F / playerComponent.MaxDreamyFigure_F;
-        unitHpBars[(int)UnitKind.Enemy].fillAmount = enemyComponenet.Hp_F / enemyComponenet.MaxHp_F;
-        unitEnergyBars[(int)UnitKind.Enemy].fillAmount = enemyComponenet.Energy_F / enemyComponenet.MaxEnergy_F;
-        unitDreamyFigureBars[(int)UnitKind.Enemy].fillAmount = enemyComponenet.DreamyFigure_F / enemyComponenet.MaxDreamyFigure_F;
-    }
-
+    [HideInInspector]
+    public GameObject Enemy;
 }

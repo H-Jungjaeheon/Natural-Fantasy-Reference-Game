@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
-    #region ÀúÀå µ¥ÀÌÅÍ ¸ğÀ½
+    #region ì €ì¥ ë°ì´í„° ëª¨ìŒ
     private class GameSaveData
     {
         public int BasicDamageLevel;
@@ -16,7 +16,7 @@ public class GameManager : Singleton<GameManager>
     }
     #endregion
 
-    #region ÀçÈ­ ¹× ·¹º§ º¯¼öµé
+    #region ì¬í™” ë° ë ˆë²¨ ë³€ìˆ˜ë“¤
     private uint gold;
     public uint Gold
     {
@@ -31,6 +31,7 @@ public class GameManager : Singleton<GameManager>
         set { reduceCoolTimeLevel = value; }
     }
 
+    [SerializeField]
     private int maxHpUpgradeLevel;
     public int MaxHpUpgradeLevel
     {
