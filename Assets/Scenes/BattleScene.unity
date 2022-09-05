@@ -283,10 +283,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10ad1faa3cdd8424095b47ed1a3d48ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nowPage: 0
-  maxPage: 0
-  minPage: 0
   SkillChooseButton: {fileID: 619574704}
+  OutSkillChooseButton: {fileID: 1614225774}
   SkillButtons:
   - {fileID: 1021869091}
   - {fileID: 0}
@@ -295,11 +293,11 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  OutSkillChooseButton: {fileID: 1614225774}
-  Player: {fileID: 1717870240}
   ButtonPageObjs:
   - {fileID: 1874100341}
   - {fileID: 1503250936}
+  content: {fileID: 357028323}
+  nowButtonPage: 0
 --- !u!1 &108768959
 GameObject:
   m_ObjectHideFlags: 0
@@ -5394,7 +5392,6 @@ MonoBehaviour:
   unitEnergyBars: {fileID: 529741880}
   unitDreamyFigureBars: {fileID: 916333784}
   startPos_Vector: {x: 0, y: 0}
-  isSkillButtonPage: 0
   swordAuraObj: {fileID: 416800877848305474, guid: 85a20b6e84648e44a8811b52283438a6, type: 3}
 --- !u!1 &1788169639
 GameObject:

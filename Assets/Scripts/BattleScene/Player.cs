@@ -5,11 +5,11 @@ using UnityEngine.UI;
 
 public class Player : BasicUnitScript
 {
-    public bool isSkillButtonPage;
-
     [Header("공격에 필요한 오브젝트 모음")]
     [SerializeField]
     private GameObject swordAuraObj;
+
+    BattleButtonManager BBM;
 
     protected override void Update()
     {
@@ -21,6 +21,7 @@ public class Player : BasicUnitScript
 
     protected override void StartSetting() //초기 세팅 (일부 공통)
     {
+        BBM = BattleButtonManager.Instance;
         maxActionCoolTime -= GameManager.Instance.ReduceCoolTimeLevel * 0.5f;
         MaxHp_F += GameManager.Instance.MaxHpUpgradeLevel * 5;
         MaxEnergy_F += GameManager.Instance.MaxEnergyUpgradeLevel * 5;
@@ -141,7 +142,7 @@ public class Player : BasicUnitScript
         var attackRangeObjComponent = attackRangeObj.GetComponent<BoxCollider2D>();
         isDeflecting = true;
         nowDefensivePosition_B[nowDefensePosIndex] = false;
-        ActionButtonsSetActive(false);
+        BBM.ActionButtonsSetActive(false, false, false);
         transform.rotation = Quaternion.Euler(0, setRotation, 0);
         attackRangeObjComponent.size = new Vector2(0.55f, 2.1f);
         attackRangeObjComponent.offset = new Vector2(-0.1f, 0f);
@@ -153,7 +154,7 @@ public class Player : BasicUnitScript
         attackRangeObjComponent.offset = new Vector2(0f, 0f);
         if (isWaiting == false)
         {
-            ActionButtonsSetActive(true);
+            BBM.ActionButtonsSetActive(true, false, false);
         }
         isDeflecting = false;
         if (nowActionCoolTime != 0)
@@ -180,10 +181,10 @@ public class Player : BasicUnitScript
                 isWaiting = false;
                 nowActionCoolTime = 0;
                 ActionCoolTimeBarSetActive(false);
-                ActionButtonsSetActive(true);
+                BBM.ActionButtonsSetActive(true, false, false);
             }
         }
-        if (isWaiting == false && isJumping == false && isAttacking == false && isDeflecting == false && isResting == false && isFainting == false && isSkillButtonPage == false)
+        if (isWaiting == false && isJumping == false && isAttacking == false && isDeflecting == false && isResting == false && isFainting == false) //isSkillButtonPage == false
         {
             ActionCoolTimeBarSetActive(false);
         }
@@ -201,7 +202,7 @@ public class Player : BasicUnitScript
         {
             ActionCoolTimeBarSetActive(true);
         }
-        ActionButtonsSetActive(false);
+        BBM.ActionButtonsSetActive(false, false, false);
     }
 
     private void Jump()
@@ -209,7 +210,7 @@ public class Player : BasicUnitScript
         if (isJumping == false && isResting == false && isAttacking == false && isDefensing == false && isDeflecting == false && isFainting == false && Input.GetKey(KeyCode.Space))
         {
             isJumping = true;
-            ActionButtonsSetActive(false);
+            BBM.ActionButtonsSetActive(false, false, false);
             rigid.AddForce(Vector2.up * jumpPower_F, ForceMode2D.Impulse);
             rigid.gravityScale = setJumpGravityScale_F - 0.5f;
             StartCoroutine(JumpDelay());
@@ -219,7 +220,14 @@ public class Player : BasicUnitScript
             isJumping = false;
             if (isWaiting == false)
             {
-                ActionButtonsSetActive(true);
+                if (BBM.nowButtonPage == ButtonPage.SecondPage)
+                {
+                    BBM.ActionButtonsSetActive(false, true, false);
+                }
+                else
+                {
+                    BBM.ActionButtonsSetActive(true, false, false);
+                }
             }
             transform.position = startPos_Vector;
             rigid.velocity = Vector2.zero;
@@ -242,7 +250,7 @@ public class Player : BasicUnitScript
         if (isDefensing == false)
         {
             isAttacking = true;
-            ActionButtonsSetActive(false);
+            BBM.ActionButtonsSetActive(false, false, false);
             StartCoroutine(GoToAttack());
         }
     }
@@ -252,7 +260,7 @@ public class Player : BasicUnitScript
         if (isDefensing == false)
         {
             isResting = true;
-            ActionButtonsSetActive(false);
+            BBM.ActionButtonsSetActive(false, false, false);
             StartCoroutine(Resting());
         }
     }
@@ -273,7 +281,7 @@ public class Player : BasicUnitScript
             nowRestingCount += 1;
         }
         isResting = false;
-        ActionButtonsSetActive(true);
+        BBM.ActionButtonsSetActive(true, false, false);
     }
 
     IEnumerator GoToAttack()
@@ -383,7 +391,7 @@ public class Player : BasicUnitScript
         {
             isAttacking = true;
             Energy_F -= nowUseSkillNeedEnergy;
-            ActionButtonsSetActive(false);
+            BBM.ActionButtonsSetActive(false, false, false);
             switch (nowUseSkillIndex)
             {
                 case 1:
@@ -421,7 +429,6 @@ public class Player : BasicUnitScript
         isAttacking = false;
         if (isFaintingReady == false)
         {
-            BattleButtonManager.Instance.ButtonsPageChange(false, true);
             WaitingTimeStart();
         }
     }
@@ -435,40 +442,12 @@ public class Player : BasicUnitScript
     protected override IEnumerator Fainting()
     {
         isFainting = true;
-        ActionButtonsSetActive(false);
+        BBM.ActionButtonsSetActive(false, false, false);
         yield return new WaitForSeconds(5); //나중에 매개변수로 레벨에 따라서 기절 시간 넣기
-        ActionButtonsSetActive(true);
+        BBM.ActionButtonsSetActive(true, false, false);
         Energy_F += 8; //나중에 매개변수로 레벨에 따라서 기력 차는 양 증가
         isFainting = false;
         nowActionCoolTime = maxActionCoolTime;
-        BattleButtonManager.Instance.ButtonsPageChange(false, true);
         WaitingTimeStart();
-    }
-
-    private void ActionButtonsSetActive(bool setActive)
-    {
-        var battleButtonManagerInstance = BattleButtonManager.Instance;
-
-        if (setActive)
-        {
-            isSkillButtonPage = false;
-        }
-        else
-        {
-            isSkillButtonPage = true;
-        }
-
-        for (int nowButtonPage = battleButtonManagerInstance.minPage;
-        nowButtonPage <= battleButtonManagerInstance.maxPage; nowButtonPage++)
-        {
-            if (setActive && battleButtonManagerInstance.nowPage == nowButtonPage)
-            {
-                battleButtonManagerInstance.ButtonPageObjs[nowButtonPage].SetActive(true);
-            }
-            else
-            {
-                battleButtonManagerInstance.ButtonPageObjs[nowButtonPage].SetActive(false);
-            }
-        }
     }
 }

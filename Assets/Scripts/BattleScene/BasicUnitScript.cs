@@ -251,9 +251,9 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     protected IEnumerator HpDiminishedProduction()
     {
-        float nowReductionSpeed = MaxHp_F / 15;
+        float nowReductionSpeed = MaxHp_F / 12;
         isHpDiminishedProduction = true;
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.7f);
         while (lightHp_F > Hp_F)
         {
             lightHp_F -= Time.deltaTime * nowReductionSpeed;

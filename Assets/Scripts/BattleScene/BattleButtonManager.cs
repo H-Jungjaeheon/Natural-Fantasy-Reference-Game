@@ -16,31 +16,30 @@ public enum Skills
 
 public class BattleButtonManager : Singleton<BattleButtonManager>
 {
-    public int nowPage;
-    public int maxPage;
-    public int minPage;
-
-    #region Çàµ¿ ¹öÆ°¸ğÀ½
-    [Header("Çàµ¿ ¹öÆ°¸ğÀ½")]
-    [Tooltip("½ºÅ³¼±ÅÃ ¹öÆ°")]
+    #region í–‰ë™ ë²„íŠ¼ëª¨ìŒ
+    [Header("í–‰ë™ ë²„íŠ¼ëª¨ìŒ")]
+    [Tooltip("ìŠ¤í‚¬ì„ íƒ ë²„íŠ¼")]
     [SerializeField]
     private Button SkillChooseButton;
 
-    [Tooltip("½ºÅ³¹öÆ°µé")]
-    [SerializeField]
-    private Button[] SkillButtons = new Button[7];
-
-    [Tooltip("½ºÅ³¼±ÅÃ ³ª°¡±â ¹öÆ°")]
+    [Tooltip("ìŠ¤í‚¬ì„ íƒ ë‚˜ê°€ê¸° ë²„íŠ¼")]
     [SerializeField]
     private Button OutSkillChooseButton;
+
+    [Tooltip("ìŠ¤í‚¬ë²„íŠ¼ë“¤")]
+    [SerializeField]
+    private Button[] SkillButtons = new Button[7];
     #endregion
 
-    [Header("ÇÃ·¹ÀÌ¾î ¿ÀºêÁ§Æ®")]
+    [Header("ê° ë²„íŠ¼ë“¤ í˜ì´ì§€ ì˜¤ë¸Œì íŠ¸")]
     [SerializeField]
-    private GameObject Player;
+    private GameObject[] ButtonPageObjs = new GameObject[2];
 
-    [Header("°¢ ¹öÆ°µé ÆäÀÌÁö ¿ÀºêÁ§Æ®")]
-    public GameObject[] ButtonPageObjs;
+    [SerializeField]
+    [Tooltip("ìŠ¤í‚¬ ìŠ¤í¬ë¡¤ëŸ¬ ì¡°ì ˆ ì˜¤ë¸Œì íŠ¸")]
+    private GameObject content;
+
+    public ButtonPage nowButtonPage;
 
     Player playerComponent;
 
@@ -48,114 +47,36 @@ public class BattleButtonManager : Singleton<BattleButtonManager>
     void Start()
     {
         StartSetting();
-        ButtonsSetting();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     private void StartSetting()
     {
-        playerComponent = Player.GetComponent<Player>();
-        nowPage = 0;
-        minPage = 0;
-        maxPage = 1; //+½ºÅ³ ÆäÀÌÁö ¸¹À» ¼ö·Ï ¼ö ´õÇÏ±â
-    }
-
-    private void ButtonsSetting()
-    {
-        SkillChooseButton.onClick.AddListener(() => ButtonsPageChange(true, false));
-        OutSkillChooseButton.onClick.AddListener(() => ButtonsPageChange(false, true));
+        playerComponent = BattleSceneManager.Instance.Player.GetComponent<Player>();
+        SkillChooseButton.onClick.AddListener(() => ActionButtonsSetActive(false, true, true));
+        OutSkillChooseButton.onClick.AddListener(() => ActionButtonsSetActive(true, false, false));
         SkillButtons[(int)Skills.FirstSkill].onClick.AddListener(() => playerComponent.SkillUse(1, 5));
     }
 
-    public void ButtonsPageChange(bool isTurnToNextPage, bool isExitSkillButtonPage)
+    /// <summary>
+    /// ë§¤ê°œë³€ìˆ˜ : ê¸°ë³¸ í˜ì´ì§€ í™œì„±í™” ì—¬ë¶€, ìŠ¤í‚¬ í˜ì´ì§€ í™œì„±í™” ì—¬ë¶€, ìŠ¤í‚¬ ìŠ¤í¬ë¡¤ ì´ˆê¸°í™” ì—¬ë¶€
+    /// </summary>
+    /// <param name="firstPageSetActive"></param>
+    /// <param name="secondPageSetActive"></param>
+    public void ActionButtonsSetActive(bool firstPageSetActive, bool secondPageSetActive, bool isScrollInitialization) 
     {
-        if (playerComponent.isDefensing == false)
+        if (firstPageSetActive)
         {
-            if (isExitSkillButtonPage)
+            nowButtonPage = ButtonPage.FirstPage;
+        }
+        else if(secondPageSetActive)
+        {
+            nowButtonPage = ButtonPage.SecondPage;
+            if (isScrollInitialization)
             {
-                playerComponent.isSkillButtonPage = false;
-                ButtonPageObjs[(int)ButtonPage.FirstPage].SetActive(true);
-                for (int nowPageIndex = (int)ButtonPage.SecondPage; nowPageIndex <= maxPage; nowPageIndex++)
-                {
-                    ButtonPageObjs[nowPageIndex].SetActive(false);
-                }
-                nowPage = minPage;
-            }
-            else if (isTurnToNextPage)
-            {
-                playerComponent.isSkillButtonPage = true;
-                int nextPageIndex = nowPage + 1;
-                if (nextPageIndex <= maxPage)
-                {
-                    for (int nowPageIndex = (int)ButtonPage.FirstPage; nowPageIndex <= maxPage; nowPageIndex++)
-                    {
-                        if (nowPageIndex == nextPageIndex)
-                        {
-                            ButtonPageObjs[nowPageIndex].SetActive(true);
-                        }
-                        else
-                        {
-                            ButtonPageObjs[nowPageIndex].SetActive(false);
-                        }
-                    }
-                    nowPage++;
-                }
-                else
-                {
-                    ButtonPageObjs[(int)ButtonPage.SecondPage].SetActive(true);
-                    for (int nowPageIndex = minPage; nowPageIndex <= maxPage; nowPageIndex++)
-                    {
-                        if (nowPageIndex == (int)ButtonPage.SecondPage)
-                        {
-                            continue;
-                        }
-                        else
-                        {
-                            ButtonPageObjs[nowPageIndex].SetActive(false);
-                        }
-                    }
-                    nowPage = (int)ButtonPage.SecondPage;
-                }
-            }
-            else if (isTurnToNextPage == false)
-            {
-                int nextPageIndex = nowPage - 1;
-                if (nextPageIndex >= minPage)
-                {
-                    for (int nowPageIndex = (int)ButtonPage.FirstPage; nowPageIndex <= maxPage; nowPageIndex++)
-                    {
-                        if (nowPageIndex == nextPageIndex)
-                        {
-                            ButtonPageObjs[nowPageIndex].SetActive(true);
-                        }
-                        else
-                        {
-                            ButtonPageObjs[nowPageIndex].SetActive(false);
-                        }
-                    }
-                    nowPage--;
-                }
-                else
-                {
-                    for (int nowPageIndex = minPage; nowPageIndex <= maxPage; nowPageIndex++)
-                    {
-                        if (nowPageIndex == maxPage)
-                        {
-                            ButtonPageObjs[nowPageIndex].SetActive(true);
-                        }
-                        else
-                        {
-                            ButtonPageObjs[nowPageIndex].SetActive(false);
-                        }
-                    }
-                    nowPage = maxPage;
-                }
+                content.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, 20, 0);
             }
         }
+        ButtonPageObjs[(int)ButtonPage.FirstPage].SetActive(firstPageSetActive);
+        ButtonPageObjs[(int)ButtonPage.SecondPage].SetActive(secondPageSetActive);
     }
 }
