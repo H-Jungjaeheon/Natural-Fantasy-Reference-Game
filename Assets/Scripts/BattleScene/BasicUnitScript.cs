@@ -49,11 +49,10 @@ public abstract class BasicUnitScript : MonoBehaviour
     [SerializeField]
     protected float jumpPower_F;
 
-    [Header("방어 / 방어 위치 관련 변수")]
-    [Tooltip("현재 방어 위치")]
-    public DefensePos nowDefensivePosition;
+    [HideInInspector]
+    public DefensePos nowDefensivePosition; //현재 방어 위치
 
-    public bool isDefensing;
+    protected bool isDefensing;
 
     protected bool isDeflecting;
 
@@ -239,6 +238,7 @@ public abstract class BasicUnitScript : MonoBehaviour
         nowAttackCount_I = 1;
         nowActionCoolTime = 0;
     }
+
     protected abstract void StartSetting();
 
     protected void UnitBarsUpdate()
@@ -276,9 +276,10 @@ public abstract class BasicUnitScript : MonoBehaviour
         isHpDiminishedProduction = false;
     }
 
-    protected virtual void ReleaseDefense()
+    protected void ReleaseDefense()
     {
         nowDefensivePosition = DefensePos.None;
+        isDefensing = false;
     }
 
     protected abstract void Faint();

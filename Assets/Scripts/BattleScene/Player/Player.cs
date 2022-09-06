@@ -14,11 +14,11 @@ public class Player : BasicUnitScript
     protected override void Update()
     {
         base.Update();
-        Defense();
         Deflect();
+        Defense();
         Jump();
     }
-
+  
     protected override void StartSetting() //초기 세팅 (일부 공통)
     {
         BBM = BattleButtonManager.Instance;
@@ -57,30 +57,10 @@ public class Player : BasicUnitScript
         }
         else if (isDefensing && isDeflecting == false)
         {
-            print("실행");
-            bool isInputAnyDefenseKey = false;
-
-            if (nowDefensivePosition == DefensePos.Left && Input.GetKeyUp(KeyCode.A))
+            if (nowDefensivePosition == DefensePos.Left && !Input.GetKey(KeyCode.A) || nowDefensivePosition == DefensePos.Right && !Input.GetKey(KeyCode.D)
+                || nowDefensivePosition == DefensePos.Up && !Input.GetKey(KeyCode.W))
             {
-                nowDefensivePosition = DefensePos.None;
-            }
-            else if (nowDefensivePosition == DefensePos.Right && Input.GetKeyUp(KeyCode.D))
-            {
-                nowDefensivePosition = DefensePos.None;
-            }
-            else if (nowDefensivePosition == DefensePos.Up && Input.GetKeyUp(KeyCode.W))
-            {
-                nowDefensivePosition = DefensePos.None;
-            }
-
-            if (nowDefensivePosition != DefensePos.None)
-            {
-                isInputAnyDefenseKey = true;
-            }
-
-            if (isInputAnyDefenseKey == false)
-            {
-                isDefensing = false;
+                ReleaseDefense();
             }
         }
     }
@@ -126,8 +106,14 @@ public class Player : BasicUnitScript
         attackRangeObjComponent.size = new Vector2(0.55f, 2.1f);
         attackRangeObjComponent.offset = new Vector2(-0.1f, 0f);
         //애니 실행
-        yield return new WaitForSeconds(0.3f); //치기 전까지 기다림
-        //범위 내의 반사 가능한 오브젝트 상호작용
+        yield return new WaitForSeconds(0.15f); //치기 전까지 기다림
+        if (rangeInDeflectAbleObj.Count != 0)
+        {
+            for (int nowIndex = 0; nowIndex < rangeInDeflectAbleObj.Count; nowIndex++)
+            {
+                rangeInDeflectAbleObj[nowIndex].GetComponent<EnemysBullet>().Reflex(true);
+            }
+        }
         yield return new WaitForSeconds(0.5f); //애니메이션 종료까지 기다림
         attackRangeObjComponent.size = new Vector2(0.8f, 2.1f);
         attackRangeObjComponent.offset = new Vector2(0f, 0f);
