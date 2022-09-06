@@ -4038,7 +4038,7 @@ MonoBehaviour:
   maxActionCoolTime: 3.5
   setJumpGravityScale_F: 2.5
   jumpPower_F: 12.5
-  nowDefensivePosition_B: 
+  nowDefensivePosition: 0
   isDefensing: 0
   isJumping: 0
   isResting: 0
@@ -5368,7 +5368,7 @@ MonoBehaviour:
   maxActionCoolTime: 3.5
   setJumpGravityScale_F: 2.5
   jumpPower_F: 12.5
-  nowDefensivePosition_B: 000000
+  nowDefensivePosition: 3
   isDefensing: 0
   isJumping: 0
   isResting: 0

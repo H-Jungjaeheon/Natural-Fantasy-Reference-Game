@@ -83,8 +83,8 @@ public class SwordAura : MonoBehaviour
     {
         if(collision.gameObject.CompareTag("Enemy"))
         {
-            collision.gameObject.GetComponent<BasicUnitScript>().Hp_F -= damage;
-            if(isEnemyHit == false)
+            collision.gameObject.GetComponent<BasicUnitScript>().Hit(damage, false);
+            if (isEnemyHit == false)
             {
                 CamShake.NowCamShakeStart(0.3f, 1);
                 isEnemyHit = true;

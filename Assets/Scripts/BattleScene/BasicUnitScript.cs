@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum NowDefensePos
+public enum DefensePos
 {
     Left,
     Right,
     Up,
-    DefensePosCount
+    None
 }
 
 public abstract class BasicUnitScript : MonoBehaviour
@@ -51,7 +51,7 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     [Header("방어 / 방어 위치 관련 변수")]
     [Tooltip("현재 방어 위치")]
-    public bool[] nowDefensivePosition_B;
+    public DefensePos nowDefensivePosition;
 
     public bool isDefensing;
 
@@ -249,6 +249,18 @@ public abstract class BasicUnitScript : MonoBehaviour
         unitLightHpBars.fillAmount = lightHp_F / MaxHp_F;
     }
 
+    public void Hit(int damage, bool isDefending)
+    {
+        if (isDefending)
+        {
+            Energy_F -= 1;
+        }
+        else
+        {
+            Hp_F -= damage;
+        }
+    }
+
     protected IEnumerator HpDiminishedProduction()
     {
         float nowReductionSpeed = MaxHp_F / 12;
@@ -264,13 +276,18 @@ public abstract class BasicUnitScript : MonoBehaviour
         isHpDiminishedProduction = false;
     }
 
+    protected virtual void ReleaseDefense()
+    {
+        nowDefensivePosition = DefensePos.None;
+    }
+
     protected abstract void Faint();
 
     protected abstract void UISetting();
 
     protected abstract void Defense();
 
-    protected abstract void SetDefensing(int defensingDirectionIndex, float setRotation);
+    protected abstract void SetDefensing(DefensePos nowDefensePos, float setRotation);
 
     protected void ActionCoolTimeBarSetActive(bool SetActive) => actionCoolTimeObj.SetActive(SetActive);
 

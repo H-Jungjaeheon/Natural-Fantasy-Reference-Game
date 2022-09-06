@@ -37,71 +37,50 @@ public class Player : BasicUnitScript
         {
             if (Input.GetKey(KeyCode.A))
             {
-                SetDefensing((int)NowDefensePos.Left, 180);
+                SetDefensing(DefensePos.Left, 180);
                 //방어 애니메이션
             }
             else if (Input.GetKey(KeyCode.D))
             {
-                SetDefensing((int)NowDefensePos.Right, 0);
+                SetDefensing(DefensePos.Right, 0);
                 //방어 애니메이션
             }
             else if (Input.GetKey(KeyCode.W))
             {
-                SetDefensing((int)NowDefensePos.Up, 0);
+                SetDefensing(DefensePos.Up, 0);
                 //방어 애니메이션
             }
-            if (nowDefensivePosition_B[(int)NowDefensePos.Left] == false)
+            if (nowDefensivePosition != DefensePos.Left)
             {
                 transform.rotation = Quaternion.Euler(0, 0, 0);
             }
         }
         else if (isDefensing && isDeflecting == false)
         {
-            bool isInputDefenseKey = false;
-            if (Input.GetKeyUp(KeyCode.W))
+            print("실행");
+            bool isInputAnyDefenseKey = false;
+
+            if (nowDefensivePosition == DefensePos.Left && Input.GetKeyUp(KeyCode.A))
             {
-                nowDefensivePosition_B[(int)NowDefensePos.Up] = false;
-                for (int nowDefensePosIndex = 0; nowDefensePosIndex < (int)NowDefensePos.DefensePosCount; nowDefensePosIndex++)
-                {
-                    if (nowDefensivePosition_B[nowDefensePosIndex] == true)
-                    {
-                        isInputDefenseKey = true;
-                    }
-                }
-                if (isInputDefenseKey == false)
-                {
-                    isDefensing = false;
-                }
+                nowDefensivePosition = DefensePos.None;
             }
-            else if (Input.GetKeyUp(KeyCode.D))
+            else if (nowDefensivePosition == DefensePos.Right && Input.GetKeyUp(KeyCode.D))
             {
-                nowDefensivePosition_B[(int)NowDefensePos.Right] = false;
-                for (int nowDefensePosIndex = 0; nowDefensePosIndex < (int)NowDefensePos.DefensePosCount; nowDefensePosIndex++)
-                {
-                    if (nowDefensivePosition_B[nowDefensePosIndex] == true)
-                    {
-                        isInputDefenseKey = true;
-                    }
-                }
-                if (isInputDefenseKey == false)
-                {
-                    isDefensing = false;
-                }
+                nowDefensivePosition = DefensePos.None;
             }
-            else if (Input.GetKeyUp(KeyCode.A))
+            else if (nowDefensivePosition == DefensePos.Up && Input.GetKeyUp(KeyCode.W))
             {
-                nowDefensivePosition_B[(int)NowDefensePos.Left] = false;
-                for (int nowDefensePosIndex = 0; nowDefensePosIndex < (int)NowDefensePos.DefensePosCount; nowDefensePosIndex++)
-                {
-                    if (nowDefensivePosition_B[nowDefensePosIndex] == true)
-                    {
-                        isInputDefenseKey = true;
-                    }
-                }
-                if (isInputDefenseKey == false)
-                {
-                    isDefensing = false;
-                }
+                nowDefensivePosition = DefensePos.None;
+            }
+
+            if (nowDefensivePosition != DefensePos.None)
+            {
+                isInputAnyDefenseKey = true;
+            }
+
+            if (isInputAnyDefenseKey == false)
+            {
+                isDefensing = false;
             }
         }
     }
@@ -115,33 +94,33 @@ public class Player : BasicUnitScript
         }
     }
 
-    protected override void SetDefensing(int defensingDirectionIndex, float setRotation)
+    protected override void SetDefensing(DefensePos nowDefensePos, float setRotation)
     {
         isDefensing = true;
-        nowDefensivePosition_B[defensingDirectionIndex] = true;
+        nowDefensivePosition = nowDefensePos;
         transform.rotation = Quaternion.Euler(0, setRotation, 0);
     }
 
     private void Deflect()
     {
-        if (isDefensing)
+        if (isDefensing && isDeflecting == false && Input.GetKeyDown(KeyCode.Space))
         {
-            if (nowDefensivePosition_B[(int)NowDefensePos.Right] == true && isDeflecting == false && Input.GetKeyDown(KeyCode.Space))
+            if (nowDefensivePosition == DefensePos.Right)
             {
-                StartCoroutine(Deflecting((int)NowDefensePos.Right, 0));
+                StartCoroutine(Deflecting(0));
             }
-            else if (nowDefensivePosition_B[(int)NowDefensePos.Left] == true && isDeflecting == false && Input.GetKeyDown(KeyCode.Space))
+            else if (nowDefensivePosition == DefensePos.Left)
             {
-                StartCoroutine(Deflecting((int)NowDefensePos.Left, 180));
+                StartCoroutine(Deflecting(180));
             }
         }
     }
 
-    IEnumerator Deflecting(int nowDefensePosIndex, int setRotation)
+    IEnumerator Deflecting(int setRotation)
     {
         var attackRangeObjComponent = attackRangeObj.GetComponent<BoxCollider2D>();
         isDeflecting = true;
-        nowDefensivePosition_B[nowDefensePosIndex] = false;
+        nowDefensivePosition = DefensePos.None;
         BBM.ActionButtonsSetActive(false, false, false);
         transform.rotation = Quaternion.Euler(0, setRotation, 0);
         attackRangeObjComponent.size = new Vector2(0.55f, 2.1f);
@@ -331,7 +310,8 @@ public class Player : BasicUnitScript
             {
                 if (rangeInEnemy[nowIndex] != null)
                 {
-                    rangeInEnemy[nowIndex].GetComponent<BasicUnitScript>().Hp_F -= Damage_I;
+                    bool isDefence = rangeInEnemy[nowIndex].GetComponent<BasicUnitScript>().nowDefensivePosition == DefensePos.Left ? true : false;
+                    rangeInEnemy[nowIndex].GetComponent<BasicUnitScript>().Hit(Damage_I, isDefence);
                 }
             }
         }

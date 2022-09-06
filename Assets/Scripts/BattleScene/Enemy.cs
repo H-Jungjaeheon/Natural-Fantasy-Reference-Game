@@ -60,6 +60,7 @@ public class Enemy : BasicUnitScript
             nowdelayTime += Time.deltaTime;
             yield return null;
         }
+
         if (rangeInEnemy.Count != 0) //기본공격 실행 함수 및 기본공격 애니메이션 시작
         {
             CamShake.NowCamShakeStart(0.3f, 0.5f);
@@ -67,22 +68,17 @@ public class Enemy : BasicUnitScript
             {
                 if (rangeInEnemy[nowIndex] != null)
                 {
-                    switch (rangeInEnemy[nowIndex].GetComponent<BasicUnitScript>().nowDefensivePosition_B[(int)NowDefensePos.Right])
-                    {
-                        case true:
-                            rangeInEnemy[nowIndex].GetComponent<BasicUnitScript>().Energy_F -= 1;
-                            break;
-                        case false:
-                            rangeInEnemy[nowIndex].GetComponent<BasicUnitScript>().Hp_F -= Damage_I;
-                            break;
-                    }
+                    bool isDefence = rangeInEnemy[nowIndex].GetComponent<BasicUnitScript>().nowDefensivePosition == DefensePos.Right ? true : false;
+                    rangeInEnemy[nowIndex].GetComponent<BasicUnitScript>().Hit(Damage_I, isDefence);
                 }
             }
         }
+
         if (isLastAttack == true)
         {
             yield return new WaitForSeconds(1f);
         }
+
         StartCoroutine(Return());
     }
 
@@ -111,7 +107,7 @@ public class Enemy : BasicUnitScript
     {
         
     }
-    protected override void SetDefensing(int defensingDirectionIndex, float setRotation)
+    protected override void SetDefensing(DefensePos nowDefensePos, float setRotation)
     {
 
     }
