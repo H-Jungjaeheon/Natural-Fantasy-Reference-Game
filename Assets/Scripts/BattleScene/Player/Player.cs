@@ -109,6 +109,7 @@ public class Player : BasicUnitScript
         yield return new WaitForSeconds(0.15f); //치기 전까지 기다림
         if (rangeInDeflectAbleObj.Count != 0)
         {
+            CamShake.NowCamShakeStart(0.2f, 0.4f);
             for (int nowIndex = 0; nowIndex < rangeInDeflectAbleObj.Count; nowIndex++)
             {
                 rangeInDeflectAbleObj[nowIndex].GetComponent<EnemysBullet>().Reflex(true);
@@ -169,7 +170,7 @@ public class Player : BasicUnitScript
         }
         BBM.ActionButtonsSetActive(false, false, false);
     }
-
+        
     private void Jump()
     {
         if (isJumping == false && isResting == false && isAttacking == false && isDefensing == false && isDeflecting == false && isFainting == false && Input.GetKey(KeyCode.Space))
@@ -408,6 +409,7 @@ public class Player : BasicUnitScript
     protected override IEnumerator Fainting()
     {
         isFainting = true;
+        nowDefensivePosition = DefensePos.None;
         BBM.ActionButtonsSetActive(false, false, false);
         yield return new WaitForSeconds(5); //나중에 매개변수로 레벨에 따라서 기절 시간 넣기
         BBM.ActionButtonsSetActive(true, false, false);

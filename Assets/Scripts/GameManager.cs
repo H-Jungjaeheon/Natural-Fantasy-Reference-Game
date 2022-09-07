@@ -53,6 +53,9 @@ public class GameManager : Singleton<GameManager>
         set { damageUpgradeLevel = value; }
     }
     #endregion
+
+    public GameObject testBullet;
+
     private void Awake()
     {
         if (instance == null)
@@ -73,6 +76,9 @@ public class GameManager : Singleton<GameManager>
     // Update is called once per frame
     void Update()
     {
-       
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            Instantiate(testBullet, testBullet.transform.position, testBullet.transform.rotation);
+        }
     }
 }

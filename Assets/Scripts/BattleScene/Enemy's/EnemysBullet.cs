@@ -41,28 +41,30 @@ public class EnemysBullet : MonoBehaviour
     {
         isDeflecting = isReflexToPlayer;
     }
-
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
-        BasicUnitScript hitObjsUnitScript = collision.gameObject.GetComponent<BasicUnitScript>();
-        if (collision.gameObject.CompareTag("Player") && isDeflecting == false)
+        BasicUnitScript hitObjsUnitScript = collision.GetComponent<BasicUnitScript>();
+        if (collision.CompareTag("Player") && isDeflecting == false)
         {
             if (hitObjsUnitScript.nowDefensivePosition == DefensePos.Right)
             {
+                CamShake.NowCamShakeStart(0.2f, 0.4f);
                 hitObjsUnitScript.Hit(damage, true);
             }
             else
             {
+                CamShake.NowCamShakeStart(0.2f, 0.8f);
                 hitObjsUnitScript.Hit(damage, false);
             }
             Destroy(gameObject);
         }
-        else if (collision.gameObject.CompareTag("Enemy") && isDeflecting)
+        else if (collision.CompareTag("Enemy") && isDeflecting)
         {
+            CamShake.NowCamShakeStart(0.2f, 0.8f);
             hitObjsUnitScript.Hit(damage, false);
             Destroy(gameObject);
         }
-        else if (collision.gameObject.CompareTag("ObjDestroy"))
+        else if (collision.CompareTag("ObjDestroy"))
         {
             Destroy(gameObject);
         }
