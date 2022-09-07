@@ -98,13 +98,11 @@ public class Player : BasicUnitScript
 
     IEnumerator Deflecting(int setRotation)
     {
-        var attackRangeObjComponent = attackRangeObj.GetComponent<BoxCollider2D>();
         isDeflecting = true;
         nowDefensivePosition = DefensePos.None;
         BBM.ActionButtonsSetActive(false, false, false);
         transform.rotation = Quaternion.Euler(0, setRotation, 0);
-        attackRangeObjComponent.size = new Vector2(0.55f, 2.1f);
-        attackRangeObjComponent.offset = new Vector2(-0.1f, 0f);
+        ChangeAttackRange(new Vector2(0.55f, 2.1f), new Vector2(-0.1f, 0));
         //애니 실행
         yield return new WaitForSeconds(0.15f); //치기 전까지 기다림
         if (rangeInDeflectAbleObj.Count != 0)
@@ -116,8 +114,7 @@ public class Player : BasicUnitScript
             }
         }
         yield return new WaitForSeconds(0.5f); //애니메이션 종료까지 기다림
-        attackRangeObjComponent.size = new Vector2(0.8f, 2.1f);
-        attackRangeObjComponent.offset = new Vector2(0f, 0f);
+        InitializationAttackRange();
         if (isWaiting == false)
         {
             BBM.ActionButtonsSetActive(true, false, false);
@@ -410,6 +407,7 @@ public class Player : BasicUnitScript
     {
         isFainting = true;
         nowDefensivePosition = DefensePos.None;
+        isDefensing = false;
         BBM.ActionButtonsSetActive(false, false, false);
         yield return new WaitForSeconds(5); //나중에 매개변수로 레벨에 따라서 기절 시간 넣기
         BBM.ActionButtonsSetActive(true, false, false);

@@ -90,7 +90,7 @@ public abstract class BasicUnitScript : MonoBehaviour
     public float Hp_F
     {
         get { return hp_F; }
-        set 
+        set
         {
             if (value > lightHp_F)
             {
@@ -101,7 +101,7 @@ public abstract class BasicUnitScript : MonoBehaviour
                 hp_F = 0;
                 Dead();
             }
-            else 
+            else
             {
                 hp_F = value;
             }
@@ -137,7 +137,7 @@ public abstract class BasicUnitScript : MonoBehaviour
                 energy_F = 0;
                 isFaintingReady = true;
             }
-            else 
+            else
             {
                 energy_F = value;
             }
@@ -217,6 +217,8 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     protected Rigidbody2D rigid;
 
+    protected BoxCollider2D attackRangeObjComponent;
+
     protected virtual void Awake()
     {
         StartSameSetting();
@@ -237,6 +239,7 @@ public abstract class BasicUnitScript : MonoBehaviour
         startPos_Vector = transform.position;
         nowAttackCount_I = 1;
         nowActionCoolTime = 0;
+        attackRangeObjComponent = attackRangeObj.GetComponent<BoxCollider2D>();
     }
 
     protected abstract void StartSetting();
@@ -295,4 +298,16 @@ public abstract class BasicUnitScript : MonoBehaviour
     protected abstract void Dead();
 
     protected abstract IEnumerator Fainting();
+
+    protected void ChangeAttackRange(Vector2 attackRangeColliderSize, Vector2 attackRangeColliderOffset)
+    {
+        attackRangeObjComponent.size = attackRangeColliderSize;
+        attackRangeObjComponent.offset = attackRangeColliderOffset;
+    }
+
+    protected void InitializationAttackRange()
+    {
+        attackRangeObjComponent.size = new Vector2(0.8f, 2.1f);
+        attackRangeObjComponent.offset = new Vector2(0f, 0f);
+    }
 }
