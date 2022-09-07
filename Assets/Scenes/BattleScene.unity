@@ -4680,6 +4680,42 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1333865519}
   m_CullTransparentMesh: 1
+--- !u!1 &1385437875
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1385437876}
+  m_Layer: 0
+  m_Name: "\uD654\uBA74 \uD754\uB4E4\uB9BC \uC6D0\uBCF8 \uAC8C\uC784\uCC98\uB7FC
+    \uACE0\uCE58\uAE30  \uC2A4\uD14C\uC774\uD2B8 \uD328\uD134 \uB2E4\uC2DC \uCC3E\uC544\uBCF4\uAE30
+    \uAD6C\uC870\uCCB4 \uCC3E\uC544\uBCF4\uAE30 \uD3EC\uC2A4\uD2B8 \uD504\uB85C\uC138\uC2F1
+    \uACF5\uBD80\uD558\uAE30 mathf\uB97C \uD1B5\uD55C \uD0C4\uB9C9 \uBC1C\uC0AC \uACF5\uBD80\uD558\uAE30 
+    \uADF8 \uC774\uD6C4 \uD295\uACA8\uB0B4\uAE30\uC640 \uBC29\uC5B4\uC5D0 \uD654\uBA74
+    \uD754\uB4E4\uB9BC \uB123\uAE30  \uC2A4\uD0AC \uAE30\uD68D, \uC7AC\uD654  \uADF8\uADF8
+    \uC774\uD6C4 \uBCF4\uC2A4 \uD328\uD134 \uC18D\uC131 \uC2DC\uC2A4\uD15C, "
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1385437876
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1385437875}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -6.867468, y: 0.9644377, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1390554747
 GameObject:
   m_ObjectHideFlags: 0
@@ -7002,5 +7038,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 5
-  speed: 20
+  speed: 21
   isDeflecting: 0
