@@ -6,16 +6,12 @@ using Random = UnityEngine.Random;
 
 public class CamShake : MonoBehaviour
 {
-    public delegate void CamShakeStarts(float timeInput, float shakeAmountInput);
-    public static CamShakeStarts NowCamShakeStart;
+    public static Action<float, float> NowCamShakeStart;
     private float shakeAmount;
     private float shakeTime;
     private bool isShaking;
 
-    [SerializeField]
-    private GameObject playerObj;
-
-    Player playerComponent;
+    private Player playerComponent;
 
     Vector3 jumpingShaking = new Vector3(0,0,-10);
     Vector3 initialPosition;
@@ -23,7 +19,6 @@ public class CamShake : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        NowCamShakeStart += CamShakeStart;
         StartSetting();
     }
 
@@ -31,11 +26,16 @@ public class CamShake : MonoBehaviour
     void Update()
     {
         CamShaking();
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            StartCoroutine(TestCamShake(0.6f));
+        }
     }
 
     public void StartSetting()
     {
-        playerComponent = playerObj.GetComponent<Player>();
+        NowCamShakeStart += CamShakeStart;
+        playerComponent = BattleSceneManager.Instance.Player;
         initialPosition = transform.position;
     }
 
@@ -57,7 +57,7 @@ public class CamShake : MonoBehaviour
             else
             {
                 jumpingShaking.x = Random.insideUnitSphere.x * shakeAmount;
-                jumpingShaking.y = Random.insideUnitSphere.y * shakeAmount + playerObj.transform.position.y;
+                jumpingShaking.y = Random.insideUnitSphere.y * shakeAmount + playerComponent.transform.position.y;
                 transform.position = jumpingShaking;
             }
             shakeTime -= Time.deltaTime;
@@ -76,9 +76,27 @@ public class CamShake : MonoBehaviour
             else
             {
                 jumpingShaking.x = transform.position.x;
-                jumpingShaking.y = playerObj.transform.position.y;
+                jumpingShaking.y = playerComponent.transform.position.y;
                 transform.position = jumpingShaking;
             }
+        }
+    }
+
+    IEnumerator TestCamShake(float shakeAmount)
+    {
+        WaitForSeconds shakeDelay = new WaitForSeconds(0.05f);
+        int maxShakeCount = 5;
+        int multiplication = 1;
+        float nowShakeAmount = shakeAmount;
+        while (maxShakeCount > 0)
+        {
+            jumpingShaking.x = nowShakeAmount * multiplication;
+            jumpingShaking.y = transform.position.y;
+            transform.position = jumpingShaking;
+            nowShakeAmount -= shakeAmount / 7;
+            multiplication *= -1;
+            maxShakeCount -= 1;
+            yield return shakeDelay;
         }
     }
 }

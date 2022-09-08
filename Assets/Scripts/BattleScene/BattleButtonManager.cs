@@ -41,7 +41,7 @@ public class BattleButtonManager : Singleton<BattleButtonManager>
 
     public ButtonPage nowButtonPage;
 
-    Player playerComponent;
+    private Player playerComponent;
 
     // Start is called before the first frame update
     void Start()
@@ -51,7 +51,7 @@ public class BattleButtonManager : Singleton<BattleButtonManager>
 
     private void StartSetting()
     {
-        playerComponent = BattleSceneManager.Instance.Player.GetComponent<Player>();
+        playerComponent = BattleSceneManager.Instance.Player;
         SkillChooseButton.onClick.AddListener(() => ActionButtonsSetActive(false, true, true));
         OutSkillChooseButton.onClick.AddListener(() => ActionButtonsSetActive(true, false, false));
         SkillButtons[(int)Skills.FirstSkill].onClick.AddListener(() => playerComponent.SkillUse(1, 5));

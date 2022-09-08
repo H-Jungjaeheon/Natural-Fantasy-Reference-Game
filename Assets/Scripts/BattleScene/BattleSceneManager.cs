@@ -17,7 +17,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     [HideInInspector]
     public Vector2 EnemyCharacterPos; //적 포지션
 
-    public GameObject Player;
+    public Player Player;
 
     [HideInInspector]
     public GameObject Enemy;

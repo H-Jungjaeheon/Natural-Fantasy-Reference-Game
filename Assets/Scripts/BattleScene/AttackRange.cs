@@ -5,19 +5,15 @@ using UnityEngine;
 public class AttackRange : MonoBehaviour
 {
     [SerializeField]
-    [Tooltip("ÀÌ °ø°İ ¹üÀ§¸¦ °¡Áø ÇØ´ç À¯´Ö Á¾·ù")]
+    [Tooltip("ì´ ê³µê²© ë²”ìœ„ë¥¼ ê°€ì§„ í•´ë‹¹ ìœ ë‹› ì¢…ë¥˜")]
     private bool isPlayer;
 
     [SerializeField]
-    [Tooltip("ÀÌ °ø°İ ¹üÀ§¸¦ °¡Áø ÇØ´ç À¯´Ö ¿ÀºêÁ§Æ®")]
+    [Tooltip("ì´ ê³µê²© ë²”ìœ„ë¥¼ ê°€ì§„ í•´ë‹¹ ìœ ë‹› ì˜¤ë¸Œì íŠ¸")]
     private GameObject unitObj;
 
-    //[SerializeField]
-    //[Tooltip("°ø°İ ¹üÀ§ Äİ¶óÀÌ´õ")]
-    //private Collider2D attackRangeCollider;
-
     [SerializeField]
-    [Tooltip("Äİ¶óÀÌ´õ X ÁÂÇ¥")]
+    [Tooltip("ì½œë¼ì´ë” X ì¢Œí‘œ")]
     private float setColliderXPos;
 
     private Vector2 colliderPos;
@@ -51,7 +47,7 @@ public class AttackRange : MonoBehaviour
         setColliderXPos *= -1;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision) //ÀûÀÌ ¹üÀ§¿¡ µé¾î¿Ã ½Ã
+    private void OnTriggerEnter2D(Collider2D collision) //ì ì´ ë²”ìœ„ì— ë“¤ì–´ì˜¬ ì‹œ
     {
         if (collision.gameObject.CompareTag("DeflectAbleObj"))
         {
@@ -80,7 +76,7 @@ public class AttackRange : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision) //ÀûÀÌ ¹üÀ§¿¡ ³ª°¥ ½Ã
+    private void OnTriggerExit2D(Collider2D collision) //ì ì´ ë²”ìœ„ì— ë‚˜ê°ˆ ì‹œ
     {
         if (collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Player"))
         {

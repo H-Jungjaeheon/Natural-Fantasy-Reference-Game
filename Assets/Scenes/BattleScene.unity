@@ -2678,7 +2678,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce015dafb632efc48bf6b131147107af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerObj: {fileID: 1717870240}
 --- !u!1 &834820273
 GameObject:
   m_ObjectHideFlags: 0
@@ -3822,7 +3821,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerCharacterPos: {x: 0, y: 0}
   EnemyCharacterPos: {x: 8, y: -0.15}
-  Player: {fileID: 1717870240}
+  Player: {fileID: 1717870245}
   Enemy: {fileID: 0}
 --- !u!4 &1076351709
 Transform:
