@@ -174,6 +174,7 @@ public class Player : BasicUnitScript
         {
             isJumping = true;
             BBM.ActionButtonsSetActive(false, false, false);
+            CamShake.JumpStart();
             rigid.AddForce(Vector2.up * jumpPower_F, ForceMode2D.Impulse);
             rigid.gravityScale = setJumpGravityScale_F - 0.5f;
             StartCoroutine(JumpDelay());
@@ -192,6 +193,7 @@ public class Player : BasicUnitScript
                     BBM.ActionButtonsSetActive(true, false, false);
                 }
             }
+            CamShake.JumpStop();
             transform.position = startPos_Vector;
             rigid.velocity = Vector2.zero;
             rigid.gravityScale = 0;
