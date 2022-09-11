@@ -107,7 +107,7 @@ public class Player : BasicUnitScript
         yield return new WaitForSeconds(0.15f); //치기 전까지 기다림
         if (rangeInDeflectAbleObj.Count != 0)
         {
-            CamShake.NowCamShakeStart(0.2f, 0.4f);
+            CamShake.CamShakeMod(true, 1.1f);
             for (int nowIndex = 0; nowIndex < rangeInDeflectAbleObj.Count; nowIndex++)
             {
                 rangeInDeflectAbleObj[nowIndex].GetComponent<EnemysBullet>().Reflex(true);
@@ -286,10 +286,10 @@ public class Player : BasicUnitScript
             switch (nowAttackCount_I)
             {
                 case 1:
-                    CamShake.NowCamShakeStart(0.3f, 0.5f);
+                    CamShake.CamShakeMod(true, 2f);
                     break;
                 case 3:
-                    CamShake.NowCamShakeStart(0.3f, 1);
+                    CamShake.CamShakeMod(false, 2f); //대각선 떨림 코드로 변경
                     break;
             }
             for (int nowIndex = 0; nowIndex < rangeInEnemy.Count; nowIndex++)

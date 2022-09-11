@@ -86,7 +86,7 @@ public class SwordAura : MonoBehaviour
             collision.gameObject.GetComponent<BasicUnitScript>().Hit(damage, false);
             if (isEnemyHit == false)
             {
-                CamShake.NowCamShakeStart(0.3f, 1);
+                CamShake.CamShakeMod(false, 2f); //대각선
                 isEnemyHit = true;
             }
         }

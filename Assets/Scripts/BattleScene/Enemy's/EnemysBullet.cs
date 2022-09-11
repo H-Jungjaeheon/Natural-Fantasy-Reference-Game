@@ -48,19 +48,19 @@ public class EnemysBullet : MonoBehaviour
         {
             if (hitObjsUnitScript.nowDefensivePosition == DefensePos.Right)
             {
-                CamShake.NowCamShakeStart(0.2f, 0.4f);
+                CamShake.CamShakeMod(true, 1.5f);
                 hitObjsUnitScript.Hit(damage, true);
             }
             else
             {
-                CamShake.NowCamShakeStart(0.2f, 0.8f);
-                hitObjsUnitScript.Hit(damage, false);
+                CamShake.CamShakeMod(false,  2f);
+                hitObjsUnitScript.Hit(damage, false); //대각선
             }
             Destroy(gameObject);
         }
         else if (collision.CompareTag("Enemy") && isDeflecting)
         {
-            CamShake.NowCamShakeStart(0.2f, 0.8f);
+            CamShake.CamShakeMod(false, 2f); //대각선
             hitObjsUnitScript.Hit(damage, false);
             Destroy(gameObject);
         }

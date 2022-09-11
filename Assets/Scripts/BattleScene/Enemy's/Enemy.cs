@@ -63,7 +63,7 @@ public class Enemy : BasicUnitScript
 
         if (rangeInEnemy.Count != 0) //기본공격 실행 함수 및 기본공격 애니메이션 시작
         {
-            CamShake.NowCamShakeStart(0.3f, 0.5f);
+            CamShake.CamShakeMod(false, 2f);
             for (int nowIndex = 0; nowIndex < rangeInEnemy.Count; nowIndex++)
             {
                 if (rangeInEnemy[nowIndex] != null)
