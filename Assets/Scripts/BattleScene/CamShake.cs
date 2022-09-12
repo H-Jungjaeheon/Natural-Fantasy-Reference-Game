@@ -17,14 +17,14 @@ public class CamShake : MonoBehaviour
     [Tooltip("플레이어 착지 중 카메라 떨어지는 속도")]
     private float setJumpCamGravityScale_F;
 
-    private bool isVerticalShaking;
-
     [SerializeField]
     [Tooltip("부모 오브젝트의 리지드바디(점프 속도 제어용)")]
     private Rigidbody2D rigid;
 
     Vector3 initialPosition;
-    Vector3 startPosition;
+    Vector3 objStartPosition;
+    Vector3 camStartposition;
+    Vector3 zeroPosition = new Vector3(0,0,0);
     WaitForSeconds shakeDelay = new WaitForSeconds(0.03f);
 
     void Awake()
@@ -37,14 +37,21 @@ public class CamShake : MonoBehaviour
         RepetitionSetting();
         if (Input.GetKeyDown(KeyCode.H))
         {
-            StartCoroutine(CamVerticalShake(1.5f));
+            StartCoroutine(CamVerticalShake(1.6f));
+            //StartCoroutine(CamHorizontalShake(1.1f));
+        }
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            //StartCoroutine(CamVerticalShake(1.5f));
+            StartCoroutine(CamHorizontalShake(1.1f));
         }
     }
 
     public void StartSetting()
     {
         initialPosition = rigid.transform.position;
-        startPosition = rigid.transform.position;
+        objStartPosition = rigid.transform.position;
+        camStartposition = transform.position;
         CamShakeMod = CamShakeStart;
         JumpStart = CallingStartJump;
         JumpStop = StopJump;
@@ -64,11 +71,8 @@ public class CamShake : MonoBehaviour
 
     private void RepetitionSetting()
     {
-        if (isVerticalShaking == false)
-        {
-            initialPosition.y = rigid.transform.position.y;
-            rigid.transform.position = initialPosition;
-        }
+        initialPosition.y = rigid.transform.position.y;
+        //rigid.transform.position = initialPosition;
     }
 
     private void CallingStartJump()
@@ -78,7 +82,8 @@ public class CamShake : MonoBehaviour
 
     private void StopJump()
     {
-        rigid.transform.position = startPosition;
+        rigid.transform.position = objStartPosition;
+        transform.position = camStartposition;
         rigid.velocity = Vector2.zero;
         rigid.gravityScale = 0;
     }
@@ -96,49 +101,45 @@ public class CamShake : MonoBehaviour
         rigid.gravityScale = 1.5f;
     }
 
-    IEnumerator CamHorizontalShake(float shakeAmount)
+    IEnumerator CamHorizontalShake(float shakeAmount) //점프 시 y값은 계속 변하고 있음
     {
-        int multiplication = 1;
+        int multiplication = -1;
         Vector3 nowCamPos = initialPosition;
-        for (int nowShakeCount = 0; nowShakeCount < 9; nowShakeCount++)
+        for (int nowShakeCount = 0; nowShakeCount < 11; nowShakeCount++)
         {
             nowCamPos.x = shakeAmount * multiplication;
+            nowCamPos.y = (BattleSceneManager.Instance.Player.isJumping) ? initialPosition.y : objStartPosition.y;
+
             rigid.transform.position = nowCamPos;
 
-            shakeAmount = (nowShakeCount == 1) ? shakeAmount -= shakeAmount / 1.5f : shakeAmount -= shakeAmount / 10;
+            shakeAmount = (nowShakeCount == 0) ? shakeAmount -= shakeAmount / 1.25f : shakeAmount -= shakeAmount / 9;
             
             multiplication *= -1;
             yield return shakeDelay;
+            rigid.transform.position = initialPosition;
         }
     }
 
     IEnumerator CamVerticalShake(float shakeAmount)
     {
         int multiplication = -1;
-        Vector3 nowCamPos = initialPosition;
-        Vector3 plusPos = startPosition;
-        isVerticalShaking = true;
-
+        Vector3 plusPos = zeroPosition;
+        print(zeroPosition);
         for (int nowShakeCount = 0; nowShakeCount < 11; nowShakeCount++)
         {
-            plusPos.y = shakeAmount * -multiplication;
-            nowCamPos.x = shakeAmount * multiplication;
-            rigid.transform.position = nowCamPos;
-            rigid.transform.position += plusPos;
-            shakeAmount = (nowShakeCount == 1) ? shakeAmount -= shakeAmount / 1.2f : shakeAmount -= shakeAmount / 8.5f;
+            plusPos.x = -(shakeAmount * multiplication);
+            plusPos.y = shakeAmount * multiplication;
 
-            yield return shakeDelay;
+            transform.position += plusPos;
+
+            shakeAmount = (nowShakeCount == 0) ? shakeAmount -= shakeAmount / 1.25f : shakeAmount -= shakeAmount / 9;
+
             multiplication *= -1;
-            rigid.transform.position -= plusPos;
+            yield return shakeDelay;
+            transform.position -= plusPos;
+            plusPos = zeroPosition;
         }
-        isVerticalShaking = false;
-        if (BattleSceneManager.Instance.Player.isJumping == false)
-        {
-            rigid.transform.position = startPosition;
-        }
-        else 
-        {
-            rigid.transform.position = initialPosition;
-        }
+        plusPos = initialPosition;
+        transform.position = plusPos;
     }
 }
