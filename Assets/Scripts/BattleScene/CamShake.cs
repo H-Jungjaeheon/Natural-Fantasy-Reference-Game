@@ -35,16 +35,16 @@ public class CamShake : MonoBehaviour
     void Update()
     {
         RepetitionSetting();
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            StartCoroutine(CamVerticalShake(1.6f));
-            //StartCoroutine(CamHorizontalShake(1.1f));
-        }
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            //StartCoroutine(CamVerticalShake(1.5f));
-            StartCoroutine(CamHorizontalShake(1.1f));
-        }
+        //if (Input.GetKeyDown(KeyCode.H))
+        //{
+        //    StartCoroutine(CamVerticalShake(1.6f));
+        //    //StartCoroutine(CamHorizontalShake(1.1f));
+        //}
+        //if (Input.GetKeyDown(KeyCode.G))
+        //{
+        //    //StartCoroutine(CamVerticalShake(1.5f));
+        //    StartCoroutine(CamHorizontalShake(1.1f));
+        //}
     }
 
     public void StartSetting()
@@ -72,7 +72,6 @@ public class CamShake : MonoBehaviour
     private void RepetitionSetting()
     {
         initialPosition.y = rigid.transform.position.y;
-        //rigid.transform.position = initialPosition;
     }
 
     private void CallingStartJump()
@@ -124,7 +123,6 @@ public class CamShake : MonoBehaviour
     {
         int multiplication = -1;
         Vector3 plusPos = zeroPosition;
-        print(zeroPosition);
         for (int nowShakeCount = 0; nowShakeCount < 11; nowShakeCount++)
         {
             plusPos.x = -(shakeAmount * multiplication);
