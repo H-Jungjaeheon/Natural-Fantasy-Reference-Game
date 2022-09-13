@@ -35,22 +35,12 @@ public class CamShake : MonoBehaviour
     void Update()
     {
         RepetitionSetting();
-        //if (Input.GetKeyDown(KeyCode.H))
-        //{
-        //    StartCoroutine(CamVerticalShake(1.6f));
-        //    //StartCoroutine(CamHorizontalShake(1.1f));
-        //}
-        //if (Input.GetKeyDown(KeyCode.G))
-        //{
-        //    //StartCoroutine(CamVerticalShake(1.5f));
-        //    StartCoroutine(CamHorizontalShake(1.1f));
-        //}
     }
 
     public void StartSetting()
     {
         initialPosition = rigid.transform.position;
-        objStartPosition = rigid.transform.position;
+        objStartPosition = initialPosition;
         camStartposition = transform.position;
         CamShakeMod = CamShakeStart;
         JumpStart = CallingStartJump;
@@ -100,7 +90,7 @@ public class CamShake : MonoBehaviour
         rigid.gravityScale = 1.5f;
     }
 
-    IEnumerator CamHorizontalShake(float shakeAmount) //점프 시 y값은 계속 변하고 있음
+    IEnumerator CamHorizontalShake(float shakeAmount) 
     {
         int multiplication = -1;
         Vector3 nowCamPos = initialPosition;

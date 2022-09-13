@@ -11,6 +11,18 @@ public enum DefensePos
     None
 }
 
+public enum NowState
+{
+    Standingby,
+    Defensing,
+    Deflecting,
+    Jumping,
+    Resting,
+    FaintingReady,
+    Fainting,
+    Attacking
+}
+
 public abstract class BasicUnitScript : MonoBehaviour
 {
     #region 공격 쿨타임 관련 변수 (공통)
@@ -51,6 +63,8 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     [HideInInspector]
     public DefensePos nowDefensivePosition; //현재 방어 위치
+
+    public NowState nowState; //현재 행동
 
     protected bool isDefensing;
 
