@@ -87,11 +87,11 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     private bool isHpDiminishedProduction;
 
-    [Header("공격 범위 내의 적 리스트")]
-    public List<GameObject> rangeInEnemy = new List<GameObject>();
+    [HideInInspector]
+    public List<GameObject> rangeInEnemy = new List<GameObject>(); //공격 범위 내의 적 리스트
 
-    [Header("튕겨내기 범위 내의 오브젝트 리스트")]
-    public List<GameObject> rangeInDeflectAbleObj = new List<GameObject>();
+    [HideInInspector]
+    public List<GameObject> rangeInDeflectAbleObj = new List<GameObject>(); //튕겨내기 범위 내의 오브젝트 리스트
 
     protected int nowAttackCount_I; //연속공격 시 현재 공격 횟수
     #endregion

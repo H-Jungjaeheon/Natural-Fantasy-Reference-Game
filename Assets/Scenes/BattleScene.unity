@@ -4279,6 +4279,7 @@ MonoBehaviour:
   setJumpGravityScale_F: 2.5
   jumpPower_F: 12.5
   nowDefensivePosition: 3
+  nowState: 0
   isJumping: 0
   isResting: 0
   isFaintingReady: 0
@@ -5610,6 +5611,7 @@ MonoBehaviour:
   setJumpGravityScale_F: 2.5
   jumpPower_F: 13
   nowDefensivePosition: 3
+  nowState: 0
   isJumping: 0
   isResting: 0
   isFaintingReady: 0

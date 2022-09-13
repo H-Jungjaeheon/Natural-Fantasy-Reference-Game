@@ -21,6 +21,7 @@ public class Player : BasicUnitScript
   
     protected override void StartSetting() //초기 세팅 (일부 공통)
     {
+        nowState = NowState.Standingby;
         BBM = BattleButtonManager.Instance;
         maxActionCoolTime -= GameManager.Instance.ReduceCoolTimeLevel * 0.5f;
         MaxHp_F += GameManager.Instance.MaxHpUpgradeLevel * 5;
@@ -77,6 +78,7 @@ public class Player : BasicUnitScript
     protected override void SetDefensing(DefensePos nowDefensePos, float setRotation)
     {
         isDefensing = true;
+        nowState = NowState.Defensing;
         nowDefensivePosition = nowDefensePos;
         transform.rotation = Quaternion.Euler(0, setRotation, 0);
     }

@@ -23,13 +23,11 @@ public class ObjectPool : Singleton<ObjectPool>
         for (int nowCount = 0; nowCount < count; nowCount++)
         {
             objPools[nowPoolIndex].Enqueue(CreateNewObjs(nowPoolIndex));
-            //SwordAuraQueue.Enqueue(CreateNewObjs());//
         }
     }
 
     private GameObject CreateNewObjs(int nowObjIndex) //오브젝트 생성 함수
     {
-        //var newCreateObj = Instantiate(SwordAuraObj[0], transform).GetComponent<SwordAura>();
         GameObject newCreateObj = Instantiate(usePrefabObjs[nowObjIndex], transform);
         newCreateObj.gameObject.SetActive(false);
         return newCreateObj;
@@ -40,16 +38,13 @@ public class ObjectPool : Singleton<ObjectPool>
     {
         if (objPools[objIndex].Count > 0)
         {
-            //var obj = SwordAuraQueue.Dequeue();
             GameObject obj = objPools[objIndex].Dequeue();
             obj.transform.SetParent(null);
-            print("작동");
             obj.gameObject.SetActive(true);
             return obj;
         }
         else 
         {
-            //var newObj = CreateNewObjs();
             GameObject newObj = CreateNewObjs(objIndex);
             newObj.transform.SetParent(null);
             newObj.gameObject.SetActive(true);
