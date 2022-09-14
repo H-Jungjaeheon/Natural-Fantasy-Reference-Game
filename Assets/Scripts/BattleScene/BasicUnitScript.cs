@@ -63,12 +63,10 @@ public abstract class BasicUnitScript : MonoBehaviour
     [HideInInspector]
     public DefensePos nowDefensivePosition; //현재 방어 위치
 
+    [HideInInspector]
     public NowState nowState; //현재 행동
 
     protected bool isWaiting; //대기중
-
-    [HideInInspector]
-    public bool isFaintingReady;
 
     private bool isHpDiminishedProduction;
 
@@ -134,7 +132,6 @@ public abstract class BasicUnitScript : MonoBehaviour
             if (value <= 0)
             {
                 energy_F = 0;
-                isFaintingReady = true;
             }
             else
             {
@@ -190,10 +187,6 @@ public abstract class BasicUnitScript : MonoBehaviour
     #endregion
 
     [SerializeField]
-    [Tooltip("해당 유닛 공격 범위 콜라이더")]
-    protected GameObject attackRangeObj;
-
-    [SerializeField]
     [Tooltip("유닛 체력바 이미지")]
     private Image unitHpBars;
 
@@ -214,8 +207,12 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     protected Camera Cam;
 
+    [SerializeField]
+    [Tooltip("자신의 리지드바디")]
     protected Rigidbody2D rigid;
 
+    [SerializeField]
+    [Tooltip("자신의 공격 범위 콜라이더")]
     protected BoxCollider2D attackRangeObjComponent;
 
     protected virtual void Awake()
@@ -234,11 +231,9 @@ public abstract class BasicUnitScript : MonoBehaviour
     protected void StartSameSetting()
     {
         Cam = Camera.main;
-        rigid = gameObject.GetComponent<Rigidbody2D>();
         startPos_Vector = transform.position;
         nowAttackCount_I = 1;
         nowActionCoolTime = 0;
-        attackRangeObjComponent = attackRangeObj.GetComponent<BoxCollider2D>();
     }
 
     protected abstract void StartSetting();

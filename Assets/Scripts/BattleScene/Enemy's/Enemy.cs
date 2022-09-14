@@ -126,9 +126,8 @@ public class Enemy : BasicUnitScript
     }
     protected override void Faint()
     {
-        if (isFaintingReady && (nowState == NowState.Standingby || nowState == NowState.Defensing))
+        if (Energy_F <= 0 && (nowState == NowState.Standingby || nowState == NowState.Defensing))
         {
-            isFaintingReady = false;
             StartCoroutine(Fainting());
         }
     }

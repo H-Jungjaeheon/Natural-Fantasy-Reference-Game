@@ -4280,7 +4280,6 @@ MonoBehaviour:
   jumpPower_F: 12.5
   nowDefensivePosition: 3
   nowState: 0
-  isFaintingReady: 0
   rangeInEnemy: []
   rangeInDeflectAbleObj: []
   hp_F: 100
@@ -4292,12 +4291,13 @@ MonoBehaviour:
   maxDreamyFigure_F: 20
   damage_I: 4
   Speed_F: 3.5
-  attackRangeObj: {fileID: 541266942}
   unitHpBars: {fileID: 1135723117}
   unitLightHpBars: {fileID: 1437239399}
   unitEnergyBars: {fileID: 994072189}
   unitDreamyFigureBars: {fileID: 1198872407}
   startPos_Vector: {x: 0, y: 0}
+  rigid: {fileID: 1159378195}
+  attackRangeObjComponent: {fileID: 541266945}
 --- !u!50 &1159378195
 Rigidbody2D:
   serializedVersion: 4
@@ -5608,7 +5608,6 @@ MonoBehaviour:
   jumpPower_F: 13
   nowDefensivePosition: 3
   nowState: 0
-  isFaintingReady: 0
   rangeInEnemy: []
   rangeInDeflectAbleObj: []
   hp_F: 25
@@ -5620,12 +5619,13 @@ MonoBehaviour:
   maxDreamyFigure_F: 20
   damage_I: 1
   Speed_F: 5
-  attackRangeObj: {fileID: 693950547}
   unitHpBars: {fileID: 939537340}
   unitLightHpBars: {fileID: 1390554749}
   unitEnergyBars: {fileID: 529741880}
   unitDreamyFigureBars: {fileID: 916333784}
   startPos_Vector: {x: 0, y: 0}
+  rigid: {fileID: 1717870243}
+  attackRangeObjComponent: {fileID: 693950549}
   swordAuraObj: {fileID: 416800877848305474, guid: 85a20b6e84648e44a8811b52283438a6, type: 3}
 --- !u!1 &1788169639
 GameObject:

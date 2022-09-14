@@ -10,7 +10,7 @@ public class Player : BasicUnitScript
     private GameObject swordAuraObj;
 
     BattleButtonManager BBM;
-
+    
     protected override void Update()
     {
         base.Update();
@@ -68,9 +68,8 @@ public class Player : BasicUnitScript
 
     protected override void Faint() //기절
     {
-        if (isFaintingReady && (nowState == NowState.Standingby || nowState == NowState.Defensing))
+        if (Energy_F <= 0 && (nowState == NowState.Standingby || nowState == NowState.Defensing))
         {
-            isFaintingReady = false;
             StartCoroutine(Fainting());
         }
     }
@@ -392,9 +391,14 @@ public class Player : BasicUnitScript
         }
 
         yield return new WaitForSeconds(0.5f);
-        if (isFaintingReady == false)
+
+        if (Energy_F > 0)
         {
             WaitingTimeStart();
+        }
+        else
+        {
+            nowState = NowState.Standingby;
         }
     }
 
