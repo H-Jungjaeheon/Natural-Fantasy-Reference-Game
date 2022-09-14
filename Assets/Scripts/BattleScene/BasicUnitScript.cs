@@ -14,6 +14,7 @@ public enum DefensePos
 public enum NowState
 {
     Standingby,
+    AttackCoolTimeWaiting,
     Defensing,
     Deflecting,
     Jumping,
@@ -150,6 +151,7 @@ public abstract class BasicUnitScript : MonoBehaviour
             {
                 energy_F = 0;
                 isFaintingReady = true;
+                nowState = NowState.FaintingReady;
             }
             else
             {
@@ -296,6 +298,7 @@ public abstract class BasicUnitScript : MonoBehaviour
     protected void ReleaseDefense()
     {
         nowDefensivePosition = DefensePos.None;
+        nowState = NowState.Standingby;
         isDefensing = false;
     }
 

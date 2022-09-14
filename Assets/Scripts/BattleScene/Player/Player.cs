@@ -66,7 +66,7 @@ public class Player : BasicUnitScript
         }
     }
 
-    protected override void Faint()
+    protected override void Faint() //기절
     {
         if (isFaintingReady && isAttacking == false)
         {
@@ -101,6 +101,7 @@ public class Player : BasicUnitScript
     IEnumerator Deflecting(int setRotation)
     {
         isDeflecting = true;
+        nowState = NowState.Deflecting;
         nowDefensivePosition = DefensePos.None;
         BBM.ActionButtonsSetActive(false, false, false);
         transform.rotation = Quaternion.Euler(0, setRotation, 0);
@@ -117,11 +118,12 @@ public class Player : BasicUnitScript
         }
         yield return new WaitForSeconds(0.5f); //애니메이션 종료까지 기다림
         InitializationAttackRange();
+        isDeflecting = false;
+        nowState = NowState.Standingby;
         if (isWaiting == false)
         {
             BBM.ActionButtonsSetActive(true, false, false);
         }
-        isDeflecting = false;
         if (nowActionCoolTime != 0)
         {
             ActionCoolTimeBarSetActive(true);
@@ -162,6 +164,7 @@ public class Player : BasicUnitScript
 
     private void WaitingTimeStart() //공격 후의 세팅 (일부 공통, 한번만 실행) 
     {
+        nowState = NowState.Standingby;
         isWaiting = true;
         if (nowActionCoolTime < maxActionCoolTime)
         {
@@ -175,6 +178,7 @@ public class Player : BasicUnitScript
         if (isJumping == false && isResting == false && isAttacking == false && isDefensing == false && isDeflecting == false && isFainting == false && Input.GetKey(KeyCode.Space))
         {
             isJumping = true;
+            nowState = NowState.Jumping;
             BBM.ActionButtonsSetActive(false, false, false);
             CamShake.JumpStart();
             rigid.AddForce(Vector2.up * jumpPower_F, ForceMode2D.Impulse);
@@ -183,6 +187,7 @@ public class Player : BasicUnitScript
         }
         else if (isJumping && transform.position.y < startPos_Vector.y)
         {
+            nowState = NowState.Standingby;
             isJumping = false;
             if (isWaiting == false)
             {
@@ -217,6 +222,7 @@ public class Player : BasicUnitScript
         if (isDefensing == false)
         {
             isAttacking = true;
+            nowState = NowState.Attacking;
             BBM.ActionButtonsSetActive(false, false, false);
             StartCoroutine(GoToAttack());
         }
@@ -227,6 +233,7 @@ public class Player : BasicUnitScript
         if (isDefensing == false)
         {
             isResting = true;
+            nowState = NowState.Resting;
             BBM.ActionButtonsSetActive(false, false, false);
             StartCoroutine(Resting());
         }
@@ -248,6 +255,7 @@ public class Player : BasicUnitScript
             nowRestingCount += 1;
         }
         isResting = false;
+        nowState = NowState.Standingby;
         BBM.ActionButtonsSetActive(true, false, false);
     }
 
@@ -375,6 +383,7 @@ public class Player : BasicUnitScript
         float maxDelayTime = 1f;
         bool isFailEnchant = true;
 
+        nowState = NowState.Attacking;
         while (nowDelayTime < maxDelayTime)
         {
             if (Input.GetKeyDown(KeyCode.Space) && nowDelayTime > 0.65f && nowDelayTime < 0.85f)
@@ -410,6 +419,7 @@ public class Player : BasicUnitScript
     protected override IEnumerator Fainting()
     {
         isFainting = true;
+        nowState = NowState.Fainting;
         nowDefensivePosition = DefensePos.None;
         isDefensing = false;
         BBM.ActionButtonsSetActive(false, false, false);
