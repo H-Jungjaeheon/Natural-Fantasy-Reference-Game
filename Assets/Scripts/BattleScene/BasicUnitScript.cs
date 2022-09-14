@@ -19,7 +19,6 @@ public enum NowState
     Deflecting,
     Jumping,
     Resting,
-    FaintingReady,
     Fainting,
     Attacking
 }
@@ -151,7 +150,6 @@ public abstract class BasicUnitScript : MonoBehaviour
             {
                 energy_F = 0;
                 isFaintingReady = true;
-                nowState = NowState.FaintingReady;
             }
             else
             {

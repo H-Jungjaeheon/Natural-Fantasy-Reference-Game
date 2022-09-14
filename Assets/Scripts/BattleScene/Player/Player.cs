@@ -34,7 +34,7 @@ public class Player : BasicUnitScript
 
     protected override void Defense()
     {
-        if (isDefensing == false && isDeflecting == false && isJumping == false && isAttacking == false && isResting == false && isFainting == false)
+        if (nowState == NowState.Standingby)
         {
             if (Input.GetKey(KeyCode.A))
             {
@@ -56,7 +56,7 @@ public class Player : BasicUnitScript
                 transform.rotation = Quaternion.Euler(0, 0, 0);
             }
         }
-        else if (isDefensing && isDeflecting == false)
+        else if (nowState == NowState.Defensing)
         {
             if (nowDefensivePosition == DefensePos.Left && !Input.GetKey(KeyCode.A) || nowDefensivePosition == DefensePos.Right && !Input.GetKey(KeyCode.D)
                 || nowDefensivePosition == DefensePos.Up && !Input.GetKey(KeyCode.W))
@@ -68,7 +68,7 @@ public class Player : BasicUnitScript
 
     protected override void Faint() //기절
     {
-        if (isFaintingReady && isAttacking == false)
+        if (isFaintingReady && nowState == NowState.Standingby)
         {
             isFaintingReady = false;
             StartCoroutine(Fainting());
@@ -85,7 +85,7 @@ public class Player : BasicUnitScript
 
     private void Deflect()
     {
-        if (isDefensing && isDeflecting == false && Input.GetKeyDown(KeyCode.Space))
+        if (nowState == NowState.Defensing && Input.GetKeyDown(KeyCode.Space))
         {
             if (nowDefensivePosition == DefensePos.Right)
             {
@@ -119,7 +119,11 @@ public class Player : BasicUnitScript
         yield return new WaitForSeconds(0.5f); //애니메이션 종료까지 기다림
         InitializationAttackRange();
         isDeflecting = false;
-        nowState = NowState.Standingby;
+        if (nowState != NowState.Defensing)
+        {
+            nowState = NowState.Standingby;
+        }
+
         if (isWaiting == false)
         {
             BBM.ActionButtonsSetActive(true, false, false);
@@ -139,7 +143,7 @@ public class Player : BasicUnitScript
 
     protected override void UISetting() //대기시간 및 UI세팅 (일부 공통)
     {
-        if (isFainting == false && isWaiting && isDeflecting == false)
+        if (nowState == NowState.Standingby) //isFainting == false && isWaiting && isDeflecting == false
         {
             actionCoolTimeImage.fillAmount = nowActionCoolTime / maxActionCoolTime;
             nowActionCoolTime += Time.deltaTime;
@@ -151,11 +155,11 @@ public class Player : BasicUnitScript
                 BBM.ActionButtonsSetActive(true, false, false);
             }
         }
-        if (isWaiting == false && isJumping == false && isAttacking == false && isDeflecting == false && isResting == false && isFainting == false) //isSkillButtonPage == false
-        {
-            ActionCoolTimeBarSetActive(false);
-        }
-        else if (isDeflecting == true)
+        //if (isWaiting == false && isJumping == false && isAttacking == false && isDeflecting == false && isResting == false && isFainting == false) //isSkillButtonPage == false
+        //{
+        //    ActionCoolTimeBarSetActive(false);
+        //}
+        if (nowState == NowState.Deflecting || nowState == NowState.Jumping || nowState == NowState.Fainting)
         {
             ActionCoolTimeBarSetActive(false);
         }
@@ -175,7 +179,7 @@ public class Player : BasicUnitScript
         
     private void Jump()
     {
-        if (isJumping == false && isResting == false && isAttacking == false && isDefensing == false && isDeflecting == false && isFainting == false && Input.GetKey(KeyCode.Space))
+        if (nowState == NowState.Standingby && Input.GetKey(KeyCode.Space))
         {
             isJumping = true;
             nowState = NowState.Jumping;
@@ -185,7 +189,7 @@ public class Player : BasicUnitScript
             rigid.gravityScale = setJumpGravityScale_F - 0.5f;
             StartCoroutine(JumpDelay());
         }
-        else if (isJumping && transform.position.y < startPos_Vector.y)
+        else if (nowState == NowState.Jumping && transform.position.y < startPos_Vector.y)
         {
             nowState = NowState.Standingby;
             isJumping = false;
@@ -219,7 +223,7 @@ public class Player : BasicUnitScript
 
     public void CloseAttackStart()
     {
-        if (isDefensing == false)
+        if (nowState == NowState.Standingby)
         {
             isAttacking = true;
             nowState = NowState.Attacking;
@@ -230,7 +234,7 @@ public class Player : BasicUnitScript
 
     public void RestStart()
     {
-        if (isDefensing == false)
+        if (nowState == NowState.Standingby)
         {
             isResting = true;
             nowState = NowState.Resting;
@@ -363,7 +367,7 @@ public class Player : BasicUnitScript
 
     public void SkillUse(int nowUseSkillIndex, int nowUseSkillNeedEnergy)
     {
-        if (isDefensing == false && Energy_F >= nowUseSkillNeedEnergy)
+        if (nowState == NowState.Standingby && Energy_F >= nowUseSkillNeedEnergy)
         {
             isAttacking = true;
             Energy_F -= nowUseSkillNeedEnergy;
