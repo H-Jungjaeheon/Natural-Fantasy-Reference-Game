@@ -48,7 +48,6 @@ public abstract class BasicUnitScript : MonoBehaviour
     [Tooltip("최대 쿨타임")]
     public float maxActionCoolTime;
 
-    protected bool isWaiting; //대기중
     #endregion
 
     #region 행동 관련 변수
@@ -66,24 +65,10 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     public NowState nowState; //현재 행동
 
-    protected bool isDefensing;
-
-    protected bool isDeflecting;
-
-    [HideInInspector]
-    public bool isJumping;
-
-    [HideInInspector]
-    public bool isResting;
+    protected bool isWaiting; //대기중
 
     [HideInInspector]
     public bool isFaintingReady;
-
-    [HideInInspector]
-    public bool isFainting;
-
-    [HideInInspector]
-    public bool isAttacking;
 
     private bool isHpDiminishedProduction;
 
@@ -297,7 +282,6 @@ public abstract class BasicUnitScript : MonoBehaviour
     {
         nowDefensivePosition = DefensePos.None;
         nowState = NowState.Standingby;
-        isDefensing = false;
     }
 
     protected abstract void Faint();

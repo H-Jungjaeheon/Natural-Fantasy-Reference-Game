@@ -97,7 +97,7 @@ public class CamShake : MonoBehaviour
         for (int nowShakeCount = 0; nowShakeCount < 11; nowShakeCount++)
         {
             nowCamPos.x = shakeAmount * multiplication;
-            nowCamPos.y = (BattleSceneManager.Instance.Player.isJumping) ? initialPosition.y : objStartPosition.y;
+            nowCamPos.y = (BattleSceneManager.Instance.Player.nowState == NowState.Jumping) ? initialPosition.y : objStartPosition.y;
 
             rigid.transform.position = nowCamPos;
 

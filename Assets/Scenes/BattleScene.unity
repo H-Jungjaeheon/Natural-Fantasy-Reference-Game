@@ -4280,11 +4280,7 @@ MonoBehaviour:
   jumpPower_F: 12.5
   nowDefensivePosition: 3
   nowState: 0
-  isJumping: 0
-  isResting: 0
   isFaintingReady: 0
-  isFainting: 0
-  isAttacking: 0
   rangeInEnemy: []
   rangeInDeflectAbleObj: []
   hp_F: 100
@@ -5612,11 +5608,7 @@ MonoBehaviour:
   jumpPower_F: 13
   nowDefensivePosition: 3
   nowState: 0
-  isJumping: 0
-  isResting: 0
   isFaintingReady: 0
-  isFainting: 0
-  isAttacking: 0
   rangeInEnemy: []
   rangeInDeflectAbleObj: []
   hp_F: 25

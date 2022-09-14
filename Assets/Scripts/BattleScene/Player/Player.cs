@@ -18,7 +18,7 @@ public class Player : BasicUnitScript
         Defense();
         Jump();
     }
-  
+
     protected override void StartSetting() //초기 세팅 (일부 공통)
     {
         nowState = NowState.Standingby;
@@ -68,7 +68,7 @@ public class Player : BasicUnitScript
 
     protected override void Faint() //기절
     {
-        if (isFaintingReady && nowState == NowState.Standingby)
+        if (isFaintingReady && (nowState == NowState.Standingby || nowState == NowState.Defensing))
         {
             isFaintingReady = false;
             StartCoroutine(Fainting());
@@ -77,7 +77,6 @@ public class Player : BasicUnitScript
 
     protected override void SetDefensing(DefensePos nowDefensePos, float setRotation)
     {
-        isDefensing = true;
         nowState = NowState.Defensing;
         nowDefensivePosition = nowDefensePos;
         transform.rotation = Quaternion.Euler(0, setRotation, 0);
@@ -100,7 +99,6 @@ public class Player : BasicUnitScript
 
     IEnumerator Deflecting(int setRotation)
     {
-        isDeflecting = true;
         nowState = NowState.Deflecting;
         nowDefensivePosition = DefensePos.None;
         BBM.ActionButtonsSetActive(false, false, false);
@@ -118,7 +116,6 @@ public class Player : BasicUnitScript
         }
         yield return new WaitForSeconds(0.5f); //애니메이션 종료까지 기다림
         InitializationAttackRange();
-        isDeflecting = false;
         if (nowState != NowState.Defensing)
         {
             nowState = NowState.Standingby;
@@ -136,14 +133,13 @@ public class Player : BasicUnitScript
         {
             transform.rotation = Quaternion.Euler(0, 0, 0);
         }
-        isDefensing = false;
         yield return null;
     }
 
 
     protected override void UISetting() //대기시간 및 UI세팅 (일부 공통)
     {
-        if (nowState == NowState.Standingby) //isFainting == false && isWaiting && isDeflecting == false
+        if (isWaiting && (nowState == NowState.Standingby || nowState == NowState.Jumping || nowState == NowState.Defensing)) //isFainting == false && isWaiting && isDeflecting == false
         {
             actionCoolTimeImage.fillAmount = nowActionCoolTime / maxActionCoolTime;
             nowActionCoolTime += Time.deltaTime;
@@ -155,11 +151,7 @@ public class Player : BasicUnitScript
                 BBM.ActionButtonsSetActive(true, false, false);
             }
         }
-        //if (isWaiting == false && isJumping == false && isAttacking == false && isDeflecting == false && isResting == false && isFainting == false) //isSkillButtonPage == false
-        //{
-        //    ActionCoolTimeBarSetActive(false);
-        //}
-        if (nowState == NowState.Deflecting || nowState == NowState.Jumping || nowState == NowState.Fainting)
+        if (nowState == NowState.Deflecting || nowState == NowState.Fainting)
         {
             ActionCoolTimeBarSetActive(false);
         }
@@ -176,12 +168,11 @@ public class Player : BasicUnitScript
         }
         BBM.ActionButtonsSetActive(false, false, false);
     }
-        
+
     private void Jump()
     {
         if (nowState == NowState.Standingby && Input.GetKey(KeyCode.Space))
         {
-            isJumping = true;
             nowState = NowState.Jumping;
             BBM.ActionButtonsSetActive(false, false, false);
             CamShake.JumpStart();
@@ -192,7 +183,6 @@ public class Player : BasicUnitScript
         else if (nowState == NowState.Jumping && transform.position.y < startPos_Vector.y)
         {
             nowState = NowState.Standingby;
-            isJumping = false;
             if (isWaiting == false)
             {
                 if (BBM.nowButtonPage == ButtonPage.SecondPage)
@@ -225,7 +215,6 @@ public class Player : BasicUnitScript
     {
         if (nowState == NowState.Standingby)
         {
-            isAttacking = true;
             nowState = NowState.Attacking;
             BBM.ActionButtonsSetActive(false, false, false);
             StartCoroutine(GoToAttack());
@@ -236,7 +225,6 @@ public class Player : BasicUnitScript
     {
         if (nowState == NowState.Standingby)
         {
-            isResting = true;
             nowState = NowState.Resting;
             BBM.ActionButtonsSetActive(false, false, false);
             StartCoroutine(Resting());
@@ -258,7 +246,6 @@ public class Player : BasicUnitScript
             Energy_F += 1;
             nowRestingCount += 1;
         }
-        isResting = false;
         nowState = NowState.Standingby;
         BBM.ActionButtonsSetActive(true, false, false);
     }
@@ -361,7 +348,6 @@ public class Player : BasicUnitScript
         transform.rotation = Quaternion.identity;
         transform.position = startPos_Vector;
         nowAttackCount_I = 1;
-        isAttacking = false;
         WaitingTimeStart();
     }
 
@@ -369,7 +355,6 @@ public class Player : BasicUnitScript
     {
         if (nowState == NowState.Standingby && Energy_F >= nowUseSkillNeedEnergy)
         {
-            isAttacking = true;
             Energy_F -= nowUseSkillNeedEnergy;
             BBM.ActionButtonsSetActive(false, false, false);
             switch (nowUseSkillIndex)
@@ -407,7 +392,6 @@ public class Player : BasicUnitScript
         }
 
         yield return new WaitForSeconds(0.5f);
-        isAttacking = false;
         if (isFaintingReady == false)
         {
             WaitingTimeStart();
@@ -422,15 +406,12 @@ public class Player : BasicUnitScript
 
     protected override IEnumerator Fainting()
     {
-        isFainting = true;
         nowState = NowState.Fainting;
         nowDefensivePosition = DefensePos.None;
-        isDefensing = false;
         BBM.ActionButtonsSetActive(false, false, false);
         yield return new WaitForSeconds(5); //나중에 매개변수로 레벨에 따라서 기절 시간 넣기
         BBM.ActionButtonsSetActive(true, false, false);
         Energy_F += 8; //나중에 매개변수로 레벨에 따라서 기력 차는 양 증가
-        isFainting = false;
         nowActionCoolTime = maxActionCoolTime;
         WaitingTimeStart();
     }

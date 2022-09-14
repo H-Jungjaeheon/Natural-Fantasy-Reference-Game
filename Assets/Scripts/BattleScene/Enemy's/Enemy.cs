@@ -94,13 +94,16 @@ public class Enemy : BasicUnitScript
         transform.rotation = Quaternion.identity;
         transform.position = startPos_Vector;
         nowAttackCount_I = 1;
-        isAttacking = false;
         WaitingTimeStart();
     }
     private void WaitingTimeStart() //공격 후의 세팅 (일부 공통) 
     {
+        nowState = NowState.Standingby;
         isWaiting = true;
-        ActionCoolTimeBarSetActive(true);
+        if (nowActionCoolTime < maxActionCoolTime)
+        {
+            ActionCoolTimeBarSetActive(true);
+        }
     }
 
     protected override void Defense()
@@ -123,7 +126,7 @@ public class Enemy : BasicUnitScript
     }
     protected override void Faint()
     {
-        if (isFaintingReady && isAttacking == false)
+        if (isFaintingReady && (nowState == NowState.Standingby || nowState == NowState.Defensing))
         {
             isFaintingReady = false;
             StartCoroutine(Fainting());
