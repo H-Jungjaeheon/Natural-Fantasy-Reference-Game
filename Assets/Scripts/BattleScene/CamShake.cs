@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 using System;
 
 public class CamShake : MonoBehaviour
@@ -21,6 +22,12 @@ public class CamShake : MonoBehaviour
     [Tooltip("부모 오브젝트의 리지드바디(점프 속도 제어용)")]
     private Rigidbody2D rigid;
 
+    [SerializeField]
+    private PostProcessVolume PPV;
+
+    [SerializeField]
+    private Bloom bloom;
+
     Vector3 initialPosition;
     Vector3 objStartPosition;
     Vector3 camStartposition;
@@ -30,11 +37,16 @@ public class CamShake : MonoBehaviour
     void Awake()
     {
         StartSetting();
+        PPV.profile.TryGetSettings(out bloom);
     }
 
     void Update()
     {
         RepetitionSetting();
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            bloom.intensity.value+=10;
+        }
     }
 
     public void StartSetting()

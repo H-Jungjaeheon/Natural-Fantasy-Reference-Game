@@ -2819,6 +2819,8 @@ MonoBehaviour:
   jumpCamPower_F: 4.5
   setJumpCamGravityScale_F: 0.4
   rigid: {fileID: 822495800}
+  PPV: {fileID: 824615376}
+  bloom: {fileID: 0}
 --- !u!61 &824615375
 BoxCollider2D:
   m_ObjectHideFlags: 0
