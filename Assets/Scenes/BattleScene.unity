@@ -358,6 +358,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10ad1faa3cdd8424095b47ed1a3d48ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDontDestroyObj: 0
   SkillChooseButton: {fileID: 619574704}
   OutSkillChooseButton: {fileID: 1614225774}
   SkillButtons:
@@ -988,8 +989,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -1499.9999, y: 20}
-  m_SizeDelta: {x: 1500, y: 200}
+  m_AnchoredPosition: {x: -1500, y: 20}
+  m_SizeDelta: {x: 1500.0001, y: 200}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &372756921
 GameObject:
@@ -2580,7 +2581,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1, y: 3}
   m_EdgeRadius: 0
 --- !u!1 &818699457
 GameObject:
@@ -2820,7 +2821,6 @@ MonoBehaviour:
   setJumpCamGravityScale_F: 0.4
   rigid: {fileID: 822495800}
   PPV: {fileID: 824615376}
-  bloom: {fileID: 0}
 --- !u!61 &824615375
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3082,7 +3082,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1, y: 3}
   m_EdgeRadius: 0
 --- !u!1 &907236290
 GameObject:
@@ -3161,7 +3161,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1, y: 3}
   m_EdgeRadius: 0
 --- !u!1 &916333782
 GameObject:
@@ -3477,6 +3477,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1855ff8de88f0c645aefc6be774c4ef5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDontDestroyObj: 0
   usePrefabObjs:
   - {fileID: 416800877848305474, guid: 85a20b6e84648e44a8811b52283438a6, type: 3}
 --- !u!4 &951784404
@@ -4065,6 +4066,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c45a53ad6f76cf48a92103a221ed9e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDontDestroyObj: 0
   PlayerCharacterPos: {x: 0, y: 0}
   EnemyCharacterPos: {x: 8, y: -0.15}
   Player: {fileID: 1717870245}
@@ -4112,6 +4114,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5c3bd223f3d4264ebe774d6fa523e8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDontDestroyObj: 1
   maxHpUpgradeLevel: 0
   testBullet: {fileID: 7600358472687557744, guid: 6fb09c3008d354545b947436931e039b, type: 3}
 --- !u!4 &1088394778
@@ -5226,7 +5229,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1, y: 3}
   m_EdgeRadius: 0
 --- !u!1 &1503250936
 GameObject:
@@ -7115,7 +7118,15 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 7600358472687557742, guid: 6fb09c3008d354545b947436931e039b, type: 3}
+      propertyPath: speed
+      value: 21
+      objectReference: {fileID: 0}
+    - target: {fileID: 7600358472687557742, guid: 6fb09c3008d354545b947436931e039b, type: 3}
       propertyPath: damage
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7600358472687557742, guid: 6fb09c3008d354545b947436931e039b, type: 3}
+      propertyPath: isDeflectAble
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7600358472687557744, guid: 6fb09c3008d354545b947436931e039b, type: 3}

@@ -6,7 +6,8 @@ using UnityEngine.SceneManagement;
 public class GameManager : Singleton<GameManager>
 {
     #region 저장 데이터 모음
-    private class GameSaveData
+    [System.Serializable]
+    public class GameSaveData
     {
         public int BasicDamageLevel;
         public int BasicHealthLevel;
@@ -58,9 +59,9 @@ public class GameManager : Singleton<GameManager>
 
     private void Awake()
     {
-        if (instance == null)
+        if (isDontDestroyObj && instance == null)
         {
-            instance = this;
+            //instance = this;
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -76,6 +77,20 @@ public class GameManager : Singleton<GameManager>
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            StartCoroutine(TestBulletFire());
+        }
+    }
+    IEnumerator TestBulletFire()
+    {
+        for (int i = 0; i < 360; i += 30)
+        {
+            GameObject bulletObj;
+            Vector3 dir = new Vector2(Mathf.Cos(i * Mathf.Deg2Rad), Mathf.Sin(i * Mathf.Deg2Rad)); //* Mathf.Deg2Rad
+            bulletObj = Instantiate(testBullet, BattleSceneManager.Instance.Enemy.transform.position, Quaternion.identity);
+            bulletObj.GetComponent<EnemysBullet>().moveDirection = dir;//(dir - transform.position).normalized;
+            yield return null;
+        }
     }
 }

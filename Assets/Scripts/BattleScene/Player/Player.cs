@@ -98,6 +98,7 @@ public class Player : BasicUnitScript
 
     IEnumerator Deflecting(int setRotation)
     {
+        bool isAlreadyShake = false;
         nowState = NowState.Deflecting;
         nowDefensivePosition = DefensePos.None;
         BBM.ActionButtonsSetActive(false, false, false);
@@ -105,12 +106,16 @@ public class Player : BasicUnitScript
         ChangeAttackRange(new Vector2(0.55f, 2.1f), new Vector2(-0.1f, 0));
         //애니 실행
         yield return new WaitForSeconds(0.15f); //치기 전까지 기다림
-        if (rangeInDeflectAbleObj.Count != 0)
+        for (int nowIndex = 0; nowIndex < rangeInDeflectAbleObj.Count; nowIndex++)
         {
-            CamShake.CamShakeMod(true, 1.1f);
-            for (int nowIndex = 0; nowIndex < rangeInDeflectAbleObj.Count; nowIndex++)
+            if (rangeInDeflectAbleObj[nowIndex].GetComponent<EnemysBullet>().isDeflectAble)
             {
-                rangeInDeflectAbleObj[nowIndex].GetComponent<EnemysBullet>().Reflex(true);
+                if (isAlreadyShake == false)
+                {
+                    isAlreadyShake = true;
+                    CamShake.CamShakeMod(true, 1.1f);
+                }
+                rangeInDeflectAbleObj[nowIndex].GetComponent<EnemysBullet>().Reflex(BulletState.Deflecting);
             }
         }
         yield return new WaitForSeconds(0.5f); //애니메이션 종료까지 기다림

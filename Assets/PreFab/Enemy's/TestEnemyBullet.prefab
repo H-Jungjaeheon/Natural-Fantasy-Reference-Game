@@ -135,5 +135,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 1
-  speed: 21
-  isDeflecting: 0
+  speed: 5
+  isDeflectAble: 0
+  nowBulletState: 0
+  moveDirection: {x: 0, y: 0}

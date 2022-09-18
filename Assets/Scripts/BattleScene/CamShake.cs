@@ -25,7 +25,6 @@ public class CamShake : MonoBehaviour
     [SerializeField]
     private PostProcessVolume PPV;
 
-    [SerializeField]
     private Bloom bloom;
 
     Vector3 initialPosition;
@@ -43,10 +42,10 @@ public class CamShake : MonoBehaviour
     void Update()
     {
         RepetitionSetting();
-        if (Input.GetKeyDown(KeyCode.F1))
-        {
-            bloom.intensity.value+=10;
-        }
+        //if (Input.GetKeyDown(KeyCode.F1))
+        //{
+        //    bloom.intensity.value+=10;
+        //}
     }
 
     public void StartSetting()
