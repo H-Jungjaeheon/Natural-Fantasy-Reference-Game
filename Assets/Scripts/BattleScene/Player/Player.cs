@@ -3,6 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum NowProperty
+{
+    NatureProperty,
+    ForceProperty,
+    FlameProperty,
+    TheHolySpiritProperty,
+    AngelProperty
+}
+
 public class Player : BasicUnitScript
 {
     [Header("공격에 필요한 오브젝트 모음")]

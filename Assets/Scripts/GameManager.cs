@@ -77,17 +77,17 @@ public class GameManager : Singleton<GameManager>
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F1))
-        {
-            StartCoroutine(TestBulletFire());
-        }
+        //if (Input.GetKeyDown(KeyCode.F1))
+        //{
+        //    StartCoroutine(TestBulletFire());
+        //}
     }
-    IEnumerator TestBulletFire()
+    IEnumerator TestBulletFire() //360도로 총알 발사되는 것
     {
         for (int i = 0; i < 360; i += 30)
         {
             GameObject bulletObj;
-            Vector3 dir = new Vector2(Mathf.Cos(i * Mathf.Deg2Rad), Mathf.Sin(i * Mathf.Deg2Rad)); //* Mathf.Deg2Rad
+            Vector3 dir = new Vector2(Mathf.Cos(i * Mathf.Deg2Rad), Mathf.Sin(i* Mathf.Deg2Rad)); //* Mathf.Deg2Rad
             bulletObj = Instantiate(testBullet, BattleSceneManager.Instance.Enemy.transform.position, Quaternion.identity);
             bulletObj.GetComponent<EnemysBullet>().moveDirection = dir;//(dir - transform.position).normalized;
             yield return null;
