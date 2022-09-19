@@ -26,6 +26,7 @@ public class CamShake : MonoBehaviour
     private PostProcessVolume PPV;
 
     private Bloom bloom;
+    private Vignette vignette;
 
     Vector3 initialPosition;
     Vector3 objStartPosition;
@@ -37,15 +38,16 @@ public class CamShake : MonoBehaviour
     {
         StartSetting();
         PPV.profile.TryGetSettings(out bloom);
+        PPV.profile.TryGetSettings(out vignette);
     }
 
     void Update()
     {
         RepetitionSetting();
-        //if (Input.GetKeyDown(KeyCode.F1))
-        //{
-        //    bloom.intensity.value+=10;
-        //}
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            bloom.intensity.value += 10;
+        }
     }
 
     public void StartSetting()

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public enum NowProperty
 {
+    BasicProperty,
     NatureProperty,
     ForceProperty,
     FlameProperty,
@@ -19,6 +20,9 @@ public class Player : BasicUnitScript
     private GameObject swordAuraObj;
 
     BattleButtonManager BBM;
+
+    [SerializeField]
+    private NowProperty nowProperty;
     
     protected override void Update()
     {
@@ -31,6 +35,7 @@ public class Player : BasicUnitScript
     protected override void StartSetting() //초기 세팅 (일부 공통)
     {
         nowState = NowState.Standingby;
+        nowProperty = NowProperty.BasicProperty;
         BBM = BattleButtonManager.Instance;
         maxActionCoolTime -= GameManager.Instance.ReduceCoolTimeLevel * 0.5f;
         MaxHp_F += GameManager.Instance.MaxHpUpgradeLevel * 5;
