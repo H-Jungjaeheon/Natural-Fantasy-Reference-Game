@@ -77,10 +77,10 @@ public class GameManager : Singleton<GameManager>
     // Update is called once per frame
     void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.F1))
-        //{
-        //    StartCoroutine(TestBulletFire());
-        //}
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            StartCoroutine(TestBulletFire());
+        }
     }
     IEnumerator TestBulletFire() //360도로 총알 발사되는 것
     {
