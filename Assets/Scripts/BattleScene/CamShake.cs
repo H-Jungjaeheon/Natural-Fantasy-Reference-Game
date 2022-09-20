@@ -44,10 +44,10 @@ public class CamShake : MonoBehaviour
     void Update()
     {
         RepetitionSetting();
-        if (Input.GetKeyDown(KeyCode.F1))
-        {
-            bloom.intensity.value += 10;
-        }
+        //if (Input.GetKeyDown(KeyCode.F1))
+        //{
+        //    bloom.intensity.value += 10;
+        //}
     }
 
     public void StartSetting()

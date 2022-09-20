@@ -129,14 +129,7 @@ public abstract class BasicUnitScript : MonoBehaviour
         get { return energy_F; }
         set
         {
-            if (value <= 0)
-            {
-                energy_F = 0;
-            }
-            else
-            {
-                energy_F = value;
-            }
+            energy_F = (value <= 0) ? energy_F = 0 : energy_F = value;
         }
     }
 
@@ -159,7 +152,10 @@ public abstract class BasicUnitScript : MonoBehaviour
     public float DreamyFigure_F
     {
         get { return dreamyFigure_F; }
-        set { dreamyFigure_F = value; }
+        set
+        {
+            dreamyFigure_F = (value >= MaxDreamyFigure_F) ? dreamyFigure_F = MaxDreamyFigure_F : dreamyFigure_F = value;
+        }
     }
 
     [Tooltip("최대 몽환 게이지")]
@@ -251,10 +247,12 @@ public abstract class BasicUnitScript : MonoBehaviour
         if (isDefending)
         {
             Energy_F -= 1;
+            DreamyFigure_F += 1;
         }
         else
         {
             Hp_F -= damage;
+            DreamyFigure_F += 2;
         }
     }
 

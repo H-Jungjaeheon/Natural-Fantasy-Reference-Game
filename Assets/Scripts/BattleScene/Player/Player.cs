@@ -17,13 +17,18 @@ public class Player : BasicUnitScript
 {
     [Header("공격에 필요한 오브젝트 모음")]
     [SerializeField]
+    [Tooltip("검기(첫번째) 스킬 발사체 오브젝트")]
     private GameObject swordAuraObj;
 
-    BattleButtonManager BBM;
+
+    [SerializeField]
+    private float maxChangePropertyCoolTime;
 
     [SerializeField]
     private NowProperty nowProperty;
     
+    BattleButtonManager BBM;
+
     protected override void Update()
     {
         base.Update();
