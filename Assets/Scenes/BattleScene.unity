@@ -461,7 +461,7 @@ GameObject:
   - component: {fileID: 153970712}
   - component: {fileID: 153970711}
   m_Layer: 0
-  m_Name: space-game-background-with-landscape-of-planet_107791-1700
+  m_Name: Test
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5844,7 +5844,6 @@ MonoBehaviour:
   rigid: {fileID: 1717870243}
   attackRangeObjComponent: {fileID: 693950549}
   swordAuraObj: {fileID: 416800877848305474, guid: 85a20b6e84648e44a8811b52283438a6, type: 3}
-  maxChangePropertyCoolTime: 30
   nowProperty: 0
 --- !u!1 &1771375653
 GameObject:
