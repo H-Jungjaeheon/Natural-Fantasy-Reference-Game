@@ -20,18 +20,62 @@ public class Player : BasicUnitScript
     [Tooltip("검기(첫번째) 스킬 발사체 오브젝트")]
     private GameObject swordAuraObj;
 
+    private float maxChangePropertyCoolTime = 30; //최대 속성 변경 시간
 
-    [SerializeField]
-    private float maxChangePropertyCoolTime;
+    private float nowChangePropertyCoolTime; //현재 속성 변경 시간
+
+    [HideInInspector]
+    public float NowChangePropertyCoolTime
+    {
+        get 
+        {
+            return nowChangePropertyCoolTime;
+        }
+        set
+        {
+            if (value >= maxChangePropertyCoolTime)
+            {
+                StartCoroutine(ChangeProperty(false));
+            }
+            else
+            {
+                print(nowChangePropertyCoolTime);
+                nowChangePropertyCoolTime = value;
+            }
+        }
+    }
+
+    private float nowPropertyTimeLimit; // 현재 속성 남은시간
+
+    [HideInInspector]
+    public float NowPropertyTimeLimit
+    {
+        get { return nowPropertyTimeLimit; }
+        set
+        {
+            if (value <= 0)
+            {
+                StartCoroutine(ChangeProperty(true));
+            }
+            else
+            {
+                print(nowPropertyTimeLimit);
+                nowPropertyTimeLimit = value;
+            }
+        }
+    }
 
     [SerializeField]
     private NowProperty nowProperty;
     
+    private int randPropertyIndex;
+
     BattleButtonManager BBM;
 
     protected override void Update()
     {
         base.Update();
+        CountDownPropertyTime();
         Deflect();
         Defense();
         Jump();
@@ -47,6 +91,7 @@ public class Player : BasicUnitScript
         MaxEnergy_F += GameManager.Instance.MaxEnergyUpgradeLevel * 5;
         Damage_I += GameManager.Instance.DamageUpgradeLevel;
         BattleSceneManager.Instance.PlayerCharacterPos = transform.position;
+        randPropertyIndex = Random.Range(1, 6);
         Energy_F = MaxEnergy_F;
         Hp_F = MaxHp_F;
     }
@@ -98,6 +143,45 @@ public class Player : BasicUnitScript
         nowState = NowState.Defensing;
         nowDefensivePosition = nowDefensePos;
         transform.rotation = Quaternion.Euler(0, setRotation, 0);
+    }
+
+    IEnumerator ChangeProperty(bool isChangeBasicProperty)
+    {
+        while (true)
+        {
+            if (nowState == NowState.Standingby)
+            {
+                break;
+            }
+        }
+        
+        //중간에 속성 바뀌는 애니메이션 각각 만들기
+        if (isChangeBasicProperty)
+        {
+            nowProperty = NowProperty.BasicProperty;
+            print("속성 : 기본");
+            NowPropertyTimeLimit = 30;
+
+        }
+        else
+        {
+            nowProperty = NowProperty.NatureProperty;
+            print("속성 : 변경");
+            NowChangePropertyCoolTime = 0;
+        }
+        yield return null;
+    }
+
+    private void CountDownPropertyTime()
+    {
+        if (nowProperty != NowProperty.BasicProperty)
+        {
+            nowPropertyTimeLimit -= Time.deltaTime;
+        }
+        else
+        {
+            NowChangePropertyCoolTime += Time.deltaTime;
+        }
     }
 
     private void Deflect()
