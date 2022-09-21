@@ -10,7 +10,8 @@ public enum NowProperty
     ForceProperty,
     FlameProperty,
     TheHolySpiritProperty,
-    AngelProperty
+    AngelProperty,
+    PropertyTotalNumber
 }
 
 public class Player : BasicUnitScript
@@ -66,7 +67,7 @@ public class Player : BasicUnitScript
     [SerializeField]
     private NowProperty nowProperty;
     
-    private int randPropertyIndex;
+    private int nextPropertyIndex;
 
     private BattleButtonManager BBM;
 
@@ -96,7 +97,7 @@ public class Player : BasicUnitScript
         BBM = BattleButtonManager.Instance;
         
         BattleSceneManager.Instance.PlayerCharacterPos = transform.position;
-        randPropertyIndex = Random.Range((int)NowProperty.NatureProperty, (int)NowProperty.AngelProperty + 1);
+        nextPropertyIndex = Random.Range((int)NowProperty.NatureProperty, (int)NowProperty.PropertyTotalNumber);
         Energy_F = MaxEnergy_F;
         Hp_F = MaxHp_F;
     }
@@ -166,6 +167,8 @@ public class Player : BasicUnitScript
         {
             NowPropertyTimeLimit = 0;
             nowProperty = NowProperty.BasicProperty;
+            nextPropertyIndex = ((NowProperty)nextPropertyIndex == NowProperty.AngelProperty) ? (int)NowProperty.NatureProperty : nextPropertyIndex + 1;
+            print(nextPropertyIndex);
             print("속성 : 기본");
 
         }
@@ -173,8 +176,7 @@ public class Player : BasicUnitScript
         {
             NowChangePropertyCoolTime = 0;
             //randPropertyIndex
-            nowProperty = NowProperty.NatureProperty;
-            print("속성 : 변경");
+            nowProperty = (NowProperty)nextPropertyIndex;
         }
     }
 
@@ -182,12 +184,10 @@ public class Player : BasicUnitScript
     {
         if (nowProperty != NowProperty.BasicProperty)
         {
-            print($"속성 변경중");
             NowPropertyTimeLimit += Time.deltaTime;
         }
         else
         {
-            print($"속성 변경 기다림");
             NowChangePropertyCoolTime += Time.deltaTime;
         }
     }
