@@ -20,11 +20,10 @@ public class Player : BasicUnitScript
     [Tooltip("검기(첫번째) 스킬 발사체 오브젝트")]
     private GameObject swordAuraObj;
 
-    private float maxChangePropertyCoolTime = 30; //최대 속성 변경 시간
+    private float maxChangePropertyCoolTime = 25; //최대 속성 변경 시간
 
     private float nowChangePropertyCoolTime; //현재 속성 변경 시간
 
-    [HideInInspector]
     public float NowChangePropertyCoolTime
     {
         get 
@@ -39,27 +38,26 @@ public class Player : BasicUnitScript
             }
             else
             {
-                print(nowChangePropertyCoolTime);
                 nowChangePropertyCoolTime = value;
             }
         }
     }
 
-    private float nowPropertyTimeLimit; // 현재 속성 남은시간
+    private float maxPropertyTimeLimit = 15; //최대 속성 지속시간
 
-    [HideInInspector]
+    private float nowPropertyTimeLimit; // 현재 속성 남은 지속시간
+    
     public float NowPropertyTimeLimit
     {
         get { return nowPropertyTimeLimit; }
         set
         {
-            if (value <= 0)
+            if (value >= maxPropertyTimeLimit)
             {
                 StartCoroutine(ChangeProperty(true));
             }
             else
             {
-                print(nowPropertyTimeLimit);
                 nowPropertyTimeLimit = value;
             }
         }
@@ -70,7 +68,7 @@ public class Player : BasicUnitScript
     
     private int randPropertyIndex;
 
-    BattleButtonManager BBM;
+    private BattleButtonManager BBM;
 
     protected override void Update()
     {
@@ -83,15 +81,22 @@ public class Player : BasicUnitScript
 
     protected override void StartSetting() //초기 세팅 (일부 공통)
     {
+        var gameManager_Ins = GameManager.Instance;
+        int plusMultiplicationMaxHpPerLevel = 5;
+        int plusMultiplicationMaxEnergyPerLevel = 5;
+        float plusMultiplicationMaxActionCoolTimePerLevel = 0.5f; 
+
+        maxActionCoolTime -= gameManager_Ins.ReduceCoolTimeLevel * plusMultiplicationMaxActionCoolTimePerLevel;
+        MaxHp_F += gameManager_Ins.MaxHpUpgradeLevel * plusMultiplicationMaxHpPerLevel;
+        MaxEnergy_F += gameManager_Ins.MaxEnergyUpgradeLevel * plusMultiplicationMaxEnergyPerLevel;
+        Damage_I += gameManager_Ins.DamageUpgradeLevel;
+        
         nowState = NowState.Standingby;
         nowProperty = NowProperty.BasicProperty;
         BBM = BattleButtonManager.Instance;
-        maxActionCoolTime -= GameManager.Instance.ReduceCoolTimeLevel * 0.5f;
-        MaxHp_F += GameManager.Instance.MaxHpUpgradeLevel * 5;
-        MaxEnergy_F += GameManager.Instance.MaxEnergyUpgradeLevel * 5;
-        Damage_I += GameManager.Instance.DamageUpgradeLevel;
+        
         BattleSceneManager.Instance.PlayerCharacterPos = transform.position;
-        randPropertyIndex = Random.Range(1, 6);
+        randPropertyIndex = Random.Range((int)NowProperty.NatureProperty, (int)NowProperty.AngelProperty + 1);
         Energy_F = MaxEnergy_F;
         Hp_F = MaxHp_F;
     }
@@ -117,7 +122,7 @@ public class Player : BasicUnitScript
             }
             if (nowDefensivePosition != DefensePos.Left)
             {
-                transform.rotation = Quaternion.Euler(0, 0, 0);
+                transform.rotation = Quaternion.identity;
             }
         }
         else if (nowState == NowState.Defensing)
@@ -153,33 +158,36 @@ public class Player : BasicUnitScript
             {
                 break;
             }
+            yield return null;
         }
         
         //중간에 속성 바뀌는 애니메이션 각각 만들기
         if (isChangeBasicProperty)
         {
+            NowPropertyTimeLimit = 0;
             nowProperty = NowProperty.BasicProperty;
             print("속성 : 기본");
-            NowPropertyTimeLimit = 30;
 
         }
         else
         {
+            NowChangePropertyCoolTime = 0;
+            //randPropertyIndex
             nowProperty = NowProperty.NatureProperty;
             print("속성 : 변경");
-            NowChangePropertyCoolTime = 0;
         }
-        yield return null;
     }
 
     private void CountDownPropertyTime()
     {
         if (nowProperty != NowProperty.BasicProperty)
         {
-            nowPropertyTimeLimit -= Time.deltaTime;
+            print($"속성 변경중");
+            NowPropertyTimeLimit += Time.deltaTime;
         }
         else
         {
+            print($"속성 변경 기다림");
             NowChangePropertyCoolTime += Time.deltaTime;
         }
     }
