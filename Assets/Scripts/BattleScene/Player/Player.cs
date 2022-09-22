@@ -17,8 +17,8 @@ public enum NowProperty
 public class Player : BasicUnitScript
 {
     [Header("공격에 필요한 오브젝트 모음")]
-    [SerializeField]
     [Tooltip("검기(첫번째) 스킬 발사체 오브젝트")]
+    [SerializeField]
     private GameObject swordAuraObj;
 
     private float maxChangePropertyCoolTime = 25; //최대 속성 변경 시간
@@ -65,10 +65,11 @@ public class Player : BasicUnitScript
         }
     }
 
-    [SerializeField]
     private NowProperty nowProperty;
     
     private int nextPropertyIndex;
+
+    private bool isChangePropertyReady;
 
     private BattleButtonManager BBM;
 
@@ -154,7 +155,10 @@ public class Player : BasicUnitScript
 
     IEnumerator ChangeProperty(bool isChangeBasicProperty)
     {
-        WaitForSeconds waitPropertyChangeTime = new WaitForSeconds(2);
+        NowPropertyTimeLimit = 0;
+        NowChangePropertyCoolTime = 0;
+        isChangePropertyReady = true;
+        nowActionCoolTime = 0;
 
         while (true)
         {
@@ -167,30 +171,35 @@ public class Player : BasicUnitScript
 
         nowState = NowState.ChangingProperties;
         BBM.ActionButtonsSetActive(false, false, false);
+        transform.rotation = Quaternion.identity;
 
         if (isChangeBasicProperty)
         {
-            NowPropertyTimeLimit = 0;
             nowProperty = NowProperty.BasicProperty;
             nextPropertyIndex = ((NowProperty)nextPropertyIndex == NowProperty.AngelProperty) ? (int)NowProperty.NatureProperty : nextPropertyIndex + 1;
+            print("기본 속성으로 변경");
+            StartCoroutine(EndingPropertyChanges());
         }
         else
         {
-            NowChangePropertyCoolTime = 0;
             nowProperty = (NowProperty)nextPropertyIndex;
             switch (nowProperty)
             {
                 case NowProperty.NatureProperty:
                     print("자연 속성으로 변경");
+                    StartCoroutine(EndingPropertyChanges());
                     break;
                 case NowProperty.ForceProperty:
                     print("힘 속성으로 변경");
+                    StartCoroutine(EndingPropertyChanges());
                     break;
                 case NowProperty.FlameProperty:
                     print("화염 속성으로 변경");
+                    StartCoroutine(EndingPropertyChanges());
                     break;
                 case NowProperty.TheHolySpiritProperty:
                     print("성령 속성으로 변경");
+                    StartCoroutine(EndingPropertyChanges());
                     break;
                 case NowProperty.AngelProperty:
                     print("천사 속성으로 변경");
@@ -203,18 +212,23 @@ public class Player : BasicUnitScript
     IEnumerator EndingPropertyChanges() //나중에 애니메이션 나오면 일반함수로 전환, 그리고 속성 변경 애니메이션 끝날때쯤 변경한 이 함수 실행
     {
         yield return new WaitForSeconds(2);
+        isChangePropertyReady = false;
+        nowState = NowState.Standingby;
         WaitingTimeStart();
     }
 
     private void CountDownPropertyTime()
     {
-        if (nowProperty != NowProperty.BasicProperty)
+        if (isChangePropertyReady == false)
         {
-            NowPropertyTimeLimit += Time.deltaTime;
-        }
-        else
-        {
-            NowChangePropertyCoolTime += Time.deltaTime;
+            if (nowProperty != NowProperty.BasicProperty)
+            {
+                NowPropertyTimeLimit += Time.deltaTime;
+            }
+            else
+            {
+                NowChangePropertyCoolTime += Time.deltaTime;
+            }
         }
     }
 
