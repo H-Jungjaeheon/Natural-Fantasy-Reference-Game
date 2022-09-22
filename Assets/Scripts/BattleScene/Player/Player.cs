@@ -39,6 +39,7 @@ public class Player : BasicUnitScript
             }
             else
             {
+                print(nowChangePropertyCoolTime);
                 nowChangePropertyCoolTime = value;
             }
         }
@@ -180,22 +181,29 @@ public class Player : BasicUnitScript
             switch (nowProperty)
             {
                 case NowProperty.NatureProperty:
-
+                    print("자연 속성으로 변경");
                     break;
                 case NowProperty.ForceProperty:
-
+                    print("힘 속성으로 변경");
                     break;
                 case NowProperty.FlameProperty:
-
+                    print("화염 속성으로 변경");
                     break;
                 case NowProperty.TheHolySpiritProperty:
-
+                    print("성령 속성으로 변경");
                     break;
                 case NowProperty.AngelProperty:
-
+                    print("천사 속성으로 변경");
+                    StartCoroutine(EndingPropertyChanges());
                     break;
             }
         }
+    }
+
+    IEnumerator EndingPropertyChanges() //나중에 애니메이션 나오면 일반함수로 전환, 그리고 속성 변경 애니메이션 끝날때쯤 변경한 이 함수 실행
+    {
+        yield return new WaitForSeconds(2);
+        WaitingTimeStart();
     }
 
     private void CountDownPropertyTime()
