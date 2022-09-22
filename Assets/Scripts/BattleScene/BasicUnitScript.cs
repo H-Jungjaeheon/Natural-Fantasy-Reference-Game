@@ -20,7 +20,8 @@ public enum NowState
     Jumping,
     Resting,
     Fainting,
-    Attacking
+    Attacking,
+    ChangingProperties
 }
 
 public abstract class BasicUnitScript : MonoBehaviour

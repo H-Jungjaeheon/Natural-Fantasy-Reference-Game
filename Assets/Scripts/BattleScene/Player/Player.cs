@@ -153,6 +153,8 @@ public class Player : BasicUnitScript
 
     IEnumerator ChangeProperty(bool isChangeBasicProperty)
     {
+        WaitForSeconds waitPropertyChangeTime = new WaitForSeconds(2);
+
         while (true)
         {
             if (nowState == NowState.Standingby)
@@ -161,22 +163,38 @@ public class Player : BasicUnitScript
             }
             yield return null;
         }
-        
-        //중간에 속성 바뀌는 애니메이션 각각 만들기
+
+        nowState = NowState.ChangingProperties;
+        BBM.ActionButtonsSetActive(false, false, false);
+
         if (isChangeBasicProperty)
         {
             NowPropertyTimeLimit = 0;
             nowProperty = NowProperty.BasicProperty;
             nextPropertyIndex = ((NowProperty)nextPropertyIndex == NowProperty.AngelProperty) ? (int)NowProperty.NatureProperty : nextPropertyIndex + 1;
-            print(nextPropertyIndex);
-            print("속성 : 기본");
-
         }
         else
         {
             NowChangePropertyCoolTime = 0;
-            //randPropertyIndex
             nowProperty = (NowProperty)nextPropertyIndex;
+            switch (nowProperty)
+            {
+                case NowProperty.NatureProperty:
+
+                    break;
+                case NowProperty.ForceProperty:
+
+                    break;
+                case NowProperty.FlameProperty:
+
+                    break;
+                case NowProperty.TheHolySpiritProperty:
+
+                    break;
+                case NowProperty.AngelProperty:
+
+                    break;
+            }
         }
     }
 
@@ -266,7 +284,7 @@ public class Player : BasicUnitScript
                 BBM.ActionButtonsSetActive(true, false, false);
             }
         }
-        if (nowState == NowState.Deflecting || nowState == NowState.Fainting)
+        else if (nowState == NowState.Deflecting || nowState == NowState.Fainting || nowState == NowState.ChangingProperties)
         {
             ActionCoolTimeBarSetActive(false);
         }
