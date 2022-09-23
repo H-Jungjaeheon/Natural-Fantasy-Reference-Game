@@ -23,11 +23,11 @@ public class Player : BasicUnitScript
 
     private float maxChangePropertyCoolTime = 25; //최대 속성 변경 시간
 
-    private float nowChangePropertyCoolTime; //현재 속성 변경 시간
+    public float nowChangePropertyCoolTime; //현재 속성 변경 시간
 
     public float NowChangePropertyCoolTime
     {
-        get 
+        get
         {
             return nowChangePropertyCoolTime;
         }
@@ -48,7 +48,7 @@ public class Player : BasicUnitScript
     private float maxPropertyTimeLimit = 15; //최대 속성 지속시간
 
     private float nowPropertyTimeLimit; // 현재 속성 남은 지속시간
-    
+
     public float NowPropertyTimeLimit
     {
         get { return nowPropertyTimeLimit; }
@@ -66,7 +66,7 @@ public class Player : BasicUnitScript
     }
 
     private NowProperty nowProperty;
-    
+
     private int nextPropertyIndex;
 
     private bool isChangePropertyReady;
@@ -87,17 +87,17 @@ public class Player : BasicUnitScript
         var gameManager_Ins = GameManager.Instance;
         int plusMultiplicationMaxHpPerLevel = 5;
         int plusMultiplicationMaxEnergyPerLevel = 5;
-        float plusMultiplicationMaxActionCoolTimePerLevel = 0.5f; 
+        float plusMultiplicationMaxActionCoolTimePerLevel = 0.5f;
 
         maxActionCoolTime -= gameManager_Ins.ReduceCoolTimeLevel * plusMultiplicationMaxActionCoolTimePerLevel;
         MaxHp_F += gameManager_Ins.MaxHpUpgradeLevel * plusMultiplicationMaxHpPerLevel;
         MaxEnergy_F += gameManager_Ins.MaxEnergyUpgradeLevel * plusMultiplicationMaxEnergyPerLevel;
         Damage_I += gameManager_Ins.DamageUpgradeLevel;
-        
+
         nowState = NowState.Standingby;
         nowProperty = NowProperty.BasicProperty;
         BBM = BattleButtonManager.Instance;
-        
+
         BattleSceneManager.Instance.PlayerCharacterPos = transform.position;
         nextPropertyIndex = Random.Range((int)NowProperty.NatureProperty, (int)NowProperty.PropertyTotalNumber);
         Energy_F = MaxEnergy_F;
@@ -276,7 +276,7 @@ public class Player : BasicUnitScript
             nowState = NowState.Standingby;
         }
 
-        if (isWaiting == false)
+        if (isWaiting == false && isChangePropertyReady == false)
         {
             BBM.ActionButtonsSetActive(true, false, false);
         }
@@ -286,7 +286,7 @@ public class Player : BasicUnitScript
         }
         if (!Input.GetKey(KeyCode.A))
         {
-            transform.rotation = Quaternion.Euler(0, 0, 0);
+            transform.rotation = Quaternion.identity;
         }
         yield return null;
     }
@@ -316,12 +316,16 @@ public class Player : BasicUnitScript
     private void WaitingTimeStart() //공격 후의 세팅 (일부 공통, 한번만 실행) 
     {
         nowState = NowState.Standingby;
-        isWaiting = true;
-        if (nowActionCoolTime < maxActionCoolTime)
+
+        if (isChangePropertyReady == false)
         {
-            ActionCoolTimeBarSetActive(true);
+            isWaiting = true;
+            if (nowActionCoolTime < maxActionCoolTime)
+            {
+                ActionCoolTimeBarSetActive(true);
+            }
+            BBM.ActionButtonsSetActive(false, false, false);
         }
-        BBM.ActionButtonsSetActive(false, false, false);
     }
 
     private void Jump()
@@ -338,7 +342,7 @@ public class Player : BasicUnitScript
         else if (nowState == NowState.Jumping && transform.position.y < startPos_Vector.y)
         {
             nowState = NowState.Standingby;
-            if (isWaiting == false)
+            if (isWaiting == false && isChangePropertyReady == false)
             {
                 if (BBM.nowButtonPage == ButtonPage.SecondPage)
                 {
@@ -402,7 +406,10 @@ public class Player : BasicUnitScript
             nowRestingCount += 1;
         }
         nowState = NowState.Standingby;
-        BBM.ActionButtonsSetActive(true, false, false);
+        if (isChangePropertyReady == false)
+        {
+            BBM.ActionButtonsSetActive(true, false, false);
+        }
     }
 
     IEnumerator GoToAttack()
@@ -503,6 +510,7 @@ public class Player : BasicUnitScript
         transform.rotation = Quaternion.identity;
         transform.position = startPos_Vector;
         nowAttackCount_I = 1;
+
         WaitingTimeStart();
     }
 
@@ -570,9 +578,14 @@ public class Player : BasicUnitScript
         nowDefensivePosition = DefensePos.None;
         BBM.ActionButtonsSetActive(false, false, false);
         yield return new WaitForSeconds(5); //나중에 매개변수로 레벨에 따라서 기절 시간 넣기
-        BBM.ActionButtonsSetActive(true, false, false);
         Energy_F += 8; //나중에 매개변수로 레벨에 따라서 기력 차는 양 증가
         nowActionCoolTime = maxActionCoolTime;
+
+        if (isChangePropertyReady == false)
+        {
+            BBM.ActionButtonsSetActive(true, false, false);
+        }
+
         WaitingTimeStart();
     }
 }
