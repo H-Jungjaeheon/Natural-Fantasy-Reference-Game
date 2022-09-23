@@ -2362,7 +2362,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1717870245}
         m_TargetAssemblyTypeName: Player, Assembly-CSharp
-        m_MethodName: RestStart
+        m_MethodName: PropertyChangeStart
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

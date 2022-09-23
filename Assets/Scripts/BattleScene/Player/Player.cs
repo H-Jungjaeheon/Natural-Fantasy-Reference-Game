@@ -410,7 +410,13 @@ public class Player : BasicUnitScript
         BBM.ActionButtonsSetActive(false, false, false);
         transform.rotation = Quaternion.identity;
 
+        if (nowProperty != NowProperty.BasicProperty)
+        {
+            nextPropertyIndex = ((NowProperty)nextPropertyIndex == NowProperty.AngelProperty) ? (int)NowProperty.NatureProperty : nextPropertyIndex + 1;
+        }
+
         nowProperty = (NowProperty)nextPropertyIndex;
+        
         switch (nowProperty)
         {
             case NowProperty.NatureProperty:
