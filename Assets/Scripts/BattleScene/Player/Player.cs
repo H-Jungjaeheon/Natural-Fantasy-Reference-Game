@@ -70,7 +70,7 @@ public class Player : BasicUnitScript
 
     private bool isChangePropertyReady;
 
-    private BattleButtonManager BBM;
+    private BattleButtonManager BBM; 
 
     protected override void Update()
     {
@@ -387,6 +387,55 @@ public class Player : BasicUnitScript
             BBM.ActionButtonsSetActive(false, false, false);
             StartCoroutine(Resting());
         }
+    }
+
+    public void PropertyChangeStart()
+    {
+        if (nowState == NowState.Standingby)
+        {
+            nowState = NowState.Resting;
+            BBM.ActionButtonsSetActive(false, false, false);
+            StartCoroutine(PropertyChange());
+        }
+    }
+
+    IEnumerator PropertyChange()/////////////////////////////////////////////////////////////////////
+    {
+        NowPropertyTimeLimit = 0;
+        NowChangePropertyCoolTime = 0;
+        isChangePropertyReady = true;
+        nowActionCoolTime = 0;
+
+        nowState = NowState.ChangingProperties;
+        BBM.ActionButtonsSetActive(false, false, false);
+        transform.rotation = Quaternion.identity;
+
+        nowProperty = (NowProperty)nextPropertyIndex;
+        switch (nowProperty)
+        {
+            case NowProperty.NatureProperty:
+                print("자연 속성으로 변경");
+                StartCoroutine(EndingPropertyChanges());
+                break;
+            case NowProperty.ForceProperty:
+                print("힘 속성으로 변경");
+                StartCoroutine(EndingPropertyChanges());
+                break;
+            case NowProperty.FlameProperty:
+                print("화염 속성으로 변경");
+                StartCoroutine(EndingPropertyChanges());
+                break;
+            case NowProperty.TheHolySpiritProperty:
+                print("성령 속성으로 변경");
+                StartCoroutine(EndingPropertyChanges());
+                break;
+            case NowProperty.AngelProperty:
+                print("천사 속성으로 변경");
+                StartCoroutine(EndingPropertyChanges());
+                break;
+        }
+        nextPropertyIndex = ((NowProperty)nextPropertyIndex == NowProperty.AngelProperty) ? (int)NowProperty.NatureProperty : nextPropertyIndex + 1;
+        yield return null;
     }
 
     IEnumerator Resting()
