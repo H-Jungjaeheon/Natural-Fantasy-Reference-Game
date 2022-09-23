@@ -4505,7 +4505,6 @@ MonoBehaviour:
   maxEnergy_F: 30
   isHaveDreamyFigure: 0
   dreamyFigure_F: 0
-  maxDreamyFigure_F: 20
   damage_I: 4
   Speed_F: 3.5
   unitHpBars: {fileID: 1135723117}
@@ -5833,7 +5832,6 @@ MonoBehaviour:
   maxEnergy_F: 15
   isHaveDreamyFigure: 0
   dreamyFigure_F: 0
-  maxDreamyFigure_F: 20
   damage_I: 1
   Speed_F: 5
   unitHpBars: {fileID: 939537340}
@@ -5844,7 +5842,6 @@ MonoBehaviour:
   rigid: {fileID: 1717870243}
   attackRangeObjComponent: {fileID: 693950549}
   swordAuraObj: {fileID: 416800877848305474, guid: 85a20b6e84648e44a8811b52283438a6, type: 3}
-  nowChangePropertyCoolTime: 20
 --- !u!1 &1771375653
 GameObject:
   m_ObjectHideFlags: 0
