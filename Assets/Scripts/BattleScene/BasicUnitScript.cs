@@ -155,19 +155,11 @@ public abstract class BasicUnitScript : MonoBehaviour
         get { return dreamyFigure_F; }
         set
         {
-            dreamyFigure_F = (value >= MaxDreamyFigure_F) ? dreamyFigure_F = MaxDreamyFigure_F : dreamyFigure_F = value;
+            dreamyFigure_F = (value >= maxDreamyFigure_F) ? dreamyFigure_F = maxDreamyFigure_F : dreamyFigure_F = value;
         }
     }
 
-    [Tooltip("최대 몽환 게이지")]
-    [SerializeField]
-    protected float maxDreamyFigure_F;
-    public float MaxDreamyFigure_F
-    {
-        get { return maxDreamyFigure_F; }
-        set { maxDreamyFigure_F = value; }
-    }
-
+    protected float maxDreamyFigure_F; //최대 몽환 게이지
 
     [Tooltip("공격력")]
     [SerializeField]
@@ -239,7 +231,7 @@ public abstract class BasicUnitScript : MonoBehaviour
     {
         unitHpBars.fillAmount = Hp_F / MaxHp_F;
         unitEnergyBars.fillAmount = Energy_F / MaxEnergy_F;
-        unitDreamyFigureBars.fillAmount = DreamyFigure_F / MaxDreamyFigure_F;
+        unitDreamyFigureBars.fillAmount = DreamyFigure_F / maxDreamyFigure_F;
         unitLightHpBars.fillAmount = lightHp_F / MaxHp_F;
     }
 
