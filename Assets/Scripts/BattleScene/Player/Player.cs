@@ -23,7 +23,7 @@ public class Player : BasicUnitScript
 
     private float maxChangePropertyCoolTime = 35; //최대 속성 변경 시간
 
-    private float nowChangePropertyCoolTime; //현재 속성 변경 시간
+    public float nowChangePropertyCoolTime; //현재 속성 변경 시간 !
 
     public float NowChangePropertyCoolTime
     {
@@ -46,7 +46,7 @@ public class Player : BasicUnitScript
 
     private float maxPropertyTimeLimit = 25; //최대 속성 지속시간
 
-    private float nowPropertyTimeLimit; // 현재 속성 남은 지속시간
+    public float nowPropertyTimeLimit; // 현재 속성 남은 지속시간 !
 
     public float NowPropertyTimeLimit
     {
@@ -64,7 +64,7 @@ public class Player : BasicUnitScript
         }
     }
 
-    private NowProperty nowProperty;
+    public NowProperty nowProperty; //!
 
     private int nextPropertyIndex;
 
@@ -79,6 +79,7 @@ public class Player : BasicUnitScript
         Deflect();
         Defense();
         Jump();
+        print(nextPropertyIndex);
     }
 
     protected override void StartSetting() //초기 세팅 (일부 공통)
@@ -92,6 +93,7 @@ public class Player : BasicUnitScript
         MaxHp_F += gameManager_Ins.MaxHpUpgradeLevel * plusMultiplicationMaxHpPerLevel;
         MaxEnergy_F += gameManager_Ins.MaxEnergyUpgradeLevel * plusMultiplicationMaxEnergyPerLevel;
         Damage_I += gameManager_Ins.DamageUpgradeLevel;
+        maxDreamyFigure_F = 20;
 
         nowState = NowState.Standingby;
         nowProperty = NowProperty.BasicProperty;
@@ -175,7 +177,6 @@ public class Player : BasicUnitScript
         if (isChangeBasicProperty)
         {
             nowProperty = NowProperty.BasicProperty;
-            nextPropertyIndex = ((NowProperty)nextPropertyIndex == NowProperty.AngelProperty) ? (int)NowProperty.NatureProperty : nextPropertyIndex + 1;
             print("기본 속성으로 변경");
             StartCoroutine(EndingPropertyChanges());
         }
@@ -205,6 +206,7 @@ public class Player : BasicUnitScript
                     StartCoroutine(EndingPropertyChanges());
                     break;
             }
+            nextPropertyIndex = ((NowProperty)nextPropertyIndex == NowProperty.AngelProperty) ? (int)NowProperty.NatureProperty : nextPropertyIndex + 1;
         }
     }
 
@@ -214,6 +216,14 @@ public class Player : BasicUnitScript
         isChangePropertyReady = false;
         nowState = NowState.Standingby;
         WaitingTimeStart();
+    }
+    public void PropertyChangeStart()
+    {
+        if (nowState == NowState.Standingby && DreamyFigure_F >= 10)
+        {
+            DreamyFigure_F -= 10;
+            StartCoroutine(ChangeProperty(false));
+        }
     }
 
     private void CountDownPropertyTime()
@@ -389,60 +399,6 @@ public class Player : BasicUnitScript
         }
     }
 
-    public void PropertyChangeStart()
-    {
-        if (nowState == NowState.Standingby)
-        {
-            nowState = NowState.Resting;
-            BBM.ActionButtonsSetActive(false, false, false);
-            StartCoroutine(PropertyChange());
-        }
-    }
-
-    IEnumerator PropertyChange()/////////////////////////////////////////////////////////////////////
-    {
-        NowPropertyTimeLimit = 0;
-        NowChangePropertyCoolTime = 0;
-        isChangePropertyReady = true;
-        nowActionCoolTime = 0;
-
-        nowState = NowState.ChangingProperties;
-        BBM.ActionButtonsSetActive(false, false, false);
-        transform.rotation = Quaternion.identity;
-
-        if (nowProperty != NowProperty.BasicProperty)
-        {
-            nextPropertyIndex = ((NowProperty)nextPropertyIndex == NowProperty.AngelProperty) ? (int)NowProperty.NatureProperty : nextPropertyIndex + 1;
-        }
-
-        nowProperty = (NowProperty)nextPropertyIndex;
-        
-        switch (nowProperty)
-        {
-            case NowProperty.NatureProperty:
-                print("자연 속성으로 변경");
-                StartCoroutine(EndingPropertyChanges());
-                break;
-            case NowProperty.ForceProperty:
-                print("힘 속성으로 변경");
-                StartCoroutine(EndingPropertyChanges());
-                break;
-            case NowProperty.FlameProperty:
-                print("화염 속성으로 변경");
-                StartCoroutine(EndingPropertyChanges());
-                break;
-            case NowProperty.TheHolySpiritProperty:
-                print("성령 속성으로 변경");
-                StartCoroutine(EndingPropertyChanges());
-                break;
-            case NowProperty.AngelProperty:
-                print("천사 속성으로 변경");
-                StartCoroutine(EndingPropertyChanges());
-                break;
-        }
-        nextPropertyIndex = ((NowProperty)nextPropertyIndex == NowProperty.AngelProperty) ? (int)NowProperty.NatureProperty : nextPropertyIndex + 1;
-        yield return null;
-    }
 
     IEnumerator Resting()
     {
