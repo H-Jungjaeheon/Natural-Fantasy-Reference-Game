@@ -204,6 +204,10 @@ public abstract class BasicUnitScript : MonoBehaviour
     [Tooltip("자신의 공격 범위 콜라이더")]
     protected BoxCollider2D attackRangeObjComponent;
 
+    protected Vector2 InitializationAttackRangeSize = new Vector2(1.1f, 2.6f);
+
+    protected Vector2 InitializationAttackRangeOffset = new Vector2(0.2f, 0);
+
     protected virtual void Awake()
     {
         StartSameSetting();
@@ -292,7 +296,7 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     protected void InitializationAttackRange()
     {
-        attackRangeObjComponent.size = new Vector2(0.8f, 2.1f);
-        attackRangeObjComponent.offset = new Vector2(0f, 0f);
+        attackRangeObjComponent.size = InitializationAttackRangeSize;
+        attackRangeObjComponent.offset = InitializationAttackRangeOffset;
     }
 }

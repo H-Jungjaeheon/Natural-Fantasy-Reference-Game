@@ -263,7 +263,7 @@ public class Player : BasicUnitScript
         nowDefensivePosition = DefensePos.None;
         BBM.ActionButtonsSetActive(false, false, false);
         transform.rotation = Quaternion.Euler(0, setRotation, 0);
-        ChangeAttackRange(new Vector2(0.55f, 2.1f), new Vector2(-0.1f, 0));
+        ChangeAttackRange(new Vector2(0.7f, 2.6f), new Vector2(0, 0));
         //애니 실행
         yield return new WaitForSeconds(0.15f); //치기 전까지 기다림
         for (int nowIndex = 0; nowIndex < rangeInDeflectAbleObj.Count; nowIndex++)
