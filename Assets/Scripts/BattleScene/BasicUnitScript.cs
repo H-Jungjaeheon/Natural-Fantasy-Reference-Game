@@ -24,6 +24,16 @@ public enum NowState
     ChangingProperties
 }
 
+public enum NowEnemyProperty
+{
+    Mutant,
+    Guardian,
+    Rot,
+    EvilSpirit,
+    Angel,
+    PropertyTotalNumber
+}
+
 public abstract class BasicUnitScript : MonoBehaviour
 {
     #region 공격 쿨타임 관련 변수 (공통)
@@ -285,6 +295,8 @@ public abstract class BasicUnitScript : MonoBehaviour
     protected void ActionCoolTimeBarSetActive(bool SetActive) => actionCoolTimeObj.SetActive(SetActive);
 
     protected abstract void Dead();
+
+    protected abstract IEnumerator PropertyPassiveAbilityStart();
 
     protected abstract IEnumerator Fainting();
 

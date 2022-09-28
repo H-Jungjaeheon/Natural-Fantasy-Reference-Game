@@ -131,4 +131,10 @@ public class Enemy : BasicUnitScript
             StartCoroutine(Fainting());
         }
     }
+
+    protected override IEnumerator PropertyPassiveAbilityStart()
+    {
+
+        yield return null;
+    }
 }

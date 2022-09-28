@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum NowProperty
+public enum NowPlayerProperty
 {
     BasicProperty,
     NatureProperty,
@@ -64,7 +64,7 @@ public class Player : BasicUnitScript
         }
     }
 
-    private NowProperty nowProperty; 
+    private NowPlayerProperty nowProperty; 
 
     private int nextPropertyIndex;
 
@@ -96,11 +96,11 @@ public class Player : BasicUnitScript
         maxDreamyFigure_F = 20;
 
         nowState = NowState.Standingby;
-        nowProperty = NowProperty.BasicProperty;
+        nowProperty = NowPlayerProperty.BasicProperty;
         BBM = BattleButtonManager.Instance;
 
         BattleSceneManager.Instance.PlayerCharacterPos = transform.position;
-        nextPropertyIndex = Random.Range((int)NowProperty.NatureProperty, (int)NowProperty.PropertyTotalNumber);
+        nextPropertyIndex = Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
         Energy_F = MaxEnergy_F;
         Hp_F = MaxHp_F;
     }
@@ -176,37 +176,37 @@ public class Player : BasicUnitScript
 
         if (isChangeBasicProperty)
         {
-            nowProperty = NowProperty.BasicProperty;
+            nowProperty = NowPlayerProperty.BasicProperty;
             print("기본 속성으로 변경");
             StartCoroutine(EndingPropertyChanges());
         }
         else
         {
-            nowProperty = (NowProperty)nextPropertyIndex;
+            nowProperty = (NowPlayerProperty)nextPropertyIndex;
             switch (nowProperty)
             {
-                case NowProperty.NatureProperty:
+                case NowPlayerProperty.NatureProperty:
                     print("자연 속성으로 변경");
                     StartCoroutine(EndingPropertyChanges());
                     break;
-                case NowProperty.ForceProperty:
+                case NowPlayerProperty.ForceProperty:
                     print("힘 속성으로 변경");
                     StartCoroutine(EndingPropertyChanges());
                     break;
-                case NowProperty.FlameProperty:
+                case NowPlayerProperty.FlameProperty:
                     print("화염 속성으로 변경");
                     StartCoroutine(EndingPropertyChanges());
                     break;
-                case NowProperty.TheHolySpiritProperty:
+                case NowPlayerProperty.TheHolySpiritProperty:
                     print("성령 속성으로 변경");
                     StartCoroutine(EndingPropertyChanges());
                     break;
-                case NowProperty.AngelProperty:
+                case NowPlayerProperty.AngelProperty:
                     print("천사 속성으로 변경");
                     StartCoroutine(EndingPropertyChanges());
                     break;
             }
-            nextPropertyIndex = ((NowProperty)nextPropertyIndex == NowProperty.AngelProperty) ? (int)NowProperty.NatureProperty : nextPropertyIndex + 1;
+            nextPropertyIndex = ((NowPlayerProperty)nextPropertyIndex == NowPlayerProperty.AngelProperty) ? (int)NowPlayerProperty.NatureProperty : nextPropertyIndex + 1;
         }
     }
 
@@ -230,7 +230,7 @@ public class Player : BasicUnitScript
     {
         if (isChangePropertyReady == false)
         {
-            if (nowProperty != NowProperty.BasicProperty)
+            if (nowProperty != NowPlayerProperty.BasicProperty)
             {
                 NowPropertyTimeLimit += Time.deltaTime;
             }
@@ -398,7 +398,6 @@ public class Player : BasicUnitScript
             StartCoroutine(Resting());
         }
     }
-
 
     IEnumerator Resting()
     {
@@ -597,5 +596,11 @@ public class Player : BasicUnitScript
         }
 
         WaitingTimeStart();
+    }
+
+    protected override IEnumerator PropertyPassiveAbilityStart()
+    {
+
+        yield return null;
     }
 }
