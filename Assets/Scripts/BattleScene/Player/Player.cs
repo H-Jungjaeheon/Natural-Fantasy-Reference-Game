@@ -70,6 +70,25 @@ public class Player : BasicUnitScript
 
     private bool isChangePropertyReady;
 
+    private float maxNaturePassiveCount;
+
+    private float nowNaturePassiveCount;
+    public float NowNaturePassiveCount
+    {
+        get { return NowNaturePassiveCount; }
+        set
+        {
+            if (value >= maxActionCoolTime)
+            {
+                
+            }
+            else
+            {
+                nowNaturePassiveCount = value;
+            }
+        }
+    }
+
     private BattleButtonManager BBM; 
 
     protected override void Update()
