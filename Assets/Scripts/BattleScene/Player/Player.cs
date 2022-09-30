@@ -619,7 +619,24 @@ public class Player : BasicUnitScript
 
     protected override IEnumerator PropertyPassiveAbilityStart()
     {
+        switch (nowProperty)
+        {
+            case NowPlayerProperty.NatureProperty:
 
+                break;
+            case NowPlayerProperty.ForceProperty:
+
+                break;
+            case NowPlayerProperty.FlameProperty:
+
+                break;
+            case NowPlayerProperty.TheHolySpiritProperty:
+
+                break;
+            case NowPlayerProperty.AngelProperty:
+
+                break;
+        }
         yield return null;
     }
 }
