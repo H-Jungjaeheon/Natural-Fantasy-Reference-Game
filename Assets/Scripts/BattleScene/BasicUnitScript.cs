@@ -249,7 +249,7 @@ public abstract class BasicUnitScript : MonoBehaviour
         unitLightHpBars.fillAmount = lightHp_F / MaxHp_F;
     }
 
-    public void Hit(int damage, bool isDefending)
+    public virtual void Hit(int damage, bool isDefending)
     {
         if (isDefending)
         {

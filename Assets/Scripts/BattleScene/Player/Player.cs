@@ -124,6 +124,20 @@ public class Player : BasicUnitScript
         Hp_F = MaxHp_F;
     }
 
+    public override void Hit(int damage, bool isDefending)
+    {
+        if (isDefending)
+        {
+            Energy_F -= 1;
+            DreamyFigure_F += 1;
+        }
+        else
+        {
+            Hp_F -= nowProperty == NowPlayerProperty.ForceProperty ? damage * 1.5f : damage;
+            DreamyFigure_F += 2;
+        }
+    }
+
     protected override void Defense()
     {
         if (nowState == NowState.Standingby)
@@ -625,7 +639,11 @@ public class Player : BasicUnitScript
 
                 break;
             case NowPlayerProperty.ForceProperty:
-
+                while (nowProperty == NowPlayerProperty.ForceProperty)
+                {
+                    Damage_I = Damage_I * 2;
+                }
+                Damage_I = Damage_I / 2;
                 break;
             case NowPlayerProperty.FlameProperty:
 

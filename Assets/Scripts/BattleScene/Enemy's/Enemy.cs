@@ -51,6 +51,11 @@ public class Enemy : BasicUnitScript
         StartCoroutine(Attacking(true, nowAttackCount_I, 1f)); //첫번째 공격 실행
     }
 
+    public override void Hit(int damage, bool isDefending)
+    {
+        base.Hit(damage, isDefending);
+    }
+
     IEnumerator Attacking(bool isLastAttack, int nowAttackCount_I, float delayTime)
     {
         float nowdelayTime = 0;

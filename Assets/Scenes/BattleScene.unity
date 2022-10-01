@@ -5882,6 +5882,9 @@ MonoBehaviour:
   rigid: {fileID: 1717870243}
   attackRangeObjComponent: {fileID: 693950549}
   swordAuraObj: {fileID: 416800877848305474, guid: 85a20b6e84648e44a8811b52283438a6, type: 3}
+  nowChangePropertyCoolTime: 0
+  nowPropertyTimeLimit: 0
+  nowProperty: 0
 --- !u!1 &1771375653
 GameObject:
   m_ObjectHideFlags: 0
@@ -7257,6 +7260,10 @@ PrefabInstance:
     - target: {fileID: 7600358472687557744, guid: 6fb09c3008d354545b947436931e039b, type: 3}
       propertyPath: m_Name
       value: TestEnemyBullet
+      objectReference: {fileID: 0}
+    - target: {fileID: 7600358472687557744, guid: 6fb09c3008d354545b947436931e039b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7600358472687557748, guid: 6fb09c3008d354545b947436931e039b, type: 3}
       propertyPath: m_RootOrder
