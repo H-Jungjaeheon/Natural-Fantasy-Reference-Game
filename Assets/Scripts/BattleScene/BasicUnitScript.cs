@@ -173,8 +173,8 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     [Tooltip("공격력")]
     [SerializeField]
-    protected int damage_I;
-    public int Damage_I
+    protected float damage_I;
+    public float Damage_I
     {
         get { return damage_I; }
         set { damage_I = value; }
@@ -249,7 +249,7 @@ public abstract class BasicUnitScript : MonoBehaviour
         unitLightHpBars.fillAmount = lightHp_F / MaxHp_F;
     }
 
-    public virtual void Hit(int damage, bool isDefending)
+    public virtual void Hit(float damage, bool isDefending)
     {
         if (isDefending)
         {
