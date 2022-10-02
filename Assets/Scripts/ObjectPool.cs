@@ -2,6 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum PoolObjKind
+{
+    PlayerSwordAura,
+    PlayerHpRecoveryBead
+}
+
 public class ObjectPool : Singleton<ObjectPool>
 {
     [SerializeField]

@@ -92,7 +92,7 @@ public class SwordAura : MonoBehaviour
         }
         else if(collision.gameObject.CompareTag("ObjDestroy"))
         {
-            ObjectPool.Instance.ReturnObject(gameObject, 0);
+            ObjectPool.Instance.ReturnObject(gameObject, (int)PoolObjKind.PlayerSwordAura);
         }
     }
 }

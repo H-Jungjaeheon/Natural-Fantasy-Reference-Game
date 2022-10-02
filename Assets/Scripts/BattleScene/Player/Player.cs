@@ -15,12 +15,7 @@ public enum NowPlayerProperty
 }
 
 public class Player : BasicUnitScript
-{
-    [Header("공격에 필요한 오브젝트 모음")]
-    [Tooltip("검기(첫번째) 스킬 발사체 오브젝트")]
-    [SerializeField]
-    private GameObject swordAuraObj;
-
+{ 
     private float maxChangePropertyCoolTime = 35; //최대 속성 변경 시간
 
     public float nowChangePropertyCoolTime; //현재 속성 변경 시간 !
@@ -81,7 +76,8 @@ public class Player : BasicUnitScript
         {
             if (value >= maxActionCoolTime)
             {
-                
+                isSpawnNatureBead = true;
+
             }
             else
             {
@@ -89,6 +85,8 @@ public class Player : BasicUnitScript
             }
         }
     }
+
+    private bool isSpawnNatureBead;
 
     private BattleButtonManager BBM; 
 
@@ -99,7 +97,6 @@ public class Player : BasicUnitScript
         Deflect();
         Defense();
         Jump();
-        print(nextPropertyIndex);
     }
 
     protected override void StartSetting() //초기 세팅 (일부 공통)
@@ -637,7 +634,15 @@ public class Player : BasicUnitScript
         switch (nowProperty)
         {
             case NowPlayerProperty.NatureProperty:
-
+                while (nowProperty == NowPlayerProperty.NatureProperty)
+                {
+                    if (isSpawnNatureBead == false)
+                    {
+                        nowNaturePassiveCount += Time.deltaTime;
+                    }
+                    yield return null;
+                }
+                nowNaturePassiveCount = 0;
                 break;
             case NowPlayerProperty.ForceProperty:
                 float enhancedDamage = Damage_I / 3f;
