@@ -71,13 +71,13 @@ public class Player : BasicUnitScript
     private float nowNaturePassiveCount;
     public float NowNaturePassiveCount
     {
-        get { return NowNaturePassiveCount; }
+        get { return nowNaturePassiveCount; }
         set
         {
-            if (value >= maxActionCoolTime)
+            if (value >= maxNaturePassiveCount)
             {
                 isSpawnNatureBead = true;
-
+                OP.GetObject((int)PoolObjKind.PlayerHpRecoveryBead);
             }
             else
             {
@@ -86,9 +86,12 @@ public class Player : BasicUnitScript
         }
     }
 
-    private bool isSpawnNatureBead;
+    [HideInInspector]
+    public bool isSpawnNatureBead;
 
-    private BattleButtonManager BBM; 
+    private BattleButtonManager BBM;
+
+    private ObjectPool OP;
 
     protected override void Update()
     {
@@ -111,10 +114,12 @@ public class Player : BasicUnitScript
         MaxEnergy_F += gameManager_Ins.MaxEnergyUpgradeLevel * plusMultiplicationMaxEnergyPerLevel;
         Damage_I += gameManager_Ins.DamageUpgradeLevel;
         maxDreamyFigure_F = 20;
+        maxNaturePassiveCount = 5;
 
         nowState = NowState.Standingby;
         nowProperty = NowPlayerProperty.BasicProperty;
         BBM = BattleButtonManager.Instance;
+        OP = ObjectPool.Instance;
 
         BattleSceneManager.Instance.PlayerCharacterPos = transform.position;
         nextPropertyIndex = Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
@@ -586,9 +591,8 @@ public class Player : BasicUnitScript
             yield return null;
         }
 
-        var enchantedSwordAuraObj = ObjectPool.Instance.GetObject(0);
+        var enchantedSwordAuraObj = OP.GetObject((int)PoolObjKind.PlayerSwordAura);
         var enchantedSwordAuraObjComponent = enchantedSwordAuraObj.GetComponent<SwordAura>();
-        enchantedSwordAuraObj.transform.position = transform.position + (Vector3)new Vector2(2.5f, 0);
         if (isFailEnchant == false)
         {
             enchantedSwordAuraObjComponent.IsEnchanted = true;
@@ -631,19 +635,21 @@ public class Player : BasicUnitScript
 
     protected override IEnumerator PropertyPassiveAbilityStart()
     {
+        NowChangePropertyCoolTime = 0;
         switch (nowProperty)
         {
             case NowPlayerProperty.NatureProperty:
                 while (nowProperty == NowPlayerProperty.NatureProperty)
                 {
-                    if (isSpawnNatureBead == false)
+                    if (isSpawnNatureBead == false && nowProperty == NowPlayerProperty.NatureProperty)
                     {
-                        nowNaturePassiveCount += Time.deltaTime;
+                        NowNaturePassiveCount += Time.deltaTime;
                     }
                     yield return null;
                 }
-                nowNaturePassiveCount = 0;
+                NowNaturePassiveCount = 0;
                 break;
+
             case NowPlayerProperty.ForceProperty:
                 float enhancedDamage = Damage_I / 3f;
                 float reducedMaxActionCoolTime = maxActionCoolTime / 5;
@@ -656,12 +662,15 @@ public class Player : BasicUnitScript
                 Damage_I -= enhancedDamage;
                 maxActionCoolTime += reducedMaxActionCoolTime;
                 break;
+
             case NowPlayerProperty.FlameProperty:
 
                 break;
+
             case NowPlayerProperty.TheHolySpiritProperty:
 
                 break;
+
             case NowPlayerProperty.AngelProperty:
 
                 break;

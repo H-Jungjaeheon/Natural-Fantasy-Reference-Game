@@ -6,30 +6,82 @@ public class PlayerHpRecoveryBead : MonoBehaviour
 {
     [SerializeField]
     [Tooltip("체력 회복량")]
-    private int RecoveryAmount;
+    private int recoveryAmount;
 
-    // Start is called before the first frame update
-    void Start()
+    private float nowDeleteTimeLimit;
+
+    private int maxDeleteTimeLimit;
+
+    private ObjectPool OP;
+
+    private Player Player;
+
+    private void Start()
     {
-        
+        StartSetting();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        DeleteTimeLimit();
+        DeterminePlayerProperties();
     }
+
+    private void StartSetting()
+    {
+        maxDeleteTimeLimit = 5;
+        OP = ObjectPool.Instance;
+        Player = BattleSceneManager.Instance.Player;
+    }
+
     private void OnEnable()
     {
-        //랜덤 위치
+        int upwardPlacementProbability = 35;
+
+        nowDeleteTimeLimit = 0;
+        int randomSpawnPositionProbability = Random.Range(0, 100);
+        if (randomSpawnPositionProbability < upwardPlacementProbability)
+        {
+            transform.position = new Vector2(-10, 5);
+        }
+        else
+        {
+            int randomSpawnXPosition = Random.Range(-7, 16);
+            transform.position = new Vector2(randomSpawnXPosition, -1);
+        }
     }
+
+    private void DeleteTimeLimit()
+    {
+        nowDeleteTimeLimit += Time.deltaTime;
+        if (nowDeleteTimeLimit >= maxDeleteTimeLimit)
+        {
+            DeleteSetting();
+        }
+    }
+
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            BattleSceneManager.Instance.Player.Hp_F += RecoveryAmount;
-            ObjectPool.Instance.ReturnObject(gameObject, (int)PoolObjKind.PlayerHpRecoveryBead);
+            Player.Hp_F += recoveryAmount;
+            DeleteSetting();
+        }
+    }
+
+    private void DeleteSetting()
+    {
+        OP.ReturnObject(gameObject, (int)PoolObjKind.PlayerHpRecoveryBead);
+        Player.isSpawnNatureBead = false;
+        Player.NowNaturePassiveCount = 0;
+    }
+
+    private void DeterminePlayerProperties()
+    {
+        if (Player.nowProperty != NowPlayerProperty.NatureProperty)
+        {
+            DeleteSetting();
         }
     }
 }

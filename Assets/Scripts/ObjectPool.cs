@@ -16,7 +16,7 @@ public class ObjectPool : Singleton<ObjectPool>
     [SerializeField]
     private Dictionary<int, Queue<GameObject>> objPools = new Dictionary<int, Queue<GameObject>>();
 
-    void Awake()
+    void Start()
     {
         for (int nowObjIndex = 0; nowObjIndex < usePrefabObjs.Length; nowObjIndex++)
         {
