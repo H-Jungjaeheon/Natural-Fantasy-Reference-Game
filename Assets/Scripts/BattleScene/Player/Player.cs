@@ -15,7 +15,7 @@ public enum NowPlayerProperty
 }
 
 public class Player : BasicUnitScript
-{ 
+{
     private float maxChangePropertyCoolTime = 35; //최대 속성 변경 시간
 
     public float nowChangePropertyCoolTime; //현재 속성 변경 시간 !
@@ -65,6 +65,8 @@ public class Player : BasicUnitScript
     private int nextPropertyIndex;
 
     private bool isChangePropertyReady;
+
+    private bool isResurrectionOpportunityExists;
 
     private float maxNaturePassiveCount;
 
@@ -120,6 +122,7 @@ public class Player : BasicUnitScript
         nowProperty = NowPlayerProperty.BasicProperty;
         BBM = BattleButtonManager.Instance;
         OP = ObjectPool.Instance;
+        isResurrectionOpportunityExists = true;
 
         BattleSceneManager.Instance.PlayerCharacterPos = transform.position;
         nextPropertyIndex = Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
@@ -612,8 +615,35 @@ public class Player : BasicUnitScript
 
     protected override void Dead()
     {
-        print("사망");
-        //사망 애니 및 이벤트
+        if (nowProperty == NowPlayerProperty.AngelProperty && isResurrectionOpportunityExists)
+        {
+            StartCoroutine(Resurrection());
+        }
+        else
+        {
+            print("사망");
+            //사망 애니 및 이벤트
+        }
+    }
+
+    private IEnumerator Resurrection()
+    {
+        isResurrectionOpportunityExists = false; //무적 끝날 때
+        nowState = NowState.Resurrection; //움직임 봉인 풀릴 때 기본으로 변경
+        while (true)
+        {
+            Hp_F += Time.deltaTime;
+            if (Hp_F >= MaxHp_F / 10)
+            {
+                Hp_F = maxHp_F / 10;
+                if (Energy_F < maxEnergy_F / 10)
+                {
+                    Energy_F = maxEnergy_F / 10;
+                }
+                break;
+            }
+            yield return null;
+        }
     }
 
     protected override IEnumerator Fainting()
@@ -668,10 +698,6 @@ public class Player : BasicUnitScript
                 break;
 
             case NowPlayerProperty.TheHolySpiritProperty:
-
-                break;
-
-            case NowPlayerProperty.AngelProperty:
 
                 break;
         }

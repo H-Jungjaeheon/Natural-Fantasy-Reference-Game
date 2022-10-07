@@ -21,7 +21,8 @@ public enum NowState
     Resting,
     Fainting,
     Attacking,
-    ChangingProperties
+    ChangingProperties,
+    Resurrection
 }
 
 public enum NowEnemyProperty
