@@ -628,8 +628,9 @@ public class Player : BasicUnitScript
 
     private IEnumerator Resurrection()
     {
-        isResurrectionOpportunityExists = false; //무적 끝날 때
-        nowState = NowState.Resurrection; //움직임 봉인 풀릴 때 기본으로 변경
+        isResurrectionOpportunityExists = false;
+        nowState = NowState.Resurrection;
+        BBM.ActionButtonsSetActive(false, false, false);
         while (true)
         {
             Hp_F += Time.deltaTime;
@@ -644,6 +645,12 @@ public class Player : BasicUnitScript
             }
             yield return null;
         }
+        BBM.ActionButtonsSetActive(true, false, false);
+        nowState = NowState.Standingby; 
+        Invincibility(true);
+        yield return new WaitForSeconds(15f);
+        print("무적 끝");
+        Invincibility(false);
     }
 
     protected override IEnumerator Fainting()

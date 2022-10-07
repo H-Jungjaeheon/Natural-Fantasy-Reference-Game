@@ -22,7 +22,8 @@ public enum NowState
     Fainting,
     Attacking,
     ChangingProperties,
-    Resurrection
+    Resurrection,
+    Dead
 }
 
 public enum NowEnemyProperty
@@ -81,6 +82,8 @@ public abstract class BasicUnitScript : MonoBehaviour
     protected bool isWaiting; //대기중
 
     private bool isHpDiminishedProduction;
+
+    private bool isInvincibility;
 
     [HideInInspector]
     public List<GameObject> rangeInEnemy = new List<GameObject>(); //공격 범위 내의 적 리스트
@@ -252,15 +255,18 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     public virtual void Hit(float damage, bool isDefending)
     {
-        if (isDefending)
+        if (isInvincibility == false)
         {
-            Energy_F -= 1;
-            DreamyFigure_F += 1;
-        }
-        else
-        {
-            Hp_F -= damage;
-            DreamyFigure_F += 2;
+            if (isDefending)
+            {
+                Energy_F -= 1;
+                DreamyFigure_F += 1;
+            }
+            else
+            {
+                Hp_F -= damage;
+                DreamyFigure_F += 2;
+            }
         }
     }
 
@@ -305,6 +311,11 @@ public abstract class BasicUnitScript : MonoBehaviour
     {
         attackRangeObjComponent.size = attackRangeColliderSize;
         attackRangeObjComponent.offset = attackRangeColliderOffset;
+    }
+
+    protected void Invincibility(bool isInvincibilityOn)
+    {
+        isInvincibility = isInvincibilityOn;
     }
 
     protected void InitializationAttackRange()
