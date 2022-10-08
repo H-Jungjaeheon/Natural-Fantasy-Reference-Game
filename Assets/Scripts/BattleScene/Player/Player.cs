@@ -125,28 +125,31 @@ public class Player : BasicUnitScript
         isResurrectionOpportunityExists = true;
 
         BattleSceneManager.Instance.PlayerCharacterPos = transform.position;
-        nextPropertyIndex = Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
+        nextPropertyIndex = (int)NowPlayerProperty.AngelProperty;//Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
         Energy_F = MaxEnergy_F;
         Hp_F = MaxHp_F;
     }
 
     public override void Hit(float damage, bool isDefending)
     {
-        if (isDefending)
+        if (isInvincibility == false)
         {
-            Energy_F -= 1;
-            DreamyFigure_F += 1;
-        }
-        else
-        {
-            Hp_F -= nowProperty == NowPlayerProperty.ForceProperty ? damage * 2f : damage;
-            DreamyFigure_F += 2;
+            if (isDefending)
+            {
+                Energy_F -= 1;
+                DreamyFigure_F += 1;
+            }
+            else
+            {
+                Hp_F -= nowProperty == NowPlayerProperty.ForceProperty ? damage * 2f : damage;
+                DreamyFigure_F += 2;
+            }
         }
     }
 
     protected override void Defense()
     {
-        if (nowState == NowState.Standingby)
+        if (nowState == NowState.Standingby && Hp_F > 0)
         {
             if (Input.GetKey(KeyCode.A))
             {
@@ -348,9 +351,7 @@ public class Player : BasicUnitScript
             nowActionCoolTime += Time.deltaTime;
             if (nowActionCoolTime >= maxActionCoolTime)
             {
-                isWaiting = false;
-                nowActionCoolTime = 0;
-                ActionCoolTimeBarSetActive(false);
+                WaitingTimeEnd();
                 BBM.ActionButtonsSetActive(true, false, false);
             }
         }
@@ -365,7 +366,7 @@ public class Player : BasicUnitScript
     {
         nowState = NowState.Standingby;
 
-        if (isChangePropertyReady == false)
+        if (isChangePropertyReady == false && Hp_F > 0)
         {
             isWaiting = true;
             if (nowActionCoolTime < maxActionCoolTime)
@@ -378,7 +379,7 @@ public class Player : BasicUnitScript
 
     private void Jump()
     {
-        if (nowState == NowState.Standingby && Input.GetKey(KeyCode.Space))
+        if (nowState == NowState.Standingby && Input.GetKey(KeyCode.Space) && Hp_F > 0)
         {
             nowState = NowState.Jumping;
             BBM.ActionButtonsSetActive(false, false, false);
@@ -613,10 +614,15 @@ public class Player : BasicUnitScript
         }
     }
 
-    protected override void Dead()
+    protected override IEnumerator Dead()
     {
         if (nowProperty == NowPlayerProperty.AngelProperty && isResurrectionOpportunityExists)
         {
+            isResurrectionOpportunityExists = false;
+            while (nowState != NowState.Standingby)
+            {
+                yield return null;
+            }
             StartCoroutine(Resurrection());
         }
         else
@@ -628,28 +634,33 @@ public class Player : BasicUnitScript
 
     private IEnumerator Resurrection()
     {
-        isResurrectionOpportunityExists = false;
+        int recoveryFixedValue = 20;
+        int ResurrectionStatsValueSharingValue = 5;
+
+        Invincibility(true);
         nowState = NowState.Resurrection;
+        WaitingTimeEnd();
         BBM.ActionButtonsSetActive(false, false, false);
+
         while (true)
         {
-            Hp_F += Time.deltaTime;
-            if (Hp_F >= MaxHp_F / 10)
+            Hp_F += Time.deltaTime * (MaxHp_F / recoveryFixedValue);
+            Energy_F += (Energy_F < maxEnergy_F / ResurrectionStatsValueSharingValue) ? Time.deltaTime * (maxEnergy_F / recoveryFixedValue) : 0;
+            if (Hp_F >= MaxHp_F / ResurrectionStatsValueSharingValue && Energy_F >= maxEnergy_F / ResurrectionStatsValueSharingValue)
             {
-                Hp_F = maxHp_F / 10;
-                if (Energy_F < maxEnergy_F / 10)
+                Hp_F = MaxHp_F / ResurrectionStatsValueSharingValue;
+                if (Energy_F <= maxEnergy_F / ResurrectionStatsValueSharingValue)
                 {
-                    Energy_F = maxEnergy_F / 10;
+                    Energy_F = maxEnergy_F / ResurrectionStatsValueSharingValue;
                 }
                 break;
             }
             yield return null;
         }
+
         BBM.ActionButtonsSetActive(true, false, false);
         nowState = NowState.Standingby; 
-        Invincibility(true);
         yield return new WaitForSeconds(15f);
-        print("무적 끝");
         Invincibility(false);
     }
 
@@ -662,7 +673,7 @@ public class Player : BasicUnitScript
         Energy_F += 8; //나중에 매개변수로 레벨에 따라서 기력 차는 양 증가
         nowActionCoolTime = maxActionCoolTime;
 
-        if (isChangePropertyReady == false)
+        if (isChangePropertyReady == false && Hp_F > 0)
         {
             BBM.ActionButtonsSetActive(true, false, false);
         }

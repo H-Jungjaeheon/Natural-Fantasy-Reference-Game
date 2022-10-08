@@ -119,9 +119,9 @@ public class Enemy : BasicUnitScript
     {
 
     }
-    protected override void Dead()
+    protected override IEnumerator Dead()
     {
-        
+        yield return null;
     }
 
     protected override IEnumerator Fainting()

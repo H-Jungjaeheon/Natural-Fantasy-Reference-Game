@@ -83,7 +83,7 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     private bool isHpDiminishedProduction;
 
-    private bool isInvincibility;
+    protected bool isInvincibility;
 
     [HideInInspector]
     public List<GameObject> rangeInEnemy = new List<GameObject>(); //공격 범위 내의 적 리스트
@@ -111,7 +111,7 @@ public abstract class BasicUnitScript : MonoBehaviour
             if (value <= 0)
             {
                 hp_F = 0;
-                Dead();
+                StartCoroutine(Dead());
             }
             else
             {
@@ -295,13 +295,20 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     protected abstract void UISetting();
 
+    protected virtual void WaitingTimeEnd()
+    {
+        isWaiting = false;
+        nowActionCoolTime = 0;
+        ActionCoolTimeBarSetActive(false);
+    }
+
     protected abstract void Defense();
 
     protected abstract void SetDefensing(DefensePos nowDefensePos, float setRotation);
 
     protected void ActionCoolTimeBarSetActive(bool SetActive) => actionCoolTimeObj.SetActive(SetActive);
 
-    protected abstract void Dead();
+    protected abstract IEnumerator Dead();
 
     protected abstract IEnumerator PropertyPassiveAbilityStart();
 
