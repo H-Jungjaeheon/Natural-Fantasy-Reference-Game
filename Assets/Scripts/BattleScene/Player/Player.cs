@@ -68,6 +68,8 @@ public class Player : BasicUnitScript
 
     private bool isResurrectionOpportunityExists;
 
+    private bool angelPropertyBuffing;
+
     private float maxNaturePassiveCount;
 
     private float nowNaturePassiveCount;
@@ -125,7 +127,7 @@ public class Player : BasicUnitScript
         isResurrectionOpportunityExists = true;
 
         BattleSceneManager.Instance.PlayerCharacterPos = transform.position;
-        nextPropertyIndex = (int)NowPlayerProperty.AngelProperty;//Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
+        nextPropertyIndex = Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
         Energy_F = MaxEnergy_F;
         Hp_F = MaxHp_F;
     }
@@ -149,7 +151,7 @@ public class Player : BasicUnitScript
 
     protected override void Defense()
     {
-        if (nowState == NowState.Standingby && Hp_F > 0)
+        if (nowState == NowState.Standingby && Hp_F > 0 && isChangePropertyReady == false)
         {
             if (Input.GetKey(KeyCode.A))
             {
@@ -205,7 +207,7 @@ public class Player : BasicUnitScript
 
         while (true)
         {
-            if (nowState == NowState.Standingby)
+            if (nowState == NowState.Standingby && angelPropertyBuffing == false)
             {
                 break;
             }
@@ -213,6 +215,7 @@ public class Player : BasicUnitScript
         }
 
         nowState = NowState.ChangingProperties;
+        Invincibility(true);
         BBM.ActionButtonsSetActive(false, false, false);
         transform.rotation = Quaternion.identity;
 
@@ -257,6 +260,7 @@ public class Player : BasicUnitScript
         yield return new WaitForSeconds(2);
         isChangePropertyReady = false;
         nowState = NowState.Standingby;
+        Invincibility(false);
         WaitingTimeStart();
     }
     public void PropertyChangeStart()
@@ -379,7 +383,7 @@ public class Player : BasicUnitScript
 
     private void Jump()
     {
-        if (nowState == NowState.Standingby && Input.GetKey(KeyCode.Space) && Hp_F > 0)
+        if (nowState == NowState.Standingby && Input.GetKey(KeyCode.Space) && Hp_F > 0 && isChangePropertyReady == false)
         {
             nowState = NowState.Jumping;
             BBM.ActionButtonsSetActive(false, false, false);
@@ -638,6 +642,7 @@ public class Player : BasicUnitScript
         int ResurrectionStatsValueSharingValue = 5;
 
         Invincibility(true);
+        AngelPropertyBuff(true);
         nowState = NowState.Resurrection;
         WaitingTimeEnd();
         BBM.ActionButtonsSetActive(false, false, false);
@@ -661,7 +666,16 @@ public class Player : BasicUnitScript
         BBM.ActionButtonsSetActive(true, false, false);
         nowState = NowState.Standingby; 
         yield return new WaitForSeconds(15f);
+        AngelPropertyBuff(false);
         Invincibility(false);
+    }
+
+    private void AngelPropertyBuff(bool isBuffing)
+    {
+        angelPropertyBuffing = isBuffing;
+        Damage_I = isBuffing ? Damage_I * 2: Damage_I / 2;
+        maxActionCoolTime = isBuffing ? maxActionCoolTime - 1 : maxActionCoolTime + 1;
+        Speed_F = isBuffing ? Speed_F * 1.5f : Speed_F / 1.5f;
     }
 
     protected override IEnumerator Fainting()
