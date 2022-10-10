@@ -58,7 +58,7 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     protected float nowActionCoolTime; //현재 쿨타임
 
-    [Tooltip("최대 쿨타임")]
+    [HideInInspector]
     public float maxActionCoolTime;
 
     #endregion
@@ -72,6 +72,8 @@ public abstract class BasicUnitScript : MonoBehaviour
     [Tooltip("점프 파워")]
     [SerializeField]
     protected float jumpPower_F;
+
+    protected float restWaitTime;
 
     [HideInInspector]
     public DefensePos nowDefensivePosition; //현재 방어 위치
@@ -245,7 +247,7 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     protected abstract void StartSetting();
 
-    protected void UnitBarsUpdate()
+    protected virtual void UnitBarsUpdate()
     {
         unitHpBars.fillAmount = Hp_F / MaxHp_F;
         unitEnergyBars.fillAmount = Energy_F / MaxEnergy_F;

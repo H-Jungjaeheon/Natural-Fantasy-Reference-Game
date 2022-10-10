@@ -16,6 +16,37 @@ public enum NowPlayerProperty
 
 public class Player : BasicUnitScript
 {
+    #region 쉴드 관련 변수 / 오브젝트
+    private float shieldHp_F;
+    public float ShieldHp_F
+    {
+        get { return shieldHp_F; }
+        set
+        {
+            if (value <= 0)
+            {
+                shieldHp_F = 0;
+                if (nowProperty == NowPlayerProperty.TheHolySpiritProperty)
+                {
+                    TheHolySpiritPropertyBuff(false);
+                    TheHolySpiritPropertyDeBuff(true);
+                }
+            }
+            else
+            {
+                shieldHp_F = value;
+            }
+        }
+    }
+
+    private float maxShieldHp_F;
+
+    [SerializeField]
+    [Tooltip("유닛 실드 체력바 이미지")]
+    private Image unitShieldHpBars;
+    #endregion
+
+
     private float maxChangePropertyCoolTime = 35; //최대 속성 변경 시간
 
     public float nowChangePropertyCoolTime; //현재 속성 변경 시간 !
@@ -112,11 +143,14 @@ public class Player : BasicUnitScript
         int plusMultiplicationMaxHpPerLevel = 5;
         int plusMultiplicationMaxEnergyPerLevel = 5;
         float plusMultiplicationMaxActionCoolTimePerLevel = 0.5f;
+        float basicMaxActionCoolTime = 3.5f;
 
-        maxActionCoolTime -= gameManager_Ins.ReduceCoolTimeLevel * plusMultiplicationMaxActionCoolTimePerLevel;
+        maxActionCoolTime = basicMaxActionCoolTime - (gameManager_Ins.ReduceCoolTimeLevel * plusMultiplicationMaxActionCoolTimePerLevel);
         MaxHp_F += gameManager_Ins.MaxHpUpgradeLevel * plusMultiplicationMaxHpPerLevel;
         MaxEnergy_F += gameManager_Ins.MaxEnergyUpgradeLevel * plusMultiplicationMaxEnergyPerLevel;
         Damage_I += gameManager_Ins.DamageUpgradeLevel;
+        restWaitTime = 1.25f;
+        maxShieldHp_F = 2;
         maxDreamyFigure_F = 20;
         maxNaturePassiveCount = 5;
 
@@ -127,16 +161,26 @@ public class Player : BasicUnitScript
         isResurrectionOpportunityExists = true;
 
         BattleSceneManager.Instance.PlayerCharacterPos = transform.position;
-        nextPropertyIndex = Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
+        nextPropertyIndex = (int)NowPlayerProperty.TheHolySpiritProperty;//Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
         Energy_F = MaxEnergy_F;
         Hp_F = MaxHp_F;
+    }
+
+    protected override void UnitBarsUpdate()
+    {
+        base.UnitBarsUpdate();
+        unitShieldHpBars.fillAmount = ShieldHp_F / maxShieldHp_F;
     }
 
     public override void Hit(float damage, bool isDefending)
     {
         if (isInvincibility == false)
         {
-            if (isDefending)
+            if (ShieldHp_F > 0 && !isDefending)
+            {
+                ShieldHp_F -= 1;
+            }
+            else if (isDefending)
             {
                 Energy_F -= 1;
                 DreamyFigure_F += 1;
@@ -222,7 +266,6 @@ public class Player : BasicUnitScript
         if (isChangeBasicProperty)
         {
             nowProperty = NowPlayerProperty.BasicProperty;
-            print("기본 속성으로 변경");
             StartCoroutine(EndingPropertyChanges());
         }
         else
@@ -231,23 +274,18 @@ public class Player : BasicUnitScript
             switch (nowProperty)
             {
                 case NowPlayerProperty.NatureProperty:
-                    print("자연 속성으로 변경");
                     StartCoroutine(EndingPropertyChanges());
                     break;
                 case NowPlayerProperty.ForceProperty:
-                    print("힘 속성으로 변경");
                     StartCoroutine(EndingPropertyChanges());
                     break;
                 case NowPlayerProperty.FlameProperty:
-                    print("화염 속성으로 변경");
                     StartCoroutine(EndingPropertyChanges());
                     break;
                 case NowPlayerProperty.TheHolySpiritProperty:
-                    print("성령 속성으로 변경");
                     StartCoroutine(EndingPropertyChanges());
                     break;
                 case NowPlayerProperty.AngelProperty:
-                    print("천사 속성으로 변경");
                     StartCoroutine(EndingPropertyChanges());
                     break;
             }
@@ -446,7 +484,7 @@ public class Player : BasicUnitScript
     IEnumerator Resting()
     {
         int nowRestingCount = 0;
-        WaitForSeconds RestWaitTime = new WaitForSeconds(1.25f);
+        WaitForSeconds RestWaitTime = new WaitForSeconds(restWaitTime);
         while (3 > nowRestingCount)
         {
             if (Energy_F >= MaxEnergy_F)
@@ -673,9 +711,34 @@ public class Player : BasicUnitScript
     private void AngelPropertyBuff(bool isBuffing)
     {
         angelPropertyBuffing = isBuffing;
-        Damage_I = isBuffing ? Damage_I * 2: Damage_I / 2;
+
+        Damage_I = isBuffing ? Damage_I * 2 : Damage_I / 2;
         maxActionCoolTime = isBuffing ? maxActionCoolTime - 1 : maxActionCoolTime + 1;
         Speed_F = isBuffing ? Speed_F * 1.5f : Speed_F / 1.5f;
+    }
+
+    private void TheHolySpiritPropertyBuff(bool isBuffing)
+    {
+        float originalRestWaitTime = 1.25f;
+        float reducedMaxActionCoolTime = maxActionCoolTime / 4;
+        float reducedRestWaitTime = originalRestWaitTime / 5;
+
+        maxActionCoolTime = isBuffing ? maxActionCoolTime - reducedMaxActionCoolTime : maxActionCoolTime + reducedMaxActionCoolTime;
+        restWaitTime = isBuffing ? restWaitTime - reducedRestWaitTime : restWaitTime + reducedRestWaitTime;
+        Damage_I = isBuffing ? Damage_I * 1.5f : Damage_I / 1.5f;
+        Speed_F = isBuffing ? Speed_F * 1.25f : Speed_F / 1.25f;
+    }
+
+    private void TheHolySpiritPropertyDeBuff(bool isDeBuffing)
+    {
+        float originalRestWaitTime = 1.25f;
+        float reducedMaxActionCoolTime = maxActionCoolTime / 4;
+        float reducedRestWaitTime = originalRestWaitTime / 5;
+
+        maxActionCoolTime = isDeBuffing ? maxActionCoolTime + reducedMaxActionCoolTime : maxActionCoolTime - reducedMaxActionCoolTime;
+        restWaitTime = isDeBuffing ? restWaitTime + reducedRestWaitTime : restWaitTime - reducedRestWaitTime;
+        Damage_I = isDeBuffing ? Damage_I / 1.5f : Damage_I * 1.5f;
+        Speed_F = isDeBuffing ? Speed_F / 1.25f : Speed_F * 1.25f;
     }
 
     protected override IEnumerator Fainting()
@@ -698,6 +761,7 @@ public class Player : BasicUnitScript
     protected override IEnumerator PropertyPassiveAbilityStart()
     {
         NowChangePropertyCoolTime = 0;
+
         switch (nowProperty)
         {
             case NowPlayerProperty.NatureProperty:
@@ -713,10 +777,12 @@ public class Player : BasicUnitScript
                 break;
 
             case NowPlayerProperty.ForceProperty:
-                float enhancedDamage = Damage_I / 3f;
+                float enhancedDamage = Damage_I / 2f;
                 float reducedMaxActionCoolTime = maxActionCoolTime / 5;
+
                 maxActionCoolTime -= reducedMaxActionCoolTime;
                 Damage_I += enhancedDamage;
+                print(maxActionCoolTime);
                 while (nowProperty == NowPlayerProperty.ForceProperty)
                 {
                     yield return null;
@@ -730,7 +796,24 @@ public class Player : BasicUnitScript
                 break;
 
             case NowPlayerProperty.TheHolySpiritProperty:
+                ShieldHp_F = 2;
+                TheHolySpiritPropertyBuff(true);
 
+                while (nowProperty == NowPlayerProperty.TheHolySpiritProperty)
+                {
+                    yield return null;
+                }
+
+                if (ShieldHp_F > 0)
+                {
+                    TheHolySpiritPropertyBuff(false);
+                }
+                else
+                {
+                    TheHolySpiritPropertyDeBuff(false);
+                }
+
+                shieldHp_F = 0;
                 break;
         }
     }
