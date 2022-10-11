@@ -46,7 +46,6 @@ public class Player : BasicUnitScript
     private Image unitShieldHpBars;
     #endregion
 
-
     private float maxChangePropertyCoolTime = 35; //최대 속성 변경 시간
 
     public float nowChangePropertyCoolTime; //현재 속성 변경 시간 !
@@ -128,6 +127,14 @@ public class Player : BasicUnitScript
 
     private ObjectPool OP;
 
+    [SerializeField]
+    [Tooltip("현재 플레이어 속성 아이콘")]
+    private Image NowPropertyImage;
+
+    [SerializeField]
+    [Tooltip("플레이어 속성 아이콘 스프라이트 모음")]
+    private Sprite[] NowPropertyIconImages;
+
     protected override void Update()
     {
         base.Update();
@@ -161,7 +168,8 @@ public class Player : BasicUnitScript
         isResurrectionOpportunityExists = true;
 
         BattleSceneManager.Instance.PlayerCharacterPos = transform.position;
-        nextPropertyIndex = (int)NowPlayerProperty.TheHolySpiritProperty;//Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
+        nextPropertyIndex = Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
+        NowPropertyImage.GetComponent<Image>().sprite = NowPropertyIconImages[(int)nowProperty];
         Energy_F = MaxEnergy_F;
         Hp_F = MaxHp_F;
     }
@@ -291,6 +299,7 @@ public class Player : BasicUnitScript
             }
             nextPropertyIndex = ((NowPlayerProperty)nextPropertyIndex == NowPlayerProperty.AngelProperty) ? (int)NowPlayerProperty.NatureProperty : nextPropertyIndex + 1;
         }
+        NowPropertyImage.GetComponent<Image>().sprite = NowPropertyIconImages[(int)nowProperty];
     }
 
     IEnumerator EndingPropertyChanges() //나중에 애니메이션 나오면 일반함수로 전환, 그리고 속성 변경 애니메이션 끝날때쯤 변경한 이 함수 실행
