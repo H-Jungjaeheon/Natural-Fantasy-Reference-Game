@@ -332,4 +332,9 @@ public abstract class BasicUnitScript : MonoBehaviour
         attackRangeObjComponent.size = InitializationAttackRangeSize;
         attackRangeObjComponent.offset = InitializationAttackRangeOffset;
     }
+
+    protected void BurnDamageStart()
+    {
+        
+    }
 }
