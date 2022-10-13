@@ -191,6 +191,21 @@ public abstract class BasicUnitScript : MonoBehaviour
     protected float Speed_F;
     #endregion
 
+    #region 화상 관련 변수
+    protected bool isBurning;
+
+    protected int nowBurnDamageStack; //현재 중첩된 스택
+
+    protected int additionalLimitTime; //스택 중첩 추가시간
+
+    protected float nowBurnDamageLimitTime; //현재 화상 지속시간
+
+    protected float maxBurnDamageLimitTime; //최대 화상 지속시간
+
+    protected float maxStackableOverlapTime; //스택 중첩 가능 시간
+    #endregion
+
+    #region 스탯 UI 이미지 모음
     [SerializeField]
     [Tooltip("유닛 체력바 이미지")]
     private Image unitHpBars;
@@ -206,6 +221,7 @@ public abstract class BasicUnitScript : MonoBehaviour
     [SerializeField]
     [Tooltip("유닛 몽환 게이지 이미지")]
     private Image unitDreamyFigureBars;
+    #endregion
 
     [HideInInspector]
     public Vector2 startPos_Vector;
@@ -235,6 +251,7 @@ public abstract class BasicUnitScript : MonoBehaviour
         UISetting();
         Faint();
         UnitBarsUpdate();
+        Burning();
     }
 
     protected void StartSameSetting()
@@ -322,19 +339,45 @@ public abstract class BasicUnitScript : MonoBehaviour
         attackRangeObjComponent.offset = attackRangeColliderOffset;
     }
 
-    protected void Invincibility(bool isInvincibilityOn)
-    {
-        isInvincibility = isInvincibilityOn;
-    }
-
+    protected void Invincibility(bool isInvincibilityOn) => isInvincibility = isInvincibilityOn;
     protected void InitializationAttackRange()
     {
         attackRangeObjComponent.size = InitializationAttackRangeSize;
         attackRangeObjComponent.offset = InitializationAttackRangeOffset;
     }
 
-    protected void BurnDamageStart()
+    protected void Burning()
     {
-        
+        if (isBurning)
+        {
+            maxStackableOverlapTime = 10 - (nowBurnDamageStack);
+            nowBurnDamageLimitTime += Time.deltaTime;
+            if (nowBurnDamageLimitTime >= maxBurnDamageLimitTime)
+            {
+                isBurning = false;
+                nowBurnDamageStack = 0;
+                nowBurnDamageLimitTime = 0;
+            }
+        }
+    }
+
+    public void BurnDamageStart()
+    {
+        if (nowBurnDamageStack >= 5 || nowBurnDamageLimitTime > maxStackableOverlapTime)
+        {
+            return;
+        }
+
+        nowBurnDamageStack++;
+
+        if (nowBurnDamageStack == 0)
+        {
+            isBurning = true;
+            Burning();
+        }
+        else if (nowBurnDamageStack < 5 && nowBurnDamageLimitTime <= maxStackableOverlapTime)
+        {
+            nowBurnDamageLimitTime = 0;
+        }
     }
 }
