@@ -45,6 +45,8 @@ public class SwordAura : MonoBehaviour
 
     private BattleSceneManager BS;
 
+    private Player playerScript;
+
     private void Awake()
     {
         StartSetting();
@@ -63,6 +65,7 @@ public class SwordAura : MonoBehaviour
     private void StartSetting()
     {
         SR = GetComponent<SpriteRenderer>();
+        playerScript = BattleSceneManager.Instance.Player.GetComponent<Player>();
         BS = BattleSceneManager.Instance;
         spawnPlusVector = new Vector2(2.5f, 0);
         movingPlusVector = new Vector2(speed, 0);
@@ -96,6 +99,10 @@ public class SwordAura : MonoBehaviour
             {
                 CamShake.CamShakeMod(false, 2f); //대각선
                 isEnemyHit = true;
+            }
+            if (playerScript.nowProperty == NowPlayerProperty.FlameProperty)
+            {
+                collision.gameObject.GetComponent<BasicUnitScript>().BurnDamageStart();
             }
         }
         else if(collision.gameObject.CompareTag("ObjDestroy"))

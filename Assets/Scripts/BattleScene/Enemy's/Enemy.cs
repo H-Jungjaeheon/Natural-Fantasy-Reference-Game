@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Enemy : BasicUnitScript
 {
+
+
     protected override void StartSetting()
     {
         isWaiting = true;

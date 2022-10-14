@@ -203,6 +203,10 @@ public abstract class BasicUnitScript : MonoBehaviour
     protected float maxBurnDamageLimitTime; //최대 화상 지속시간
 
     protected float maxStackableOverlapTime; //스택 중첩 가능 시간
+
+    protected float nowGiveBurnDamageTime;
+
+    protected float maxGiveBurnDamageTime;
     #endregion
 
     #region 스탯 UI 이미지 모음
@@ -260,6 +264,7 @@ public abstract class BasicUnitScript : MonoBehaviour
         startPos_Vector = transform.position;
         nowAttackCount_I = 1;
         nowActionCoolTime = 0;
+        maxGiveBurnDamageTime = 3;
     }
 
     protected abstract void StartSetting();
@@ -350,13 +355,21 @@ public abstract class BasicUnitScript : MonoBehaviour
     {
         if (isBurning)
         {
-            maxStackableOverlapTime = 10 - (nowBurnDamageStack);
             nowBurnDamageLimitTime += Time.deltaTime;
+            nowGiveBurnDamageTime += Time.deltaTime;
+
+            if (nowGiveBurnDamageTime >= maxGiveBurnDamageTime)
+            {
+                Hp_F -= 1;
+                nowGiveBurnDamageTime = 0;
+            }
+
             if (nowBurnDamageLimitTime >= maxBurnDamageLimitTime)
             {
                 isBurning = false;
                 nowBurnDamageStack = 0;
                 nowBurnDamageLimitTime = 0;
+                nowGiveBurnDamageTime = 0;
             }
         }
     }
@@ -365,19 +378,23 @@ public abstract class BasicUnitScript : MonoBehaviour
     {
         if (nowBurnDamageStack >= 5 || nowBurnDamageLimitTime > maxStackableOverlapTime)
         {
+            print("최대 스택!");
             return;
         }
 
         nowBurnDamageStack++;
+        print("스택 중첩");
 
-        if (nowBurnDamageStack == 0)
+        maxStackableOverlapTime = 10 - nowBurnDamageStack; //현재 스택에 따른 효과 중첩 가능 제한 시간
+        print(maxStackableOverlapTime);
+        maxBurnDamageLimitTime = 10 + nowBurnDamageStack; //스택이 높을 수록 지속시간 증가
+        print(maxBurnDamageLimitTime);
+
+        if (nowBurnDamageStack == 1)
         {
+            print("불타기 시작");
             isBurning = true;
-            Burning();
         }
-        else if (nowBurnDamageStack < 5 && nowBurnDamageLimitTime <= maxStackableOverlapTime)
-        {
-            nowBurnDamageLimitTime = 0;
-        }
+        nowBurnDamageLimitTime = 0;
     }
 }

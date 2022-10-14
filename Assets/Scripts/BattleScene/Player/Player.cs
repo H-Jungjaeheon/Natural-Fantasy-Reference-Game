@@ -168,7 +168,7 @@ public class Player : BasicUnitScript
         isResurrectionOpportunityExists = true;
 
         BattleSceneManager.Instance.PlayerCharacterPos = transform.position;
-        nextPropertyIndex = Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
+        nextPropertyIndex = (int)NowPlayerProperty.FlameProperty; //Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
         NowPropertyImage.GetComponent<Image>().sprite = NowPropertyIconImages[(int)nowProperty];
         Energy_F = MaxEnergy_F;
         Hp_F = MaxHp_F;
@@ -531,8 +531,12 @@ public class Player : BasicUnitScript
     {
         bool isComplete = false;
         bool isFail = false;
+        bool isToBurn = false;
+
         float nowdelayTime = 0;
         float nowattacktime_f = 0;
+
+        int maxEnemyIndex;
 
         while (nowdelayTime < delayTime) //연타 방지용 (기본공격 애니메이션 시작 및 타격 지점까지 딜레이)
         {
@@ -557,10 +561,20 @@ public class Player : BasicUnitScript
             }
             for (int nowIndex = 0; nowIndex < rangeInEnemy.Count; nowIndex++)
             {
+                maxEnemyIndex = rangeInEnemy.Count - 1;
+
                 if (rangeInEnemy[nowIndex] != null)
                 {
                     bool isDefence = rangeInEnemy[nowIndex].GetComponent<BasicUnitScript>().nowDefensivePosition == DefensePos.Left ? true : false;
                     rangeInEnemy[nowIndex].GetComponent<BasicUnitScript>().Hit(Damage_I, isDefence);
+                    if (isToBurn == false && nowProperty == NowPlayerProperty.FlameProperty)
+                    {
+                        rangeInEnemy[nowIndex].GetComponent<BasicUnitScript>().BurnDamageStart();
+                        if (nowIndex == maxEnemyIndex)
+                        {
+                            isToBurn = true;
+                        }
+                    }
                 }
             }
         }
@@ -798,10 +812,6 @@ public class Player : BasicUnitScript
                 }
                 Damage_I -= enhancedDamage;
                 maxActionCoolTime += reducedMaxActionCoolTime;
-                break;
-
-            case NowPlayerProperty.FlameProperty:
-
                 break;
 
             case NowPlayerProperty.TheHolySpiritProperty:
