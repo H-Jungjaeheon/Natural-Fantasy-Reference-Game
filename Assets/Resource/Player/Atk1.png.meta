@@ -1,22 +1,22 @@
 fileFormatVersion: 2
-guid: 14e6b3a299a99c74896e20b3de5dc12e
+guid: 1dc9588ae6eb8994eaaa93d51ff67c59
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6934013284892070054
-    second: Attack1_0
+      213: 973381753724528327
+    second: Atk1_0
   - first:
-      213: -7957278214813060823
-    second: Attack1_1
+      213: -4782984319984547071
+    second: Atk1_1
   - first:
-      213: 1409549213185883415
-    second: Attack1_2
+      213: 3564578421492666449
+    second: Atk1_2
   - first:
-      213: 4976274401295337057
-    second: Attack1_3
+      213: 5780036627493395932
+    second: Atk1_3
   - first:
-      213: -5639509438907974925
-    second: Attack1_4
+      213: -5700803150015795121
+    second: Atk1_7
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -80,7 +80,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -92,7 +92,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -104,7 +104,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Android
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -118,106 +118,106 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Attack1_0
+      name: Atk1_0
       rect:
         serializedVersion: 2
-        x: 0
+        x: 423
         y: 0
-        width: 135
-        height: 119
+        width: 118
+        height: 288
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6a0d4d938509a3060800000000000000
-      internalID: 6934013284892070054
+      spriteID: 7c6e89d3c85228d00800000000000000
+      internalID: 973381753724528327
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Attack1_1
+      name: Atk1_1
       rect:
         serializedVersion: 2
-        x: 159
+        x: 1528
         y: 0
-        width: 135
-        height: 119
+        width: 117
+        height: 288
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 921fc138f91129190800000000000000
-      internalID: -7957278214813060823
+      spriteID: 10bce013a1d6f9db0800000000000000
+      internalID: -4782984319984547071
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Attack1_2
+      name: Atk1_2
       rect:
         serializedVersion: 2
-        x: 306
+        x: 2401
         y: 0
-        width: 159
-        height: 119
+        width: 581
+        height: 288
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 71d30619a89bf8310800000000000000
-      internalID: 1409549213185883415
+      spriteID: 150d71b303de77130800000000000000
+      internalID: 3564578421492666449
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Attack1_3
+      name: Atk1_3
       rect:
         serializedVersion: 2
-        x: 465
+        x: 3525
         y: 0
-        width: 148
-        height: 119
+        width: 548
+        height: 288
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 166041ad3374f0540800000000000000
-      internalID: 4976274401295337057
+      spriteID: cdd9d7250b0d63050800000000000000
+      internalID: 5780036627493395932
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Attack1_4
+      name: Atk1_7
       rect:
         serializedVersion: 2
-        x: 620
+        x: 4631
         y: 0
-        width: 145
-        height: 119
+        width: 483
+        height: 288
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3fa7d627b007cb1b0800000000000000
-      internalID: -5639509438907974925
+      spriteID: f4071ec3dbda2e0b0800000000000000
+      internalID: -5700803150015795121
       vertices: []
       indices: 
       edges: []
