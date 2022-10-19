@@ -15,8 +15,8 @@ TextureImporter:
       213: -6613076473671319566
     second: A1-sheet_3
   - first:
-      213: -169235764792672105
-    second: A1-sheet_7
+      213: -389295578238546813
+    second: A1-sheet_4
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -121,9 +121,9 @@ TextureImporter:
       name: A1-sheet_0
       rect:
         serializedVersion: 2
-        x: 134
+        x: 0
         y: 0
-        width: 106
+        width: 430
         height: 136
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -142,9 +142,9 @@ TextureImporter:
       name: A1-sheet_1
       rect:
         serializedVersion: 2
-        x: 566
+        x: 430
         y: 0
-        width: 106
+        width: 430
         height: 136
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -163,9 +163,9 @@ TextureImporter:
       name: A1-sheet_2
       rect:
         serializedVersion: 2
-        x: 922
+        x: 860
         y: 0
-        width: 306
+        width: 430
         height: 136
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -184,9 +184,9 @@ TextureImporter:
       name: A1-sheet_3
       rect:
         serializedVersion: 2
-        x: 1364
+        x: 1290
         y: 0
-        width: 291
+        width: 430
         height: 136
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -202,12 +202,12 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: A1-sheet_7
+      name: A1-sheet_4
       rect:
         serializedVersion: 2
-        x: 1798
+        x: 1720
         y: 0
-        width: 254
+        width: 430
         height: 136
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -216,8 +216,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 790cd34f7f0c6adf0800000000000000
-      internalID: -169235764792672105
+      spriteID: 38c0672fbb1f89af0800000000000000
+      internalID: -389295578238546813
       vertices: []
       indices: 
       edges: []

@@ -168,7 +168,7 @@ public class Player : BasicUnitScript
         isResurrectionOpportunityExists = true;
 
         BattleSceneManager.Instance.PlayerCharacterPos = transform.position;
-        nextPropertyIndex = (int)NowPlayerProperty.FlameProperty; //Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
+        nextPropertyIndex = Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
         NowPropertyImage.GetComponent<Image>().sprite = NowPropertyIconImages[(int)nowProperty];
         Energy_F = MaxEnergy_F;
         Hp_F = MaxHp_F;
@@ -815,6 +815,8 @@ public class Player : BasicUnitScript
                 break;
 
             case NowPlayerProperty.TheHolySpiritProperty:
+
+                print("실행");
                 ShieldHp_F = 2;
                 TheHolySpiritPropertyBuff(true);
 
