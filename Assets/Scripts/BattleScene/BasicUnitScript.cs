@@ -383,7 +383,7 @@ public abstract class BasicUnitScript : MonoBehaviour
         }
 
         nowBurnDamageStack++;
-        print("스택 중첩");
+        print($"스택 중첩 : {nowBurnDamageStack}스택");
 
         maxStackableOverlapTime = 10 - nowBurnDamageStack; //현재 스택에 따른 효과 중첩 가능 제한 시간
         print(maxStackableOverlapTime);

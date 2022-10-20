@@ -100,6 +100,8 @@ public class Player : BasicUnitScript
 
     private bool angelPropertyBuffing;
 
+    private bool isToBurn;
+
     private float maxNaturePassiveCount;
 
     private float nowNaturePassiveCount;
@@ -168,7 +170,7 @@ public class Player : BasicUnitScript
         isResurrectionOpportunityExists = true;
 
         BattleSceneManager.Instance.PlayerCharacterPos = transform.position;
-        nextPropertyIndex = Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
+        nextPropertyIndex = (int)NowPlayerProperty.FlameProperty;//Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
         NowPropertyImage.GetComponent<Image>().sprite = NowPropertyIconImages[(int)nowProperty];
         Energy_F = MaxEnergy_F;
         Hp_F = MaxHp_F;
@@ -531,7 +533,6 @@ public class Player : BasicUnitScript
     {
         bool isComplete = false;
         bool isFail = false;
-        bool isToBurn = false;
 
         float nowdelayTime = 0;
         float nowattacktime_f = 0;
@@ -559,6 +560,7 @@ public class Player : BasicUnitScript
                     CamShake.CamShakeMod(false, 2f); //대각선 떨림 코드로 변경
                     break;
             }
+
             for (int nowIndex = 0; nowIndex < rangeInEnemy.Count; nowIndex++)
             {
                 maxEnemyIndex = rangeInEnemy.Count - 1;
@@ -604,6 +606,11 @@ public class Player : BasicUnitScript
         }
         else //돌아가기
         {
+            if (isToBurn)
+            {
+                isToBurn = false;
+            }
+
             if (isLastAttack == true)
             {
                 yield return new WaitForSeconds(0.5f);
@@ -816,7 +823,6 @@ public class Player : BasicUnitScript
 
             case NowPlayerProperty.TheHolySpiritProperty:
 
-                print("실행");
                 ShieldHp_F = 2;
                 TheHolySpiritPropertyBuff(true);
 
