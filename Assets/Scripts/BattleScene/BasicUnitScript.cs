@@ -264,6 +264,8 @@ public abstract class BasicUnitScript : MonoBehaviour
         nowAttackCount_I = 1;
         nowActionCoolTime = 0;
         maxGiveBurnDamageTime = 3;
+        maxStackableOverlapTime = 10; //화상 효과 중첩 가능 제한시간 초기화
+        maxBurnDamageLimitTime = 15; //화상 효과 지속시간 증가 초기화
     }
 
     protected abstract void StartSetting();
@@ -354,7 +356,6 @@ public abstract class BasicUnitScript : MonoBehaviour
     {
         if (isBurning)
         {
-            print(nowBurnDamageStack);
             nowBurnDamageLimitTime += Time.deltaTime;
             nowGiveBurnDamageTime += Time.deltaTime;
 
@@ -376,19 +377,16 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     public void BurnDamageStart()
     {
-        if (nowBurnDamageStack == 5 || nowBurnDamageLimitTime > maxStackableOverlapTime)
+        if (nowBurnDamageStack == 5 || nowBurnDamageLimitTime >= maxStackableOverlapTime)
         {
             return;
         }
 
         nowBurnDamageStack++;
-
-        maxStackableOverlapTime = 10 - nowBurnDamageStack; //현재 스택에 따른 효과 중첩 가능 제한 시간
-        print(maxStackableOverlapTime);
-        maxBurnDamageLimitTime = 15 + nowBurnDamageStack; //스택이 높을 수록 지속시간 증가
-        print(maxBurnDamageLimitTime);
-
         nowBurnDamageLimitTime = 0;
+
+        maxStackableOverlapTime = 10 - nowBurnDamageStack; //현재 스택에 따른 화상 효과 중첩 가능 제한 시간
+        maxBurnDamageLimitTime = 15 + nowBurnDamageStack; //스택이 높을 수록 화상 지속시간 증가
 
         if (nowBurnDamageStack == 1)
         {
