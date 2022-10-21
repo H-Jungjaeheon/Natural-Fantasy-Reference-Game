@@ -58,7 +58,6 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     protected float nowActionCoolTime; //현재 쿨타임
 
-    [HideInInspector]
     public float maxActionCoolTime;
 
     #endregion
@@ -355,6 +354,7 @@ public abstract class BasicUnitScript : MonoBehaviour
     {
         if (isBurning)
         {
+            print(nowBurnDamageStack);
             nowBurnDamageLimitTime += Time.deltaTime;
             nowGiveBurnDamageTime += Time.deltaTime;
 
@@ -376,25 +376,23 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     public void BurnDamageStart()
     {
-        if (nowBurnDamageStack >= 5 || nowBurnDamageLimitTime > maxStackableOverlapTime)
+        if (nowBurnDamageStack == 5 || nowBurnDamageLimitTime > maxStackableOverlapTime)
         {
-            print("최대 스택!");
             return;
         }
 
         nowBurnDamageStack++;
-        print($"스택 중첩 : {nowBurnDamageStack}스택");
 
         maxStackableOverlapTime = 10 - nowBurnDamageStack; //현재 스택에 따른 효과 중첩 가능 제한 시간
         print(maxStackableOverlapTime);
-        maxBurnDamageLimitTime = 10 + nowBurnDamageStack; //스택이 높을 수록 지속시간 증가
+        maxBurnDamageLimitTime = 15 + nowBurnDamageStack; //스택이 높을 수록 지속시간 증가
         print(maxBurnDamageLimitTime);
+
+        nowBurnDamageLimitTime = 0;
 
         if (nowBurnDamageStack == 1)
         {
-            print("불타기 시작");
             isBurning = true;
         }
-        nowBurnDamageLimitTime = 0;
     }
 }
