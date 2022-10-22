@@ -567,7 +567,10 @@ public class Player : BasicUnitScript
 
                 if (rangeInEnemy[nowIndex] != null)
                 {
-                    bool isDefence = rangeInEnemy[nowIndex].GetComponent<BasicUnitScript>().nowDefensivePosition == DefensePos.Left ? true : false;
+                    var unitScriptComponenet = rangeInEnemy[nowIndex].GetComponent<BasicUnitScript>();
+
+                    bool isDefence = (unitScriptComponenet.nowState == NowState.Defensing && unitScriptComponenet.nowDefensivePosition == DefensePos.Left) ? true : false;
+
                     rangeInEnemy[nowIndex].GetComponent<BasicUnitScript>().Hit(Damage_I, isDefence);
                     if (isToBurn == false && nowProperty == NowPlayerProperty.FlameProperty)
                     {

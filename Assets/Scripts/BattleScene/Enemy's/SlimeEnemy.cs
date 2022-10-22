@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : BasicUnitScript
+public class SlimeEnemy : BasicUnitScript
 {
     protected override void StartSetting()
     {
+        nowState = NowState.Standingby;
+        nowDefensivePosition = DefensePos.None;
         isWaiting = true;
         BattleSceneManager.Instance.EnemyCharacterPos = transform.position;
         BattleSceneManager.Instance.Enemy = gameObject;
@@ -113,7 +115,7 @@ public class Enemy : BasicUnitScript
 
     protected override void Defense()
     {
-        
+
     }
     protected override void SetDefensing(DefensePos nowDefensePos, float setRotation)
     {
