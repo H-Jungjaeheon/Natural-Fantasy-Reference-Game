@@ -2,9 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum NowSwordAuraState
+{
+    Basic,
+    Enchanted
+}
+
 public class SwordAura : MonoBehaviour
 {
-    #region
+    #region 검기 관련 스탯 모음
     [Header("검기 관련 스탯 모음")]
     [SerializeField]
     private float speed;
@@ -35,11 +41,19 @@ public class SwordAura : MonoBehaviour
     }
     #endregion
 
+    [SerializeField]
+    [Tooltip("강화 검기 스프라이트들")]
+    private Sprite[] swordAuraImages;
+
+    [SerializeField]
+    [Tooltip("검기 오브젝트 스프라이트 렌더러")]
+    private SpriteRenderer sR;
+
     Vector2 movingPlusVector;
 
     Vector2 spawnPlusVector;
 
-    private SpriteRenderer SR;
+    Vector3 basicSpinVector;
 
     private bool isEnemyHit;
 
@@ -60,36 +74,39 @@ public class SwordAura : MonoBehaviour
     void FixedUpdate()
     {
         AuraMove();
+        AuraSpin();
     }
 
     private void StartSetting()
     {
-        SR = GetComponent<SpriteRenderer>();
         playerScript = BattleSceneManager.Instance.Player.GetComponent<Player>();
         BS = BattleSceneManager.Instance;
+
         spawnPlusVector = new Vector2(2.5f, 0);
         movingPlusVector = new Vector2(speed, 0);
+        basicSpinVector = new Vector3(0, 0, 2000);
     }
 
     private void EnchantedSetting()
     {
-        print("강화 완료");
-        SR.material.color = new Color(245, 110, 225);
-        //이미지 교체로 코드 변경
+        sR.sprite = swordAuraImages[(int)NowSwordAuraState.Enchanted];
         damage += 2; //나중에 스킬 강화나 데미지 강화 레벨에 비례해서 증가
     }
 
     public void OnEnableSetting()
     {
+        sR.sprite = swordAuraImages[(int)NowSwordAuraState.Basic];
         transform.position = BS.Player.transform.position + (Vector3)spawnPlusVector;
+        transform.rotation = Quaternion.identity;
         damage = 0;
         damage += (4 + 0); //나중에 스킬 강화나 데미지 강화 레벨에 비례해서 증가
-        SR.material.color = new Color(144, 0, 123);
         isEnemyHit = false;
     }
 
     private void AuraMove() => transform.position += (Vector3)movingPlusVector * Time.deltaTime;
 
+    private void AuraSpin() => transform.eulerAngles += basicSpinVector * Time.deltaTime;
+    
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.gameObject.CompareTag("Enemy"))

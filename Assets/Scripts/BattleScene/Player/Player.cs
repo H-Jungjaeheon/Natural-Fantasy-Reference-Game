@@ -48,7 +48,7 @@ public class Player : BasicUnitScript
 
     private float maxChangePropertyCoolTime = 35; //최대 속성 변경 시간
 
-    public float nowChangePropertyCoolTime; //현재 속성 변경 시간 !
+    public float nowChangePropertyCoolTime; //현재 속성 변경 시간
 
     public float NowChangePropertyCoolTime
     {
@@ -72,7 +72,7 @@ public class Player : BasicUnitScript
 
     private float maxPropertyTimeLimit = 25; //최대 속성 지속시간
 
-    public float nowPropertyTimeLimit; // 현재 속성 남은 지속시간 !
+    private float nowPropertyTimeLimit; // 현재 속성 남은 지속시간
 
     public float NowPropertyTimeLimit
     {
@@ -90,7 +90,8 @@ public class Player : BasicUnitScript
         }
     }
 
-    public NowPlayerProperty nowProperty; // !
+    [HideInInspector]
+    public NowPlayerProperty nowProperty;
 
     private int nextPropertyIndex;
 
@@ -131,11 +132,15 @@ public class Player : BasicUnitScript
 
     [SerializeField]
     [Tooltip("현재 플레이어 속성 아이콘")]
-    private Image NowPropertyImage;
+    private Image nowPropertyImage;
 
     [SerializeField]
     [Tooltip("플레이어 속성 아이콘 스프라이트 모음")]
-    private Sprite[] NowPropertyIconImages;
+    private Sprite[] nowPropertyIconImages;
+
+    [SerializeField]
+    [Tooltip("플레이어 애니메이션")]
+    private Animator playerAnimator;
 
     protected override void Update()
     {
@@ -170,8 +175,8 @@ public class Player : BasicUnitScript
         isResurrectionOpportunityExists = true;
 
         BattleSceneManager.Instance.PlayerCharacterPos = transform.position;
-        nextPropertyIndex = (int)NowPlayerProperty.FlameProperty;//Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
-        NowPropertyImage.GetComponent<Image>().sprite = NowPropertyIconImages[(int)nowProperty];
+        nextPropertyIndex = Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
+        nowPropertyImage.GetComponent<Image>().sprite = nowPropertyIconImages[(int)nowProperty];
         Energy_F = MaxEnergy_F;
         Hp_F = MaxHp_F;
     }
@@ -210,18 +215,16 @@ public class Player : BasicUnitScript
             if (Input.GetKey(KeyCode.A))
             {
                 SetDefensing(DefensePos.Left, 180);
-                //방어 애니메이션
             }
             else if (Input.GetKey(KeyCode.D))
             {
                 SetDefensing(DefensePos.Right, 0);
-                //방어 애니메이션
             }
             else if (Input.GetKey(KeyCode.W))
             {
                 SetDefensing(DefensePos.Up, 0);
-                //방어 애니메이션
             }
+
             if (nowDefensivePosition != DefensePos.Left)
             {
                 transform.rotation = Quaternion.identity;
@@ -232,6 +235,9 @@ public class Player : BasicUnitScript
             if (nowDefensivePosition == DefensePos.Left && !Input.GetKey(KeyCode.A) || nowDefensivePosition == DefensePos.Right && !Input.GetKey(KeyCode.D)
                 || nowDefensivePosition == DefensePos.Up && !Input.GetKey(KeyCode.W))
             {
+                string nowDefenceAnimName = (nowDefensivePosition == DefensePos.Up) ? "Defence(Top)" : "Defence(Left&Right)";
+
+                playerAnimator.SetBool(nowDefenceAnimName, false);
                 ReleaseDefense();
             }
         }
@@ -247,6 +253,9 @@ public class Player : BasicUnitScript
 
     protected override void SetDefensing(DefensePos nowDefensePos, float setRotation)
     {
+        string nowDefenceAnimName = (nowDefensePos == DefensePos.Up) ? "Defence(Top)" : "Defence(Left&Right)";
+
+        playerAnimator.SetBool(nowDefenceAnimName, true);
         nowState = NowState.Defensing;
         nowDefensivePosition = nowDefensePos;
         transform.rotation = Quaternion.Euler(0, setRotation, 0);
@@ -276,7 +285,6 @@ public class Player : BasicUnitScript
         if (isChangeBasicProperty)
         {
             nowProperty = NowPlayerProperty.BasicProperty;
-            StartCoroutine(EndingPropertyChanges());
         }
         else
         {
@@ -284,24 +292,20 @@ public class Player : BasicUnitScript
             switch (nowProperty)
             {
                 case NowPlayerProperty.NatureProperty:
-                    StartCoroutine(EndingPropertyChanges());
                     break;
                 case NowPlayerProperty.ForceProperty:
-                    StartCoroutine(EndingPropertyChanges());
                     break;
                 case NowPlayerProperty.FlameProperty:
-                    StartCoroutine(EndingPropertyChanges());
                     break;
                 case NowPlayerProperty.TheHolySpiritProperty:
-                    StartCoroutine(EndingPropertyChanges());
                     break;
                 case NowPlayerProperty.AngelProperty:
-                    StartCoroutine(EndingPropertyChanges());
                     break;
             }
             nextPropertyIndex = ((NowPlayerProperty)nextPropertyIndex == NowPlayerProperty.AngelProperty) ? (int)NowPlayerProperty.NatureProperty : nextPropertyIndex + 1;
         }
-        NowPropertyImage.GetComponent<Image>().sprite = NowPropertyIconImages[(int)nowProperty];
+        StartCoroutine(EndingPropertyChanges());
+        nowPropertyImage.GetComponent<Image>().sprite = nowPropertyIconImages[(int)nowProperty];
     }
 
     IEnumerator EndingPropertyChanges() //나중에 애니메이션 나오면 일반함수로 전환, 그리고 속성 변경 애니메이션 끝날때쯤 변경한 이 함수 실행
@@ -312,6 +316,7 @@ public class Player : BasicUnitScript
         Invincibility(false);
         WaitingTimeStart();
     }
+
     public void PropertyChangeStart()
     {
         if (nowState == NowState.Standingby && DreamyFigure_F >= 10)
@@ -354,13 +359,18 @@ public class Player : BasicUnitScript
     IEnumerator Deflecting(int setRotation)
     {
         bool isAlreadyShake = false;
+
         nowState = NowState.Deflecting;
         nowDefensivePosition = DefensePos.None;
         BBM.ActionButtonsSetActive(false, false, false);
         transform.rotation = Quaternion.Euler(0, setRotation, 0);
         ChangeAttackRange(new Vector2(0.7f, 2.6f), new Vector2(0, 0));
-        //애니 실행
+
+        playerAnimator.SetBool("Paring", true);
+        playerAnimator.SetBool("Defence(Left&Right)", false);
+
         yield return new WaitForSeconds(0.15f); //치기 전까지 기다림
+        
         for (int nowIndex = 0; nowIndex < rangeInDeflectAbleObj.Count; nowIndex++)
         {
             if (rangeInDeflectAbleObj[nowIndex].GetComponent<EnemysBullet>().isDeflectAble)
@@ -373,8 +383,12 @@ public class Player : BasicUnitScript
                 rangeInDeflectAbleObj[nowIndex].GetComponent<EnemysBullet>().Reflex(BulletState.Deflecting);
             }
         }
-        yield return new WaitForSeconds(0.5f); //애니메이션 종료까지 기다림
+        yield return new WaitForSeconds(0.25f); //애니메이션 종료까지 기다림
+        
+        playerAnimator.SetBool("Paring", false);
+        
         InitializationAttackRange();
+
         if (nowState != NowState.Defensing)
         {
             nowState = NowState.Standingby;
@@ -519,6 +533,8 @@ public class Player : BasicUnitScript
         Vector3 Movetransform = new Vector3(Speed_F, 0, 0); //이동을 위해 더해줄 연산
         Vector3 Targettransform = new Vector3(BattleSceneManager.Instance.EnemyCharacterPos.x - 5.5f, transform.position.y); //목표 위치
 
+        playerAnimator.SetBool("Moving", true);
+
         while (transform.position.x < Targettransform.x) //이동중
         {
             transform.position += Movetransform * Time.deltaTime;
@@ -526,7 +542,9 @@ public class Player : BasicUnitScript
         }
         transform.position = Targettransform; //이동 완료
 
+        playerAnimator.SetBool("Moving", false);
         StartCoroutine(Attacking(false, nowAttackCount_I, 0.2f, 0.2f)); //첫번째 공격 실행
+        playerAnimator.SetTrigger("BasicAttack");
     }
 
     IEnumerator Attacking(bool isLastAttack, int nowAttackCount_I, float delayTime, float linkedAttacksLimitTime) //3연공 재귀로 구현
@@ -600,10 +618,12 @@ public class Player : BasicUnitScript
             switch (nowAttackCount_I) //공격 실행 애니메이션 시작
             {
                 case 2:
-                    StartCoroutine(Attacking(false, nowAttackCount_I, 0.2f, 0.25f)); //두번째 공격
+                    StartCoroutine(Attacking(false, nowAttackCount_I, 0.2f, 0.25f));
+                    playerAnimator.SetTrigger("BasicSecondAttackHitActionCompleat");
                     break;
                 case 3:
-                    StartCoroutine(Attacking(true, nowAttackCount_I, 0.35f, 0)); //세번째 공격
+                    StartCoroutine(Attacking(true, nowAttackCount_I, 0.35f, 0));
+                    playerAnimator.SetTrigger("BasicThirdAttackHitActionCompleat");
                     break;
             }
         }
@@ -626,6 +646,8 @@ public class Player : BasicUnitScript
     {
         Vector3 Movetransform = new Vector3(Speed_F, 0, 0);
         transform.rotation = Quaternion.Euler(0, 180, 0);
+
+        playerAnimator.SetBool("Moving", true);
         while (transform.position.x > startPos_Vector.x)
         {
             transform.position -= Movetransform * Time.deltaTime;
@@ -635,6 +657,7 @@ public class Player : BasicUnitScript
         transform.position = startPos_Vector;
         nowAttackCount_I = 1;
 
+        playerAnimator.SetBool("Moving", false);
         WaitingTimeStart();
     }
 
@@ -648,6 +671,7 @@ public class Player : BasicUnitScript
             {
                 case 1:
                     StartCoroutine(SwordAuraSkill());
+                    playerAnimator.SetBool("FirstSkill", true);
                     break;
             }
         }
@@ -656,13 +680,14 @@ public class Player : BasicUnitScript
     private IEnumerator SwordAuraSkill()
     {
         float nowDelayTime = 0;
-        float maxDelayTime = 1f;
+        float maxDelayTime = 0.6f;
         bool isFailEnchant = true;
 
         nowState = NowState.Attacking;
+
         while (nowDelayTime < maxDelayTime)
         {
-            if (Input.GetKeyDown(KeyCode.Space) && nowDelayTime > 0.65f && nowDelayTime < 0.85f)
+            if (Input.GetKeyDown(KeyCode.Space) && nowDelayTime > 0.4f && nowDelayTime < 0.55f)
             {
                 isFailEnchant = false;
             }
@@ -672,12 +697,15 @@ public class Player : BasicUnitScript
 
         var enchantedSwordAuraObj = OP.GetObject((int)PoolObjKind.PlayerSwordAura);
         var enchantedSwordAuraObjComponent = enchantedSwordAuraObj.GetComponent<SwordAura>();
+
         if (isFailEnchant == false)
         {
             enchantedSwordAuraObjComponent.IsEnchanted = true;
         }
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.3f);
+
+        playerAnimator.SetBool("FirstSkill", false);
 
         if (Energy_F > 0)
         {
@@ -815,7 +843,6 @@ public class Player : BasicUnitScript
 
                 maxActionCoolTime -= reducedMaxActionCoolTime;
                 Damage_I += enhancedDamage;
-                print(maxActionCoolTime);
                 while (nowProperty == NowPlayerProperty.ForceProperty)
                 {
                     yield return null;

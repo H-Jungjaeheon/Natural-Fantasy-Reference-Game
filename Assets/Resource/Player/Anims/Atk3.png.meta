@@ -123,10 +123,10 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 297
-        height: 288
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 588
+        height: 576
+      alignment: 9
+      pivot: {x: 0.48, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -142,12 +142,12 @@ TextureImporter:
       name: Atk3_1
       rect:
         serializedVersion: 2
-        x: 348
+        x: 696
         y: 0
-        width: 294
-        height: 288
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 580
+        height: 576
+      alignment: 9
+      pivot: {x: 0.48, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -163,12 +163,12 @@ TextureImporter:
       name: Atk3_2
       rect:
         serializedVersion: 2
-        x: 681
+        x: 1390
         y: 0
-        width: 319
-        height: 288
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 625
+        height: 576
+      alignment: 9
+      pivot: {x: 0.48, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -184,12 +184,12 @@ TextureImporter:
       name: Atk3_3
       rect:
         serializedVersion: 2
-        x: 1040
+        x: 2086
         y: 0
-        width: 306
-        height: 288
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 646
+        height: 576
+      alignment: 9
+      pivot: {x: 0.48, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -205,12 +205,12 @@ TextureImporter:
       name: Atk3_4
       rect:
         serializedVersion: 2
-        x: 1392
+        x: 2784
         y: 0
-        width: 298
-        height: 288
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 627
+        height: 576
+      alignment: 9
+      pivot: {x: 0.48, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
