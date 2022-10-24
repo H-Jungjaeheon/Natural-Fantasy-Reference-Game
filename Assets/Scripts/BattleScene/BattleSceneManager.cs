@@ -47,7 +47,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
     private void EnemyStatTextSetting()
     {
-        enemyHpText.text = $"{nowEnemyBasicUnitScriptComponent.Hp_F}/{nowEnemyBasicUnitScriptComponent.MaxHp_F}";
+        enemyHpText.text = $"{(nowEnemyBasicUnitScriptComponent.Hp_F):N0}/{(nowEnemyBasicUnitScriptComponent.MaxHp_F):N0}";
         enemyEnergyText.text = $"{nowEnemyBasicUnitScriptComponent.Energy_F}/{nowEnemyBasicUnitScriptComponent.MaxEnergy_F}";
         enemyDreamyFigureText.text = $"{nowEnemyBasicUnitScriptComponent.DreamyFigure_F}/{nowEnemyBasicUnitScriptComponent.maxDreamyFigure_F}";
     }

@@ -35,17 +35,7 @@ public class SlimeEnemy : BasicUnitScript
 
     public void RandBehaviorStart()
     {
-        int behaviorProbability = Random.Range(0, 100);
-        //if ()
-        //{
-            
-        //}
-        //switch ()
-        //{
-        //    case (10 > 2):
-
-        //        break;
-        //}
+        //int behaviorProbability = Random.Range(0, 100);
         StartCoroutine(GoToAttack());
     }
 
@@ -53,6 +43,8 @@ public class SlimeEnemy : BasicUnitScript
     {
         Vector3 Movetransform = new Vector3(Speed_F, 0, 0); //이동을 위해 더해줄 연산
         Vector3 Targettransform = new Vector3(BattleSceneManager.Instance.PlayerCharacterPos.x + 5.5f, transform.position.y); //목표 위치
+
+        Energy_F -= 2;
 
         while (transform.position.x > Targettransform.x) //이동중
         {
@@ -139,8 +131,11 @@ public class SlimeEnemy : BasicUnitScript
 
     protected override IEnumerator Fainting()
     {
-        //기절 애니 및 이벤트
-        yield return null;
+        nowState = NowState.Fainting;
+        yield return new WaitForSeconds(5); 
+        Energy_F += MaxEnergy_F / 3; 
+        //nowActionCoolTime = maxActionCoolTime;
+        WaitingTimeStart();
     }
     protected override void Faint()
     {
