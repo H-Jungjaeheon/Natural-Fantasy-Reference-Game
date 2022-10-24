@@ -19,6 +19,17 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
     public Player Player;
 
-    [HideInInspector]
     public GameObject Enemy;
+
+    [SerializeField]
+    [Tooltip("적 체력 텍스트")]
+    private Text enemyHpText;
+
+    [SerializeField]
+    [Tooltip("적 기력 텍스트")]
+    private Text enemyEnergyText;
+
+    [SerializeField]
+    [Tooltip("적 몽환게이지 텍스트")]
+    private Text enemyDreamyFigureText;
 }

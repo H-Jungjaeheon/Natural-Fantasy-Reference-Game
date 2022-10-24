@@ -28,6 +28,7 @@ public class Player : BasicUnitScript
                 shieldHp_F = 0;
                 if (nowProperty == NowPlayerProperty.TheHolySpiritProperty)
                 {
+                    playerHpText.color = basicHpTextColor;
                     TheHolySpiritPropertyBuff(false);
                     TheHolySpiritPropertyDeBuff(true);
                 }
@@ -142,6 +143,22 @@ public class Player : BasicUnitScript
     [Tooltip("플레이어 애니메이션")]
     private Animator playerAnimator;
 
+    [SerializeField]
+    [Tooltip("플레이어 체력 표시 텍스트")]
+    private Text playerHpText;
+
+    [SerializeField]
+    [Tooltip("플레이어 기력 표시 텍스트")]
+    private Text playerEnergyText;
+
+    [SerializeField]
+    [Tooltip("플레이어 몽환 게이지 표시 텍스트")]
+    private Text playerDreamyFigureText;
+
+    private Color basicHpTextColor;
+
+    private Color shieldHpTextColor; 
+
     protected override void Update()
     {
         base.Update();
@@ -149,6 +166,7 @@ public class Player : BasicUnitScript
         Deflect();
         Defense();
         Jump();
+        StatTextsSetting();
     }
 
     protected override void StartSetting() //초기 세팅 (일부 공통)
@@ -174,11 +192,28 @@ public class Player : BasicUnitScript
         OP = ObjectPool.Instance;
         isResurrectionOpportunityExists = true;
 
+        basicHpTextColor = new Color(0.7f, 0.1f, 0.1f);
+        shieldHpTextColor = new Color(0.897f, 0.9f, 0.7f);
         BattleSceneManager.Instance.PlayerCharacterPos = transform.position;
         nextPropertyIndex = Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
         nowPropertyImage.GetComponent<Image>().sprite = nowPropertyIconImages[(int)nowProperty];
         Energy_F = MaxEnergy_F;
         Hp_F = MaxHp_F;
+    }
+
+    private void StatTextsSetting()
+    {
+        if (nowProperty == NowPlayerProperty.TheHolySpiritProperty && ShieldHp_F > 0)
+        {
+            playerHpText.text = $"{ShieldHp_F}/{maxShieldHp_F}";
+        }
+        else
+        {
+            playerHpText.text = $"{Hp_F}/{MaxHp_F}";
+        }
+
+        playerEnergyText.text = $"{Energy_F}/{MaxEnergy_F}";
+        playerDreamyFigureText.text = $"{DreamyFigure_F}/{maxDreamyFigure_F}";
     }
 
     protected override void UnitBarsUpdate()
@@ -855,6 +890,7 @@ public class Player : BasicUnitScript
 
                 ShieldHp_F = 2;
                 TheHolySpiritPropertyBuff(true);
+                playerHpText.color = shieldHpTextColor;
 
                 while (nowProperty == NowPlayerProperty.TheHolySpiritProperty)
                 {
@@ -870,6 +906,7 @@ public class Player : BasicUnitScript
                     TheHolySpiritPropertyDeBuff(false);
                 }
 
+                playerHpText.color = basicHpTextColor;
                 shieldHp_F = 0;
                 break;
         }
