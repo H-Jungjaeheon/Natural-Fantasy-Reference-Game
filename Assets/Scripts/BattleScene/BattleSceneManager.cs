@@ -21,6 +21,8 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
     public GameObject Enemy;
 
+    private BasicUnitScript nowEnemyBasicUnitScriptComponent;
+
     [SerializeField]
     [Tooltip("적 체력 텍스트")]
     private Text enemyHpText;
@@ -32,4 +34,21 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     [SerializeField]
     [Tooltip("적 몽환게이지 텍스트")]
     private Text enemyDreamyFigureText;
+
+    private void Start()
+    {
+        nowEnemyBasicUnitScriptComponent = Enemy.GetComponent<BasicUnitScript>();
+    }
+
+    private void Update()
+    {
+        EnemyStatTextSetting();
+    }
+
+    private void EnemyStatTextSetting()
+    {
+        enemyHpText.text = $"{nowEnemyBasicUnitScriptComponent.Hp_F}/{nowEnemyBasicUnitScriptComponent.MaxHp_F}";
+        enemyEnergyText.text = $"{nowEnemyBasicUnitScriptComponent.Energy_F}/{nowEnemyBasicUnitScriptComponent.MaxEnergy_F}";
+        enemyDreamyFigureText.text = $"{nowEnemyBasicUnitScriptComponent.DreamyFigure_F}/{nowEnemyBasicUnitScriptComponent.maxDreamyFigure_F}";
+    }
 }

@@ -4559,9 +4559,9 @@ MonoBehaviour:
   EnemyCharacterPos: {x: 8, y: -0.15}
   Player: {fileID: 1717870245}
   Enemy: {fileID: 1159378193}
-  enemyHpText: {fileID: 0}
-  enemyEnergyText: {fileID: 0}
-  enemyDreamyFigureText: {fileID: 0}
+  enemyHpText: {fileID: 1216858759}
+  enemyEnergyText: {fileID: 1235441139}
+  enemyDreamyFigureText: {fileID: 2128666978}
 --- !u!4 &1076351709
 Transform:
   m_ObjectHideFlags: 0

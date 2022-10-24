@@ -27,14 +27,25 @@ public class SlimeEnemy : BasicUnitScript
                 isWaiting = false;
                 nowActionCoolTime = 0;
                 ActionCoolTimeBarSetActive(false);
-                RandAttackStart();
+                RandBehaviorStart();
             }
         }
         nullActionCoolTimeImage.transform.position = Cam.WorldToScreenPoint(transform.position + new Vector3(0, actionCoolTimeImageYPos_F, 0));
     }
 
-    public void RandAttackStart()
+    public void RandBehaviorStart()
     {
+        int behaviorProbability = Random.Range(0, 100);
+        //if ()
+        //{
+            
+        //}
+        //switch ()
+        //{
+        //    case (10 > 2):
+
+        //        break;
+        //}
         StartCoroutine(GoToAttack());
     }
 
