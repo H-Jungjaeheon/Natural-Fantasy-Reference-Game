@@ -78,7 +78,8 @@ public class SlimeEnemy : BasicUnitScript
             {
                 if (rangeInEnemy[nowIndex] != null)
                 {
-                    bool isDefence = rangeInEnemy[nowIndex].GetComponent<BasicUnitScript>().nowDefensivePosition == DefensePos.Right ? true : false;
+                    var nowRangeInEnemysComponent = rangeInEnemy[nowIndex].GetComponent<BasicUnitScript>();
+                    bool isDefence = (nowRangeInEnemysComponent.nowDefensivePosition == DefensePos.Right && nowRangeInEnemysComponent.nowState == NowState.Defensing) ? true : false;
                     rangeInEnemy[nowIndex].GetComponent<BasicUnitScript>().Hit(Damage_I, isDefence);
                 }
             }

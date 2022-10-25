@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PlayerBasicPropertyDefence(Right&Left)Animation
+  m_Name: PlayerBasicPropertyStunAnimation
   serializedVersion: 6
   m_Legacy: 0
   m_Compressed: 0
@@ -20,9 +20,9 @@ AnimationClip:
   m_PPtrCurves:
   - curve:
     - time: 0
-      value: {fileID: -9147236567495898671, guid: 905c0478821dc5145a6e7fe33174bc13, type: 3}
+      value: {fileID: 3156634924717718424, guid: 8f2ab7e95827b7b46918aa59a4eec3e8, type: 3}
     - time: 0.083333336
-      value: {fileID: -9147236567495898671, guid: 905c0478821dc5145a6e7fe33174bc13, type: 3}
+      value: {fileID: 2831363460287316188, guid: 8f2ab7e95827b7b46918aa59a4eec3e8, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
@@ -42,8 +42,8 @@ AnimationClip:
       customType: 23
       isPPtrCurve: 1
     pptrCurveMapping:
-    - {fileID: -9147236567495898671, guid: 905c0478821dc5145a6e7fe33174bc13, type: 3}
-    - {fileID: -9147236567495898671, guid: 905c0478821dc5145a6e7fe33174bc13, type: 3}
+    - {fileID: 3156634924717718424, guid: 8f2ab7e95827b7b46918aa59a4eec3e8, type: 3}
+    - {fileID: 2831363460287316188, guid: 8f2ab7e95827b7b46918aa59a4eec3e8, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}

@@ -234,6 +234,7 @@ public class Player : BasicUnitScript
             {
                 Energy_F -= 1;
                 DreamyFigure_F += 1;
+                playerAnimator.SetTrigger("DefenceIntermediateMotion");
             }
             else
             {
@@ -488,6 +489,7 @@ public class Player : BasicUnitScript
             CamShake.JumpStart();
             rigid.AddForce(Vector2.up * jumpPower_F, ForceMode2D.Impulse);
             rigid.gravityScale = setJumpGravityScale_F - 0.5f;
+            playerAnimator.SetTrigger("Jumping");
             StartCoroutine(JumpDelay());
         }
         else if (nowState == NowState.Jumping && transform.position.y < startPos_Vector.y)
@@ -504,6 +506,8 @@ public class Player : BasicUnitScript
                     BBM.ActionButtonsSetActive(true, false, false);
                 }
             }
+
+            playerAnimator.SetBool("JumpIntermediateMotion", false);
             CamShake.JumpStop();
             transform.position = startPos_Vector;
             rigid.velocity = Vector2.zero;
@@ -513,11 +517,13 @@ public class Player : BasicUnitScript
     IEnumerator JumpDelay()
     {
         yield return new WaitForSeconds(0.3f);
+
         while (rigid.gravityScale >= 0.2f)
         {
             rigid.gravityScale -= Time.deltaTime * 3f;
             yield return null;
         }
+        playerAnimator.SetBool("JumpIntermediateMotion", true);
         rigid.gravityScale = setJumpGravityScale_F * 1.5f;
     }
 
@@ -839,10 +845,24 @@ public class Player : BasicUnitScript
 
     protected override IEnumerator Fainting()
     {
+        if (nowDefensivePosition == DefensePos.Left || nowDefensivePosition == DefensePos.Right)
+        {
+            playerAnimator.SetBool("Defence(Left&Right)", false);
+        }
+        else if (nowDefensivePosition == DefensePos.Up)
+        {
+            playerAnimator.SetBool("Defence(Top)", false);
+        }
+
+        playerAnimator.SetBool("Stuning", true);
+
         nowState = NowState.Fainting;
         nowDefensivePosition = DefensePos.None;
         BBM.ActionButtonsSetActive(false, false, false);
         yield return new WaitForSeconds(5); //나중에 매개변수로 레벨에 따라서 기절 시간 넣기
+
+        playerAnimator.SetBool("Stuning", false);
+
         Energy_F += 8; //나중에 매개변수로 레벨에 따라서 기력 차는 양 증가
         nowActionCoolTime = maxActionCoolTime;
 
