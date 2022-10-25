@@ -35,8 +35,12 @@ public class SlimeEnemy : BasicUnitScript
 
     public void RandBehaviorStart()
     {
-        //int behaviorProbability = Random.Range(0, 100);
-        StartCoroutine(GoToAttack());
+        if (nowState != NowState.Fainting)
+        {
+            nowState = NowState.Attacking;
+            //int behaviorProbability = Random.Range(0, 100);
+            StartCoroutine(GoToAttack());
+        }
     }
 
     IEnumerator GoToAttack()
@@ -102,6 +106,7 @@ public class SlimeEnemy : BasicUnitScript
             transform.position += Movetransform * Time.deltaTime;
             yield return null;
         }
+        nowState = NowState.Standingby;
         transform.rotation = Quaternion.identity;
         transform.position = startPos_Vector;
         nowAttackCount_I = 1;
@@ -110,10 +115,13 @@ public class SlimeEnemy : BasicUnitScript
     private void WaitingTimeStart() //공격 후의 세팅 (일부 공통) 
     {
         nowState = NowState.Standingby;
-        isWaiting = true;
-        if (nowActionCoolTime < maxActionCoolTime)
+        if (Hp_F > 0)
         {
-            ActionCoolTimeBarSetActive(true);
+            isWaiting = true;
+            if (nowActionCoolTime < maxActionCoolTime)
+            {
+                ActionCoolTimeBarSetActive(true);
+            }
         }
     }
 
@@ -125,6 +133,7 @@ public class SlimeEnemy : BasicUnitScript
     {
 
     }
+
     protected override IEnumerator Dead()
     {
         yield return null;
