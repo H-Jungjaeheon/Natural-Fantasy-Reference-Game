@@ -118,7 +118,7 @@ public class SlimeEnemy : BasicUnitScript
     private void WaitingTimeStart() //공격 후의 세팅 (일부 공통) 
     {
         nowState = NowState.Standingby;
-
+        
         if (Hp_F > 0)
         {
             isWaiting = true;
@@ -147,8 +147,7 @@ public class SlimeEnemy : BasicUnitScript
     {
         nowState = NowState.Fainting;
         yield return new WaitForSeconds(5); 
-        Energy_F += MaxEnergy_F / 3; 
-        //nowActionCoolTime = maxActionCoolTime;
+        Energy_F = MaxEnergy_F; 
         WaitingTimeStart();
     }
     protected override void Faint()
