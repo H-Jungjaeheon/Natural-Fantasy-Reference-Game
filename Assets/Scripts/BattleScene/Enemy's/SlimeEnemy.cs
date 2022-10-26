@@ -8,12 +8,15 @@ public class SlimeEnemy : BasicUnitScript
     {
         nowState = NowState.Standingby;
         nowDefensivePosition = DefensePos.None;
+
         isWaiting = true;
+        actionCoolTimeObj.SetActive(true);
+        
         BattleSceneManager.Instance.EnemyCharacterPos = transform.position;
         BattleSceneManager.Instance.Enemy = gameObject;
-        actionCoolTimeObj.SetActive(true);
-        Energy_F = MaxEnergy_F;
+
         Hp_F = MaxHp_F;
+        Energy_F = MaxEnergy_F;
     }
 
     protected override void UISetting()
@@ -27,7 +30,7 @@ public class SlimeEnemy : BasicUnitScript
                 isWaiting = false;
                 nowActionCoolTime = 0;
                 ActionCoolTimeBarSetActive(false);
-                RandBehaviorStart();
+                RandBehaviorStart(); //랜덤 행동
             }
         }
         nullActionCoolTimeImage.transform.position = Cam.WorldToScreenPoint(transform.position + new Vector3(0, actionCoolTimeImageYPos_F, 0));
@@ -35,7 +38,7 @@ public class SlimeEnemy : BasicUnitScript
 
     public void RandBehaviorStart()
     {
-        if (nowState != NowState.Fainting)
+        if (nowState == NowState.Standingby)
         {
             nowState = NowState.Attacking;
             //int behaviorProbability = Random.Range(0, 100);
@@ -115,6 +118,7 @@ public class SlimeEnemy : BasicUnitScript
     private void WaitingTimeStart() //공격 후의 세팅 (일부 공통) 
     {
         nowState = NowState.Standingby;
+
         if (Hp_F > 0)
         {
             isWaiting = true;

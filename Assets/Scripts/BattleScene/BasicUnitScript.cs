@@ -14,7 +14,6 @@ public enum DefensePos
 public enum NowState
 {
     Standingby,
-    AttackCoolTimeWaiting,
     Defensing,
     Deflecting,
     Jumping,
