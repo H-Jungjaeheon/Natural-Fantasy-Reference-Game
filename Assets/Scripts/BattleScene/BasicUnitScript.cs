@@ -76,7 +76,7 @@ public abstract class BasicUnitScript : MonoBehaviour
     [HideInInspector]
     public DefensePos nowDefensivePosition; //현재 방어 위치
 
-    [HideInInspector]
+    //[HideInInspector]
     public NowState nowState; //현재 행동
 
     protected bool isWaiting; //대기중
@@ -252,8 +252,8 @@ public abstract class BasicUnitScript : MonoBehaviour
     protected virtual void Update()
     {
         UISetting();
-        Faint();
         UnitBarsUpdate();
+        Faint();
         Burning();
     }
 
@@ -316,8 +316,6 @@ public abstract class BasicUnitScript : MonoBehaviour
         nowState = NowState.Standingby;
     }
 
-    protected abstract void Faint();
-
     protected abstract void UISetting();
 
     protected virtual void WaitingTimeEnd()
@@ -337,7 +335,11 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     protected abstract IEnumerator PropertyPassiveAbilityStart();
 
+    protected abstract void Faint();
+
     protected abstract IEnumerator Fainting();
+
+    protected abstract IEnumerator Resting();
 
     protected void ChangeAttackRange(Vector2 attackRangeColliderSize, Vector2 attackRangeColliderOffset)
     {

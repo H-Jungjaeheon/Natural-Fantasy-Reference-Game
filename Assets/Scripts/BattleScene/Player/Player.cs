@@ -279,14 +279,6 @@ public class Player : BasicUnitScript
         }
     }
 
-    protected override void Faint() //기절
-    {
-        if (Energy_F <= 0 && (nowState == NowState.Standingby || nowState == NowState.Defensing))
-        {
-            StartCoroutine(Fainting());
-        }
-    }
-
     protected override void SetDefensing(DefensePos nowDefensePos, float setRotation)
     {
         string nowDefenceAnimName = (nowDefensePos == DefensePos.Up) ? "Defence(Top)" : "Defence(Left&Right)";
@@ -465,7 +457,7 @@ public class Player : BasicUnitScript
         nullActionCoolTimeImage.transform.position = Cam.WorldToScreenPoint(transform.position + new Vector3(0, actionCoolTimeImageYPos_F, 0));
     }
 
-    private void WaitingTimeStart() //공격 후의 세팅 (일부 공통, 한번만 실행) 
+    private void WaitingTimeStart() //공격 후의 세팅 (일부 공통, 한번만 실행) ///////////////////////////////////////////
     {
         nowState = NowState.Standingby;
 
@@ -547,7 +539,7 @@ public class Player : BasicUnitScript
         }
     }
 
-    IEnumerator Resting()
+    protected override IEnumerator Resting()
     {
         int nowRestingCount = 0;
         WaitForSeconds RestWaitTime = new WaitForSeconds(restWaitTime);
@@ -841,6 +833,14 @@ public class Player : BasicUnitScript
         restWaitTime = isDeBuffing ? restWaitTime + reducedRestWaitTime : restWaitTime - reducedRestWaitTime;
         Damage_I = isDeBuffing ? Damage_I / 1.5f : Damage_I * 1.5f;
         Speed_F = isDeBuffing ? Speed_F / 1.25f : Speed_F * 1.25f;
+    }
+
+    protected override void Faint()
+    {
+        if (Energy_F <= 0 && (nowState == NowState.Standingby || nowState == NowState.Defensing))
+        {
+            StartCoroutine(Fainting());
+        }
     }
 
     protected override IEnumerator Fainting()

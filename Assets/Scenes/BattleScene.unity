@@ -5104,8 +5104,8 @@ MonoBehaviour:
   nowState: 0
   rangeInEnemy: []
   rangeInDeflectAbleObj: []
-  hp_F: 200
-  maxHp_F: 200
+  hp_F: 350
+  maxHp_F: 350
   energy_F: 30
   maxEnergy_F: 30
   isHaveDreamyFigure: 0

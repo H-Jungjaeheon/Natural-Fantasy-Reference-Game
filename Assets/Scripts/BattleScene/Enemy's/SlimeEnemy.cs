@@ -17,6 +17,8 @@ public class SlimeEnemy : BasicUnitScript
 
         Hp_F = MaxHp_F;
         Energy_F = MaxEnergy_F;
+
+        restWaitTime = 1.25f;
     }
 
     protected override void UISetting()
@@ -38,11 +40,33 @@ public class SlimeEnemy : BasicUnitScript
 
     public void RandBehaviorStart()
     {
+        // StartCoroutine(Resting()); - 휴식
+        // StartCoroutine(GoToAttack()); - 기본 근접 공격
+        //
+        //
+        //
+        //
+
         if (nowState == NowState.Standingby)
         {
-            nowState = NowState.Attacking;
-            //int behaviorProbability = Random.Range(0, 100);
-            StartCoroutine(GoToAttack());
+            int behaviorProbability = Random.Range(0, 100);
+
+            if (Energy_F <= MaxEnergy_F / 2)
+            {
+                if (behaviorProbability <= 29)
+                {
+                    StartCoroutine(Resting());
+                }
+                else
+                {
+                    StartCoroutine(GoToAttack());
+                }
+            }
+            else
+            {
+                nowState = NowState.Attacking;
+                StartCoroutine(GoToAttack());
+            }   
         }
     }
 
@@ -109,16 +133,24 @@ public class SlimeEnemy : BasicUnitScript
             transform.position += Movetransform * Time.deltaTime;
             yield return null;
         }
-        nowState = NowState.Standingby;
+
         transform.rotation = Quaternion.identity;
         transform.position = startPos_Vector;
         nowAttackCount_I = 1;
-        WaitingTimeStart();
+
+        if (Energy_F > 0)
+        {
+            WaitingTimeStart();
+        }
+        else
+        {
+            nowState = NowState.Standingby;
+        }
     }
     private void WaitingTimeStart() //공격 후의 세팅 (일부 공통) 
     {
         nowState = NowState.Standingby;
-        
+
         if (Hp_F > 0)
         {
             isWaiting = true;
@@ -127,6 +159,28 @@ public class SlimeEnemy : BasicUnitScript
                 ActionCoolTimeBarSetActive(true);
             }
         }
+    }
+
+    protected override IEnumerator Resting()
+    {
+        nowState = NowState.Resting;
+
+        int nowRestingCount = 0;
+        WaitForSeconds RestWaitTime = new WaitForSeconds(restWaitTime);
+        while (3 > nowRestingCount)
+        {
+            if (Energy_F >= MaxEnergy_F)
+            {
+                Energy_F = MaxEnergy_F;
+                break;
+            }
+            yield return RestWaitTime;
+            Energy_F += 1;
+            nowRestingCount += 1;
+        }
+
+        nowActionCoolTime = maxActionCoolTime;
+        WaitingTimeStart();
     }
 
     protected override void Defense()
@@ -143,19 +197,20 @@ public class SlimeEnemy : BasicUnitScript
         yield return null;
     }
 
-    protected override IEnumerator Fainting()
-    {
-        nowState = NowState.Fainting;
-        yield return new WaitForSeconds(5); 
-        Energy_F = MaxEnergy_F; 
-        WaitingTimeStart();
-    }
     protected override void Faint()
     {
         if (Energy_F <= 0 && (nowState == NowState.Standingby || nowState == NowState.Defensing))
         {
             StartCoroutine(Fainting());
         }
+    }
+
+    protected override IEnumerator Fainting()
+    {
+        nowState = NowState.Fainting;
+        yield return new WaitForSeconds(5); 
+        Energy_F = MaxEnergy_F; 
+        WaitingTimeStart();
     }
 
     protected override IEnumerator PropertyPassiveAbilityStart()
