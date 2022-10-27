@@ -4658,8 +4658,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDontDestroyObj: 0
-  PlayerCharacterPos: {x: 0, y: 0}
-  EnemyCharacterPos: {x: 8, y: -0.15}
+  playerCharacterPos: {x: 0, y: 0}
+  enemyCharacterPos: {x: 0, y: 0}
   Player: {fileID: 1717870245}
   Enemy: {fileID: 1159378193}
   enemyHpText: {fileID: 1216858759}
@@ -5099,7 +5099,7 @@ MonoBehaviour:
   actionCoolTimeImageYPos_F: 2
   maxActionCoolTime: 3.5
   setJumpGravityScale_F: 2.5
-  jumpPower_F: 12.5
+  jumpPower_F: 25
   nowDefensivePosition: 0
   nowState: 0
   rangeInEnemy: []
@@ -5120,6 +5120,7 @@ MonoBehaviour:
   startPos_Vector: {x: 0, y: 0}
   rigid: {fileID: 1159378195}
   attackRangeObjComponent: {fileID: 541266945}
+  motionVectorWithPattern: {x: 0, y: 0}
 --- !u!1 &1198872405
 GameObject:
   m_ObjectHideFlags: 0

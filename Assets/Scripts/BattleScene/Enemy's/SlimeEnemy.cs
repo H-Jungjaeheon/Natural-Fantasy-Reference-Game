@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class SlimeEnemy : BasicUnitScript
 {
+    [SerializeField]
+    [Tooltip("보스 패턴 사용 시 사용할 움직임 벡터")]
+    private Vector2 motionVectorWithPattern = new Vector2(0, 0);
+
     protected override void StartSetting()
     {
         nowState = NowState.Standingby;
@@ -12,7 +16,7 @@ public class SlimeEnemy : BasicUnitScript
         isWaiting = true;
         actionCoolTimeObj.SetActive(true);
         
-        BattleSceneManager.Instance.EnemyCharacterPos = transform.position;
+        BattleSceneManager.Instance.enemyCharacterPos = transform.position;
         BattleSceneManager.Instance.Enemy = gameObject;
 
         Hp_F = MaxHp_F;
@@ -59,13 +63,13 @@ public class SlimeEnemy : BasicUnitScript
                 }
                 else
                 {
-                    StartCoroutine(GoToAttack(true));
+                    StartCoroutine(GoToAttack(false));
                 }
             }
             else
             {
                 nowState = NowState.Attacking;
-                StartCoroutine(GoToAttack(true));
+                StartCoroutine(GoToAttack(false));
             }   
         }
     }
@@ -73,7 +77,7 @@ public class SlimeEnemy : BasicUnitScript
     IEnumerator GoToAttack(bool isBasicCloseAttack)
     {
         Vector3 Movetransform = new Vector3(Speed_F, 0, 0); //이동을 위해 더해줄 연산
-        Vector3 Targettransform = new Vector3(BattleSceneManager.Instance.PlayerCharacterPos.x + 5.5f, transform.position.y); //목표 위치
+        Vector3 Targettransform = new Vector3(BattleSceneManager.Instance.playerCharacterPos.x + 5.5f, transform.position.y); //목표 위치
 
         Energy_F -= 2;
 
@@ -133,8 +137,32 @@ public class SlimeEnemy : BasicUnitScript
 
     IEnumerator AnIndefensibleCloseAttack()
     {
+        rigid.AddForce(Vector2.up * jumpPower_F * 1.5f, ForceMode2D.Impulse);
+        rigid.gravityScale = setJumpGravityScale_F;
 
-        yield return null;
+        motionVectorWithPattern.x = 4f; //점프하며 플레이어 위치에 다가갈 스피드
+
+        while (transform.position.x >= BattleSceneManager.Instance.playerCharacterPos.x)
+        {
+            transform.position -= (Vector3)motionVectorWithPattern * Time.deltaTime;
+            yield return null;
+        }
+
+        motionVectorWithPattern.x = 0;
+        rigid.gravityScale = setJumpGravityScale_F * 5;
+
+        while (transform.position.y > startPos_Vector.y)
+        {
+            yield return null;
+        }
+
+        transform.position = new Vector2(transform.position.x, BattleSceneManager.Instance.enemyCharacterPos.y);
+        rigid.velocity = Vector2.zero;
+        rigid.gravityScale = 0;
+
+        yield return new WaitForSeconds(1f);
+
+        StartCoroutine(Return());
     }
 
     IEnumerator Return() //근접공격 후 돌아오기

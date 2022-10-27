@@ -194,7 +194,7 @@ public class Player : BasicUnitScript
 
         basicHpTextColor = new Color(0.7f, 0.1f, 0.1f);
         shieldHpTextColor = new Color(0.897f, 0.9f, 0.7f);
-        BattleSceneManager.Instance.PlayerCharacterPos = transform.position;
+        BattleSceneManager.Instance.playerCharacterPos = transform.position;
         nextPropertyIndex = Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
         nowPropertyImage.GetComponent<Image>().sprite = nowPropertyIconImages[(int)nowProperty];
         Energy_F = MaxEnergy_F;
@@ -564,7 +564,7 @@ public class Player : BasicUnitScript
     IEnumerator GoToAttack()
     {
         Vector3 Movetransform = new Vector3(Speed_F, 0, 0); //이동을 위해 더해줄 연산
-        Vector3 Targettransform = new Vector3(BattleSceneManager.Instance.EnemyCharacterPos.x - 5.5f, transform.position.y); //목표 위치
+        Vector3 Targettransform = new Vector3(BattleSceneManager.Instance.enemyCharacterPos.x - 5.5f, transform.position.y); //목표 위치
 
         playerAnimator.SetBool("Moving", true);
 
