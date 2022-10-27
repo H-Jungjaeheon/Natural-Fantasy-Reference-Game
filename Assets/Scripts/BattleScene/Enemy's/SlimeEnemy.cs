@@ -41,8 +41,8 @@ public class SlimeEnemy : BasicUnitScript
     public void RandBehaviorStart()
     {
         // StartCoroutine(Resting()); - 휴식
-        // StartCoroutine(GoToAttack()); - 기본 근접 공격
-        //
+        // StartCoroutine(GoToAttack(true)); - 기본 근접 공격
+        // StartCoroutine(GoToAttack(false)); - 방어 불가 스킬 근접 공격
         //
         //
         //
@@ -50,7 +50,7 @@ public class SlimeEnemy : BasicUnitScript
         if (nowState == NowState.Standingby)
         {
             int behaviorProbability = Random.Range(0, 100);
-
+            
             if (Energy_F <= MaxEnergy_F / 2)
             {
                 if (behaviorProbability <= 29)
@@ -59,18 +59,18 @@ public class SlimeEnemy : BasicUnitScript
                 }
                 else
                 {
-                    StartCoroutine(GoToAttack());
+                    StartCoroutine(GoToAttack(true));
                 }
             }
             else
             {
                 nowState = NowState.Attacking;
-                StartCoroutine(GoToAttack());
+                StartCoroutine(GoToAttack(true));
             }   
         }
     }
 
-    IEnumerator GoToAttack()
+    IEnumerator GoToAttack(bool isBasicCloseAttack)
     {
         Vector3 Movetransform = new Vector3(Speed_F, 0, 0); //이동을 위해 더해줄 연산
         Vector3 Targettransform = new Vector3(BattleSceneManager.Instance.PlayerCharacterPos.x + 5.5f, transform.position.y); //목표 위치
@@ -84,7 +84,14 @@ public class SlimeEnemy : BasicUnitScript
         }
         transform.position = Targettransform; //이동 완료
 
-        StartCoroutine(Attacking(true, nowAttackCount_I, 1f)); //첫번째 공격 실행
+        if (isBasicCloseAttack)
+        {
+            StartCoroutine(Attacking(true, nowAttackCount_I, 1f)); //첫번째 공격 실행
+        }
+        else
+        {
+            StartCoroutine(AnIndefensibleCloseAttack());
+        }
     }
 
     public override void Hit(float damage, bool isDefending)
@@ -122,6 +129,12 @@ public class SlimeEnemy : BasicUnitScript
         }
 
         StartCoroutine(Return());
+    }
+
+    IEnumerator AnIndefensibleCloseAttack()
+    {
+
+        yield return null;
     }
 
     IEnumerator Return() //근접공격 후 돌아오기
