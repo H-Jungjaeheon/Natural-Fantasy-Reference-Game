@@ -342,7 +342,15 @@ public class Player : BasicUnitScript
         isChangePropertyReady = false;
         nowState = NowState.Standingby;
         Invincibility(false);
-        WaitingTimeStart();
+
+        if (BattleButtonManager.Instance.nowButtonPage == ButtonPage.FirstPage)
+        {
+            BBM.ActionButtonsSetActive(true, false, true);
+        }
+        else
+        {
+            BBM.ActionButtonsSetActive(false, true, false);
+        }
     }
 
     public void PropertyChangeStart()
@@ -622,10 +630,10 @@ public class Player : BasicUnitScript
 
                     bool isDefence = (unitScriptComponenet.nowState == NowState.Defensing && unitScriptComponenet.nowDefensivePosition == DefensePos.Left) ? true : false;
 
-                    rangeInEnemy[nowIndex].GetComponent<BasicUnitScript>().Hit(Damage_I, isDefence);
+                    unitScriptComponenet.Hit(Damage_I, isDefence);
                     if (isToBurn == false && nowProperty == NowPlayerProperty.FlameProperty)
                     {
-                        rangeInEnemy[nowIndex].GetComponent<BasicUnitScript>().BurnDamageStart();
+                        unitScriptComponenet.BurnDamageStart();
                         if (nowIndex == maxEnemyIndex)
                         {
                             isToBurn = true;

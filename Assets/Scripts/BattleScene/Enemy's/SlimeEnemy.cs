@@ -5,8 +5,12 @@ using UnityEngine;
 public class SlimeEnemy : BasicUnitScript
 {
     [SerializeField]
-    [Tooltip("보스 패턴 사용 시 사용할 움직임 벡터")]
-    private Vector2 motionVectorWithPattern = new Vector2(0, 0);
+    [Tooltip("이동이 필요한 패턴 사용 시 사용할 속도 벡터")]
+    private Vector2 speedVectorWithPattern = new Vector2(0, 0);
+
+    [SerializeField]
+    [Tooltip("특정 패턴 사용 시 몸체 충돌 데미지 판정 판별 변수")]
+    private bool isPhysicalAttacking;
 
     protected override void StartSetting()
     {
@@ -22,7 +26,7 @@ public class SlimeEnemy : BasicUnitScript
         Hp_F = MaxHp_F;
         Energy_F = MaxEnergy_F;
 
-        restWaitTime = 1.25f;
+        restWaitTime = 1.85f;
     }
 
     protected override void UISetting()
@@ -55,9 +59,9 @@ public class SlimeEnemy : BasicUnitScript
         {
             int behaviorProbability = Random.Range(0, 100);
             
-            if (Energy_F <= MaxEnergy_F / 2)
+            if (Energy_F <= MaxEnergy_F / 3)
             {
-                if (behaviorProbability <= 29)
+                if (behaviorProbability <= 39)
                 {
                     StartCoroutine(Resting());
                 }
@@ -69,7 +73,7 @@ public class SlimeEnemy : BasicUnitScript
             else
             {
                 nowState = NowState.Attacking;
-                StartCoroutine(GoToAttack(false));
+                StartCoroutine(GoToAttack(true));
             }   
         }
     }
@@ -77,9 +81,11 @@ public class SlimeEnemy : BasicUnitScript
     IEnumerator GoToAttack(bool isBasicCloseAttack)
     {
         Vector3 Movetransform = new Vector3(Speed_F, 0, 0); //이동을 위해 더해줄 연산
-        Vector3 Targettransform = new Vector3(BattleSceneManager.Instance.playerCharacterPos.x + 5.5f, transform.position.y); //목표 위치
+        Vector3 Targettransform = new Vector3(0, transform.position.y); //목표 위치
+        var battleSceneManagerInstance = BattleSceneManager.Instance;
 
-        Energy_F -= 2;
+        Targettransform.x = (isBasicCloseAttack) ? battleSceneManagerInstance.playerCharacterPos.x + 5.5f : battleSceneManagerInstance.playerCharacterPos.x + 8;
+        Energy_F -= (isBasicCloseAttack) ? 2 : 3;
 
         while (transform.position.x > Targettransform.x) //이동중
         {
@@ -90,11 +96,11 @@ public class SlimeEnemy : BasicUnitScript
 
         if (isBasicCloseAttack)
         {
-            StartCoroutine(Attacking(true, nowAttackCount_I, 1f)); //첫번째 공격 실행
+            StartCoroutine(Attacking(true, nowAttackCount_I, 1f)); //기본 공격 실행
         }
         else
         {
-            StartCoroutine(AnIndefensibleCloseAttack());
+            StartCoroutine(DefenselessCloseAttack()); //내려찍기 공격 실행
         }
     }
 
@@ -122,7 +128,7 @@ public class SlimeEnemy : BasicUnitScript
                 {
                     var nowRangeInEnemysComponent = rangeInEnemy[nowIndex].GetComponent<BasicUnitScript>();
                     bool isDefence = (nowRangeInEnemysComponent.nowDefensivePosition == DefensePos.Right && nowRangeInEnemysComponent.nowState == NowState.Defensing) ? true : false;
-                    rangeInEnemy[nowIndex].GetComponent<BasicUnitScript>().Hit(Damage_I, isDefence);
+                    nowRangeInEnemysComponent.Hit(Damage_I, isDefence);
                 }
             }
         }
@@ -135,32 +141,43 @@ public class SlimeEnemy : BasicUnitScript
         StartCoroutine(Return());
     }
 
-    IEnumerator AnIndefensibleCloseAttack()
+    IEnumerator DefenselessCloseAttack() //내려찍기 공격
     {
-        rigid.AddForce(Vector2.up * jumpPower_F * 1.5f, ForceMode2D.Impulse);
+        WaitForSeconds defenselessCloseAttackDelay = new WaitForSeconds(0.45f);
+
+        yield return new WaitForSeconds(0.5f); //점프 전 대기 시간
+        rigid.AddForce(Vector2.up * jumpPower_F, ForceMode2D.Impulse);
         rigid.gravityScale = setJumpGravityScale_F;
 
-        motionVectorWithPattern.x = 4f; //점프하며 플레이어 위치에 다가갈 스피드
+        speedVectorWithPattern.x = 5.5f; //점프하며 플레이어 위치에 다가갈 스피드
 
-        while (transform.position.x >= BattleSceneManager.Instance.playerCharacterPos.x)
+        while (transform.position.x >= BattleSceneManager.Instance.playerCharacterPos.x) //플레이어 시작 x값까지 움직임
         {
-            transform.position -= (Vector3)motionVectorWithPattern * Time.deltaTime;
+            transform.position -= (Vector3)speedVectorWithPattern * Time.deltaTime;
             yield return null;
         }
 
-        motionVectorWithPattern.x = 0;
-        rigid.gravityScale = setJumpGravityScale_F * 5;
+        rigid.gravityScale = -0.05f;
+
+        speedVectorWithPattern.x = 0;
+
+        yield return defenselessCloseAttackDelay; //내려찍기 준비시간
+
+        isPhysicalAttacking = true;
+
+        rigid.AddForce(Vector2.down * jumpPower_F * 3, ForceMode2D.Impulse);
 
         while (transform.position.y > startPos_Vector.y)
         {
             yield return null;
         }
 
-        transform.position = new Vector2(transform.position.x, BattleSceneManager.Instance.enemyCharacterPos.y);
+        transform.position = new Vector2(transform.position.x, startPos_Vector.y);
         rigid.velocity = Vector2.zero;
         rigid.gravityScale = 0;
+        isPhysicalAttacking = false;
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1.25f);
 
         StartCoroutine(Return());
     }
@@ -208,7 +225,7 @@ public class SlimeEnemy : BasicUnitScript
 
         int nowRestingCount = 0;
         WaitForSeconds RestWaitTime = new WaitForSeconds(restWaitTime);
-        while (3 > nowRestingCount)
+        while (2 > nowRestingCount)
         {
             if (Energy_F >= MaxEnergy_F)
             {
@@ -258,5 +275,14 @@ public class SlimeEnemy : BasicUnitScript
     {
 
         yield return null;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (isPhysicalAttacking && collision.gameObject.CompareTag("Player"))
+        {
+            CamShake.CamShakeMod(false, 2f);
+            collision.gameObject.GetComponent<BasicUnitScript>().Hit(Damage_I + Mathf.Round(Damage_I / 2), false);
+        }
     }
 }

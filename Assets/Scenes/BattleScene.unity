@@ -5096,10 +5096,10 @@ MonoBehaviour:
   actionCoolTimeObj: {fileID: 1146735694}
   nullActionCoolTimeImage: {fileID: 154340400}
   actionCoolTimeImage: {fileID: 1074118521}
-  actionCoolTimeImageYPos_F: 2
+  actionCoolTimeImageYPos_F: 2.3
   maxActionCoolTime: 3.5
-  setJumpGravityScale_F: 2.5
-  jumpPower_F: 25
+  setJumpGravityScale_F: 2
+  jumpPower_F: 22
   nowDefensivePosition: 0
   nowState: 0
   rangeInEnemy: []
@@ -6886,7 +6886,7 @@ MonoBehaviour:
   dreamyFigure_F: 0
   maxDreamyFigure_F: 0
   damage_I: 1
-  Speed_F: 5
+  Speed_F: 6
   unitHpBars: {fileID: 939537340}
   unitLightHpBars: {fileID: 1390554749}
   unitEnergyBars: {fileID: 529741880}

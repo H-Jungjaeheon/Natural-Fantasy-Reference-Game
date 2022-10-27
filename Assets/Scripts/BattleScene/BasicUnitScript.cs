@@ -347,7 +347,7 @@ public abstract class BasicUnitScript : MonoBehaviour
         attackRangeObjComponent.offset = attackRangeColliderOffset;
     }
 
-    protected void Invincibility(bool isInvincibilityOn) => isInvincibility = isInvincibilityOn;
+    protected void Invincibility(bool isInvincibilityOn) => isInvincibility = isInvincibilityOn; //무적 ON or OFF
     protected void InitializationAttackRange()
     {
         attackRangeObjComponent.size = InitializationAttackRangeSize;

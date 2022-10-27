@@ -60,7 +60,7 @@ public class CamShake : MonoBehaviour
         JumpStop = StopJump;
     }
 
-    public void CamShakeStart(bool isHorizontalShake, float timeInput)
+    public void CamShakeStart(bool isHorizontalShake, float timeInput) //가로로 떨림 판별, 떨리는 시간
     {
         if (isHorizontalShake)
         {
