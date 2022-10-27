@@ -5,7 +5,8 @@ using UnityEngine;
 public enum PoolObjKind
 {
     PlayerSwordAura,
-    PlayerHpRecoveryBead
+    PlayerHpRecoveryBead,
+    SlimeEnemyBullet
 }
 
 public class ObjectPool : Singleton<ObjectPool>

@@ -11,18 +11,26 @@ public enum BulletState
 public class EnemysBullet : MonoBehaviour
 {
     [SerializeField]
+    [Tooltip("총알 데미지")]
     private int damage;
 
     [SerializeField]
+    [Tooltip("총알 속도")]
     private float speed;
 
+    [Tooltip("총알 반사 가능한지 판별")]
     public bool isDeflectAble;
 
     public BulletState nowBulletState;
 
+    public Vector2 moveDirection;
+
+    [SerializeField]
+    [Tooltip("오브젝트 풀의 총알 종류")]
+    private PoolObjKind thisBulletPoolObjKind;
+
     private Vector3 moveSpeed;
 
-    public Vector2 moveDirection;
 
     // Start is called before the first frame update
     void Start()
@@ -47,10 +55,7 @@ public class EnemysBullet : MonoBehaviour
         {
             transform.position = (nowBulletState == BulletState.Deflecting) ? transform.position + (Vector3)(moveSpeed * Time.deltaTime) : transform.position - (Vector3)(moveSpeed * Time.deltaTime);
         }
-        else
-        {
-            transform.Translate(moveDirection * (Time.deltaTime * speed));
-        }
+        //transform.Translate(moveDirection * (Time.deltaTime * speed));
         //position = new Vector2(Mathf.Cos(i * Mathf.Deg2Rad), Mathf.Sin(i * Mathf.Deg2Rad));
         //Fire(position, Vector2.one * 0.2f, (position - transform.position).normalized, 5, 1, Bullet.BulletType.Enemy, system);
     }
@@ -59,6 +64,7 @@ public class EnemysBullet : MonoBehaviour
     {
         nowBulletState = isReflexToPlayer;
     }
+
     private void OnTriggerStay2D(Collider2D collision)
     {
         BasicUnitScript hitObjsUnitScript = collision.GetComponent<BasicUnitScript>();
@@ -74,17 +80,19 @@ public class EnemysBullet : MonoBehaviour
                 CamShake.CamShakeMod(false,  2f);
                 hitObjsUnitScript.Hit(damage, false); //대각선
             }
-            Destroy(gameObject);
+            ReturnToObjPool();
         }
         else if (collision.CompareTag("Enemy") && nowBulletState == BulletState.Deflecting)
         {
             CamShake.CamShakeMod(false, 2f); //대각선
             hitObjsUnitScript.Hit(damage, false);
-            Destroy(gameObject);
+            ReturnToObjPool();
         }
         else if (collision.CompareTag("ObjDestroy"))
         {
-            Destroy(gameObject);
+            ReturnToObjPool();
         }
     }
+
+    private void ReturnToObjPool() => ObjectPool.Instance.ReturnObject(gameObject, (int)thisBulletPoolObjKind);
 }
