@@ -551,6 +551,9 @@ public class Player : BasicUnitScript
     {
         int nowRestingCount = 0;
         WaitForSeconds RestWaitTime = new WaitForSeconds(restWaitTime);
+
+        battleUIAnimator.SetBool("NowResting", true);
+
         while (3 > nowRestingCount)
         {
             if (Energy_F >= MaxEnergy_F)
@@ -562,6 +565,8 @@ public class Player : BasicUnitScript
             Energy_F += 1;
             nowRestingCount += 1;
         }
+
+        battleUIAnimator.SetBool("NowResting", false);
         nowState = NowState.Standingby;
         if (isChangePropertyReady == false)
         {
@@ -862,7 +867,9 @@ public class Player : BasicUnitScript
             playerAnimator.SetBool("Defence(Top)", false);
         }
 
+        battleUIObjScript.ChangeFaintAnimObjScale();
         playerAnimator.SetBool("Stuning", true);
+        battleUIAnimator.SetBool("NowFainting", true);
 
         nowState = NowState.Fainting;
         nowDefensivePosition = DefensePos.None;
@@ -870,9 +877,11 @@ public class Player : BasicUnitScript
         yield return new WaitForSeconds(5); //나중에 매개변수로 레벨에 따라서 기절 시간 넣기
 
         playerAnimator.SetBool("Stuning", false);
+        battleUIAnimator.SetBool("NowFainting", false);
 
         Energy_F += 8; //나중에 매개변수로 레벨에 따라서 기력 차는 양 증가
         nowActionCoolTime = maxActionCoolTime;
+
 
         if (isChangePropertyReady == false && Hp_F > 0)
         {

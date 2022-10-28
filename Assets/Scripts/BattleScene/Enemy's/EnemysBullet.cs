@@ -31,14 +31,11 @@ public class EnemysBullet : MonoBehaviour
 
     private Vector3 moveSpeed;
 
-
-    // Start is called before the first frame update
     void Start()
     {
         StartSetting();
     }
 
-    // Update is called once per frame
     void Update()
     {
         BulletMove();
@@ -55,7 +52,10 @@ public class EnemysBullet : MonoBehaviour
         {
             transform.position = (nowBulletState == BulletState.Deflecting) ? transform.position + (Vector3)(moveSpeed * Time.deltaTime) : transform.position - (Vector3)(moveSpeed * Time.deltaTime);
         }
-        //transform.Translate(moveDirection * (Time.deltaTime * speed));
+        else
+        {
+            transform.Translate(moveDirection * (Time.deltaTime * speed));
+        }
         //position = new Vector2(Mathf.Cos(i * Mathf.Deg2Rad), Mathf.Sin(i * Mathf.Deg2Rad));
         //Fire(position, Vector2.one * 0.2f, (position - transform.position).normalized, 5, 1, Bullet.BulletType.Enemy, system);
     }

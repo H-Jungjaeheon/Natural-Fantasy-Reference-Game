@@ -243,6 +243,14 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     protected Vector2 InitializationAttackRangeOffset = new Vector2(0.2f, 0);
 
+    [SerializeField]
+    [Tooltip("현재 상태 표시해주는 UI 오브젝트 스크립트")]
+    protected BattleUIObj battleUIObjScript;
+
+    [SerializeField]
+    [Tooltip("현재 상태 표시해주는 UI 애니메이션")]
+    protected Animator battleUIAnimator;
+
     protected virtual void Awake()
     {
         StartSameSetting();

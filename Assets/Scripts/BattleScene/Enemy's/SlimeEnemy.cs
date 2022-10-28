@@ -51,30 +51,46 @@ public class SlimeEnemy : BasicUnitScript
         // StartCoroutine(Resting()); - 휴식
         // StartCoroutine(GoToAttack(true)); - 기본 근접 공격
         // StartCoroutine(GoToAttack(false)); - 방어 불가 스킬 근접 공격
-        //
+        // StartCoroutine(ShootBullet()); - 원거리 총알 발사 공격
         //
         //
 
         if (nowState == NowState.Standingby)
         {
             int behaviorProbability = Random.Range(0, 100);
-            
-            if (Energy_F <= MaxEnergy_F / 3)
+
+            if (behaviorProbability <= 39)
             {
-                if (behaviorProbability <= 39)
+                if (Energy_F <= MaxEnergy_F / 3)
                 {
                     StartCoroutine(Resting());
                 }
-                else
+                behaviorProbability = Random.Range(0, 100);
+                if (behaviorProbability <= 29)
                 {
                     StartCoroutine(GoToAttack(false));
                 }
+                else if (behaviorProbability <= 59)
+                {
+                    StartCoroutine(GoToAttack(true));
+                }
+                else
+                {
+                    StartCoroutine(ShootBullet());
+                }
+            }
+            else if (behaviorProbability <= 69)
+            {
+                StartCoroutine(GoToAttack(true));
+            }
+            else if (behaviorProbability <= 89)
+            {
+                StartCoroutine(GoToAttack(false));
             }
             else
             {
-                nowState = NowState.Attacking;
-                StartCoroutine(GoToAttack(true));
-            }   
+                StartCoroutine(ShootBullet());
+            }
         }
     }
 
@@ -84,6 +100,7 @@ public class SlimeEnemy : BasicUnitScript
         Vector3 Targettransform = new Vector3(0, transform.position.y); //목표 위치
         var battleSceneManagerInstance = BattleSceneManager.Instance;
 
+        nowState = NowState.Attacking;
         Targettransform.x = (isBasicCloseAttack) ? battleSceneManagerInstance.playerCharacterPos.x + 5.5f : battleSceneManagerInstance.playerCharacterPos.x + 8;
         Energy_F -= (isBasicCloseAttack) ? 2 : 3;
 
@@ -143,7 +160,7 @@ public class SlimeEnemy : BasicUnitScript
 
     IEnumerator DefenselessCloseAttack() //내려찍기 공격
     {
-        WaitForSeconds defenselessCloseAttackDelay = new WaitForSeconds(0.45f);
+        WaitForSeconds defenselessCloseAttackDelay = new WaitForSeconds(0.3f);
 
         yield return new WaitForSeconds(0.5f); //점프 전 대기 시간
         rigid.AddForce(Vector2.up * jumpPower_F, ForceMode2D.Impulse);
@@ -157,7 +174,7 @@ public class SlimeEnemy : BasicUnitScript
             yield return null;
         }
 
-        rigid.gravityScale = -0.05f;
+        rigid.gravityScale = -0.7f;
 
         speedVectorWithPattern.x = 0;
 
@@ -172,6 +189,7 @@ public class SlimeEnemy : BasicUnitScript
             yield return null;
         }
 
+        CamShake.CamShakeMod(true, 2f);
         transform.position = new Vector2(transform.position.x, startPos_Vector.y);
         rigid.velocity = Vector2.zero;
         rigid.gravityScale = 0;
@@ -205,6 +223,26 @@ public class SlimeEnemy : BasicUnitScript
             nowState = NowState.Standingby;
         }
     }
+
+    IEnumerator ShootBullet() //원거리 발사 공격
+    {
+        Vector2 spawnSlimeBulletPosition;
+
+        Energy_F -= 2;
+
+        yield return new WaitForSeconds(1.5f);
+
+        var slimeBullet = ObjectPool.Instance.GetObject((int)PoolObjKind.SlimeEnemyBullet);
+
+        spawnSlimeBulletPosition.x = transform.position.x;
+        spawnSlimeBulletPosition.y = slimeBullet.transform.position.y;
+
+        slimeBullet.transform.position = spawnSlimeBulletPosition;
+
+        yield return null;
+        WaitingTimeStart();
+    }
+
     private void WaitingTimeStart() //공격 후의 세팅 (일부 공통) 
     {
         nowState = NowState.Standingby;
