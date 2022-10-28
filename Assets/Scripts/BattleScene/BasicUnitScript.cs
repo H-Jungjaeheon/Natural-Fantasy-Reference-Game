@@ -104,10 +104,16 @@ public abstract class BasicUnitScript : MonoBehaviour
         get { return hp_F; }
         set
         {
+            if (value > MaxHp_F)
+            {
+                hp_F = MaxHp_F;
+            }
+
             if (value > lightHp_F)
             {
                 lightHp_F = Hp_F;
             }
+
             if (value <= 0)
             {
                 hp_F = 0;
@@ -117,10 +123,12 @@ public abstract class BasicUnitScript : MonoBehaviour
             {
                 hp_F = value;
             }
+
             if (isHpDiminishedProduction == false)
             {
                 StartCoroutine(HpDiminishedProduction());
             }
+
             hpText.text = $"{(Hp_F):N0}/{(MaxHp_F):N0}";
             unitHpBars.fillAmount = Hp_F / MaxHp_F;
         }
@@ -356,7 +364,6 @@ public abstract class BasicUnitScript : MonoBehaviour
     {
         isWaiting = false;
         nowActionCoolTime = 0;
-        ActionCoolTimeBarSetActive(false);
     }
 
     protected abstract void Defense();
@@ -366,8 +373,6 @@ public abstract class BasicUnitScript : MonoBehaviour
     protected void ActionCoolTimeBarSetActive(bool SetActive) => actionCoolTimeObj.SetActive(SetActive);
 
     protected abstract IEnumerator Dead();
-
-    protected abstract IEnumerator PropertyPassiveAbilityStart();
 
     protected abstract IEnumerator Fainting();
 

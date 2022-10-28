@@ -7023,7 +7023,6 @@ MonoBehaviour:
   battleUIObjScript: {fileID: 1934224821}
   battleUIAnimator: {fileID: 1934224818}
   unitShieldHpBars: {fileID: 1902801556}
-  nowChangePropertyCoolTime: 0
   nowProperty: 0
   isSpawnNatureBead: 0
   nowPropertyImage: {fileID: 693409020}
@@ -7035,6 +7034,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 2fd95d5be0356814f835f3e30fc4f631, type: 3}
   - {fileID: 21300000, guid: 04dadd18cab83314fb8fe6ed3adbc3e6, type: 3}
   playerAnimator: {fileID: 1717870246}
+  basicHpTextColor: {r: 0.69803923, g: 0.101960786, b: 0.101960786, a: 0}
+  shieldHpTextColor: {r: 0.8980392, g: 0.9019608, b: 0.69803923, a: 0}
 --- !u!95 &1717870246
 Animator:
   serializedVersion: 3

@@ -8,6 +8,8 @@ public class AttackRange : MonoBehaviour
     [Tooltip("이 공격 범위를 가진 해당 유닛 종류")]
     private bool isPlayer;
 
+    private bool isLeft;
+
     [SerializeField]
     [Tooltip("이 공격 범위를 가진 해당 유닛 오브젝트")]
     private GameObject unitObj;
@@ -18,7 +20,12 @@ public class AttackRange : MonoBehaviour
 
     private Vector2 colliderPos;
 
-    private bool isLeft;
+    private BasicUnitScript gameObjectBasicUnitScriptComponent;
+
+    private void Start()
+    {
+        gameObjectBasicUnitScriptComponent = unitObj.GetComponent<BasicUnitScript>();
+    }
 
     private void Update()
     {
@@ -32,17 +39,17 @@ public class AttackRange : MonoBehaviour
         transform.position = colliderPos;
         if (transform.rotation.y != 0 && isLeft == false)
         {
-            ChangeRotation(false);
+            ChangeRotation();
             isLeft = true;
         }
         else if(transform.rotation.y == 0 && isLeft)
         {
-            ChangeRotation(true);
+            ChangeRotation();
             isLeft = false;
         }
     }
 
-    private void ChangeRotation(bool ChangeRotate)
+    private void ChangeRotation()
     {
         setColliderXPos *= -1;
     }
@@ -51,7 +58,7 @@ public class AttackRange : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("DeflectAbleObj"))
         {
-            unitObj.GetComponent<BasicUnitScript>().rangeInDeflectAbleObj.Add(collision.gameObject);
+            gameObjectBasicUnitScriptComponent.rangeInDeflectAbleObj.Add(collision.gameObject);
         }
         else 
         {
@@ -62,13 +69,13 @@ public class AttackRange : MonoBehaviour
                     case true:
                         if (collision.gameObject.CompareTag("Enemy"))
                         {
-                            unitObj.GetComponent<BasicUnitScript>().rangeInEnemy.Add(collision.gameObject);
+                            gameObjectBasicUnitScriptComponent.rangeInEnemy.Add(collision.gameObject);
                         }
                         break;
                     case false:
                         if (collision.gameObject.CompareTag("Player"))
                         {
-                            unitObj.GetComponent<BasicUnitScript>().rangeInEnemy.Add(collision.gameObject);
+                            gameObjectBasicUnitScriptComponent.rangeInEnemy.Add(collision.gameObject);
                         }
                         break;
                 }
@@ -80,11 +87,11 @@ public class AttackRange : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Player"))
         {
-            unitObj.GetComponent<BasicUnitScript>().rangeInEnemy.Remove(collision.gameObject);
+            gameObjectBasicUnitScriptComponent.rangeInEnemy.Remove(collision.gameObject);
         }
         else if (collision.gameObject.CompareTag("DeflectAbleObj"))
         {
-            unitObj.GetComponent<BasicUnitScript>().rangeInDeflectAbleObj.Remove(collision.gameObject);
+            gameObjectBasicUnitScriptComponent.rangeInDeflectAbleObj.Remove(collision.gameObject);
         }
     }
 }

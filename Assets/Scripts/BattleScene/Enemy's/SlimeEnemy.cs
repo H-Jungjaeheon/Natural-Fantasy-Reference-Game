@@ -37,8 +37,7 @@ public class SlimeEnemy : BasicUnitScript
             nowActionCoolTime += Time.deltaTime;
             if (nowActionCoolTime >= maxActionCoolTime)
             {
-                isWaiting = false;
-                nowActionCoolTime = 0;
+                WaitingTimeEnd();
                 ActionCoolTimeBarSetActive(false);
                 RandBehaviorStart(); //랜덤 행동
             }
@@ -310,12 +309,6 @@ public class SlimeEnemy : BasicUnitScript
         battleUIAnimator.SetBool("NowFainting", false);
         Energy_F = MaxEnergy_F; 
         WaitingTimeStart();
-    }
-
-    protected override IEnumerator PropertyPassiveAbilityStart()
-    {
-
-        yield return null;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

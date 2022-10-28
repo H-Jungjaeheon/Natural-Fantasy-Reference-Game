@@ -31,11 +31,19 @@ public class Player : BasicUnitScript
                     hpText.color = basicHpTextColor;
                     TheHolySpiritPropertyBuff(false);
                     TheHolySpiritPropertyDeBuff(true);
+                    hpText.text = $"{(Hp_F):N0}/{(MaxHp_F):N0}";
                 }
             }
             else
             {
                 shieldHp_F = value;
+            }
+            
+            unitShieldHpBars.fillAmount = ShieldHp_F / maxShieldHp_F;
+            
+            if (value > 0 && nowProperty == NowPlayerProperty.TheHolySpiritProperty)
+            {
+                hpText.text = $"{ShieldHp_F}/{maxShieldHp_F}";
             }
         }
     }
@@ -49,7 +57,7 @@ public class Player : BasicUnitScript
 
     private float maxChangePropertyCoolTime = 35; //최대 속성 변경 시간
 
-    public float nowChangePropertyCoolTime; //현재 속성 변경 시간
+    private float nowChangePropertyCoolTime; //현재 속성 변경 시간
 
     public float NowChangePropertyCoolTime
     {
@@ -115,7 +123,7 @@ public class Player : BasicUnitScript
             if (value >= maxNaturePassiveCount)
             {
                 isSpawnNatureBead = true;
-                OP.GetObject((int)PoolObjKind.PlayerHpRecoveryBead);
+                oP.GetObject((int)PoolObjKind.PlayerHpRecoveryBead);
             }
             else
             {
@@ -127,9 +135,9 @@ public class Player : BasicUnitScript
     [HideInInspector]
     public bool isSpawnNatureBead;
 
-    private BattleButtonManager BBM;
+    private BattleButtonManager bBM;
 
-    private ObjectPool OP;
+    private ObjectPool oP;
 
     [SerializeField]
     [Tooltip("현재 플레이어 속성 아이콘")]
@@ -142,10 +150,17 @@ public class Player : BasicUnitScript
     [SerializeField]
     [Tooltip("플레이어 애니메이션")]
     private Animator playerAnimator;
-
+    
+    #region 체력 텍스트 색 값들
+    [Header("체력 텍스트 색 값들")]
+    [SerializeField]
+    [Tooltip("기본 체력 텍스트 색")]
     private Color basicHpTextColor;
 
-    private Color shieldHpTextColor; 
+    [SerializeField]
+    [Tooltip("성령 속성 보호막 체력 텍스트 색")]
+    private Color shieldHpTextColor;
+    #endregion
 
     protected override void Update()
     {
@@ -154,7 +169,6 @@ public class Player : BasicUnitScript
         Deflect();
         Defense();
         Jump();
-        StatTextsSetting();
     }
 
     protected override void StartSetting() //초기 세팅 (일부 공통)
@@ -176,34 +190,15 @@ public class Player : BasicUnitScript
 
         nowState = NowState.Standingby;
         nowProperty = NowPlayerProperty.BasicProperty;
-        BBM = BattleButtonManager.Instance;
-        OP = ObjectPool.Instance;
+        bBM = BattleButtonManager.Instance;
+        oP = ObjectPool.Instance;
         isResurrectionOpportunityExists = true;
 
-        basicHpTextColor = new Color(0.7f, 0.1f, 0.1f);
-        shieldHpTextColor = new Color(0.897f, 0.9f, 0.7f);
         BattleSceneManager.Instance.playerCharacterPos = transform.position;
         nextPropertyIndex = Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
         nowPropertyImage.GetComponent<Image>().sprite = nowPropertyIconImages[(int)nowProperty];
         Energy_F = MaxEnergy_F;
         Hp_F = MaxHp_F;
-    }
-
-    private void StatTextsSetting()
-    {
-        if (nowProperty == NowPlayerProperty.TheHolySpiritProperty && ShieldHp_F > 0)
-        {
-            hpText.text = $"{ShieldHp_F}/{maxShieldHp_F}";
-        }
-        else
-        {
-            hpText.text = $"{(Hp_F):N0}/{(MaxHp_F):N0}";
-        }
-    }
-
-    private void UnitBarsUpdate() //원래는 업데이트에 있었음
-    {
-        unitShieldHpBars.fillAmount = ShieldHp_F / maxShieldHp_F;
     }
 
     public override void Hit(float damage, bool isDefending)
@@ -291,12 +286,16 @@ public class Player : BasicUnitScript
 
         nowState = NowState.ChangingProperties;
         Invincibility(true);
-        BBM.ActionButtonsSetActive(false, false, false);
+        bBM.ActionButtonsSetActive(false, false, false);
         transform.rotation = Quaternion.identity;
 
         if (isChangeBasicProperty)
         {
             nowProperty = NowPlayerProperty.BasicProperty;
+            if(nowProperty == NowPlayerProperty.TheHolySpiritProperty)
+            {
+                hpText.text = $"{(Hp_F):N0}/{(MaxHp_F):N0}";
+            }
         }
         else
         {
@@ -329,11 +328,11 @@ public class Player : BasicUnitScript
 
         if (BattleButtonManager.Instance.nowButtonPage == ButtonPage.FirstPage)
         {
-            BBM.ActionButtonsSetActive(true, false, true);
+            bBM.ActionButtonsSetActive(true, false, true);
         }
         else
         {
-            BBM.ActionButtonsSetActive(false, true, false);
+            bBM.ActionButtonsSetActive(false, true, false);
         }
     }
 
@@ -363,7 +362,7 @@ public class Player : BasicUnitScript
 
     private void Deflect()
     {
-        if (nowState == NowState.Defensing && Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && nowState == NowState.Defensing)
         {
             if (nowDefensivePosition == DefensePos.Right)
             {
@@ -382,7 +381,7 @@ public class Player : BasicUnitScript
 
         nowState = NowState.Deflecting;
         nowDefensivePosition = DefensePos.None;
-        BBM.ActionButtonsSetActive(false, false, false);
+        bBM.ActionButtonsSetActive(false, false, false);
         transform.rotation = Quaternion.Euler(0, setRotation, 0);
         ChangeAttackRange(new Vector2(0.7f, 2.6f), new Vector2(0, 0));
 
@@ -416,7 +415,7 @@ public class Player : BasicUnitScript
 
         if (isWaiting == false && isChangePropertyReady == false)
         {
-            BBM.ActionButtonsSetActive(true, false, false);
+            bBM.ActionButtonsSetActive(true, false, false);
         }
         if (nowActionCoolTime != 0)
         {
@@ -439,7 +438,8 @@ public class Player : BasicUnitScript
             if (nowActionCoolTime >= maxActionCoolTime)
             {
                 WaitingTimeEnd();
-                BBM.ActionButtonsSetActive(true, false, false);
+                ActionCoolTimeBarSetActive(false);
+                bBM.ActionButtonsSetActive(true, false, false);
             }
         }
         else if (nowState == NowState.Deflecting || nowState == NowState.Fainting || nowState == NowState.ChangingProperties)
@@ -449,7 +449,7 @@ public class Player : BasicUnitScript
         nullActionCoolTimeImage.transform.position = Cam.WorldToScreenPoint(transform.position + new Vector3(0, actionCoolTimeImageYPos_F, 0));
     }
 
-    private void WaitingTimeStart() //공격 후의 세팅 (일부 공통, 한번만 실행) ///////////////////////////////////////////
+    private void WaitingTimeStart() //공격 후의 세팅 (일부 공통, 한번만 실행) 
     {
         nowState = NowState.Standingby;
 
@@ -460,7 +460,7 @@ public class Player : BasicUnitScript
             {
                 ActionCoolTimeBarSetActive(true);
             }
-            BBM.ActionButtonsSetActive(false, false, false);
+            bBM.ActionButtonsSetActive(false, false, false);
         }
     }
 
@@ -469,7 +469,7 @@ public class Player : BasicUnitScript
         if (nowState == NowState.Standingby && Input.GetKey(KeyCode.Space) && Hp_F > 0 && isChangePropertyReady == false)
         {
             nowState = NowState.Jumping;
-            BBM.ActionButtonsSetActive(false, false, false);
+            bBM.ActionButtonsSetActive(false, false, false);
             CamShake.JumpStart();
             rigid.AddForce(Vector2.up * jumpPower_F, ForceMode2D.Impulse);
             rigid.gravityScale = setJumpGravityScale_F - 0.5f;
@@ -481,13 +481,13 @@ public class Player : BasicUnitScript
             nowState = NowState.Standingby;
             if (isWaiting == false && isChangePropertyReady == false)
             {
-                if (BBM.nowButtonPage == ButtonPage.SecondPage)
+                if (bBM.nowButtonPage == ButtonPage.SecondPage)
                 {
-                    BBM.ActionButtonsSetActive(false, true, false);
+                    bBM.ActionButtonsSetActive(false, true, false);
                 }
                 else
                 {
-                    BBM.ActionButtonsSetActive(true, false, false);
+                    bBM.ActionButtonsSetActive(true, false, false);
                 }
             }
 
@@ -516,7 +516,7 @@ public class Player : BasicUnitScript
         if (nowState == NowState.Standingby)
         {
             nowState = NowState.Attacking;
-            BBM.ActionButtonsSetActive(false, false, false);
+            bBM.ActionButtonsSetActive(false, false, false);
             StartCoroutine(GoToAttack());
         }
     }
@@ -526,7 +526,7 @@ public class Player : BasicUnitScript
         if (nowState == NowState.Standingby)
         {
             nowState = NowState.Resting;
-            BBM.ActionButtonsSetActive(false, false, false);
+            bBM.ActionButtonsSetActive(false, false, false);
             StartCoroutine(Resting());
         }
     }
@@ -555,7 +555,7 @@ public class Player : BasicUnitScript
         nowState = NowState.Standingby;
         if (isChangePropertyReady == false)
         {
-            BBM.ActionButtonsSetActive(true, false, false);
+            bBM.ActionButtonsSetActive(true, false, false);
         }
     }
 
@@ -697,7 +697,7 @@ public class Player : BasicUnitScript
         if (nowState == NowState.Standingby && Energy_F >= nowUseSkillNeedEnergy)
         {
             Energy_F -= nowUseSkillNeedEnergy;
-            BBM.ActionButtonsSetActive(false, false, false);
+            bBM.ActionButtonsSetActive(false, false, false);
             switch (nowUseSkillIndex)
             {
                 case 1:
@@ -726,7 +726,7 @@ public class Player : BasicUnitScript
             yield return null;
         }
 
-        var enchantedSwordAuraObj = OP.GetObject((int)PoolObjKind.PlayerSwordAura);
+        var enchantedSwordAuraObj = oP.GetObject((int)PoolObjKind.PlayerSwordAura);
         var enchantedSwordAuraObjComponent = enchantedSwordAuraObj.GetComponent<SwordAura>();
 
         if (isFailEnchant == false)
@@ -761,7 +761,6 @@ public class Player : BasicUnitScript
         }
         else
         {
-            print("사망");
             //사망 애니 및 이벤트
         }
     }
@@ -775,7 +774,7 @@ public class Player : BasicUnitScript
         AngelPropertyBuff(true);
         nowState = NowState.Resurrection;
         WaitingTimeEnd();
-        BBM.ActionButtonsSetActive(false, false, false);
+        bBM.ActionButtonsSetActive(false, false, false);
 
         while (true)
         {
@@ -793,7 +792,7 @@ public class Player : BasicUnitScript
             yield return null;
         }
 
-        BBM.ActionButtonsSetActive(true, false, false);
+        bBM.ActionButtonsSetActive(true, false, false);
         nowState = NowState.Standingby; 
         yield return new WaitForSeconds(15f);
         AngelPropertyBuff(false);
@@ -850,7 +849,7 @@ public class Player : BasicUnitScript
 
         nowState = NowState.Fainting;
         nowDefensivePosition = DefensePos.None;
-        BBM.ActionButtonsSetActive(false, false, false);
+        bBM.ActionButtonsSetActive(false, false, false);
         yield return new WaitForSeconds(5); //나중에 매개변수로 레벨에 따라서 기절 시간 넣기
 
         playerAnimator.SetBool("Stuning", false);
@@ -862,13 +861,13 @@ public class Player : BasicUnitScript
 
         if (isChangePropertyReady == false && Hp_F > 0)
         {
-            BBM.ActionButtonsSetActive(true, false, false);
+            bBM.ActionButtonsSetActive(true, false, false);
         }
 
         WaitingTimeStart();
     }
 
-    protected override IEnumerator PropertyPassiveAbilityStart()
+    private IEnumerator PropertyPassiveAbilityStart()
     {
         NowChangePropertyCoolTime = 0;
 
@@ -905,6 +904,7 @@ public class Player : BasicUnitScript
                 ShieldHp_F = 2;
                 TheHolySpiritPropertyBuff(true);
                 hpText.color = shieldHpTextColor;
+                unitShieldHpBars.fillAmount = ShieldHp_F / maxShieldHp_F;
 
                 while (nowProperty == NowPlayerProperty.TheHolySpiritProperty)
                 {
