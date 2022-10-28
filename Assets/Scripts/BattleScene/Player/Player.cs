@@ -28,7 +28,7 @@ public class Player : BasicUnitScript
                 shieldHp_F = 0;
                 if (nowProperty == NowPlayerProperty.TheHolySpiritProperty)
                 {
-                    playerHpText.color = basicHpTextColor;
+                    hpText.color = basicHpTextColor;
                     TheHolySpiritPropertyBuff(false);
                     TheHolySpiritPropertyDeBuff(true);
                 }
@@ -143,18 +143,6 @@ public class Player : BasicUnitScript
     [Tooltip("플레이어 애니메이션")]
     private Animator playerAnimator;
 
-    [SerializeField]
-    [Tooltip("플레이어 체력 표시 텍스트")]
-    private Text playerHpText;
-
-    [SerializeField]
-    [Tooltip("플레이어 기력 표시 텍스트")]
-    private Text playerEnergyText;
-
-    [SerializeField]
-    [Tooltip("플레이어 몽환 게이지 표시 텍스트")]
-    private Text playerDreamyFigureText;
-
     private Color basicHpTextColor;
 
     private Color shieldHpTextColor; 
@@ -205,15 +193,12 @@ public class Player : BasicUnitScript
     {
         if (nowProperty == NowPlayerProperty.TheHolySpiritProperty && ShieldHp_F > 0)
         {
-            playerHpText.text = $"{ShieldHp_F}/{maxShieldHp_F}";
+            hpText.text = $"{ShieldHp_F}/{maxShieldHp_F}";
         }
         else
         {
-            playerHpText.text = $"{Hp_F}/{MaxHp_F}";
+            hpText.text = $"{(Hp_F):N0}/{(MaxHp_F):N0}";
         }
-
-        playerEnergyText.text = $"{Energy_F}/{MaxEnergy_F}";
-        playerDreamyFigureText.text = $"{DreamyFigure_F}/{maxDreamyFigure_F}";
     }
 
     protected override void UnitBarsUpdate()
@@ -552,6 +537,7 @@ public class Player : BasicUnitScript
         int nowRestingCount = 0;
         WaitForSeconds RestWaitTime = new WaitForSeconds(restWaitTime);
 
+        battleUIObjScript.ChangeRestAnimObjScale();
         battleUIAnimator.SetBool("NowResting", true);
 
         while (3 > nowRestingCount)
@@ -927,7 +913,7 @@ public class Player : BasicUnitScript
 
                 ShieldHp_F = 2;
                 TheHolySpiritPropertyBuff(true);
-                playerHpText.color = shieldHpTextColor;
+                hpText.color = shieldHpTextColor;
 
                 while (nowProperty == NowPlayerProperty.TheHolySpiritProperty)
                 {
@@ -943,7 +929,7 @@ public class Player : BasicUnitScript
                     TheHolySpiritPropertyDeBuff(false);
                 }
 
-                playerHpText.color = basicHpTextColor;
+                hpText.color = basicHpTextColor;
                 shieldHp_F = 0;
                 break;
         }

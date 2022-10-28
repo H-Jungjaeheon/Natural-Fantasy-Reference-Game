@@ -104,6 +104,7 @@ public abstract class BasicUnitScript : MonoBehaviour
         get { return hp_F; }
         set
         {
+            hpText.text = $"{(Hp_F):N0}/{(MaxHp_F):N0}";
             if (value > lightHp_F)
             {
                 lightHp_F = Hp_F;
@@ -145,6 +146,7 @@ public abstract class BasicUnitScript : MonoBehaviour
         set
         {
             energy_F = (value <= 0) ? energy_F = 0 : energy_F = value;
+            energyText.text = $"{Energy_F}/{MaxEnergy_F}";
         }
     }
 
@@ -170,6 +172,7 @@ public abstract class BasicUnitScript : MonoBehaviour
         set
         {
             dreamyFigure_F = (value >= maxDreamyFigure_F) ? dreamyFigure_F = maxDreamyFigure_F : dreamyFigure_F = value;
+            dreamyFigureText.text = $"{DreamyFigure_F}/{maxDreamyFigure_F}";
         }
     }
 
@@ -224,6 +227,18 @@ public abstract class BasicUnitScript : MonoBehaviour
     [SerializeField]
     [Tooltip("유닛 몽환 게이지 이미지")]
     private Image unitDreamyFigureBars;
+
+    [SerializeField]
+    [Tooltip("체력 표시 텍스트")]
+    protected Text hpText;
+
+    [SerializeField]
+    [Tooltip("기력 표시 텍스트")]
+    protected Text energyText;
+
+    [SerializeField]
+    [Tooltip("몽환 게이지 표시 텍스트")]
+    protected Text dreamyFigureText;
     #endregion
 
     [HideInInspector]
@@ -274,6 +289,9 @@ public abstract class BasicUnitScript : MonoBehaviour
         maxGiveBurnDamageTime = 3;
         maxStackableOverlapTime = 10; //화상 효과 중첩 가능 제한시간 초기화
         maxBurnDamageLimitTime = 15; //화상 효과 지속시간 증가 초기화
+        hpText.text = $"{(Hp_F):N0}/{(MaxHp_F):N0}";
+        energyText.text = $"{Energy_F}/{MaxEnergy_F}";
+        dreamyFigureText.text = $"{DreamyFigure_F}/{maxDreamyFigure_F}";
     }
 
     protected abstract void StartSetting();

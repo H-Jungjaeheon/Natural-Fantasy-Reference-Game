@@ -259,10 +259,14 @@ public class SlimeEnemy : BasicUnitScript
 
     protected override IEnumerator Resting()
     {
-        nowState = NowState.Resting;
-
         int nowRestingCount = 0;
         WaitForSeconds RestWaitTime = new WaitForSeconds(restWaitTime);
+
+        nowState = NowState.Resting;
+
+        battleUIObjScript.ChangeRestAnimObjScale();
+        battleUIAnimator.SetBool("NowResting", true);
+
         while (2 > nowRestingCount)
         {
             if (Energy_F >= MaxEnergy_F)
@@ -275,6 +279,7 @@ public class SlimeEnemy : BasicUnitScript
             nowRestingCount += 1;
         }
 
+        battleUIAnimator.SetBool("NowResting", false);
         nowActionCoolTime = maxActionCoolTime;
         WaitingTimeStart();
     }
@@ -304,7 +309,13 @@ public class SlimeEnemy : BasicUnitScript
     protected override IEnumerator Fainting()
     {
         nowState = NowState.Fainting;
-        yield return new WaitForSeconds(5); 
+
+        battleUIObjScript.ChangeFaintAnimObjScale();
+        battleUIAnimator.SetBool("NowFainting", true);
+
+        yield return new WaitForSeconds(5);
+
+        battleUIAnimator.SetBool("NowFainting", false);
         Energy_F = MaxEnergy_F; 
         WaitingTimeStart();
     }
