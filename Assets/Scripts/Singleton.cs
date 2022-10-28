@@ -5,7 +5,7 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     [SerializeField]
     protected bool isDontDestroyObj;
 
-    protected static T instance = null;
+    private static T instance = null;
     public static T Instance
     {
         get

@@ -201,9 +201,8 @@ public class Player : BasicUnitScript
         }
     }
 
-    protected override void UnitBarsUpdate()
+    private void UnitBarsUpdate() //원래는 업데이트에 있었음
     {
-        base.UnitBarsUpdate();
         unitShieldHpBars.fillAmount = ShieldHp_F / maxShieldHp_F;
     }
 
@@ -832,14 +831,6 @@ public class Player : BasicUnitScript
         restWaitTime = isDeBuffing ? restWaitTime + reducedRestWaitTime : restWaitTime - reducedRestWaitTime;
         Damage_I = isDeBuffing ? Damage_I / 1.5f : Damage_I * 1.5f;
         Speed_F = isDeBuffing ? Speed_F / 1.25f : Speed_F * 1.25f;
-    }
-
-    protected override void Faint()
-    {
-        if (Energy_F <= 0 && (nowState == NowState.Standingby || nowState == NowState.Defensing))
-        {
-            StartCoroutine(Fainting());
-        }
     }
 
     protected override IEnumerator Fainting()

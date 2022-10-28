@@ -59,7 +59,7 @@ public class GameManager : Singleton<GameManager>
 
     private void Awake()
     {
-        if (isDontDestroyObj && instance == null)
+        if (isDontDestroyObj && Instance == null)
         {
             //instance = this;
             DontDestroyOnLoad(gameObject);

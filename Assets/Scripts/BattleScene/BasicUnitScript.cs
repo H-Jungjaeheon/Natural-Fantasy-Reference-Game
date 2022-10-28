@@ -104,7 +104,6 @@ public abstract class BasicUnitScript : MonoBehaviour
         get { return hp_F; }
         set
         {
-            hpText.text = $"{(Hp_F):N0}/{(MaxHp_F):N0}";
             if (value > lightHp_F)
             {
                 lightHp_F = Hp_F;
@@ -122,6 +121,8 @@ public abstract class BasicUnitScript : MonoBehaviour
             {
                 StartCoroutine(HpDiminishedProduction());
             }
+            hpText.text = $"{(Hp_F):N0}/{(MaxHp_F):N0}";
+            unitHpBars.fillAmount = Hp_F / MaxHp_F;
         }
     }
 
@@ -146,7 +147,15 @@ public abstract class BasicUnitScript : MonoBehaviour
         set
         {
             energy_F = (value <= 0) ? energy_F = 0 : energy_F = value;
+            
             energyText.text = $"{Energy_F}/{MaxEnergy_F}";
+            
+            unitEnergyBars.fillAmount = Energy_F / MaxEnergy_F;
+            
+            if (value <= 0 && (nowState == NowState.Standingby || nowState == NowState.Defensing))
+            {
+                StartCoroutine(Fainting());
+            }
         }
     }
 
@@ -173,6 +182,7 @@ public abstract class BasicUnitScript : MonoBehaviour
         {
             dreamyFigure_F = (value >= maxDreamyFigure_F) ? dreamyFigure_F = maxDreamyFigure_F : dreamyFigure_F = value;
             dreamyFigureText.text = $"{DreamyFigure_F}/{maxDreamyFigure_F}";
+            unitDreamyFigureBars.fillAmount = DreamyFigure_F / maxDreamyFigure_F;
         }
     }
 
@@ -275,8 +285,6 @@ public abstract class BasicUnitScript : MonoBehaviour
     protected virtual void Update()
     {
         UISetting();
-        UnitBarsUpdate();
-        Faint();
         Burning();
     }
 
@@ -289,20 +297,18 @@ public abstract class BasicUnitScript : MonoBehaviour
         maxGiveBurnDamageTime = 3;
         maxStackableOverlapTime = 10; //화상 효과 중첩 가능 제한시간 초기화
         maxBurnDamageLimitTime = 15; //화상 효과 지속시간 증가 초기화
+
         hpText.text = $"{(Hp_F):N0}/{(MaxHp_F):N0}";
         energyText.text = $"{Energy_F}/{MaxEnergy_F}";
         dreamyFigureText.text = $"{DreamyFigure_F}/{maxDreamyFigure_F}";
-    }
 
-    protected abstract void StartSetting();
-
-    protected virtual void UnitBarsUpdate()
-    {
         unitHpBars.fillAmount = Hp_F / MaxHp_F;
         unitEnergyBars.fillAmount = Energy_F / MaxEnergy_F;
         unitDreamyFigureBars.fillAmount = DreamyFigure_F / maxDreamyFigure_F;
         unitLightHpBars.fillAmount = lightHp_F / MaxHp_F;
     }
+
+    protected abstract void StartSetting();
 
     public virtual void Hit(float damage, bool isDefending)
     {
@@ -330,10 +336,12 @@ public abstract class BasicUnitScript : MonoBehaviour
         {
             lightHp_F -= Time.deltaTime * nowReductionSpeed;
             nowReductionSpeed += Time.deltaTime * 2;
+            unitLightHpBars.fillAmount = lightHp_F / MaxHp_F;
             yield return null;
         }
         lightHp_F = Hp_F;
         isHpDiminishedProduction = false;
+        unitLightHpBars.fillAmount = lightHp_F / MaxHp_F;
     }
 
     protected void ReleaseDefense()
@@ -360,8 +368,6 @@ public abstract class BasicUnitScript : MonoBehaviour
     protected abstract IEnumerator Dead();
 
     protected abstract IEnumerator PropertyPassiveAbilityStart();
-
-    protected abstract void Faint();
 
     protected abstract IEnumerator Fainting();
 

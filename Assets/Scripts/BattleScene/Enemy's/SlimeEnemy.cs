@@ -298,14 +298,6 @@ public class SlimeEnemy : BasicUnitScript
         yield return null;
     }
 
-    protected override void Faint()
-    {
-        if (Energy_F <= 0 && (nowState == NowState.Standingby || nowState == NowState.Defensing))
-        {
-            StartCoroutine(Fainting());
-        }
-    }
-
     protected override IEnumerator Fainting()
     {
         nowState = NowState.Fainting;
