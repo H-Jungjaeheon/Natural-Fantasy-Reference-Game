@@ -64,18 +64,21 @@ public class SlimeEnemy : BasicUnitScript
                 {
                     StartCoroutine(Resting());
                 }
-                behaviorProbability = Random.Range(0, 100);
-                if (behaviorProbability <= 29)
-                {
-                    StartCoroutine(GoToAttack(false));
-                }
-                else if (behaviorProbability <= 59)
-                {
-                    StartCoroutine(GoToAttack(true));
-                }
                 else
                 {
-                    StartCoroutine(ShootBullet());
+                    behaviorProbability = Random.Range(0, 100);
+                    if (behaviorProbability <= 29)
+                    {
+                        StartCoroutine(GoToAttack(false));
+                    }
+                    else if (behaviorProbability <= 59)
+                    {
+                        StartCoroutine(GoToAttack(true));
+                    }
+                    else
+                    {
+                        StartCoroutine(ShootBullet());
+                    }
                 }
             }
             else if (behaviorProbability <= 69)
@@ -227,6 +230,7 @@ public class SlimeEnemy : BasicUnitScript
     {
         Vector2 spawnSlimeBulletPosition;
 
+        nowState = NowState.Attacking;
         Energy_F -= 2;
 
         yield return new WaitForSeconds(1.5f);
@@ -239,7 +243,15 @@ public class SlimeEnemy : BasicUnitScript
         slimeBullet.transform.position = spawnSlimeBulletPosition;
 
         yield return null;
-        WaitingTimeStart();
+
+        if (Energy_F > 0)
+        {
+            WaitingTimeStart();
+        }
+        else
+        {
+            nowState = NowState.Standingby;
+        }
     }
 
     private void WaitingTimeStart() //공격 후의 세팅 (일부 공통) 
@@ -256,14 +268,14 @@ public class SlimeEnemy : BasicUnitScript
         }
     }
 
-    protected override IEnumerator Resting()
+    protected override IEnumerator Resting()/////////////////////////////////////////////
     {
         int nowRestingCount = 0;
         WaitForSeconds RestWaitTime = new WaitForSeconds(restWaitTime);
 
         nowState = NowState.Resting;
 
-        battleUIObjScript.ChangeRestAnimObjScale();
+        battleUIObjScript.BattleUIObjSetActiveTrue(ChangeBattleUIAnim.Rest);
         battleUIAnimator.SetBool("NowResting", true);
 
         while (2 > nowRestingCount)
@@ -279,6 +291,8 @@ public class SlimeEnemy : BasicUnitScript
         }
 
         battleUIAnimator.SetBool("NowResting", false);
+        battleUIObjScript.BattleUIObjSetActiveFalse();
+
         nowActionCoolTime = maxActionCoolTime;
         WaitingTimeStart();
     }
@@ -299,14 +313,25 @@ public class SlimeEnemy : BasicUnitScript
 
     protected override IEnumerator Fainting()
     {
+        while (true)
+        {
+            if (nowState == NowState.Standingby || nowState == NowState.Defensing)
+            {
+                break;
+            }
+            yield return null;
+        }
+
         nowState = NowState.Fainting;
 
-        battleUIObjScript.ChangeFaintAnimObjScale();
+        battleUIObjScript.BattleUIObjSetActiveTrue(ChangeBattleUIAnim.Faint);
         battleUIAnimator.SetBool("NowFainting", true);
 
         yield return new WaitForSeconds(5);
 
         battleUIAnimator.SetBool("NowFainting", false);
+        battleUIObjScript.BattleUIObjSetActiveFalse();
+
         Energy_F = MaxEnergy_F; 
         WaitingTimeStart();
     }

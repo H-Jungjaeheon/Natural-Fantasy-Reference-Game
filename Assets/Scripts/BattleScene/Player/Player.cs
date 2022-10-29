@@ -536,7 +536,7 @@ public class Player : BasicUnitScript
         int nowRestingCount = 0;
         WaitForSeconds RestWaitTime = new WaitForSeconds(restWaitTime);
 
-        battleUIObjScript.ChangeRestAnimObjScale();
+        battleUIObjScript.BattleUIObjSetActiveTrue(ChangeBattleUIAnim.Rest);
         battleUIAnimator.SetBool("NowResting", true);
 
         while (3 > nowRestingCount)
@@ -551,7 +551,9 @@ public class Player : BasicUnitScript
             nowRestingCount += 1;
         }
 
+        battleUIObjScript.BattleUIObjSetActiveFalse();
         battleUIAnimator.SetBool("NowResting", false);
+
         nowState = NowState.Standingby;
         if (isChangePropertyReady == false)
         {
@@ -689,15 +691,26 @@ public class Player : BasicUnitScript
         nowAttackCount_I = 1;
 
         playerAnimator.SetBool("Moving", false);
-        WaitingTimeStart();
+
+        if (Energy_F > 0)
+        {
+            WaitingTimeStart();
+        }
+        else
+        {
+            nowState = NowState.Standingby;
+        }
     }
 
     public void SkillUse(int nowUseSkillIndex, int nowUseSkillNeedEnergy)
     {
         if (nowState == NowState.Standingby && Energy_F >= nowUseSkillNeedEnergy)
         {
+            nowState = NowState.Attacking;
             Energy_F -= nowUseSkillNeedEnergy;
+
             bBM.ActionButtonsSetActive(false, false, false);
+
             switch (nowUseSkillIndex)
             {
                 case 1:
@@ -713,8 +726,6 @@ public class Player : BasicUnitScript
         float nowDelayTime = 0;
         float maxDelayTime = 0.6f;
         bool isFailEnchant = true;
-
-        nowState = NowState.Attacking;
 
         while (nowDelayTime < maxDelayTime)
         {
@@ -834,6 +845,17 @@ public class Player : BasicUnitScript
 
     protected override IEnumerator Fainting()
     {
+        while (true)
+        {
+            if (nowState == NowState.Standingby || nowState == NowState.Defensing)
+            {
+                break;
+            }
+            yield return null;
+        }
+
+        nowState = NowState.Fainting;
+
         if (nowDefensivePosition == DefensePos.Left || nowDefensivePosition == DefensePos.Right)
         {
             playerAnimator.SetBool("Defence(Left&Right)", false);
@@ -843,15 +865,18 @@ public class Player : BasicUnitScript
             playerAnimator.SetBool("Defence(Top)", false);
         }
 
-        battleUIObjScript.ChangeFaintAnimObjScale();
         playerAnimator.SetBool("Stuning", true);
-        battleUIAnimator.SetBool("NowFainting", true);
-
-        nowState = NowState.Fainting;
         nowDefensivePosition = DefensePos.None;
         bBM.ActionButtonsSetActive(false, false, false);
+
+        yield return new WaitForSeconds(0.2f);
+
+        battleUIObjScript.BattleUIObjSetActiveTrue(ChangeBattleUIAnim.Faint);
+        battleUIAnimator.SetBool("NowFainting", true);
+
         yield return new WaitForSeconds(5); //나중에 매개변수로 레벨에 따라서 기절 시간 넣기
 
+        battleUIObjScript.BattleUIObjSetActiveFalse();
         playerAnimator.SetBool("Stuning", false);
         battleUIAnimator.SetBool("NowFainting", false);
 
@@ -870,6 +895,11 @@ public class Player : BasicUnitScript
     private IEnumerator PropertyPassiveAbilityStart()
     {
         NowChangePropertyCoolTime = 0;
+
+        while (nowState != NowState.ChangingProperties)
+        {
+            yield return null;
+        }
 
         switch (nowProperty)
         {
@@ -911,6 +941,7 @@ public class Player : BasicUnitScript
                     yield return null;
                 }
 
+
                 if (ShieldHp_F > 0)
                 {
                     TheHolySpiritPropertyBuff(false);
@@ -920,8 +951,10 @@ public class Player : BasicUnitScript
                     TheHolySpiritPropertyDeBuff(false);
                 }
 
-                hpText.color = basicHpTextColor;
                 shieldHp_F = 0;
+                unitShieldHpBars.fillAmount = ShieldHp_F / maxShieldHp_F;
+                hpText.color = basicHpTextColor;
+                hpText.text = $"{(Hp_F):N0}/{(MaxHp_F):N0}";
                 break;
         }
     }

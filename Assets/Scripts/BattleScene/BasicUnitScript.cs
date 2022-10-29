@@ -76,7 +76,7 @@ public abstract class BasicUnitScript : MonoBehaviour
     [HideInInspector]
     public DefensePos nowDefensivePosition; //현재 방어 위치
 
-    //[HideInInspector]
+    [HideInInspector]
     public NowState nowState; //현재 행동
 
     protected bool isWaiting; //대기중
@@ -98,30 +98,31 @@ public abstract class BasicUnitScript : MonoBehaviour
     [Header("스탯 관련 변수")]
     [Tooltip("체력")]
     [SerializeField]
-    protected float hp_F;
+    private float hp_F;
     public float Hp_F
     {
         get { return hp_F; }
         set
         {
-            if (value > MaxHp_F)
+            if (value >= MaxHp_F)
             {
                 hp_F = MaxHp_F;
             }
-
-            if (value > lightHp_F)
-            {
-                lightHp_F = Hp_F;
-            }
-
-            if (value <= 0)
-            {
-                hp_F = 0;
-                StartCoroutine(Dead());
-            }
             else
             {
-                hp_F = value;
+                if (value > lightHp_F)
+                {
+                    lightHp_F = Hp_F;
+                }
+                if (value <= 0)
+                {
+                    hp_F = 0;
+                    StartCoroutine(Dead());
+                }
+                else
+                {
+                    hp_F = value;
+                }
             }
 
             if (isHpDiminishedProduction == false)
@@ -154,13 +155,13 @@ public abstract class BasicUnitScript : MonoBehaviour
         get { return energy_F; }
         set
         {
-            energy_F = (value <= 0) ? energy_F = 0 : energy_F = value;
+            energy_F = (value < 0) ? energy_F = 0 : energy_F = value;
             
             energyText.text = $"{Energy_F}/{MaxEnergy_F}";
             
             unitEnergyBars.fillAmount = Energy_F / MaxEnergy_F;
             
-            if (value <= 0 && (nowState == NowState.Standingby || nowState == NowState.Defensing))
+            if (value <= 0)
             {
                 StartCoroutine(Fainting());
             }

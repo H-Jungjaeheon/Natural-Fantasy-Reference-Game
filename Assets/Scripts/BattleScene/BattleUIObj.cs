@@ -2,23 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum ChangeBattleUIAnim
+{
+    Rest,
+    Faint
+}
+
 public class BattleUIObj : MonoBehaviour
 {
     [SerializeField]
-    [Tooltip("기절 UI 애니메이션일 때 바뀔 오브젝트 크기")]
-    private Vector3 faintAnimChangeScale;
+    [Tooltip("현재 상태 표기 시 변경할 UI 크기")]
+    private Vector2[] changeObjScale;
 
     [SerializeField]
-    [Tooltip("휴식 UI 애니메이션일 때 바뀔 오브젝트 크기")]
-    private Vector3 restAnimChangeScale;
+    [Tooltip("현재 상태 표기 시 변경할 UI Y축 값")]
+    private float[] changeYPos;
 
-    public void ChangeFaintAnimObjScale()
+    private Vector2 changePosToSetActive;
+
+    public void BattleUIObjSetActiveTrue(ChangeBattleUIAnim nowChangeBattleUIAnim)
     {
-        transform.localScale = faintAnimChangeScale;
+        changePosToSetActive.x = transform.position.x;
+        changePosToSetActive.y = changeYPos[(int)nowChangeBattleUIAnim];
+        transform.position = changePosToSetActive;
+        gameObject.SetActive(true);
+        transform.localScale = changeObjScale[(int)nowChangeBattleUIAnim];
     }
 
-    public void ChangeRestAnimObjScale()
-    {
-        transform.localScale = restAnimChangeScale;
-    }
+    public void BattleUIObjSetActiveFalse() => gameObject.SetActive(false);
 }

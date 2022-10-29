@@ -3510,7 +3510,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!95 &838858990
 Animator:
   serializedVersion: 3
@@ -3590,7 +3590,7 @@ Transform:
   m_GameObject: {fileID: 838858989}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 2, z: 0}
-  m_LocalScale: {x: 0.8, y: 0.7, z: 0.5}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 0.5}
   m_Children: []
   m_Father: {fileID: 1159378198}
   m_RootOrder: 0
@@ -3607,8 +3607,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 290d1dc8a5e15f943a115e952fa7a850, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  faintAnimChangeScale: {x: 0.8, y: 0.8, z: 0}
-  restAnimChangeScale: {x: 0.5, y: 0.5, z: 0}
+  changeObjScale:
+  - {x: 0.7, y: 0.7}
+  - {x: 1.5, y: 1.5}
+  changeYPos:
+  - 3.5
+  - 2.5
 --- !u!1 &844414995
 GameObject:
   m_ObjectHideFlags: 0
@@ -7034,8 +7038,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 2fd95d5be0356814f835f3e30fc4f631, type: 3}
   - {fileID: 21300000, guid: 04dadd18cab83314fb8fe6ed3adbc3e6, type: 3}
   playerAnimator: {fileID: 1717870246}
-  basicHpTextColor: {r: 0.69803923, g: 0.101960786, b: 0.101960786, a: 0}
-  shieldHpTextColor: {r: 0.8980392, g: 0.9019608, b: 0.69803923, a: 0}
+  basicHpTextColor: {r: 0.69803923, g: 0.101960786, b: 0.101960786, a: 1}
+  shieldHpTextColor: {r: 0.8980392, g: 0.9019608, b: 0.69803923, a: 1}
 --- !u!95 &1717870246
 Animator:
   serializedVersion: 3
@@ -7611,7 +7615,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!95 &1934224818
 Animator:
   serializedVersion: 3
@@ -7708,8 +7712,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 290d1dc8a5e15f943a115e952fa7a850, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  faintAnimChangeScale: {x: 0.8, y: 0.8, z: 0}
-  restAnimChangeScale: {x: 0.5, y: 0.5, z: 0}
+  changeObjScale:
+  - {x: 0.5, y: 0.5}
+  - {x: 0.8, y: 0.8}
+  changeYPos:
+  - 2.5
+  - 1.45
 --- !u!1 &1976765156
 GameObject:
   m_ObjectHideFlags: 0
