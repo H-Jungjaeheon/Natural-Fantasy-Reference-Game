@@ -134,7 +134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9222ec899b8f8e14c80af6be2cc75e86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 1
+  damage: 4
   speed: 17
   isDeflectAble: 1
   nowBulletState: 0

@@ -2946,7 +2946,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 71, y: 2}
+  m_AnchoredPosition: {x: 72, y: 0}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &777016588
@@ -2971,7 +2971,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 49ae161148ea45746a8053e158ced090, type: 3}
-    m_FontSize: 61
+    m_FontSize: 36
     m_FontStyle: 1
     m_BestFit: 1
     m_MinSize: 0
@@ -2982,7 +2982,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: SKILL
+  m_Text: "\uC2A4\uD0AC \uC120\uD0DD"
 --- !u!222 &777016589
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5356,7 +5356,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 75, y: 2}
+  m_AnchoredPosition: {x: 72, y: 0}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1201917056
@@ -5381,7 +5381,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 49ae161148ea45746a8053e158ced090, type: 3}
-    m_FontSize: 64
+    m_FontSize: 42
     m_FontStyle: 1
     m_BestFit: 1
     m_MinSize: 0
@@ -5392,7 +5392,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: REST
+  m_Text: "\uD734\uC2DD"
 --- !u!222 &1201917057
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5435,7 +5435,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 80, y: -8}
+  m_AnchoredPosition: {x: 79, y: -3.5}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1208919463
@@ -5460,7 +5460,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 49ae161148ea45746a8053e158ced090, type: 3}
-    m_FontSize: 25
+    m_FontSize: 36
     m_FontStyle: 1
     m_BestFit: 1
     m_MinSize: 1
@@ -5471,7 +5471,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: PROPERTY CHANGE
+  m_Text: "\uC18D\uC131 \uBCC0\uACBD"
 --- !u!222 &1208919464
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6258,7 +6258,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 72, y: 2}
+  m_AnchoredPosition: {x: 72, y: 0}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1463904008
@@ -6283,7 +6283,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 49ae161148ea45746a8053e158ced090, type: 3}
-    m_FontSize: 56
+    m_FontSize: 36
     m_FontStyle: 1
     m_BestFit: 1
     m_MinSize: 0
@@ -6294,7 +6294,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: ATTACK
+  m_Text: "\uAE30\uBCF8 \uACF5\uACA9"
 --- !u!222 &1463904009
 CanvasRenderer:
   m_ObjectHideFlags: 0

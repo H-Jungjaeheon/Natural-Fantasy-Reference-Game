@@ -51,7 +51,7 @@ public class SlimeEnemy : BasicUnitScript
         // StartCoroutine(GoToAttack(true)); - 기본 근접 공격
         // StartCoroutine(GoToAttack(false)); - 방어 불가 스킬 근접 공격
         // StartCoroutine(ShootBullet()); - 원거리 총알 발사 공격
-        //
+        // StartCoroutine(HowitzerAttack()); - 곡사포 공격
         //
 
         if (nowState == NowState.Standingby)
@@ -242,7 +242,32 @@ public class SlimeEnemy : BasicUnitScript
 
         slimeBullet.transform.position = spawnSlimeBulletPosition;
 
-        yield return null;
+        if (Energy_F > 0)
+        {
+            WaitingTimeStart();
+        }
+        else
+        {
+            nowState = NowState.Standingby;
+        }
+    }
+
+    IEnumerator HowitzerAttack()
+    {
+        Vector2 spawnHowitzerBulletPosition;
+        WaitForSeconds launchDelay = new WaitForSeconds(0.7f);
+        var howitzerBullet = ObjectPool.Instance.GetObject((int)PoolObjKind.SlimeEnemyBullet);
+
+        nowState = NowState.Attacking;
+
+        for (int nowLaunchCount = 0; nowLaunchCount < 3; nowLaunchCount++)
+        {
+            spawnHowitzerBulletPosition.x = transform.position.x;
+            spawnHowitzerBulletPosition.y = howitzerBullet.transform.position.y;
+            howitzerBullet.transform.position = spawnHowitzerBulletPosition;
+
+            yield return launchDelay;
+        }
 
         if (Energy_F > 0)
         {
