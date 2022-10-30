@@ -30,14 +30,11 @@ public class EnemysHowitzerBullet : MonoBehaviour
 
     private WaitForSeconds OrbitalIndicationDelay;
 
-    void Start()
+    private IEnumerator bulletDropCoroutine;
+
+    void Awake()
     {
         StartSetting();
-    }
-
-    void Update()
-    {
-        BulletMove();
     }
 
     private void OnEnable()
@@ -48,12 +45,8 @@ public class EnemysHowitzerBullet : MonoBehaviour
     private void StartSetting()
     {
         moveSpeed = new Vector2(0, speed);
+        bulletDropCoroutine = BulletDrop();
         OrbitalIndicationDelay = new WaitForSeconds(2);
-    }
-
-    private void BulletMove()
-    {
-        transform.position -= (Vector3)(moveSpeed * Time.deltaTime);
     }
 
     IEnumerator OrbitalIndication()
@@ -66,16 +59,27 @@ public class EnemysHowitzerBullet : MonoBehaviour
         yield return OrbitalIndicationDelay;
         orbitalIndicationObj.SetActive(false);
 
-
-        yield return null;
+        StartCoroutine(BulletDrop());
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
+    IEnumerator BulletDrop()
+    {
+        while (true)
+        {
+            transform.position -= (Vector3)(moveSpeed * Time.deltaTime);
+            yield return null;
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         BasicUnitScript hitObjsUnitScript = collision.GetComponent<BasicUnitScript>();
+
+        StopCoroutine(bulletDropCoroutine);
+
         if (collision.CompareTag("Player"))
         {
-            if (hitObjsUnitScript.nowDefensivePosition == DefensePos.Right)
+            if (hitObjsUnitScript.nowDefensivePosition == DefensePos.Up)
             {
                 CamShake.CamShakeMod(true, 1.5f);
                 hitObjsUnitScript.Hit(damage, true);
@@ -85,16 +89,12 @@ public class EnemysHowitzerBullet : MonoBehaviour
                 CamShake.CamShakeMod(false, 2f);
                 hitObjsUnitScript.Hit(damage, false); //대각선
             }
+            //원형으로 터지는 애니메이션 실행 후 풀로 보내기 (코루틴)
             ReturnToObjPool();
         }
-        else if (collision.CompareTag("Enemy"))
+        else if (collision.CompareTag("Floor"))
         {
-            CamShake.CamShakeMod(false, 2f); //대각선
-            hitObjsUnitScript.Hit(damage, false);
-            ReturnToObjPool();
-        }
-        else if (collision.CompareTag("ObjDestroy"))
-        {
+            //바닥에 철퍽 하는 애니메이션 실행 후 풀로 보내기 (코루틴)
             ReturnToObjPool();
         }
     }

@@ -31,7 +31,7 @@ public class EnemysBullet : MonoBehaviour
 
     private Vector3 moveSpeed;
 
-    void Start()
+    void Awake()
     {
         moveSpeed = new Vector3(speed, 0, 0);
     }

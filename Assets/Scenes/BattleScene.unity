@@ -547,7 +547,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -10
   m_Sprite: {fileID: 21300000, guid: 39a92fe49915a784aab91eac5c9a0b35, type: 3}
   m_Color: {r: 0.4811321, g: 0.3290762, b: 0.3290762, a: 1}
   m_FlipX: 0
@@ -567,8 +567,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 153970710}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 8, z: 0}
-  m_LocalScale: {x: 6, y: 6, z: 1}
+  m_LocalPosition: {x: 0, y: 6.5, z: 0}
+  m_LocalScale: {x: 5.8, y: 5, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 11
@@ -2838,7 +2838,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
   m_Color: {r: 0.33962262, g: 0.33962262, b: 0.33962262, a: 1}
   m_FlipX: 0
@@ -3140,7 +3140,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
   m_Color: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
   m_FlipX: 0
@@ -4192,6 +4192,8 @@ MonoBehaviour:
   - {fileID: 416800877848305474, guid: 85a20b6e84648e44a8811b52283438a6, type: 3}
   - {fileID: 6698261192308821480, guid: 07c5f112eeaa2d64980b6392c9cd7383, type: 3}
   - {fileID: 7600358472687557744, guid: 6fb09c3008d354545b947436931e039b, type: 3}
+  - {fileID: 6404968251905402416, guid: 90a8a7d6b1222f04e8ed98c95cd5d90c, type: 3}
+  - {fileID: 7564255012160748176, guid: 6e4507f2484a780489adf17e86d8cccd, type: 3}
 --- !u!4 &951784404
 Transform:
   m_ObjectHideFlags: 0
@@ -5192,7 +5194,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1159378193}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9, y: 1.1, z: 0}
+  m_LocalPosition: {x: 9.8, y: 1.1, z: 0}
   m_LocalScale: {x: 1.55, y: 1.55, z: 1}
   m_Children:
   - {fileID: 838858992}
@@ -5245,8 +5247,9 @@ MonoBehaviour:
   attackRangeObjComponent: {fileID: 541266945}
   battleUIObjScript: {fileID: 838858993}
   battleUIAnimator: {fileID: 838858990}
-  speedVectorWithPattern: {x: 0, y: 0}
-  isPhysicalAttacking: 0
+  spriteRenderer: {fileID: 1159378197}
+  hitColor: {r: 1, g: 0, b: 0, a: 1}
+  returnBasicColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1198872405
 GameObject:
   m_ObjectHideFlags: 0
@@ -7026,6 +7029,9 @@ MonoBehaviour:
   attackRangeObjComponent: {fileID: 693950549}
   battleUIObjScript: {fileID: 1934224821}
   battleUIAnimator: {fileID: 1934224818}
+  spriteRenderer: {fileID: 1717870241}
+  hitColor: {r: 1, g: 0, b: 0, a: 1}
+  returnBasicColor: {r: 1, g: 1, b: 1, a: 1}
   unitShieldHpBars: {fileID: 1902801556}
   nowProperty: 0
   isSpawnNatureBead: 0

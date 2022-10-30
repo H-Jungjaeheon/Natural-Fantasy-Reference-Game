@@ -6,13 +6,15 @@ public enum PoolObjKind
 {
     PlayerSwordAura,
     PlayerHpRecoveryBead,
-    SlimeEnemyBullet
+    SlimeEnemyBullet,
+    SlimeEnemyHowitzerBullet,
+    SlimeEnemyLaser
 }
 
 public class ObjectPool : Singleton<ObjectPool>
 {
     [SerializeField]
-    private GameObject[] usePrefabObjs;//
+    private GameObject[] usePrefabObjs;
 
     [SerializeField]
     private Dictionary<int, Queue<GameObject>> objPools = new Dictionary<int, Queue<GameObject>>();

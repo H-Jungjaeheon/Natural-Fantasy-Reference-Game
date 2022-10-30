@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class SlimeEnemy : BasicUnitScript
 {
-    [SerializeField]
-    [Tooltip("이동이 필요한 패턴 사용 시 사용할 속도 벡터")]
-    private Vector2 speedVectorWithPattern = new Vector2(0, 0);
+    private Vector2 speedVectorWithPattern = new Vector2(0, 0); //이동이 필요한 패턴 사용 시 사용할 속도 벡터
 
-    [SerializeField]
-    [Tooltip("특정 패턴 사용 시 몸체 충돌 데미지 판정 판별 변수")]
-    private bool isPhysicalAttacking;
+    private bool isPhysicalAttacking; //특정 패턴 사용 시 몸체 충돌 데미지 판정 판별 변수
+
+    private int restLimitTurn;
+
+    private const int maxRestLimitTurn = 3;
 
     protected override void StartSetting()
     {
@@ -47,52 +47,55 @@ public class SlimeEnemy : BasicUnitScript
 
     public void RandBehaviorStart()
     {
-        // StartCoroutine(Resting()); - 휴식
-        // StartCoroutine(GoToAttack(true)); - 기본 근접 공격
-        // StartCoroutine(GoToAttack(false)); - 방어 불가 스킬 근접 공격
-        // StartCoroutine(ShootBullet()); - 원거리 총알 발사 공격
-        // StartCoroutine(HowitzerAttack()); - 곡사포 공격
-        //
+        // StartCoroutine(Resting()); //- 휴식
+        // StartCoroutine(GoToAttack(true)); //- 기본 근접 공격
+        // StartCoroutine(GoToAttack(false)); //- 방어 불가 스킬 근접 공격
+        // StartCoroutine(ShootBullet()); //- 원거리 총알 발사 공격
+        // StartCoroutine(HowitzerAttack()); //- 3연 곡사포 공격
+        // StartCoroutine(LaserAttack()); //- 레이저 발사 공격
 
         if (nowState == NowState.Standingby)
         {
-            int behaviorProbability = Random.Range(0, 100);
+            int behaviorProbability = Random.Range(1, 101);
 
-            if (behaviorProbability <= 39)
+            if (behaviorProbability <= 20)
             {
-                if (Energy_F <= MaxEnergy_F / 3)
+                if (Energy_F <= MaxEnergy_F / 3 && restLimitTurn >= maxRestLimitTurn)
                 {
+                    restLimitTurn = 0;
                     StartCoroutine(Resting());
                 }
                 else
                 {
-                    behaviorProbability = Random.Range(0, 100);
-                    if (behaviorProbability <= 29)
+                    behaviorProbability = Random.Range(1, 101);
+                    if (behaviorProbability <= 20)
                     {
                         StartCoroutine(GoToAttack(false));
                     }
-                    else if (behaviorProbability <= 59)
+                    else if (behaviorProbability <= 60)
                     {
-                        StartCoroutine(GoToAttack(true));
+                        StartCoroutine(HowitzerAttack());
                     }
-                    else
+                    else if (behaviorProbability <= 100)
                     {
-                        StartCoroutine(ShootBullet());
+                        StartCoroutine(LaserAttack());
                     }
                 }
             }
-            else if (behaviorProbability <= 69)
+            else if (behaviorProbability <= 55)
             {
                 StartCoroutine(GoToAttack(true));
             }
-            else if (behaviorProbability <= 89)
+            else if (behaviorProbability <= 80)
             {
                 StartCoroutine(GoToAttack(false));
             }
-            else
+            else if(behaviorProbability <= 100)
             {
                 StartCoroutine(ShootBullet());
             }
+
+            restLimitTurn++;
         }
     }
 
@@ -254,17 +257,60 @@ public class SlimeEnemy : BasicUnitScript
 
     IEnumerator HowitzerAttack()
     {
-        Vector2 spawnHowitzerBulletPosition;
         WaitForSeconds launchDelay = new WaitForSeconds(0.7f);
-        var howitzerBullet = ObjectPool.Instance.GetObject((int)PoolObjKind.SlimeEnemyBullet);
 
         nowState = NowState.Attacking;
+        
+        Energy_F -= 3;
+
+        //발사 애니메이션 실행
+        yield return new WaitForSeconds(3);
+        //Idle 애니메이션 전환
 
         for (int nowLaunchCount = 0; nowLaunchCount < 3; nowLaunchCount++)
         {
-            spawnHowitzerBulletPosition.x = transform.position.x;
-            spawnHowitzerBulletPosition.y = howitzerBullet.transform.position.y;
-            howitzerBullet.transform.position = spawnHowitzerBulletPosition;
+            ObjectPool.Instance.GetObject((int)PoolObjKind.SlimeEnemyHowitzerBullet);
+            yield return launchDelay;
+        }
+
+        if (Energy_F > 0)
+        {
+            WaitingTimeStart();
+        }
+        else
+        {
+            nowState = NowState.Standingby;
+        }
+    }
+
+    IEnumerator LaserAttack()
+    {
+        WaitForSeconds launchDelay = new WaitForSeconds(1f);
+        bool isLaunchUp = false;
+        int randLaunch = Random.Range(0, 100);
+
+        nowState = NowState.Attacking;
+        
+        Energy_F -= 5;
+
+        if (randLaunch > 49)
+        {
+            isLaunchUp = true;
+        }
+
+        //발사 준비 애니메이션 실행
+        yield return new WaitForSeconds(1.5f);
+        //발사 애니메이션 실행
+
+        for (int nowLaunchCount = 0; nowLaunchCount < 2; nowLaunchCount++)
+        {
+            GameObject nowLaunchLaserObj = ObjectPool.Instance.GetObject((int)PoolObjKind.SlimeEnemyLaser);
+            EnemysLaser nowLaunchEnemyLaser = nowLaunchLaserObj.GetComponent<EnemysLaser>();
+
+            nowLaunchEnemyLaser.launchAngle = (isLaunchUp) ? -80 : -70;
+            nowLaunchEnemyLaser.onEnablePos.x = (isLaunchUp) ? -7.5f : -6.7f;
+            nowLaunchEnemyLaser.onEnablePos.y = (isLaunchUp) ? 3 : 0;
+            isLaunchUp = (isLaunchUp) ? false : true;
 
             yield return launchDelay;
         }
@@ -352,7 +398,7 @@ public class SlimeEnemy : BasicUnitScript
         battleUIObjScript.BattleUIObjSetActiveTrue(ChangeBattleUIAnim.Faint);
         battleUIAnimator.SetBool("NowFainting", true);
 
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(8);
 
         battleUIAnimator.SetBool("NowFainting", false);
         battleUIObjScript.BattleUIObjSetActiveFalse();

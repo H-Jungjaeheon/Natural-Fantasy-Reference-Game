@@ -70,7 +70,6 @@ public class Player : BasicUnitScript
             if (value >= maxChangePropertyCoolTime)
             {
                 StartCoroutine(ChangeProperty(false));
-                StartCoroutine(PropertyPassiveAbilityStart());
             }
             else
             {
@@ -217,8 +216,10 @@ public class Player : BasicUnitScript
             }
             else
             {
+                spriteRenderer.color = hitColor;
                 Hp_F -= nowProperty == NowPlayerProperty.ForceProperty ? damage * 2f : damage;
                 DreamyFigure_F += 2;
+                StartCoroutine(ChangeToBasicColor());
             }
         }
     }
@@ -274,7 +275,6 @@ public class Player : BasicUnitScript
         NowChangePropertyCoolTime = 0;
         isChangePropertyReady = true;
         nowActionCoolTime = 0;
-
         while (true)
         {
             if (nowState == NowState.Standingby && angelPropertyBuffing == false)
@@ -313,6 +313,7 @@ public class Player : BasicUnitScript
                 case NowPlayerProperty.AngelProperty:
                     break;
             }
+            StartCoroutine(PropertyPassiveAbilityStart());
             nextPropertyIndex = ((NowPlayerProperty)nextPropertyIndex == NowPlayerProperty.AngelProperty) ? (int)NowPlayerProperty.NatureProperty : nextPropertyIndex + 1;
         }
         StartCoroutine(EndingPropertyChanges());

@@ -157,7 +157,7 @@ public abstract class BasicUnitScript : MonoBehaviour
         {
             energy_F = (value < 0) ? energy_F = 0 : energy_F = value;
             
-            energyText.text = $"{Energy_F}/{MaxEnergy_F}";
+            energyText.text = $"{(Energy_F):N0}/{(MaxEnergy_F):N0}";
             
             unitEnergyBars.fillAmount = Energy_F / MaxEnergy_F;
             
@@ -285,6 +285,18 @@ public abstract class BasicUnitScript : MonoBehaviour
     [Tooltip("현재 상태 표시해주는 UI 애니메이션")]
     protected Animator battleUIAnimator;
 
+    [SerializeField]
+    [Tooltip("자신의 스프라이트 렌더러")]
+    protected SpriteRenderer spriteRenderer;
+
+    [Tooltip("타격 시 잠깐동안 캐릭터가 바뀔 색")]
+    public Color hitColor;
+
+    [Tooltip("타격 색 변경 후 원래 색으로 되돌림")]
+    public Color returnBasicColor;
+
+    protected WaitForSeconds changeToBasicColorDelay;
+
     protected virtual void Awake()
     {
         StartSameSetting();
@@ -308,13 +320,15 @@ public abstract class BasicUnitScript : MonoBehaviour
         maxBurnDamageLimitTime = 15; //화상 효과 지속시간 증가 초기화
 
         hpText.text = $"{(Hp_F):N0}/{(MaxHp_F):N0}";
-        energyText.text = $"{Energy_F}/{MaxEnergy_F}";
+        energyText.text = $"{(Energy_F):N0}/{(MaxEnergy_F):N0}";
         dreamyFigureText.text = $"{DreamyFigure_F}/{maxDreamyFigure_F}";
 
         unitHpBars.fillAmount = Hp_F / MaxHp_F;
         unitEnergyBars.fillAmount = Energy_F / MaxEnergy_F;
         unitDreamyFigureBars.fillAmount = DreamyFigure_F / maxDreamyFigure_F;
         unitLightHpBars.fillAmount = lightHp_F / MaxHp_F;
+
+        changeToBasicColorDelay = new WaitForSeconds(0.1f);
     }
 
     protected abstract void StartSetting();
@@ -330,10 +344,18 @@ public abstract class BasicUnitScript : MonoBehaviour
             }
             else
             {
+                spriteRenderer.color = hitColor;
                 Hp_F -= damage;
                 DreamyFigure_F += 2;
+                StartCoroutine(ChangeToBasicColor());
             }
         }
+    }
+
+    protected IEnumerator ChangeToBasicColor()
+    {
+        yield return changeToBasicColorDelay;
+        spriteRenderer.color = returnBasicColor;
     }
 
     protected IEnumerator HpDiminishedProduction()
