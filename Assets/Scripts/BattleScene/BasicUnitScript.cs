@@ -51,9 +51,9 @@ public abstract class BasicUnitScript : MonoBehaviour
     [SerializeField]
     protected Image actionCoolTimeImage;
 
-    [Tooltip("쿨타임 바 Y축 위치 조절")]
+    [Tooltip("쿨타임 바 위치 조절")]
     [SerializeField]
-    protected float actionCoolTimeImageYPos_F;
+    protected Vector2 actionCoolTimeObjPlusPos;
 
     protected float nowActionCoolTime; //현재 쿨타임
 

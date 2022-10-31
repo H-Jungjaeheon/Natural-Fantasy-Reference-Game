@@ -33,6 +33,7 @@ public class SlimeEnemy : BasicUnitScript
     {
         if (isWaiting)
         {
+            actionCoolTimeObj.transform.position = transform.position + (Vector3)actionCoolTimeObjPlusPos;
             actionCoolTimeImage.fillAmount = nowActionCoolTime / maxActionCoolTime;
             nowActionCoolTime += Time.deltaTime;
             if (nowActionCoolTime >= maxActionCoolTime)
@@ -42,7 +43,6 @@ public class SlimeEnemy : BasicUnitScript
                 RandBehaviorStart(); //랜덤 행동
             }
         }
-        nullActionCoolTimeImage.transform.position = Cam.WorldToScreenPoint(transform.position + new Vector3(0, actionCoolTimeImageYPos_F, 0));
     }
 
     public void RandBehaviorStart()

@@ -432,8 +432,9 @@ public class Player : BasicUnitScript
 
     protected override void UISetting() //대기시간 및 UI세팅 (일부 공통)
     {
-        if (isWaiting && (nowState == NowState.Standingby || nowState == NowState.Jumping || nowState == NowState.Defensing)) //isFainting == false && isWaiting && isDeflecting == false
+        if (isWaiting && (nowState == NowState.Standingby || nowState == NowState.Jumping || nowState == NowState.Defensing))
         {
+            actionCoolTimeObj.transform.position = transform.position + (Vector3)actionCoolTimeObjPlusPos;
             actionCoolTimeImage.fillAmount = nowActionCoolTime / maxActionCoolTime;
             nowActionCoolTime += Time.deltaTime;
             if (nowActionCoolTime >= maxActionCoolTime)
@@ -447,7 +448,6 @@ public class Player : BasicUnitScript
         {
             ActionCoolTimeBarSetActive(false);
         }
-        nullActionCoolTimeImage.transform.position = Cam.WorldToScreenPoint(transform.position + new Vector3(0, actionCoolTimeImageYPos_F, 0));
     }
 
     private void WaitingTimeStart() //공격 후의 세팅 (일부 공통, 한번만 실행) 
