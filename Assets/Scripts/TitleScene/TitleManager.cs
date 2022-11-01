@@ -4,8 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+public enum NowOptionState
+{
+    FirstPage
+}
+
 public class TitleManager : MonoBehaviour
 {
+    [Header("오프닝 / 연출 관련 모음")]
     [SerializeField]
     [Tooltip("오프닝 오브젝트")]
     private GameObject opObj;
@@ -25,7 +31,14 @@ public class TitleManager : MonoBehaviour
     [SerializeField]
     [Tooltip("색 초기화(투명 이미지)")]
     Color basicColor;
-                  
+
+    [Header("옵션 관련 모음")]
+    [SerializeField]
+    [Tooltip("옵션 오브젝트")]
+    private GameObject optionObj;
+
+    private NowOptionState nowOptionState;
+
     WaitForSeconds faidDelay = new WaitForSeconds(1);
 
     void Start()
@@ -33,7 +46,7 @@ public class TitleManager : MonoBehaviour
         StartCoroutine(StartOp());
     }
 
-    IEnumerator StartOp()
+    IEnumerator StartOp() //타이틀 씬 시작 시 띄우는 로고 오프닝
     {
         Color color = basicColor;
         float nowImageAlpha = 0;
@@ -67,7 +80,43 @@ public class TitleManager : MonoBehaviour
         opObj.SetActive(false);
     }
 
-    IEnumerator GoToMainFaidOut()
+
+    public void OpenOptionScreen() //옵션 버튼 클릭
+    {
+        nowOptionState = NowOptionState.FirstPage;
+        optionObj.SetActive(true);
+        StartCoroutine(PressEscInOptionScreen());
+    }
+
+    IEnumerator PressEscInOptionScreen() //옵션창에 있을 시 계속 실행됨
+    {
+        while (true)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                switch (nowOptionState)
+                {
+                    case NowOptionState.FirstPage:
+                        optionObj.SetActive(false);
+                        break;
+                }
+
+                if (nowOptionState == NowOptionState.FirstPage) //ESC키를 눌렀을 때 옵션의 첫번째 페이지면 반복 종료
+                {
+                    break;
+                }
+            }
+            yield return null;
+        }
+    }
+
+    public void GoToMainSceneAnim() //플레이 버튼 클릭
+    {
+        opObj.SetActive(true);
+        StartCoroutine(GoToMainFaidOut());
+    }
+
+    IEnumerator GoToMainFaidOut() //메인화면 전환시 페이드 아웃
     {
         Color color = blackColor;
         float nowImageAlpha = 0;
@@ -83,12 +132,6 @@ public class TitleManager : MonoBehaviour
         yield return faidDelay;
         
         SceneManager.LoadScene("Main");
-    }
-
-    public void GoToMainSceneAnim()
-    {
-        opObj.SetActive(true);
-        StartCoroutine(GoToMainFaidOut());
     }
 
     public void Quit()
