@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public enum DefensePos
 {
@@ -249,15 +250,15 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     [SerializeField]
     [Tooltip("체력 표시 텍스트")]
-    protected Text hpText;
+    protected TextMeshProUGUI hpText;
 
     [SerializeField]
     [Tooltip("기력 표시 텍스트")]
-    protected Text energyText;
+    protected TextMeshProUGUI energyText;
 
     [SerializeField]
     [Tooltip("몽환 게이지 표시 텍스트")]
-    protected Text dreamyFigureText;
+    protected TextMeshProUGUI dreamyFigureText;
     #endregion
 
     [HideInInspector]
