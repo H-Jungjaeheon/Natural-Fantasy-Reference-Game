@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class TitleManager : MonoBehaviour
 {
@@ -24,6 +25,8 @@ public class TitleManager : MonoBehaviour
     [SerializeField]
     [Tooltip("색 초기화(투명 이미지)")]
     Color basicColor;
+                  
+    WaitForSeconds faidDelay = new WaitForSeconds(1);
 
     void Start()
     {
@@ -32,13 +35,12 @@ public class TitleManager : MonoBehaviour
 
     IEnumerator StartOp()
     {
-        WaitForSeconds opDelay = new WaitForSeconds(1);
         Color color = basicColor;
         float nowImageAlpha = 0;
 
         for (int nowFaidCount = 0; nowFaidCount < 2; nowFaidCount++)
         {
-            yield return opDelay;
+            yield return faidDelay;
 
             while ((nowFaidCount == 0 && nowImageAlpha < 1) || (nowFaidCount == 1 && nowImageAlpha > 0))
             {
@@ -52,7 +54,7 @@ public class TitleManager : MonoBehaviour
         color = blackColor;
         nowImageAlpha = 1;
 
-        yield return opDelay;
+        yield return faidDelay;
 
         while (nowImageAlpha > 0)
         {
@@ -63,5 +65,34 @@ public class TitleManager : MonoBehaviour
         }
 
         opObj.SetActive(false);
+    }
+
+    IEnumerator GoToMainFaidOut()
+    {
+        Color color = blackColor;
+        float nowImageAlpha = 0;
+
+        while (nowImageAlpha < 1)
+        {
+            nowImageAlpha += Time.deltaTime;
+            color.a = nowImageAlpha;
+            blackBGPanelImage.color = color;
+            yield return null;
+        }
+
+        yield return faidDelay;
+        
+        SceneManager.LoadScene("Main");
+    }
+
+    public void GoToMainSceneAnim()
+    {
+        opObj.SetActive(true);
+        StartCoroutine(GoToMainFaidOut());
+    }
+
+    public void Quit()
+    {
+        Application.Quit();
     }
 }
