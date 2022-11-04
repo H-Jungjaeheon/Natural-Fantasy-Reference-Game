@@ -57,17 +57,6 @@ public class GameManager : Singleton<GameManager>
 
     public GameObject testBullet;
 
-    private void Awake()
-    {
-        if (isDontDestroyObj && Instance == null)
-        {
-            //instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-            Destroy(gameObject);
-    }
-
     IEnumerator TestBulletFire() //360도로 총알 발사되는 것
     {
         //mathf탄막 연습

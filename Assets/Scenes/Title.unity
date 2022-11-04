@@ -377,7 +377,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5c3bd223f3d4264ebe774d6fa523e8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isDontDestroyObj: 0
+  isDontDestroyObj: 1
   maxHpUpgradeLevel: 0
   testBullet: {fileID: 0}
 --- !u!4 &273809865
