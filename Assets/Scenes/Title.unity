@@ -378,7 +378,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDontDestroyObj: 1
-  maxHpUpgradeLevel: 0
   testBullet: {fileID: 0}
 --- !u!4 &273809865
 Transform:
@@ -1190,7 +1189,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1783519126
 RectTransform:
   m_ObjectHideFlags: 0

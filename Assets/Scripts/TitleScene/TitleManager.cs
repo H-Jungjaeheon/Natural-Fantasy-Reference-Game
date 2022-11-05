@@ -4,11 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public enum NowOptionState
-{
-    FirstPage
-}
-
 public class TitleManager : MonoBehaviour
 {
     [Header("오프닝 / 연출 관련 모음")]
@@ -41,7 +36,7 @@ public class TitleManager : MonoBehaviour
 
     WaitForSeconds faidDelay = new WaitForSeconds(1);
 
-    void Start()
+    void Awake()
     {
         StartCoroutine(StartOp());
     }

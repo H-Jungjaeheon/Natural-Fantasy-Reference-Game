@@ -3,26 +3,40 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+public enum NowOptionState
+{
+    FirstPage
+}
+
 public class GameManager : Singleton<GameManager>
 {
     #region 저장 데이터 모음
     [System.Serializable]
     public class GameSaveData
     {
-        public int BasicDamageLevel;
-        public int BasicHealthLevel;
-        public int BasicEnergyLevel;
-        public int ReduceCoolTimeLevel;
-        public int Gold;
+        public int GoldData;
+        public int SlimeBossMaterialData;
+        public int BasicDamageLevelData;
+        public int BasicHealthLevelData;
+        public int BasicEnergyLevelData;
+        public int ReduceCoolTimeLevelData;
     }
     #endregion
 
     #region 재화 및 레벨 변수들
-    private uint gold;
-    public uint Gold
+    private int gold;
+    public int Gold
     {
         get { return gold; }
         set { gold = value; }
+    }
+
+    private int slimeBossMaterial;
+
+    public int SlimeBossMaterial
+    {
+        get { return slimeBossMaterial; }
+        set { slimeBossMaterial = value; }
     }
 
     private int reduceCoolTimeLevel;
@@ -32,7 +46,6 @@ public class GameManager : Singleton<GameManager>
         set { reduceCoolTimeLevel = value; }
     }
 
-    [SerializeField]
     private int maxHpUpgradeLevel;
     public int MaxHpUpgradeLevel
     {
