@@ -316,7 +316,7 @@ public abstract class BasicUnitScript : MonoBehaviour
         startPos_Vector = transform.position;
         nowAttackCount_I = 1;
         nowActionCoolTime = 0;
-        maxGiveBurnDamageTime = 3;
+        maxGiveBurnDamageTime = 4;
         maxStackableOverlapTime = 10; //화상 효과 중첩 가능 제한시간 초기화
         maxBurnDamageLimitTime = 15; //화상 효과 지속시간 증가 초기화
 

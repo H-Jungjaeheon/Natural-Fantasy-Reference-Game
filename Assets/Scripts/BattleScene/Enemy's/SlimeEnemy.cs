@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SlimeEnemy : BasicUnitScript
@@ -18,7 +17,6 @@ public class SlimeEnemy : BasicUnitScript
         nowDefensivePosition = DefensePos.None;
 
         isWaiting = true;
-        actionCoolTimeObj.SetActive(true);
         
         BattleSceneManager.Instance.enemyCharacterPos = transform.position;
         BattleSceneManager.Instance.Enemy = gameObject;
@@ -27,11 +25,26 @@ public class SlimeEnemy : BasicUnitScript
         Energy_F = MaxEnergy_F;
 
         restWaitTime = 1.85f;
+
+        StartCoroutine(WaitUntilTheGameStarts());
+    }
+
+    IEnumerator WaitUntilTheGameStarts()
+    {
+        while (true)
+        {
+            if (BattleSceneManager.Instance.nowGameState == NowGameState.Playing)
+            {
+                actionCoolTimeObj.SetActive(true);
+                break;
+            }
+            yield return null;
+        }
     }
 
     protected override void UISetting()
     {
-        if (isWaiting)
+        if (BattleSceneManager.Instance.nowGameState == NowGameState.Playing && isWaiting)
         {
             actionCoolTimeObj.transform.position = transform.position + (Vector3)actionCoolTimeObjPlusPos;
             actionCoolTimeImage.fillAmount = nowActionCoolTime / maxActionCoolTime;

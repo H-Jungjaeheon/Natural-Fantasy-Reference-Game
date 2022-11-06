@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -57,7 +56,7 @@ public class Player : BasicUnitScript
 
     private float maxChangePropertyCoolTime = 35; //최대 속성 변경 시간
 
-    private float nowChangePropertyCoolTime; //현재 속성 변경 시간
+    public float nowChangePropertyCoolTime; //현재 속성 변경 시간
 
     public float NowChangePropertyCoolTime
     {
@@ -194,7 +193,7 @@ public class Player : BasicUnitScript
         isResurrectionOpportunityExists = true;
 
         BattleSceneManager.Instance.playerCharacterPos = transform.position;
-        nextPropertyIndex = (int)NowPlayerProperty.TheHolySpiritProperty;//Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
+        nextPropertyIndex = Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
         nowPropertyImage.GetComponent<Image>().sprite = nowPropertyIconImages[(int)nowProperty];
         Energy_F = MaxEnergy_F;
         Hp_F = MaxHp_F;
@@ -226,7 +225,7 @@ public class Player : BasicUnitScript
 
     protected override void Defense()
     {
-        if (nowState == NowState.Standingby && Hp_F > 0 && isChangePropertyReady == false)
+        if (BattleSceneManager.Instance.nowGameState == NowGameState.Playing && nowState == NowState.Standingby && Hp_F > 0 && isChangePropertyReady == false)
         {
             if (Input.GetKey(KeyCode.A))
             {
@@ -348,7 +347,7 @@ public class Player : BasicUnitScript
 
     private void CountDownPropertyTime()
     {
-        if (isChangePropertyReady == false)
+        if (BattleSceneManager.Instance.nowGameState == NowGameState.Playing && isChangePropertyReady == false)
         {
             if (nowProperty != NowPlayerProperty.BasicProperty)
             {
@@ -467,7 +466,7 @@ public class Player : BasicUnitScript
 
     private void Jump()
     {
-        if (nowState == NowState.Standingby && Input.GetKey(KeyCode.Space) && Hp_F > 0 && isChangePropertyReady == false)
+        if (BattleSceneManager.Instance.nowGameState == NowGameState.Playing && nowState == NowState.Standingby && Input.GetKey(KeyCode.Space) && Hp_F > 0 && isChangePropertyReady == false)
         {
             nowState = NowState.Jumping;
             bBM.ActionButtonsSetActive(false, false, false);
@@ -817,7 +816,6 @@ public class Player : BasicUnitScript
 
         Damage_I = isBuffing ? Damage_I * 2 : Damage_I / 2;
         maxActionCoolTime = isBuffing ? maxActionCoolTime - 1 : maxActionCoolTime + 1;
-        Speed_F = isBuffing ? Speed_F * 1.5f : Speed_F / 1.5f;
     }
 
     private void TheHolySpiritPropertyBuff(bool isBuffing)
@@ -829,7 +827,6 @@ public class Player : BasicUnitScript
         maxActionCoolTime = isBuffing ? maxActionCoolTime - reducedMaxActionCoolTime : maxActionCoolTime + reducedMaxActionCoolTime;
         restWaitTime = isBuffing ? restWaitTime - reducedRestWaitTime : restWaitTime + reducedRestWaitTime;
         Damage_I = isBuffing ? Damage_I * 1.5f : Damage_I / 1.5f;
-        Speed_F = isBuffing ? Speed_F * 1.25f : Speed_F / 1.25f;
     }
 
     private void TheHolySpiritPropertyDeBuff(bool isDeBuffing)
