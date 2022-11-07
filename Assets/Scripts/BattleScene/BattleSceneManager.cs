@@ -55,6 +55,10 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     [Tooltip("스테이지 및 보스 소개 텍스트")]
     private TextMeshProUGUI introducingTheStageText;
 
+    [SerializeField]
+    [Tooltip("플레이어, 보스 스탯 UI 오브젝트")]
+    private GameObject[] unitStatUIObj;
+
     [HideInInspector]
     public Player Player;
 
@@ -94,6 +98,12 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         float nowImageAlpha = 1;
 
         BattleButtonManager.Instance.ActionButtonsSetActive(false, false, false);
+
+        for (int nowIndex = 0; nowIndex < unitStatUIObj.Length; nowIndex++)
+        {
+            unitStatUIObj[nowIndex].SetActive(false);
+        }
+
         nowGameState = NowGameState.GameReady;
 
         faidOutObj.SetActive(true);
@@ -185,6 +195,12 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
         faidOutObj.SetActive(false);
         nowGameState = NowGameState.Playing;
+
+        for (int nowIndex = 0; nowIndex < unitStatUIObj.Length; nowIndex++)
+        {
+            unitStatUIObj[nowIndex].SetActive(true);
+        }
+
         BattleButtonManager.Instance.ActionButtonsSetActive(true, false, false);
     }
 

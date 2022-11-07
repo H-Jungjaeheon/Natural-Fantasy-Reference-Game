@@ -4,6 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+public enum NowTitleOptionState
+{
+    FirstPage,
+    SecondPage,
+    ThirdPage,
+    PageCount
+}
+
 public class TitleManager : MonoBehaviour
 {
     [Header("오프닝 / 연출 관련 모음")]
@@ -30,9 +38,9 @@ public class TitleManager : MonoBehaviour
     [Header("옵션 관련 모음")]
     [SerializeField]
     [Tooltip("옵션 오브젝트")]
-    private GameObject optionObj;
+    private GameObject[] optionObj;
 
-    private NowOptionState nowOptionState;
+    private NowTitleOptionState nowTitleOptionState;
 
     WaitForSeconds faidDelay = new WaitForSeconds(1);
 
@@ -76,30 +84,55 @@ public class TitleManager : MonoBehaviour
     }
 
 
-    public void OpenOptionScreen() //옵션 버튼 클릭
+    public void OpenOptionScreen(int nowOpenOptionIndex) //옵션 버튼 클릭
     {
-        nowOptionState = NowOptionState.FirstPage;
-        optionObj.SetActive(true);
+        nowTitleOptionState = (NowTitleOptionState)nowOpenOptionIndex;
+
+        for (int nowIndex = 0; nowIndex < (int)NowTitleOptionState.PageCount; nowIndex++)
+        {
+            if (nowIndex == nowOpenOptionIndex)
+            {
+                optionObj[nowIndex].SetActive(true);
+            }
+            else
+            {
+                optionObj[nowIndex].SetActive(false);
+            }
+        }
+
         StartCoroutine(PressEscInOptionScreen());
     }
 
     IEnumerator PressEscInOptionScreen() //옵션창에 있을 시 계속 실행됨
     {
+        bool isOffOptionScreen = false;
+        
         while (true)
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                switch (nowOptionState)
+                switch (nowTitleOptionState)
                 {
-                    case NowOptionState.FirstPage:
-                        optionObj.SetActive(false);
+                    case NowTitleOptionState.FirstPage:
+                        optionObj[(int)NowTitleOptionState.FirstPage].SetActive(false);
+                        isOffOptionScreen = true;
+                        break;
+                    case NowTitleOptionState.SecondPage:
+                        optionObj[(int)NowTitleOptionState.FirstPage].SetActive(true);
+                        optionObj[(int)NowTitleOptionState.SecondPage].SetActive(false);
+                        break;
+                    case NowTitleOptionState.ThirdPage:
+                        optionObj[(int)NowTitleOptionState.FirstPage].SetActive(true);
+                        optionObj[(int)NowTitleOptionState.ThirdPage].SetActive(false);
                         break;
                 }
+                yield return null;
+                nowTitleOptionState = NowTitleOptionState.FirstPage;
+            }
 
-                if (nowOptionState == NowOptionState.FirstPage) //ESC키를 눌렀을 때 옵션의 첫번째 페이지면 반복 종료
-                {
-                    break;
-                }
+            if (isOffOptionScreen) //ESC키를 눌렀을 때 옵션의 첫번째 페이지면 반복 종료
+            {
+                break;
             }
             yield return null;
         }

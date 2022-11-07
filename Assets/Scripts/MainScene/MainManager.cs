@@ -4,6 +4,15 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+public enum NowMainOptionState
+{
+    None,
+    FirstPage,
+    SecondPage,
+    ThirdPage,
+    PageCount
+}
+
 public enum ScreenState
 {
     MainScreen,
@@ -16,7 +25,7 @@ public class MainManager : MonoBehaviour
 {
     private ScreenState nowScreenState;
 
-    private NowOptionState nowOptionState;
+    private NowTitleOptionState nowOptionState;
 
     [SerializeField]
     [Tooltip("스테이지 선택 창 오브젝트")]
@@ -31,6 +40,10 @@ public class MainManager : MonoBehaviour
     private GameObject faidOutObj;
 
     [SerializeField]
+    [Tooltip("일시정지 판넬 오브젝트")]
+    private GameObject gamePauseObj;
+
+    [SerializeField]
     [Tooltip("페이드 아웃 이미지")]
     private Image faidOutImage;
 
@@ -38,16 +51,50 @@ public class MainManager : MonoBehaviour
     [Tooltip("페이드 아웃 이미지 컬러")]
     private Color faidOutImageColor;
 
+    private NowMainOptionState nowMainOptionState;
+
     WaitForSeconds faidDelay = new WaitForSeconds(1);
 
     private void Start()
     {
         StartCoroutine(StartFaidAnim());
+        StartCoroutine(GamePauseObjOnOrOff());
     }
 
     private void Update()
     {
         WaitUntilPressEsc();
+    }
+
+    IEnumerator GamePauseObjOnOrOff()
+    {
+        while (true)
+        {
+            if (nowMainOptionState != NowMainOptionState.None || nowMainOptionState != NowMainOptionState.FirstPage)
+            {
+                break;
+            }
+            else if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                nowMainOptionState = (nowMainOptionState == NowMainOptionState.None) ? NowMainOptionState.FirstPage : NowMainOptionState.None;
+                Time.timeScale = (nowMainOptionState == NowMainOptionState.None) ? 0 : 1;
+                if (nowMainOptionState == NowMainOptionState.None)
+                {
+                    gamePauseObj.SetActive(true);
+                }
+                else
+                {
+                    gamePauseObj.SetActive(false);
+                }
+            }
+            yield return null;
+        }
+    }
+
+    IEnumerator GamePausePageChange()
+    {
+
+        yield return null;
     }
 
     IEnumerator StartFaidAnim()

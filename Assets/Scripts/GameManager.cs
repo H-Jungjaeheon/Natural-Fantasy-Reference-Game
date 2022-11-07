@@ -3,11 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public enum NowOptionState
-{
-    FirstPage
-}
-
 public class GameManager : Singleton<GameManager>
 {
     #region 저장 데이터 모음
