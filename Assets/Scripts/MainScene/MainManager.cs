@@ -6,11 +6,11 @@ using UnityEngine.UI;
 
 public enum NowMainOptionState
 {
-    None,
     FirstPage,
     SecondPage,
     ThirdPage,
-    PageCount
+    PageCount,
+    None
 }
 
 public enum ScreenState
@@ -25,8 +25,6 @@ public class MainManager : MonoBehaviour
 {
     private ScreenState nowScreenState;
 
-    private NowTitleOptionState nowOptionState;
-
     [SerializeField]
     [Tooltip("스테이지 선택 창 오브젝트")]
     private GameObject stgaeSelectObj;
@@ -40,8 +38,8 @@ public class MainManager : MonoBehaviour
     private GameObject faidOutObj;
 
     [SerializeField]
-    [Tooltip("일시정지 판넬 오브젝트")]
-    private GameObject gamePauseObj;
+    [Tooltip("일시정지 창 오브젝트들")]
+    private GameObject[] gamePauseObj;
 
     [SerializeField]
     [Tooltip("페이드 아웃 이미지")]
@@ -61,40 +59,75 @@ public class MainManager : MonoBehaviour
         StartCoroutine(GamePauseObjOnOrOff());
     }
 
-    private void Update()
-    {
-        WaitUntilPressEsc();
-    }
-
     IEnumerator GamePauseObjOnOrOff()
     {
         while (true)
         {
-            if (nowMainOptionState != NowMainOptionState.None || nowMainOptionState != NowMainOptionState.FirstPage)
+            if (nowScreenState != ScreenState.MainScreen)
             {
-                break;
-            }
-            else if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                nowMainOptionState = (nowMainOptionState == NowMainOptionState.None) ? NowMainOptionState.FirstPage : NowMainOptionState.None;
-                Time.timeScale = (nowMainOptionState == NowMainOptionState.None) ? 0 : 1;
-                if (nowMainOptionState == NowMainOptionState.None)
+                if (Input.GetKeyDown(KeyCode.Escape))
                 {
-                    gamePauseObj.SetActive(true);
+                    switch (nowScreenState)
+                    {
+                        case ScreenState.StageSelectScreen:
+                            stgaeSelectObj.SetActive(false);
+                            nowScreenState = ScreenState.MainScreen;
+                            break;
+                        case ScreenState.UpgradeScreen:
+                            upgradeSystemObj.SetActive(false);
+                            nowScreenState = ScreenState.MainScreen;
+                            break;
+                    }
                 }
-                else
+            }
+            else
+            {
+                if (nowMainOptionState == NowMainOptionState.SecondPage || nowMainOptionState == NowMainOptionState.ThirdPage)
                 {
-                    gamePauseObj.SetActive(false);
+                    StartCoroutine(PressEscToGamePausePageChange());
+                    break;
+                }
+                else if (Input.GetKeyDown(KeyCode.Escape) && nowScreenState == ScreenState.MainScreen)
+                {
+                    if (nowMainOptionState == NowMainOptionState.None)
+                    {
+                        gamePauseObj[(int)NowMainOptionState.FirstPage].SetActive(true);
+                    }
+                    else
+                    {
+                        gamePauseObj[(int)NowMainOptionState.FirstPage].SetActive(false);
+                    }
+                    Time.timeScale = (nowMainOptionState == NowMainOptionState.None) ? 0 : 1;
+                    nowMainOptionState = (nowMainOptionState == NowMainOptionState.None) ? NowMainOptionState.FirstPage : NowMainOptionState.None;
                 }
             }
             yield return null;
         }
     }
 
-    IEnumerator GamePausePageChange()
+    IEnumerator PressEscToGamePausePageChange()
     {
-
-        yield return null;
+        while (true)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (nowMainOptionState == NowMainOptionState.SecondPage)
+                {
+                    gamePauseObj[(int)NowMainOptionState.SecondPage].SetActive(false);
+                    gamePauseObj[(int)NowMainOptionState.FirstPage].SetActive(true);
+                }
+                else if(nowMainOptionState == NowMainOptionState.ThirdPage)
+                {
+                    gamePauseObj[(int)NowMainOptionState.ThirdPage].SetActive(false);
+                    gamePauseObj[(int)NowMainOptionState.FirstPage].SetActive(true);
+                }
+                nowMainOptionState = NowMainOptionState.FirstPage;
+                yield return null;
+                StartCoroutine(GamePauseObjOnOrOff());
+                break;
+            }
+            yield return null;
+        }
     }
 
     IEnumerator StartFaidAnim()
@@ -119,6 +152,22 @@ public class MainManager : MonoBehaviour
         faidOutObj.SetActive(false);
     }
 
+    public void PressToGamePausePageChangeButton(int nowChange)
+    {
+        for (int nowIndex = (int)NowMainOptionState.FirstPage; nowIndex < (int)NowMainOptionState.PageCount; nowIndex++)
+        {
+            if (nowIndex == nowChange)
+            {
+                gamePauseObj[nowIndex].SetActive(true);
+            }
+            else
+            {
+                gamePauseObj[nowIndex].SetActive(false);
+            }
+        }
+        nowMainOptionState = (NowMainOptionState)nowChange;
+    }
+
     public void PressContentButton(int nowPressContentIndex)
     {
         switch (nowPressContentIndex)
@@ -131,24 +180,6 @@ public class MainManager : MonoBehaviour
                 break;
         }
         nowScreenState = (ScreenState)nowPressContentIndex;
-    }
-
-    private void WaitUntilPressEsc()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            switch (nowScreenState)
-            {
-                case ScreenState.StageSelectScreen:
-                    stgaeSelectObj.SetActive(false);
-                    nowScreenState = ScreenState.MainScreen;
-                    break;
-                case ScreenState.UpgradeScreen:
-                    upgradeSystemObj.SetActive(false);
-                    nowScreenState = ScreenState.MainScreen;
-                    break;
-            }
-        }
     }
 
     public void MoveToBattleScene(int StageIndexToEnter)
@@ -181,5 +212,10 @@ public class MainManager : MonoBehaviour
         yield return faidDelay;
 
         SceneManager.LoadScene("BattleScene");
+    }
+
+    public void GameQuit()
+    {
+        Application.Quit();
     }
 }
