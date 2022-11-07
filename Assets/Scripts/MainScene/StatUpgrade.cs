@@ -4,14 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public enum StatKind
-{
-    Hp,
-    Damage,
-    Energy,
-    TotalStats
-}
-
 public enum TextColors
 {
     Red,
@@ -37,6 +29,21 @@ public class StatUpgrade : MonoBehaviour
 
     private int[] goodsRequiredForTheCurrentUpgrade = new int[(int)StatKind.TotalStats];
 
+    private GameManager gameManager;
+
+    private void OnEnable()
+    {
+        OnEnableSetting();
+    }
+
+    private void OnEnableSetting()
+    {
+        gameManager = GameManager.Instance;
+        for (int nowIndex = 0; nowIndex < (int)StatKind.TotalStats; nowIndex++)
+        {
+            
+        }
+    }
 
     public void ChangeStatsToUpgrade()
     {
