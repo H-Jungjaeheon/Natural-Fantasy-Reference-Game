@@ -428,4 +428,16 @@ public class SlimeEnemy : BasicUnitScript
             collision.gameObject.GetComponent<BasicUnitScript>().Hit(Damage_I + Mathf.Round(Damage_I / 2), false);
         }
     }
+    //IEnumerator TestBulletFire() //360도로 총알 발사되는 것
+    //{
+    //    //mathf탄막 연습
+    //    for (int i = 0; i < 360; i += 30)
+    //    {
+    //        GameObject bulletObj;
+    //        Vector3 dir = new Vector2(Mathf.Cos(i * Mathf.Deg2Rad), Mathf.Sin(i * Mathf.Deg2Rad)); //* Mathf.Deg2Rad
+    //        bulletObj = Instantiate(testBullet, BattleSceneManager.Instance.Enemy.transform.position, Quaternion.identity);
+    //        bulletObj.GetComponent<EnemysBullet>().moveDirection = dir;//(dir - transform.position).normalized;
+    //        yield return null;
+    //    }
+    //}
 }

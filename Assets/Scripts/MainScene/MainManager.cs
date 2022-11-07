@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public enum NowMainOptionState
+public enum BattleOrMainOptionState
 {
     FirstPage,
     SecondPage,
@@ -49,7 +49,7 @@ public class MainManager : MonoBehaviour
     [Tooltip("페이드 아웃 이미지 컬러")]
     private Color faidOutImageColor;
 
-    private NowMainOptionState nowMainOptionState;
+    private BattleOrMainOptionState nowMainOptionState;
 
     WaitForSeconds faidDelay = new WaitForSeconds(1);
 
@@ -82,23 +82,23 @@ public class MainManager : MonoBehaviour
             }
             else
             {
-                if (nowMainOptionState == NowMainOptionState.SecondPage || nowMainOptionState == NowMainOptionState.ThirdPage)
+                if (nowMainOptionState == BattleOrMainOptionState.SecondPage || nowMainOptionState == BattleOrMainOptionState.ThirdPage)
                 {
                     StartCoroutine(PressEscToGamePausePageChange());
                     break;
                 }
                 else if (Input.GetKeyDown(KeyCode.Escape) && nowScreenState == ScreenState.MainScreen)
                 {
-                    if (nowMainOptionState == NowMainOptionState.None)
+                    if (nowMainOptionState == BattleOrMainOptionState.None)
                     {
-                        gamePauseObj[(int)NowMainOptionState.FirstPage].SetActive(true);
+                        gamePauseObj[(int)BattleOrMainOptionState.FirstPage].SetActive(true);
                     }
                     else
                     {
-                        gamePauseObj[(int)NowMainOptionState.FirstPage].SetActive(false);
+                        gamePauseObj[(int)BattleOrMainOptionState.FirstPage].SetActive(false);
                     }
-                    Time.timeScale = (nowMainOptionState == NowMainOptionState.None) ? 0 : 1;
-                    nowMainOptionState = (nowMainOptionState == NowMainOptionState.None) ? NowMainOptionState.FirstPage : NowMainOptionState.None;
+                    Time.timeScale = (nowMainOptionState == BattleOrMainOptionState.None) ? 0 : 1;
+                    nowMainOptionState = (nowMainOptionState == BattleOrMainOptionState.None) ? BattleOrMainOptionState.FirstPage : BattleOrMainOptionState.None;
                 }
             }
             yield return null;
@@ -111,17 +111,17 @@ public class MainManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                if (nowMainOptionState == NowMainOptionState.SecondPage)
+                if (nowMainOptionState == BattleOrMainOptionState.SecondPage)
                 {
-                    gamePauseObj[(int)NowMainOptionState.SecondPage].SetActive(false);
-                    gamePauseObj[(int)NowMainOptionState.FirstPage].SetActive(true);
+                    gamePauseObj[(int)BattleOrMainOptionState.SecondPage].SetActive(false);
+                    gamePauseObj[(int)BattleOrMainOptionState.FirstPage].SetActive(true);
                 }
-                else if(nowMainOptionState == NowMainOptionState.ThirdPage)
+                else if(nowMainOptionState == BattleOrMainOptionState.ThirdPage)
                 {
-                    gamePauseObj[(int)NowMainOptionState.ThirdPage].SetActive(false);
-                    gamePauseObj[(int)NowMainOptionState.FirstPage].SetActive(true);
+                    gamePauseObj[(int)BattleOrMainOptionState.ThirdPage].SetActive(false);
+                    gamePauseObj[(int)BattleOrMainOptionState.FirstPage].SetActive(true);
                 }
-                nowMainOptionState = NowMainOptionState.FirstPage;
+                nowMainOptionState = BattleOrMainOptionState.FirstPage;
                 yield return null;
                 StartCoroutine(GamePauseObjOnOrOff());
                 break;
@@ -154,7 +154,7 @@ public class MainManager : MonoBehaviour
 
     public void PressToGamePausePageChangeButton(int nowChange)
     {
-        for (int nowIndex = (int)NowMainOptionState.FirstPage; nowIndex < (int)NowMainOptionState.PageCount; nowIndex++)
+        for (int nowIndex = (int)BattleOrMainOptionState.FirstPage; nowIndex < (int)BattleOrMainOptionState.PageCount; nowIndex++)
         {
             if (nowIndex == nowChange)
             {
@@ -165,7 +165,7 @@ public class MainManager : MonoBehaviour
                 gamePauseObj[nowIndex].SetActive(false);
             }
         }
-        nowMainOptionState = (NowMainOptionState)nowChange;
+        nowMainOptionState = (BattleOrMainOptionState)nowChange;
     }
 
     public void PressContentButton(int nowPressContentIndex)

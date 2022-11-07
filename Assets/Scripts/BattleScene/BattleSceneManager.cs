@@ -65,8 +65,10 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     [HideInInspector]
     public GameObject Enemy;
 
-    [HideInInspector]
+    //[HideInInspector]
     public NowGameState nowGameState;
+
+    private BattleOrMainOptionState nowBattleSceneOptionState;
 
     private Camera mainCam;
     
@@ -79,18 +81,79 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     private void Start()
     {
         mainCam = Camera.main;
+        nowBattleSceneOptionState = BattleOrMainOptionState.None;
+
         StartCoroutine(StartFaidAnim());
+        StartCoroutine(GamePauseObjOnOrOff());
     }
 
-    private void Update()
+    IEnumerator GamePauseObjOnOrOff()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && nowGameState == NowGameState.Playing)
+        while (true)
         {
-            bool nowGamePauseObjSetActive = (nowGameState == NowGameState.Playing);
-            gamePauseObj[0].SetActive(nowGamePauseObjSetActive);//////////////////////////////////////////////////// 수정
-            nowGameState = (nowGamePauseObjSetActive) ? NowGameState.Pausing : NowGameState.Playing;
-            Time.timeScale = nowGamePauseObjSetActive ? 0 : 1;
+            if (nowBattleSceneOptionState == BattleOrMainOptionState.SecondPage || nowBattleSceneOptionState == BattleOrMainOptionState.ThirdPage)
+            {
+                StartCoroutine(PressEscToGamePausePageChange());
+                break;
+            }
+            else if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (nowBattleSceneOptionState == BattleOrMainOptionState.None && nowGameState == NowGameState.Playing)
+                {
+                    gamePauseObj[(int)BattleOrMainOptionState.FirstPage].SetActive(true);
+                }
+                else
+                {
+                    gamePauseObj[(int)BattleOrMainOptionState.FirstPage].SetActive(false);
+                }
+                yield return null;
+                Time.timeScale = (nowBattleSceneOptionState == BattleOrMainOptionState.None) ? 0 : 1;
+                nowBattleSceneOptionState = (nowBattleSceneOptionState == BattleOrMainOptionState.None) ? BattleOrMainOptionState.FirstPage : BattleOrMainOptionState.None;
+                nowGameState = (nowGameState == NowGameState.Playing) ? NowGameState.Pausing : NowGameState.Playing;
+            }
+            yield return null;
         }
+    }
+
+    IEnumerator PressEscToGamePausePageChange()
+    {
+        while (true)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (nowBattleSceneOptionState == BattleOrMainOptionState.SecondPage)
+                {
+                    gamePauseObj[(int)BattleOrMainOptionState.SecondPage].SetActive(false);
+                    gamePauseObj[(int)BattleOrMainOptionState.FirstPage].SetActive(true);
+                }
+                else if (nowBattleSceneOptionState == BattleOrMainOptionState.ThirdPage)
+                {
+                    gamePauseObj[(int)BattleOrMainOptionState.ThirdPage].SetActive(false);
+                    gamePauseObj[(int)BattleOrMainOptionState.FirstPage].SetActive(true);
+                }
+                nowBattleSceneOptionState = BattleOrMainOptionState.FirstPage;
+                yield return null;
+                StartCoroutine(GamePauseObjOnOrOff());
+                break;
+            }
+            yield return null;
+        }
+    }
+
+    public void PressToGamePausePageChangeButton(int nowChange)
+    {
+        for (int nowIndex = (int)BattleOrMainOptionState.FirstPage; nowIndex < (int)BattleOrMainOptionState.PageCount; nowIndex++)
+        {
+            if (nowIndex == nowChange)
+            {
+                gamePauseObj[nowIndex].SetActive(true);
+            }
+            else
+            {
+                gamePauseObj[nowIndex].SetActive(false);
+            }
+        }
+        nowBattleSceneOptionState = (BattleOrMainOptionState)nowChange;
     }
 
     IEnumerator StartFaidAnim() //처음 게임 페이드 인 연출

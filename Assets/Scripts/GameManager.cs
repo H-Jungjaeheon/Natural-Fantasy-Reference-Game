@@ -23,7 +23,14 @@ public class GameManager : Singleton<GameManager>
     public int Gold
     {
         get { return gold; }
-        set { gold = value; }
+        set
+        {
+            if (value > 999999999)
+            {
+                value = 999999999;
+            }
+            gold = value;
+        }
     }
 
     private int slimeBossMaterial;
@@ -63,18 +70,4 @@ public class GameManager : Singleton<GameManager>
     }
     #endregion
 
-    public GameObject testBullet;
-
-    IEnumerator TestBulletFire() //360도로 총알 발사되는 것
-    {
-        //mathf탄막 연습
-        for (int i = 0; i < 360; i += 30)
-        {
-            GameObject bulletObj;
-            Vector3 dir = new Vector2(Mathf.Cos(i * Mathf.Deg2Rad), Mathf.Sin(i* Mathf.Deg2Rad)); //* Mathf.Deg2Rad
-            bulletObj = Instantiate(testBullet, BattleSceneManager.Instance.Enemy.transform.position, Quaternion.identity);
-            bulletObj.GetComponent<EnemysBullet>().moveDirection = dir;//(dir - transform.position).normalized;
-            yield return null;
-        }
-    }
 }
