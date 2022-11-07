@@ -28,8 +28,8 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     public Vector2 enemyCharacterPos; //적 포지션
 
     [SerializeField]
-    [Tooltip("게임 일시정지 판넬 오브젝트")]
-    private GameObject gamePauseObj;
+    [Tooltip("게임 일시정지 판넬 오브젝트들")]
+    private GameObject[] gamePauseObj;
 
     [SerializeField]
     [Tooltip("씬 전환 시 필요한 판넬 오브젝트 이미지 컴포넌트")]
@@ -87,7 +87,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         if (Input.GetKeyDown(KeyCode.Escape) && nowGameState == NowGameState.Playing)
         {
             bool nowGamePauseObjSetActive = (nowGameState == NowGameState.Playing);
-            gamePauseObj.SetActive(nowGamePauseObjSetActive);
+            gamePauseObj[0].SetActive(nowGamePauseObjSetActive);//////////////////////////////////////////////////// 수정
             nowGameState = (nowGamePauseObjSetActive) ? NowGameState.Pausing : NowGameState.Playing;
             Time.timeScale = nowGamePauseObjSetActive ? 0 : 1;
         }

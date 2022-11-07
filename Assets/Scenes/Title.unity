@@ -2302,7 +2302,6 @@ MonoBehaviour:
   - {fileID: 1070839229}
   - {fileID: 114842169}
   - {fileID: 1685923144}
-  nowOptionState: 0
 --- !u!4 &2008488242
 Transform:
   m_ObjectHideFlags: 0
