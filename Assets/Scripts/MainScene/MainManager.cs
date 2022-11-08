@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 public enum BattleOrMainOptionState
 {
@@ -21,7 +22,7 @@ public enum ScreenState
     OptionScreen
 }
 
-public class MainManager : MonoBehaviour
+public class MainManager : Singleton<MainManager>
 {
     private ScreenState nowScreenState;
 
@@ -49,12 +50,17 @@ public class MainManager : MonoBehaviour
     [Tooltip("페이드 아웃 이미지 컬러")]
     private Color faidOutImageColor;
 
+    [SerializeField]
+    [Tooltip("기본 재화 텍스트")]
+    private TextMeshProUGUI basicGoodsText;
+
     private BattleOrMainOptionState nowMainOptionState;
 
     WaitForSeconds faidDelay = new WaitForSeconds(1);
 
     private void Start()
     {
+        GameManager.Instance.nowSceneState = NowSceneState.Main;
         StartCoroutine(StartFaidAnim());
         StartCoroutine(GamePauseObjOnOrOff());
     }
@@ -150,6 +156,11 @@ public class MainManager : MonoBehaviour
         }
 
         faidOutObj.SetActive(false);
+    }
+
+    public void BasicGoodsTextFixed()
+    {
+        basicGoodsText.text = $"{GameManager.Instance.Gold}";
     }
 
     public void PressToGamePausePageChangeButton(int nowChange)

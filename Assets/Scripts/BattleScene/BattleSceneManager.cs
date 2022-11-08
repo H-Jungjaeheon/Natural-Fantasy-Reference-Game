@@ -65,7 +65,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     [HideInInspector]
     public GameObject Enemy;
 
-    //[HideInInspector]
+    [HideInInspector]
     public NowGameState nowGameState;
 
     private BattleOrMainOptionState nowBattleSceneOptionState;
@@ -82,6 +82,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     {
         mainCam = Camera.main;
         nowBattleSceneOptionState = BattleOrMainOptionState.None;
+        GameManager.Instance.nowSceneState = NowSceneState.Ingame;
 
         StartCoroutine(StartFaidAnim());
         StartCoroutine(GamePauseObjOnOrOff());

@@ -287,7 +287,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDontDestroyObj: 0
+  gold: 0
   statLevels: 000000000000000000000000
+  nowSceneState: 0
 --- !u!4 &13168010
 Transform:
   m_ObjectHideFlags: 0
@@ -455,7 +457,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 4
+  m_SortingOrder: 2
   m_TargetDisplay: 0
 --- !u!224 &66656228
 RectTransform:
@@ -1120,18 +1122,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 206404638}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1502282353}
   - {fileID: 476783042}
-  m_Father: {fileID: 516800854}
+  - {fileID: 1502282353}
+  m_Father: {fileID: 1105753262}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 30, y: 15}
+  m_AnchoredPosition: {x: -420.00003, y: 15}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &206404640
@@ -2191,7 +2193,7 @@ RectTransform:
   m_Children:
   - {fileID: 354520152}
   m_Father: {fileID: 206404639}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2227,11 +2229,10 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 605807954}
-  - {fileID: 206404639}
+  - {fileID: 1105753262}
+  - {fileID: 1709865710}
   - {fileID: 8648328}
   - {fileID: 1933086498}
-  - {fileID: 1709865710}
   m_Father: {fileID: 156636355}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2517,17 +2518,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 605807953}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 516800854}
+  m_Father: {fileID: 1105753262}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -60, y: 35}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchoredPosition: {x: 410, y: 35}
+  m_SizeDelta: {x: 195, y: 80}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &605807955
 MonoBehaviour:
@@ -2573,13 +2574,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 1538586367}
+        m_TargetAssemblyTypeName: StatUpgrade, Assembly-CSharp
+        m_MethodName: StatUpgradeButtonClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -2605,8 +2606,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 1bf457286d5bff349860e60c1fb85659, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -4551,6 +4552,43 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1105753261
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1105753262}
+  m_Layer: 5
+  m_Name: DisappearingAtHighestLevelObj
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1105753262
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1105753261}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 605807954}
+  - {fileID: 206404639}
+  m_Father: {fileID: 516800854}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1140729288
 GameObject:
   m_ObjectHideFlags: 0
@@ -4632,7 +4670,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1140729291}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1538586367}
+        m_TargetAssemblyTypeName: StatUpgrade, Assembly-CSharp
+        m_MethodName: ChangeStatsToUpgrade
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1140729291
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5631,7 +5681,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1312036463}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1538586367}
+        m_TargetAssemblyTypeName: StatUpgrade, Assembly-CSharp
+        m_MethodName: ChangeStatsToUpgrade
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1312036463
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5923,6 +5985,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5e9c0e288c28fa4ba40d61e9ac49ea7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDontDestroyObj: 0
   stgaeSelectObj: {fileID: 118908005}
   upgradeSystemObj: {fileID: 1538586365}
   faidOutObj: {fileID: 1769432468}
@@ -5932,6 +5995,7 @@ MonoBehaviour:
   - {fileID: 1051492993}
   faidOutImage: {fileID: 371832751}
   faidOutImageColor: {r: 0, g: 0, b: 0, a: 1}
+  basicGoodsText: {fileID: 1374427473}
 --- !u!4 &1403331794
 Transform:
   m_ObjectHideFlags: 0
@@ -6339,7 +6403,7 @@ RectTransform:
   m_Children:
   - {fileID: 2062951499}
   m_Father: {fileID: 206404639}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -6437,7 +6501,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1538586366
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6476,13 +6540,13 @@ MonoBehaviour:
   - {fileID: 378561986}
   - {fileID: 682743311}
   textColors:
-  - {r: 1, g: 0, b: 0, a: 0}
-  - {r: 0.2027123, g: 1, b: 0, a: 0}
-  - {r: 0, g: 0, b: 0, a: 0}
-  curChooseStatText: {fileID: 0}
-  curChooseStatLevelText: {fileID: 0}
-  curChooseStatEnhanceContentText: {fileID: 0}
-  goodsRequiredForTheCurrentUpgradeText: {fileID: 0}
+  - {r: 0.6509434, g: 0.19958171, b: 0.19958171, a: 1}
+  - {r: 0.15967444, g: 0.7830189, b: 0, a: 1}
+  curChooseStatText: {fileID: 1933086499}
+  curChooseStatLevelText: {fileID: 8648329}
+  curChooseStatEnhanceContentText: {fileID: 1709865711}
+  disappearingAtHighestLevelObj: {fileID: 1105753261}
+  basicGoodsRequiredForTheCurrentUpgradeText: {fileID: 882903438}
 --- !u!1 &1589542312
 GameObject:
   m_ObjectHideFlags: 0
@@ -7217,7 +7281,7 @@ GameObject:
   - component: {fileID: 1709865712}
   - component: {fileID: 1709865711}
   m_Layer: 5
-  m_Name: StatChangeText
+  m_Name: NowChooseStatEnhanceContentText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7230,16 +7294,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1709865709}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 516800854}
-  m_RootOrder: 4
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 190.2, y: 8}
+  m_AnchoredPosition: {x: 32, y: 50}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &1709865711
@@ -7262,7 +7326,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uCCB4\uB825\uC774 0% \uC0C1\uC2B9\uD569\uB2C8\uB2E4.  >   \uCCB4\uB825\uC774
+  m_text: "\uCCB4\uB825\uC774 10% \uC0C1\uC2B9\uD569\uB2C8\uB2E4.  >   \uCCB4\uB825\uC774
     10% \uC0C1\uC2B9\uD569\uB2C8\uB2E4."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2f5b66b0816d1a1499becdf0f1f5378e, type: 2}
@@ -7290,8 +7354,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20
-  m_fontSizeBase: 20
+  m_fontSize: 19
+  m_fontSizeBase: 19
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -8406,7 +8470,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1898369625}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1538586367}
+        m_TargetAssemblyTypeName: StatUpgrade, Assembly-CSharp
+        m_MethodName: ChangeStatsToUpgrade
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1898369625
 MonoBehaviour:
   m_ObjectHideFlags: 0

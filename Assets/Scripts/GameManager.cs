@@ -12,6 +12,13 @@ public enum UpgradeableStatKind
     //CoolTime,
 }
 
+public enum NowSceneState
+{
+    Title,
+    Main,
+    Ingame
+}
+
 public class GameManager : Singleton<GameManager>
 {
     #region 저장 데이터 모음
@@ -28,7 +35,7 @@ public class GameManager : Singleton<GameManager>
     #endregion
 
     #region 재화 및 레벨 변수들
-    private int gold;
+    public int gold;
     public int Gold
     {
         get { return gold; }
@@ -39,6 +46,10 @@ public class GameManager : Singleton<GameManager>
                 value = 999999999;
             }
             gold = value;
+            if (nowSceneState == NowSceneState.Main)
+            {
+                MainManager.Instance.BasicGoodsTextFixed();
+            }
         }
     }
 
@@ -57,8 +68,18 @@ public class GameManager : Singleton<GameManager>
         set { reduceCoolTimeLevel = value; }
     }
 
-    [HideInInspector]
+    //[HideInInspector]
     public int[] statLevels = new int[(int)UpgradeableStatKind.TotalStats];
     #endregion
 
+    [HideInInspector]
+    public NowSceneState nowSceneState;
+
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.Q))
+        {
+            Gold += 50; 
+        }
+    }
 }
