@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public enum StatKind
+public enum UpgradeableStatKind
 {
     Hp,
     Damage,
@@ -58,7 +58,7 @@ public class GameManager : Singleton<GameManager>
     }
 
     [HideInInspector]
-    public int[] statLevels = new int[(int)StatKind.TotalStats];
+    public int[] statLevels = new int[(int)UpgradeableStatKind.TotalStats];
     #endregion
 
 }
