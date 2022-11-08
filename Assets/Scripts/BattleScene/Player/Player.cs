@@ -178,9 +178,9 @@ public class Player : BasicUnitScript
         float basicMaxActionCoolTime = 3.5f;
 
         maxActionCoolTime = basicMaxActionCoolTime - (gameManager_Ins.ReduceCoolTimeLevel * plusMultiplicationMaxActionCoolTimePerLevel);
-        MaxHp_F += gameManager_Ins.MaxHpUpgradeLevel * plusMultiplicationMaxHpPerLevel;
-        MaxEnergy_F += gameManager_Ins.MaxEnergyUpgradeLevel * plusMultiplicationMaxEnergyPerLevel;
-        Damage_I += gameManager_Ins.DamageUpgradeLevel;
+        MaxHp_F += gameManager_Ins.statLevels[(int)StatKind.Hp] * plusMultiplicationMaxHpPerLevel;
+        MaxEnergy_F += gameManager_Ins.statLevels[(int)StatKind.Energy] * plusMultiplicationMaxEnergyPerLevel;
+        Damage_I += gameManager_Ins.statLevels[(int)StatKind.Damage];
         restWaitTime = 1.25f;
         maxShieldHp_F = 2;
         maxDreamyFigure_F = 20;
