@@ -66,7 +66,7 @@ public class Player : BasicUnitScript
 
     private float maxChangePropertyCoolTime = 35; //최대 속성 변경 시간
 
-    private float nowChangePropertyCoolTime; //현재 속성 변경 시간
+    public float nowChangePropertyCoolTime; //현재 속성 변경 시간
 
     public float NowChangePropertyCoolTime
     {
@@ -76,13 +76,16 @@ public class Player : BasicUnitScript
         }
         set
         {
-            if (value >= maxChangePropertyCoolTime)
+            if (value > maxChangePropertyCoolTime)
             {
                 StartCoroutine(ChangeProperty(false));
             }
             else
             {
-                nowPropertyLimitTimeImage.fillAmount = (maxChangePropertyCoolTime - NowChangePropertyCoolTime) / maxChangePropertyCoolTime;
+                if (nowProperty == NowPlayerProperty.BasicProperty)
+                {
+                    nowPropertyLimitTimeImage.fillAmount = (maxChangePropertyCoolTime - NowChangePropertyCoolTime) / maxChangePropertyCoolTime;
+                }
                 nowChangePropertyCoolTime = value;
             }
         }
@@ -90,31 +93,34 @@ public class Player : BasicUnitScript
 
     private float maxPropertyTimeLimit = 25; //최대 속성 지속시간
 
-    private float nowPropertyTimeLimit; // 현재 속성 남은 지속시간
+    public float nowPropertyTimeLimit; // 현재 속성 남은 지속시간
 
     public float NowPropertyTimeLimit
     {
         get { return nowPropertyTimeLimit; }
         set
         {
-            if (value >= maxPropertyTimeLimit)
+            if (value > maxPropertyTimeLimit)
             {
                 StartCoroutine(ChangeProperty(true));
             }
             else
             {
-                nowPropertyLimitTimeImage.fillAmount = (maxPropertyTimeLimit - NowPropertyTimeLimit) / maxPropertyTimeLimit;
+                if (nowProperty != NowPlayerProperty.BasicProperty)
+                {
+                    nowPropertyLimitTimeImage.fillAmount = (maxPropertyTimeLimit - NowPropertyTimeLimit) / maxPropertyTimeLimit;
+                }
                 nowPropertyTimeLimit = value;
             }
         }
     }
 
     [HideInInspector]
-    public NowPlayerProperty nowProperty;
+    public NowPlayerProperty nowProperty; //현재 속성 상태
 
-    private int nextPropertyIndex;
+    private int nextPropertyIndex; //다음 바뀔 속성의 인덱스
 
-    private bool isChangePropertyReady;
+    private bool isChangePropertyReady; //속성 변경 준비 판별
 
     private bool isResurrectionOpportunityExists;
 
@@ -133,7 +139,7 @@ public class Player : BasicUnitScript
             if (value >= maxNaturePassiveCount)
             {
                 isSpawnNatureBead = true;
-                oP.GetObject((int)PoolObjKind.PlayerHpRecoveryBead);
+                objectPoolInstance.GetObject((int)PoolObjKind.PlayerHpRecoveryBead);
             }
             else
             {
@@ -145,9 +151,9 @@ public class Player : BasicUnitScript
     [HideInInspector]
     public bool isSpawnNatureBead;
 
-    private BattleButtonManager bBM;
+    private BattleButtonManager battleButtonManagerInstance; //배틀 버튼 매니저 싱글톤 인스턴스
 
-    private ObjectPool oP;
+    private ObjectPool objectPoolInstance; //오브젝트 풀 싱글톤 인스턴스
 
     [SerializeField]
     [Tooltip("현재 플레이어 속성 아이콘")]
@@ -195,9 +201,9 @@ public class Player : BasicUnitScript
     protected override void StartSetting() //초기 세팅 (일부 공통)
     {
         var gameManager_Ins = GameManager.Instance;
-        int energyPerLevel = gameManager_Ins.statLevels[(int)UpgradeableStatKind.Energy] * 3; //레벨당 기력 증가식
-        int maxHpPerLevel = (int)MaxHp_F / 10 * (gameManager_Ins.statLevels[(int)UpgradeableStatKind.Hp]); //레벨당 체력 증가식
-        float damagePerLevel = (Damage_I * 10 / 100) * gameManager_Ins.statLevels[(int)UpgradeableStatKind.Damage]; //레벨당 공격력 증가식
+        int energyPerLevel = gameManager_Ins.statLevels[(int)UpgradeableStatKind.Energy] * 3; //레벨당 기력 증가식 (최대 30 증가)
+        int maxHpPerLevel = (int)MaxHp_F / 10 * (gameManager_Ins.statLevels[(int)UpgradeableStatKind.Hp]); //레벨당 체력 증가식 (최대 100% 증가)
+        float damagePerLevel = (Damage_I * 10 / 100) * gameManager_Ins.statLevels[(int)UpgradeableStatKind.Damage]; //레벨당 공격력 증가식 (최대 100% 증가)
         float maxActionCoolTimePerLevel = (gameManager_Ins.ReduceCoolTimeLevel * 0.1f); //레벨당 최대 쿨타임 차감식 (임시)
 
         maxActionCoolTime -= maxActionCoolTimePerLevel;
@@ -210,12 +216,12 @@ public class Player : BasicUnitScript
 
         nowState = NowState.Standingby;
         nowProperty = NowPlayerProperty.BasicProperty;
-        bBM = BattleButtonManager.Instance;
-        oP = ObjectPool.Instance;
+        battleButtonManagerInstance = BattleButtonManager.Instance;
+        objectPoolInstance = ObjectPool.Instance;
         isResurrectionOpportunityExists = true;
 
         BattleSceneManager.Instance.playerCharacterPos = transform.position;
-        nextPropertyIndex = Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
+        nextPropertyIndex = (int)NowPlayerProperty.AngelProperty; //Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
         nowPropertyImage.sprite = nowPropertyIconImages[(int)nowProperty];
         Energy_F = MaxEnergy_F;
         Hp_F = MaxHp_F;
@@ -292,12 +298,14 @@ public class Player : BasicUnitScript
 
     IEnumerator ChangeProperty(bool isChangeBasicProperty)
     {
-        NowPropertyTimeLimit = 0;
-        NowChangePropertyCoolTime = 0;
         isChangePropertyReady = true;
+
+        NowChangePropertyCoolTime = 0;
+        NowPropertyTimeLimit = 0;
 
         while (true)
         {
+            //print(angelPropertyBuffing);
             if (nowState == NowState.Standingby && angelPropertyBuffing == false)
             {
                 break;
@@ -307,7 +315,7 @@ public class Player : BasicUnitScript
 
         nowState = NowState.ChangingProperties;
         Invincibility(true);
-        bBM.ActionButtonsSetActive(false, false, false);
+        battleButtonManagerInstance.ActionButtonsSetActive(false, false, false);
         transform.rotation = Quaternion.identity;
         nowActionCoolTime = 0;
 
@@ -345,7 +353,6 @@ public class Player : BasicUnitScript
 
     IEnumerator EndingPropertyChanges() //나중에 애니메이션 나오면 일반함수로 전환, 그리고 속성 변경 애니메이션 끝날때쯤 변경한 이 함수 실행
     {
-        print(nowActionCoolTime);
         yield return new WaitForSeconds(2);
         isChangePropertyReady = false;
         nowState = NowState.Standingby;
@@ -353,11 +360,11 @@ public class Player : BasicUnitScript
         
         if (BattleButtonManager.Instance.nowButtonPage == ButtonPage.FirstPage)
         {
-            bBM.ActionButtonsSetActive(true, false, true);
+            battleButtonManagerInstance.ActionButtonsSetActive(true, false, true);
         }
         else
         {
-            bBM.ActionButtonsSetActive(false, true, false);
+            battleButtonManagerInstance.ActionButtonsSetActive(false, true, false);
         }
     }
 
@@ -372,7 +379,7 @@ public class Player : BasicUnitScript
 
     private void CountDownPropertyTime()
     {
-        if (BattleSceneManager.Instance.nowGameState == NowGameState.Playing && isChangePropertyReady == false)
+        if (BattleSceneManager.Instance.nowGameState == NowGameState.Playing && isChangePropertyReady == false && nowState != NowState.Resurrection)
         {
             if (nowProperty != NowPlayerProperty.BasicProperty)
             {
@@ -406,7 +413,7 @@ public class Player : BasicUnitScript
 
         nowState = NowState.Deflecting;
         nowDefensivePosition = DefensePos.None;
-        bBM.ActionButtonsSetActive(false, false, false);
+        battleButtonManagerInstance.ActionButtonsSetActive(false, false, false);
         transform.rotation = Quaternion.Euler(0, setRotation, 0);
         ChangeAttackRange(new Vector2(0.7f, 2.6f), new Vector2(0, 0));
 
@@ -440,7 +447,7 @@ public class Player : BasicUnitScript
 
         if (isWaiting == false && isChangePropertyReady == false)
         {
-            bBM.ActionButtonsSetActive(true, false, false);
+            battleButtonManagerInstance.ActionButtonsSetActive(true, false, false);
         }
         if (nowActionCoolTime != 0)
         {
@@ -467,7 +474,7 @@ public class Player : BasicUnitScript
                 ActionCoolTimeBarSetActive(false);
                 if (isChangePropertyReady == false)
                 {
-                    bBM.ActionButtonsSetActive(true, false, false);
+                    battleButtonManagerInstance.ActionButtonsSetActive(true, false, false);
                 }
             }
         }
@@ -488,7 +495,7 @@ public class Player : BasicUnitScript
             {
                 ActionCoolTimeBarSetActive(true);
             }
-            bBM.ActionButtonsSetActive(false, false, false);
+            battleButtonManagerInstance.ActionButtonsSetActive(false, false, false);
         }
     }
 
@@ -497,7 +504,7 @@ public class Player : BasicUnitScript
         if (BattleSceneManager.Instance.nowGameState == NowGameState.Playing && nowState == NowState.Standingby && Input.GetKey(KeyCode.Space) && Hp_F > 0 && isChangePropertyReady == false)
         {
             nowState = NowState.Jumping;
-            bBM.ActionButtonsSetActive(false, false, false);
+            battleButtonManagerInstance.ActionButtonsSetActive(false, false, false);
             CamShake.JumpStart();
             rigid.AddForce(Vector2.up * jumpPower_F, ForceMode2D.Impulse);
             rigid.gravityScale = setJumpGravityScale_F - 0.5f;
@@ -509,13 +516,13 @@ public class Player : BasicUnitScript
             nowState = NowState.Standingby;
             if (isWaiting == false && isChangePropertyReady == false)
             {
-                if (bBM.nowButtonPage == ButtonPage.SecondPage)
+                if (battleButtonManagerInstance.nowButtonPage == ButtonPage.SecondPage)
                 {
-                    bBM.ActionButtonsSetActive(false, true, false);
+                    battleButtonManagerInstance.ActionButtonsSetActive(false, true, false);
                 }
                 else
                 {
-                    bBM.ActionButtonsSetActive(true, false, false);
+                    battleButtonManagerInstance.ActionButtonsSetActive(true, false, false);
                 }
             }
 
@@ -544,7 +551,7 @@ public class Player : BasicUnitScript
         if (nowState == NowState.Standingby)
         {
             nowState = NowState.Attacking;
-            bBM.ActionButtonsSetActive(false, false, false);
+            battleButtonManagerInstance.ActionButtonsSetActive(false, false, false);
             StartCoroutine(GoToAttack());
         }
     }
@@ -554,7 +561,7 @@ public class Player : BasicUnitScript
         if (nowState == NowState.Standingby)
         {
             nowState = NowState.Resting;
-            bBM.ActionButtonsSetActive(false, false, false);
+            battleButtonManagerInstance.ActionButtonsSetActive(false, false, false);
             StartCoroutine(Resting());
         }
     }
@@ -585,7 +592,7 @@ public class Player : BasicUnitScript
         nowState = NowState.Standingby;
         if (isChangePropertyReady == false)
         {
-            bBM.ActionButtonsSetActive(true, false, false);
+            battleButtonManagerInstance.ActionButtonsSetActive(true, false, false);
         }
     }
 
@@ -746,7 +753,7 @@ public class Player : BasicUnitScript
             nowState = NowState.Attacking;
             Energy_F -= nowUseSkillNeedEnergy;
 
-            bBM.ActionButtonsSetActive(false, false, false);
+            battleButtonManagerInstance.ActionButtonsSetActive(false, false, false);
 
             switch (nowUseSkillIndex)
             {
@@ -774,7 +781,7 @@ public class Player : BasicUnitScript
             yield return null;
         }
 
-        var enchantedSwordAuraObj = oP.GetObject((int)PoolObjKind.PlayerSwordAura);
+        var enchantedSwordAuraObj = objectPoolInstance.GetObject((int)PoolObjKind.PlayerSwordAura);
         var enchantedSwordAuraObjComponent = enchantedSwordAuraObj.GetComponent<SwordAura>();
 
         if (isFailEnchant == false)
@@ -823,7 +830,7 @@ public class Player : BasicUnitScript
         nowState = NowState.Resurrection;
         WaitingTimeEnd();
         ActionCoolTimeBarSetActive(false);
-        bBM.ActionButtonsSetActive(false, false, false);
+        battleButtonManagerInstance.ActionButtonsSetActive(false, false, false);
 
         while (true)
         {
@@ -841,9 +848,15 @@ public class Player : BasicUnitScript
             yield return null;
         }
 
-        bBM.ActionButtonsSetActive(true, false, false);
-        nowState = NowState.Standingby; 
-        yield return new WaitForSeconds(15f);
+        battleButtonManagerInstance.ActionButtonsSetActive(true, false, false);
+        nowState = NowState.Standingby;
+        NowPropertyTimeLimit = 10;
+
+        while (NowPropertyTimeLimit < maxPropertyTimeLimit)//NowPropertyTimeLimit > 0
+        {
+            yield return null;
+        }
+
         AngelPropertyBuff(false);
         Invincibility(false);
     }
@@ -903,7 +916,7 @@ public class Player : BasicUnitScript
 
         playerAnimator.SetBool("Stuning", true);
         nowDefensivePosition = DefensePos.None;
-        bBM.ActionButtonsSetActive(false, false, false);
+        battleButtonManagerInstance.ActionButtonsSetActive(false, false, false);
 
         yield return new WaitForSeconds(0.2f);
 
@@ -921,7 +934,7 @@ public class Player : BasicUnitScript
 
         if (isChangePropertyReady == false && Hp_F > 0)
         {
-            bBM.ActionButtonsSetActive(true, false, false);
+            battleButtonManagerInstance.ActionButtonsSetActive(true, false, false);
         }
 
         WaitingTimeStart();
