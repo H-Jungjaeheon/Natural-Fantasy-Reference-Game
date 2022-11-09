@@ -225,6 +225,9 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
         yield return new WaitForSeconds(3);
 
+        introducingTheStageImage.rectTransform.DOAnchorPosX(1920, 0.25f);
+        introducingTheStageText.rectTransform.DOAnchorPosX(-1920, 0.25f);
+
         while (nowImageAlpha > 0)
         {
             nowImageAlpha -= Time.deltaTime * 3;
@@ -233,8 +236,6 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
             yield return null;
         }
 
-        introducingTheStageImage.rectTransform.DOAnchorPosX(1920, 0.5f);
-        introducingTheStageText.rectTransform.DOAnchorPosX(-1920, 0.5f);
 
         while (introducingTheStageImage.rectTransform.anchoredPosition.x < 1920)
         {

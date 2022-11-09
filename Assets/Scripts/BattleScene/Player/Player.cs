@@ -13,6 +13,16 @@ public enum NowPlayerProperty
     PropertyTotalNumber
 }
 
+public enum PropertyColor
+{
+    Gray,
+    Green,
+    Brown,
+    Red,
+    Yellow,
+    White
+}
+
 public class Player : BasicUnitScript
 {
     #region 쉴드 관련 변수 / 오브젝트
@@ -72,6 +82,7 @@ public class Player : BasicUnitScript
             }
             else
             {
+                nowPropertyLimitTimeImage.fillAmount = (maxChangePropertyCoolTime - NowChangePropertyCoolTime) / maxChangePropertyCoolTime;
                 nowChangePropertyCoolTime = value;
             }
         }
@@ -92,6 +103,7 @@ public class Player : BasicUnitScript
             }
             else
             {
+                nowPropertyLimitTimeImage.fillAmount = (maxPropertyTimeLimit - NowPropertyTimeLimit) / maxPropertyTimeLimit;
                 nowPropertyTimeLimit = value;
             }
         }
@@ -142,6 +154,10 @@ public class Player : BasicUnitScript
     private Image nowPropertyImage;
 
     [SerializeField]
+    [Tooltip("현재 플레이어 속성 지속시간 이미지")]
+    private Image nowPropertyLimitTimeImage;
+
+    [SerializeField]
     [Tooltip("플레이어 속성 아이콘 스프라이트 모음")]
     private Sprite[] nowPropertyIconImages;
 
@@ -158,6 +174,13 @@ public class Player : BasicUnitScript
     [SerializeField]
     [Tooltip("성령 속성 보호막 체력 텍스트 색")]
     private Color shieldHpTextColor;
+    #endregion
+
+    #region 속성 상징 색
+    [Header("속성 상징 색 모음")]
+    [SerializeField]
+    [Tooltip("속성 상징 색 모음")]
+    private Color[] propertyColors;
     #endregion
 
     protected override void Update()
@@ -193,7 +216,7 @@ public class Player : BasicUnitScript
 
         BattleSceneManager.Instance.playerCharacterPos = transform.position;
         nextPropertyIndex = Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
-        nowPropertyImage.GetComponent<Image>().sprite = nowPropertyIconImages[(int)nowProperty];
+        nowPropertyImage.sprite = nowPropertyIconImages[(int)nowProperty];
         Energy_F = MaxEnergy_F;
         Hp_F = MaxHp_F;
     }
@@ -272,7 +295,7 @@ public class Player : BasicUnitScript
         NowPropertyTimeLimit = 0;
         NowChangePropertyCoolTime = 0;
         isChangePropertyReady = true;
-        nowActionCoolTime = 0;
+
         while (true)
         {
             if (nowState == NowState.Standingby && angelPropertyBuffing == false)
@@ -286,6 +309,7 @@ public class Player : BasicUnitScript
         Invincibility(true);
         bBM.ActionButtonsSetActive(false, false, false);
         transform.rotation = Quaternion.identity;
+        nowActionCoolTime = 0;
 
         if (isChangeBasicProperty)
         {
@@ -315,16 +339,18 @@ public class Player : BasicUnitScript
             nextPropertyIndex = ((NowPlayerProperty)nextPropertyIndex == NowPlayerProperty.AngelProperty) ? (int)NowPlayerProperty.NatureProperty : nextPropertyIndex + 1;
         }
         StartCoroutine(EndingPropertyChanges());
-        nowPropertyImage.GetComponent<Image>().sprite = nowPropertyIconImages[(int)nowProperty];
+        nowPropertyLimitTimeImage.color = propertyColors[(int)nowProperty];
+        nowPropertyImage.sprite = nowPropertyIconImages[(int)nowProperty];
     }
 
     IEnumerator EndingPropertyChanges() //나중에 애니메이션 나오면 일반함수로 전환, 그리고 속성 변경 애니메이션 끝날때쯤 변경한 이 함수 실행
     {
+        print(nowActionCoolTime);
         yield return new WaitForSeconds(2);
         isChangePropertyReady = false;
         nowState = NowState.Standingby;
         Invincibility(false);
-
+        
         if (BattleButtonManager.Instance.nowButtonPage == ButtonPage.FirstPage)
         {
             bBM.ActionButtonsSetActive(true, false, true);
@@ -428,18 +454,21 @@ public class Player : BasicUnitScript
     }
 
 
-    protected override void UISetting() //대기시간 및 UI세팅 (일부 공통)
+    protected override void UISetting() //대기시간 및 UI세팅
     {
         if (isWaiting && (nowState == NowState.Standingby || nowState == NowState.Jumping || nowState == NowState.Defensing))
         {
             actionCoolTimeObj.transform.position = transform.position + (Vector3)actionCoolTimeObjPlusPos;
             actionCoolTimeImage.fillAmount = nowActionCoolTime / maxActionCoolTime;
             nowActionCoolTime += Time.deltaTime;
-            if (nowActionCoolTime >= maxActionCoolTime)
+            if (nowActionCoolTime >= maxActionCoolTime || isChangePropertyReady)
             {
                 WaitingTimeEnd();
                 ActionCoolTimeBarSetActive(false);
-                bBM.ActionButtonsSetActive(true, false, false);
+                if (isChangePropertyReady == false)
+                {
+                    bBM.ActionButtonsSetActive(true, false, false);
+                }
             }
         }
         else if (nowState == NowState.Deflecting || nowState == NowState.Fainting || nowState == NowState.ChangingProperties)
@@ -793,6 +822,7 @@ public class Player : BasicUnitScript
         AngelPropertyBuff(true);
         nowState = NowState.Resurrection;
         WaitingTimeEnd();
+        ActionCoolTimeBarSetActive(false);
         bBM.ActionButtonsSetActive(false, false, false);
 
         while (true)
@@ -888,7 +918,6 @@ public class Player : BasicUnitScript
 
         Energy_F += 8; //나중에 매개변수로 레벨에 따라서 기력 차는 양 증가
         nowActionCoolTime = maxActionCoolTime;
-
 
         if (isChangePropertyReady == false && Hp_F > 0)
         {
