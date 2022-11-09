@@ -6646,7 +6646,6 @@ MonoBehaviour:
   maxEnergy_F: 30
   isHaveDreamyFigure: 0
   dreamyFigure_F: 0
-  maxDreamyFigure_F: 0
   damage_I: 5
   Speed_F: 4.5
   unitHpBars: {fileID: 1135723117}
@@ -8897,8 +8896,7 @@ MonoBehaviour:
   maxEnergy_F: 15
   isHaveDreamyFigure: 1
   dreamyFigure_F: 0
-  maxDreamyFigure_F: 0
-  damage_I: 1
+  damage_I: 4
   Speed_F: 7
   unitHpBars: {fileID: 939537340}
   unitLightHpBars: {fileID: 1390554749}
@@ -8916,7 +8914,6 @@ MonoBehaviour:
   hitColor: {r: 1, g: 0, b: 0, a: 1}
   returnBasicColor: {r: 1, g: 1, b: 1, a: 1}
   unitShieldHpBars: {fileID: 1902801556}
-  nowChangePropertyCoolTime: 0
   nowProperty: 0
   isSpawnNatureBead: 0
   nowPropertyImage: {fileID: 693409020}

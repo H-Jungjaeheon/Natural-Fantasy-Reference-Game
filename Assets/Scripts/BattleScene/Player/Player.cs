@@ -47,7 +47,7 @@ public class Player : BasicUnitScript
         }
     }
 
-    private float maxShieldHp_F;
+    private const float maxShieldHp_F = 2;
 
     [SerializeField]
     [Tooltip("유닛 실드 체력바 이미지")]
@@ -56,7 +56,7 @@ public class Player : BasicUnitScript
 
     private float maxChangePropertyCoolTime = 35; //최대 속성 변경 시간
 
-    public float nowChangePropertyCoolTime; //현재 속성 변경 시간
+    private float nowChangePropertyCoolTime; //현재 속성 변경 시간
 
     public float NowChangePropertyCoolTime
     {
@@ -172,18 +172,17 @@ public class Player : BasicUnitScript
     protected override void StartSetting() //초기 세팅 (일부 공통)
     {
         var gameManager_Ins = GameManager.Instance;
-        int plusMultiplicationMaxHpPerLevel = 5;
-        int plusMultiplicationMaxEnergyPerLevel = 5;
-        float plusMultiplicationMaxActionCoolTimePerLevel = 0.5f;
-        float basicMaxActionCoolTime = 3.5f;
+        int energyPerLevel = gameManager_Ins.statLevels[(int)UpgradeableStatKind.Energy] * 3; //레벨당 기력 증가식
+        int maxHpPerLevel = (int)MaxHp_F / 10 * (gameManager_Ins.statLevels[(int)UpgradeableStatKind.Hp]); //레벨당 체력 증가식
+        float damagePerLevel = (Damage_I * 10 / 100) * gameManager_Ins.statLevels[(int)UpgradeableStatKind.Damage]; //레벨당 공격력 증가식
+        float maxActionCoolTimePerLevel = (gameManager_Ins.ReduceCoolTimeLevel * 0.1f); //레벨당 최대 쿨타임 차감식 (임시)
 
-        maxActionCoolTime = basicMaxActionCoolTime - (gameManager_Ins.ReduceCoolTimeLevel * plusMultiplicationMaxActionCoolTimePerLevel);
-        MaxHp_F += gameManager_Ins.statLevels[(int)UpgradeableStatKind.Hp] * plusMultiplicationMaxHpPerLevel;
-        MaxEnergy_F += gameManager_Ins.statLevels[(int)UpgradeableStatKind.Energy] * plusMultiplicationMaxEnergyPerLevel;
-        Damage_I += gameManager_Ins.statLevels[(int)UpgradeableStatKind.Damage];
+        maxActionCoolTime -= maxActionCoolTimePerLevel;
+        MaxHp_F += maxHpPerLevel;
+        MaxEnergy_F += energyPerLevel;
+        Damage_I += damagePerLevel;
+
         restWaitTime = 1.25f;
-        maxShieldHp_F = 2;
-        maxDreamyFigure_F = 20;
         maxNaturePassiveCount = 5;
 
         nowState = NowState.Standingby;
@@ -622,7 +621,7 @@ public class Player : BasicUnitScript
 
                     bool isDefence = (unitScriptComponenet.nowState == NowState.Defensing && unitScriptComponenet.nowDefensivePosition == DefensePos.Left) ? true : false;
 
-                    unitScriptComponenet.Hit(Damage_I, isDefence);
+                    unitScriptComponenet.Hit(CurrentRandomDamage(Damage_I), isDefence);
                     if (isToBurn == false && nowProperty == NowPlayerProperty.FlameProperty)
                     {
                         unitScriptComponenet.BurnDamageStart();
@@ -673,6 +672,15 @@ public class Player : BasicUnitScript
             }
             StartCoroutine(Return());
         }
+    }
+
+    private float CurrentRandomDamage(float nowPlayerDamage)
+    {
+        int randDamage = Random.Range(-2, 2); //랜덤 데미지 증감
+
+        nowPlayerDamage += randDamage;
+
+        return nowPlayerDamage;
     }
 
     IEnumerator Return() //근접공격 후 돌아오기

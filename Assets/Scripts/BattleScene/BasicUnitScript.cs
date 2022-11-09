@@ -197,7 +197,7 @@ public abstract class BasicUnitScript : MonoBehaviour
     }
 
     [HideInInspector]
-    public float maxDreamyFigure_F; //최대 몽환 게이지
+    public const float maxDreamyFigure_F = 20; //최대 몽환 게이지
 
     [Tooltip("공격력")]
     [SerializeField]
