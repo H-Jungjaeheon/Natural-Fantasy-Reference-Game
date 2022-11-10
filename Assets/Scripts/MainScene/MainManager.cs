@@ -18,6 +18,7 @@ public enum ScreenState
 {
     MainScreen,
     StageSelectScreen,
+    AdmissionCheckScreen,
     UpgradeScreen,
     OptionScreen
 }
@@ -29,6 +30,10 @@ public class MainManager : Singleton<MainManager>
     [SerializeField]
     [Tooltip("스테이지 선택 창 오브젝트")]
     private GameObject stgaeSelectObj;
+
+    [SerializeField]
+    [Tooltip("스테이지 입장 확인 창 오브젝트")]
+    private GameObject admissionCheckObj;
 
     [SerializeField]
     [Tooltip("업그레이드 시스템 창 오브젝트")]
@@ -54,6 +59,10 @@ public class MainManager : Singleton<MainManager>
     [Tooltip("기본 재화 텍스트")]
     private TextMeshProUGUI basicGoodsText;
 
+    [SerializeField]
+    [Tooltip("콘텐츠 버튼 오브젝트들 설명 텍스트")]
+    private TextMeshProUGUI[] contentGuidanceTexts;
+
     private BattleOrMainOptionState nowMainOptionState;
 
     WaitForSeconds faidDelay = new WaitForSeconds(1);
@@ -63,6 +72,7 @@ public class MainManager : Singleton<MainManager>
         GameManager.Instance.nowSceneState = NowSceneState.Main;
         StartCoroutine(StartFaidAnim());
         StartCoroutine(GamePauseObjOnOrOff());
+        StartCoroutine(ContentGuidanceTextsMove());
     }
 
     IEnumerator GamePauseObjOnOrOff()
@@ -136,6 +146,30 @@ public class MainManager : Singleton<MainManager>
         }
     }
 
+    IEnumerator ContentGuidanceTextsMove()
+    {
+        Vector2 textsMoveSpeed; //시작 위치에서 움직일 속도
+        Vector2[] startPos = new Vector2[2]; //시작 위치
+
+        textsMoveSpeed.x = 0; //x값은 움직이지 않음(초기화)
+
+        for (int nowIndex = 0; nowIndex < contentGuidanceTexts.Length; nowIndex++) //시작 위치 세팅
+        {
+            startPos[nowIndex] = contentGuidanceTexts[nowIndex].transform.localPosition;
+        }
+
+        while (true) //텍스트 애니메이션 반복
+        {
+            for (int nowIndex = 0; nowIndex < contentGuidanceTexts.Length; nowIndex++)
+            {
+                textsMoveSpeed.y = Mathf.Sin(Time.time) * 10;
+
+                contentGuidanceTexts[nowIndex].transform.localPosition = startPos[nowIndex] + textsMoveSpeed;
+            }
+            yield return null;
+        }
+    }
+
     IEnumerator StartFaidAnim()
     {
         Color color = faidOutImageColor;
@@ -158,10 +192,7 @@ public class MainManager : Singleton<MainManager>
         faidOutObj.SetActive(false);
     }
 
-    public void BasicGoodsTextFixed()
-    {
-        basicGoodsText.text = $"{GameManager.Instance.Gold}";
-    }
+    public void BasicGoodsTextFixed() => basicGoodsText.text = $"{GameManager.Instance.Gold}";
 
     public void PressToGamePausePageChangeButton(int nowChange)
     {
@@ -195,11 +226,26 @@ public class MainManager : Singleton<MainManager>
 
     public void MoveToBattleScene(int StageIndexToEnter)
     {
-        switch (StageIndexToEnter) //이곳에서 입장하려는 스테이지에 따라 나중에 스테이지 정보 넣기 (입장 재확인 창 띄우기)
+        nowScreenState = ScreenState.AdmissionCheckScreen;
+        admissionCheckObj.SetActive(true);
+        switch (StageIndexToEnter)
         {
             case 1:
-                StartCoroutine(MoveToStageAnim());
+                //스테이지 1 정보
                 break;
+        }
+    }
+
+    public void AdmissionCheck(bool isAdmissionBattle)
+    {
+        if (isAdmissionBattle)
+        {
+            StartCoroutine(MoveToStageAnim());
+        }
+        else
+        {
+            admissionCheckObj.SetActive(false);
+            nowScreenState = ScreenState.StageSelectScreen;
         }
     }
 
