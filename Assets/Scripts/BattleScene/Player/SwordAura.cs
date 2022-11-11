@@ -55,7 +55,7 @@ public class SwordAura : MonoBehaviour
 
     private bool isEnemyHit;
 
-    private BattleSceneManager BS;
+    private BattleSceneManager bsm;
 
     private Player playerScript;
 
@@ -77,8 +77,8 @@ public class SwordAura : MonoBehaviour
 
     private void StartSetting()
     {
-        playerScript = BattleSceneManager.Instance.Player.GetComponent<Player>();
-        BS = BattleSceneManager.Instance;
+        bsm = BattleSceneManager.Instance;
+        playerScript = bsm.Player.GetComponent<Player>();
 
         spawnPlusVector = new Vector2(2.5f, 0);
         movingPlusVector = new Vector2(speed, 0);
@@ -94,7 +94,7 @@ public class SwordAura : MonoBehaviour
     public void OnEnableSetting()
     {
         sR.sprite = swordAuraImages[(int)NowSwordAuraState.Basic];
-        transform.position = BS.Player.transform.position + (Vector3)spawnPlusVector;
+        transform.position = bsm.Player.transform.position + (Vector3)spawnPlusVector;
         transform.rotation = Quaternion.identity;
         damage = 0;
         damage += (4 + 0); //나중에 스킬 강화나 데미지 강화 레벨에 비례해서 증가
@@ -107,9 +107,12 @@ public class SwordAura : MonoBehaviour
     
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.CompareTag("Enemy"))
+        var busComponent = collision.gameObject.GetComponent<BasicUnitScript>();
+
+        if (collision.gameObject.CompareTag("Enemy"))
         {
-            collision.gameObject.GetComponent<BasicUnitScript>().Hit(damage, false);
+            busComponent.Hit(damage, false);
+            busComponent.GetBasicGood();
             if (isEnemyHit == false)
             {
                 CamShake.CamShakeMod(false, 2f); //대각선
@@ -117,7 +120,7 @@ public class SwordAura : MonoBehaviour
             }
             if (playerScript.nowProperty == NowPlayerProperty.FlameProperty)
             {
-                collision.gameObject.GetComponent<BasicUnitScript>().BurnDamageStart();
+                busComponent.BurnDamageStart();
             }
         }
         else if(collision.gameObject.CompareTag("ObjDestroy"))

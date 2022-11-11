@@ -17,9 +17,9 @@ public class SlimeEnemy : BasicUnitScript
         nowDefensivePosition = DefensePos.None;
 
         isWaiting = true;
-        
-        BattleSceneManager.Instance.enemyCharacterPos = transform.position;
-        BattleSceneManager.Instance.Enemy = gameObject;
+
+        bsm.enemyCharacterPos = transform.position;
+        bsm.Enemy = gameObject;
 
         Hp_F = MaxHp_F;
         Energy_F = MaxEnergy_F;
@@ -33,7 +33,7 @@ public class SlimeEnemy : BasicUnitScript
     {
         while (true)
         {
-            if (BattleSceneManager.Instance.nowGameState == NowGameState.Playing)
+            if (bsm.nowGameState == NowGameState.Playing)
             {
                 actionCoolTimeObj.SetActive(true);
                 break;
@@ -44,7 +44,7 @@ public class SlimeEnemy : BasicUnitScript
 
     protected override void UISetting()
     {
-        if (BattleSceneManager.Instance.nowGameState == NowGameState.Playing && isWaiting)
+        if (bsm.nowGameState == NowGameState.Playing && isWaiting)
         {
             actionCoolTimeObj.transform.position = transform.position + (Vector3)actionCoolTimeObjPlusPos;
             actionCoolTimeImage.fillAmount = nowActionCoolTime / maxActionCoolTime;
@@ -116,10 +116,9 @@ public class SlimeEnemy : BasicUnitScript
     {
         Vector3 Movetransform = new Vector3(Speed_F, 0, 0); //이동을 위해 더해줄 연산
         Vector3 Targettransform = new Vector3(0, transform.position.y); //목표 위치
-        var battleSceneManagerInstance = BattleSceneManager.Instance;
 
         nowState = NowState.Attacking;
-        Targettransform.x = (isBasicCloseAttack) ? battleSceneManagerInstance.playerCharacterPos.x + 5.5f : battleSceneManagerInstance.playerCharacterPos.x + 8;
+        Targettransform.x = (isBasicCloseAttack) ? bsm.playerCharacterPos.x + 5.5f : bsm.playerCharacterPos.x + 8;
         Energy_F -= (isBasicCloseAttack) ? 2 : 3;
 
         while (transform.position.x > Targettransform.x) //이동중
@@ -186,7 +185,7 @@ public class SlimeEnemy : BasicUnitScript
 
         speedVectorWithPattern.x = 5.5f; //점프하며 플레이어 위치에 다가갈 스피드
 
-        while (transform.position.x >= BattleSceneManager.Instance.playerCharacterPos.x) //플레이어 시작 x값까지 움직임
+        while (transform.position.x >= bsm.playerCharacterPos.x) //플레이어 시작 x값까지 움직임
         {
             transform.position -= (Vector3)speedVectorWithPattern * Time.deltaTime;
             yield return null;
@@ -392,6 +391,7 @@ public class SlimeEnemy : BasicUnitScript
 
     protected override IEnumerator Dead()
     {
+        bsm.NowGetBasicGood += 50;
         yield return null;
     }
 

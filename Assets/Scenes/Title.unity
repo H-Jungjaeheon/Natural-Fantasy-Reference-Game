@@ -490,7 +490,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDontDestroyObj: 1
-  testBullet: {fileID: 0}
+  gold: 0
+  statLevels: 000000000000000000000000
+  nowSceneState: 0
 --- !u!4 &273809865
 Transform:
   m_ObjectHideFlags: 0
@@ -966,7 +968,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!82 &852722439
 AudioSource:
   m_ObjectHideFlags: 0

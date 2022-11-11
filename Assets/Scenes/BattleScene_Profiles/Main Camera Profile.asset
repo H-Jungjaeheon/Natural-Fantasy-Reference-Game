@@ -155,10 +155,10 @@ MonoBehaviour:
     value: 5.02
   anamorphicRatio:
     overrideState: 1
-    value: -1
+    value: 1
   color:
     overrideState: 1
-    value: {r: 0.41023615, g: 0.07988606, b: 0.41509432, a: 1}
+    value: {r: 0.4035911, g: 0.2277056, b: 0.4056604, a: 1}
   fastMode:
     overrideState: 1
     value: 1

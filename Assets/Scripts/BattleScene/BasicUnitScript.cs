@@ -261,6 +261,10 @@ public abstract class BasicUnitScript : MonoBehaviour
     protected TextMeshProUGUI dreamyFigureText;
     #endregion
 
+    protected const int maxGoodGetCount = 15;
+
+    protected int nowGoodGetCount;
+
     [HideInInspector]
     public Vector2 startPos_Vector;
 
@@ -296,6 +300,8 @@ public abstract class BasicUnitScript : MonoBehaviour
     [Tooltip("타격 색 변경 후 원래 색으로 되돌림")]
     public Color returnBasicColor;
 
+    protected BattleSceneManager bsm;
+
     protected WaitForSeconds changeToBasicColorDelay;
 
     protected virtual void Awake()
@@ -319,6 +325,7 @@ public abstract class BasicUnitScript : MonoBehaviour
         maxGiveBurnDamageTime = 4;
         maxStackableOverlapTime = 10; //화상 효과 중첩 가능 제한시간 초기화
         maxBurnDamageLimitTime = 15; //화상 효과 지속시간 증가 초기화
+        bsm = BattleSceneManager.Instance;
 
         hpText.text = $"{(Hp_F):N0}/{(MaxHp_F):N0}";
         energyText.text = $"{(Energy_F):N0}/{(MaxEnergy_F):N0}";
@@ -454,6 +461,16 @@ public abstract class BasicUnitScript : MonoBehaviour
         if (nowBurnDamageStack == 1)
         {
             isBurning = true;
+        }
+    }
+
+    public virtual void GetBasicGood() //후에 보스별로 주는 재화량 다르게 하기
+    {
+        if (nowGoodGetCount < maxGoodGetCount)
+        {
+            int nowGetRandGood = Random.Range(5, 11);
+            bsm.NowGetBasicGood += nowGetRandGood;
+            nowGoodGetCount++;
         }
     }
 }

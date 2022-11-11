@@ -100,7 +100,7 @@ public class Player : BasicUnitScript
         get { return nowPropertyTimeLimit; }
         set
         {
-            if (value > maxPropertyTimeLimit)
+            if (value >= maxPropertyTimeLimit)
             {
                 StartCoroutine(ChangeProperty(true));
             }
@@ -127,6 +127,8 @@ public class Player : BasicUnitScript
     private bool angelPropertyBuffing;
 
     private bool isToBurn;
+
+    private bool isGetGood;
 
     private float maxNaturePassiveCount;
 
@@ -221,7 +223,7 @@ public class Player : BasicUnitScript
         isResurrectionOpportunityExists = true;
 
         BattleSceneManager.Instance.playerCharacterPos = transform.position;
-        nextPropertyIndex = (int)NowPlayerProperty.AngelProperty; //Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
+        nextPropertyIndex = Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
         nowPropertyImage.sprite = nowPropertyIconImages[(int)nowProperty];
         Energy_F = MaxEnergy_F;
         Hp_F = MaxHp_F;
@@ -253,7 +255,7 @@ public class Player : BasicUnitScript
 
     protected override void Defense()
     {
-        if (BattleSceneManager.Instance.nowGameState == NowGameState.Playing && nowState == NowState.Standingby && Hp_F > 0 && isChangePropertyReady == false)
+        if (bsm.nowGameState == NowGameState.Playing && nowState == NowState.Standingby && Hp_F > 0 && isChangePropertyReady == false)
         {
             if (Input.GetKey(KeyCode.A))
             {
@@ -305,7 +307,6 @@ public class Player : BasicUnitScript
 
         while (true)
         {
-            //print(angelPropertyBuffing);
             if (nowState == NowState.Standingby && angelPropertyBuffing == false)
             {
                 break;
@@ -379,7 +380,7 @@ public class Player : BasicUnitScript
 
     private void CountDownPropertyTime()
     {
-        if (BattleSceneManager.Instance.nowGameState == NowGameState.Playing && isChangePropertyReady == false && nowState != NowState.Resurrection)
+        if (bsm.nowGameState == NowGameState.Playing && isChangePropertyReady == false && nowState != NowState.Resurrection)
         {
             if (nowProperty != NowPlayerProperty.BasicProperty)
             {
@@ -501,7 +502,7 @@ public class Player : BasicUnitScript
 
     private void Jump()
     {
-        if (BattleSceneManager.Instance.nowGameState == NowGameState.Playing && nowState == NowState.Standingby && Input.GetKey(KeyCode.Space) && Hp_F > 0 && isChangePropertyReady == false)
+        if (bsm.nowGameState == NowGameState.Playing && nowState == NowState.Standingby && Input.GetKey(KeyCode.Space) && Hp_F > 0 && isChangePropertyReady == false)
         {
             nowState = NowState.Jumping;
             battleButtonManagerInstance.ActionButtonsSetActive(false, false, false);
@@ -599,7 +600,7 @@ public class Player : BasicUnitScript
     IEnumerator GoToAttack()
     {
         Vector3 Movetransform = new Vector3(Speed_F, 0, 0); //이동을 위해 더해줄 연산
-        Vector3 Targettransform = new Vector3(BattleSceneManager.Instance.enemyCharacterPos.x - 5.5f, transform.position.y); //목표 위치
+        Vector3 Targettransform = new Vector3(bsm.enemyCharacterPos.x - 5.5f, transform.position.y); //목표 위치
 
         playerAnimator.SetBool("Moving", true);
 
@@ -658,6 +659,13 @@ public class Player : BasicUnitScript
                     bool isDefence = (unitScriptComponenet.nowState == NowState.Defensing && unitScriptComponenet.nowDefensivePosition == DefensePos.Left) ? true : false;
 
                     unitScriptComponenet.Hit(CurrentRandomDamage(Damage_I), isDefence);
+
+                    if (isGetGood == false)
+                    {
+                        GetBasicGood();
+                        isGetGood = true;
+                    }
+
                     if (isToBurn == false && nowProperty == NowPlayerProperty.FlameProperty)
                     {
                         unitScriptComponenet.BurnDamageStart();
@@ -706,6 +714,8 @@ public class Player : BasicUnitScript
             {
                 yield return new WaitForSeconds(0.5f);
             }
+
+            isGetGood = false;
             StartCoroutine(Return());
         }
     }
@@ -816,7 +826,7 @@ public class Player : BasicUnitScript
         }
         else
         {
-            //사망 애니 및 이벤트
+            bsm.StartGameOverPanelAnim();
         }
     }
 
@@ -852,7 +862,7 @@ public class Player : BasicUnitScript
         nowState = NowState.Standingby;
         NowPropertyTimeLimit = 10;
 
-        while (NowPropertyTimeLimit < maxPropertyTimeLimit)//NowPropertyTimeLimit > 0
+        while (NowPropertyTimeLimit > 0)
         {
             yield return null;
         }

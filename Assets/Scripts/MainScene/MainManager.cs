@@ -26,6 +26,7 @@ public enum ScreenState
 public class MainManager : Singleton<MainManager>
 {
     private ScreenState nowScreenState;
+    private BattleOrMainOptionState nowMainOptionState;
 
     [SerializeField]
     [Tooltip("스테이지 선택 창 오브젝트")]
@@ -63,13 +64,15 @@ public class MainManager : Singleton<MainManager>
     [Tooltip("콘텐츠 버튼 오브젝트들 설명 텍스트")]
     private TextMeshProUGUI[] contentGuidanceTexts;
 
-    private BattleOrMainOptionState nowMainOptionState;
 
     WaitForSeconds faidDelay = new WaitForSeconds(1);
 
     private void Start()
     {
         GameManager.Instance.nowSceneState = NowSceneState.Main;
+        nowMainOptionState = BattleOrMainOptionState.None;
+        nowScreenState = ScreenState.MainScreen;
+
         StartCoroutine(StartFaidAnim());
         StartCoroutine(GamePauseObjOnOrOff());
         StartCoroutine(ContentGuidanceTextsMove());
