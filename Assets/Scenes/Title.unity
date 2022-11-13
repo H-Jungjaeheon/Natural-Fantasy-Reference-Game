@@ -489,7 +489,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5c3bd223f3d4264ebe774d6fa523e8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isDontDestroyObj: 1
+  isDontDestroyOnLoad: 1
   gold: 0
   statLevels: 000000000000000000000000
   nowSceneState: 0

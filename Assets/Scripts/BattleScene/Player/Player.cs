@@ -826,7 +826,8 @@ public class Player : BasicUnitScript
         }
         else
         {
-            bsm.StartGameOverPanelAnim();
+            nowState = NowState.Dead;
+            bsm.StartGameEndPanelAnim(true);
         }
     }
 

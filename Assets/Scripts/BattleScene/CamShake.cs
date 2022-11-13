@@ -29,10 +29,16 @@ public class CamShake : MonoBehaviour
     private Vignette vignette;
 
     Vector3 initialPosition;
+
     Vector3 objStartPosition;
+
     Vector3 camStartposition;
+
     Vector3 zeroPosition = new Vector3(0,0,0);
+
     WaitForSeconds shakeDelay = new WaitForSeconds(0.03f);
+
+    bool isGameClear;
 
     void Awake()
     {
@@ -58,36 +64,61 @@ public class CamShake : MonoBehaviour
         CamShakeMod = CamShakeStart;
         JumpStart = CallingStartJump;
         JumpStop = StopJump;
+
+        //bsmInstance = BattleSceneManager.Instance;
+    }
+
+    public void GameEndSetting()
+    {
+        Vector3 bossPos = BattleSceneManager.Instance.Enemy.transform.position;
+        bossPos.y -= 0.5f;
+        bossPos.z = -10;
+
+        isGameClear = true;
+        initialPosition = bossPos;
+        transform.position = bossPos;
     }
 
     public void CamShakeStart(bool isHorizontalShake, float timeInput) //가로로 떨림 판별, 떨리는 시간
     {
-        if (isHorizontalShake)
+        if (isGameClear == false)
         {
-            StartCoroutine(CamHorizontalShake(timeInput));
-        }
-        else
-        {
-            StartCoroutine(CamVerticalShake(timeInput));
+            if (isHorizontalShake)
+            {
+                StartCoroutine(CamHorizontalShake(timeInput));
+            }
+            else
+            {
+                StartCoroutine(CamVerticalShake(timeInput));
+            }
         }
     }
 
     private void RepetitionSetting()
     {
-        initialPosition.y = rigid.transform.position.y;
+        if (isGameClear == false)
+        {
+            initialPosition.y = rigid.transform.position.y;
+        }
     }
 
     private void CallingStartJump()
     {
-        StartCoroutine(StartJump());
+        if (isGameClear == false)
+        {
+            StartCoroutine(StartJump());
+        }
     }
 
     private void StopJump()
     {
-        rigid.transform.position = objStartPosition;
-        transform.position = camStartposition;
-        rigid.velocity = Vector2.zero;
-        rigid.gravityScale = 0;
+        if (isGameClear == false)
+        {
+            rigid.transform.position = objStartPosition;
+            transform.position = camStartposition;
+            rigid.velocity = Vector2.zero;
+            rigid.gravityScale = 0;
+        }
     }
 
     private IEnumerator StartJump()

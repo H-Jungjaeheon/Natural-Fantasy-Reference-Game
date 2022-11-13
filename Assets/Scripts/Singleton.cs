@@ -5,37 +5,29 @@ using UnityEngine;
 public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 {
     [SerializeField]
-    protected bool isDontDestroyObj;
+    protected bool isDontDestroyOnLoad;
 
-    private static T instance = null;
+    protected static T instance;
+
     public static T Instance
     {
         get
         {
             if (instance == null)
             {
-                instance = FindObjectOfType<T>();
-                if (instance == null)
+                GameObject obj;
+                obj = GameObject.Find(typeof(T).Name);
+                if (obj == null)
                 {
-                    instance = new GameObject().AddComponent<T>();
+                    obj = new GameObject(typeof(T).Name);
+                    instance = obj.AddComponent<T>();
+                }
+                else
+                {
+                    instance = obj.GetComponent<T>();
                 }
             }
             return instance;
-        }
-    }
-
-    protected void Awake()
-    {
-        if (isDontDestroyObj)
-        {
-            if (instance == null)
-            {
-                DontDestroyOnLoad(this.gameObject);
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
         }
     }
 }

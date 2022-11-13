@@ -11,6 +11,15 @@ public class SlimeEnemy : BasicUnitScript
 
     private const int maxRestLimitTurn = 3;
 
+    protected override void Update()
+    {
+        base.Update();
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            Hp_F -= 10;
+        }
+    }
+
     protected override void StartSetting()
     {
         nowState = NowState.Standingby;
@@ -76,36 +85,43 @@ public class SlimeEnemy : BasicUnitScript
                 if (Energy_F <= MaxEnergy_F / 3 && restLimitTurn >= maxRestLimitTurn)
                 {
                     restLimitTurn = 0;
-                    StartCoroutine(Resting());
+                    nowCoroutine = Resting();
+                    StartCoroutine(nowCoroutine);
                 }
                 else
                 {
                     behaviorProbability = Random.Range(1, 101);
                     if (behaviorProbability <= 20)
                     {
-                        StartCoroutine(GoToAttack(false));
+                        nowCoroutine = GoToAttack(false);
+                        StartCoroutine(nowCoroutine);
                     }
                     else if (behaviorProbability <= 60)
                     {
-                        StartCoroutine(HowitzerAttack());
+                        nowCoroutine = HowitzerAttack();
+                        StartCoroutine(nowCoroutine);
                     }
                     else if (behaviorProbability <= 100)
                     {
-                        StartCoroutine(LaserAttack());
+                        nowCoroutine = LaserAttack();
+                        StartCoroutine(nowCoroutine);
                     }
                 }
             }
             else if (behaviorProbability <= 55)
             {
-                StartCoroutine(GoToAttack(true));
+                nowCoroutine = GoToAttack(true);
+                StartCoroutine(nowCoroutine);
             }
             else if (behaviorProbability <= 80)
             {
-                StartCoroutine(GoToAttack(false));
+                nowCoroutine = GoToAttack(false);
+                StartCoroutine(nowCoroutine);
             }
             else if(behaviorProbability <= 100)
             {
-                StartCoroutine(ShootBullet());
+                nowCoroutine = ShootBullet();
+                StartCoroutine(nowCoroutine);
             }
 
             restLimitTurn++;
@@ -130,11 +146,13 @@ public class SlimeEnemy : BasicUnitScript
 
         if (isBasicCloseAttack)
         {
-            StartCoroutine(Attacking(true, nowAttackCount_I, 1f)); //기본 공격 실행
+            nowCoroutine = Attacking(true, nowAttackCount_I, 1f); //기본공격 실행
+            StartCoroutine(nowCoroutine);
         }
         else
         {
-            StartCoroutine(DefenselessCloseAttack()); //내려찍기 공격 실행
+            nowCoroutine = DefenselessCloseAttack(); //내려찍기 공격 실행
+            StartCoroutine(nowCoroutine);
         }
     }
 
@@ -172,7 +190,8 @@ public class SlimeEnemy : BasicUnitScript
             yield return new WaitForSeconds(1f);
         }
 
-        StartCoroutine(Return());
+        nowCoroutine = Return();
+        StartCoroutine(nowCoroutine);
     }
 
     IEnumerator DefenselessCloseAttack() //내려찍기 공격
@@ -214,7 +233,8 @@ public class SlimeEnemy : BasicUnitScript
 
         yield return new WaitForSeconds(1.25f);
 
-        StartCoroutine(Return());
+        nowCoroutine = Return();
+        StartCoroutine(nowCoroutine);
     }
 
     IEnumerator Return() //근접공격 후 돌아오기
@@ -391,7 +411,28 @@ public class SlimeEnemy : BasicUnitScript
 
     protected override IEnumerator Dead()
     {
+        nowState = NowState.Dead;
         bsm.NowGetBasicGood += 50;
+
+        rigid.velocity = Vector2.zero;
+        rigid.gravityScale = 0;
+
+        battleUIAnimator.SetBool("NowFainting", false);
+        battleUIObjScript.BattleUIObjSetActiveFalse();
+
+        battleUIAnimator.SetBool("NowResting", false);
+        battleUIObjScript.BattleUIObjSetActiveFalse();
+
+        ActionCoolTimeBarSetActive(false);
+
+        if (nowCoroutine != null)
+        {
+            StopCoroutine(nowCoroutine);
+        }
+
+        bsm.StartGameEndPanelAnim(false);
+
+        //죽는 애니메이션 재생
         yield return null;
     }
 

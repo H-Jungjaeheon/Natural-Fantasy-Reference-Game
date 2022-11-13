@@ -64,15 +64,28 @@ public class MainManager : Singleton<MainManager>
     [Tooltip("콘텐츠 버튼 오브젝트들 설명 텍스트")]
     private TextMeshProUGUI[] contentGuidanceTexts;
 
-
     WaitForSeconds faidDelay = new WaitForSeconds(1);
+
+    public void Awake()
+    {
+        if (instance != null)
+        {
+            Destroy(gameObject);
+        }
+        else if (isDontDestroyOnLoad)
+        {
+            DontDestroyOnLoad(gameObject);
+            instance = this;
+        }
+    }
 
     private void Start()
     {
         GameManager.Instance.nowSceneState = NowSceneState.Main;
         nowMainOptionState = BattleOrMainOptionState.None;
         nowScreenState = ScreenState.MainScreen;
-
+        
+        BasicGoodsTextFixed();
         StartCoroutine(StartFaidAnim());
         StartCoroutine(GamePauseObjOnOrOff());
         StartCoroutine(ContentGuidanceTextsMove());

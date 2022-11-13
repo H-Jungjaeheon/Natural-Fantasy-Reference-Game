@@ -68,6 +68,8 @@ public abstract class BasicUnitScript : MonoBehaviour
     [SerializeField]
     protected float setJumpGravityScale_F;
 
+    protected IEnumerator nowCoroutine; //현재 실행중인 코루틴 동작
+
     [Tooltip("점프 파워")]
     [SerializeField]
     protected float jumpPower_F;
@@ -84,7 +86,7 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     private bool isHpDiminishedProduction;
 
-    protected bool isInvincibility;
+    protected bool isInvincibility; //현재 무적인지 판별
 
     [HideInInspector]
     public List<GameObject> rangeInEnemy = new List<GameObject>(); //공격 범위 내의 적 리스트
@@ -164,7 +166,8 @@ public abstract class BasicUnitScript : MonoBehaviour
             
             if (value <= 0)
             {
-                StartCoroutine(Fainting());
+                nowCoroutine = Fainting();
+                StartCoroutine(nowCoroutine);
             }
         }
     }
@@ -431,7 +434,10 @@ public abstract class BasicUnitScript : MonoBehaviour
 
             if (nowGiveBurnDamageTime >= maxGiveBurnDamageTime)
             {
-                Hp_F -= 1;
+                if (isInvincibility == false)
+                {
+                    Hp_F -= 1;
+                }
                 nowGiveBurnDamageTime = 0;
             }
 

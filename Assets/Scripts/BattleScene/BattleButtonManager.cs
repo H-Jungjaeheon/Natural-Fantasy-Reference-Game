@@ -16,6 +16,12 @@ public enum Skills
 
 public class BattleButtonManager : Singleton<BattleButtonManager>
 {
+    [Tooltip("버튼 오브젝트")]
+    public GameObject buttonObj;
+
+    [Tooltip("스탯 UI 오브젝트")]
+    public GameObject statUIObj;
+
     #region 행동 버튼모음
     [Header("행동 버튼모음")]
     [Tooltip("스킬선택 버튼")]
@@ -42,6 +48,19 @@ public class BattleButtonManager : Singleton<BattleButtonManager>
     public ButtonPage nowButtonPage;
 
     private Player playerComponent;
+
+    public void Awake()
+    {
+        if (instance != null)
+        {
+            Destroy(gameObject);
+        }
+        else if (isDontDestroyOnLoad)
+        {
+            DontDestroyOnLoad(gameObject);
+            instance = this;
+        }
+    }
 
     // Start is called before the first frame update
     void Start()

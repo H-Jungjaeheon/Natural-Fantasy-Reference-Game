@@ -25,11 +25,12 @@ public enum GameEndKind
     GameClear
 }
 
-public enum FaidImageColor
+public enum Colors
 {
     Black,
     White,
-    Red
+    Red,
+    Yellow
 }
 
 public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게임 오버 및 게임 클리어, 재화 관리
@@ -73,8 +74,8 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     private Image faidImage;
 
     [SerializeField]
-    [Tooltip("페이드 아웃 이미지 색 모음")]
-    private Color[] faidOutImageColors;
+    [Tooltip("색 모음")]
+    private Color[] colors;
 
     [SerializeField]
     [Tooltip("스테이지 및 보스 소개 연출 이미지")]
@@ -84,9 +85,49 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     [Tooltip("스테이지 및 보스 소개 텍스트")]
     private TextMeshProUGUI introducingTheStageText;
 
+    #region 게임 오버 관련 
+    [Header("게임 오버 관련")]
+    [SerializeField]
+    [Tooltip("게임 오버 텍스트")]
+    private TextMeshProUGUI gameOverText;
+
+    [SerializeField]
+    [Tooltip("획득한 기본 재화 텍스트")]
+    private TextMeshProUGUI obtainText;
+
+    [SerializeField]
+    [Tooltip("안내 텍스트")]
+    private TextMeshProUGUI guideText;
+
+    [SerializeField]
+    [Tooltip("재화 획득 표기 오브젝트")]
+    private GameObject obtainObj;
+
+    private GameEndKind gameEndKind;
+    #endregion
+
+    #region 재화 획득 애니메이션 관련 
+    [Header("재화 획득 애니메이션 관련")]
+    [SerializeField]
+    [Tooltip("재화 획득 애니메이션 오브젝트")]
+    private GameObject getGoodObj;
+
+    [SerializeField]
+    [Tooltip("재화 획득 애니메이터")]
+    private Animator getGoodAnim;
+
+    [SerializeField]
+    [Tooltip("획득 재화 개수 표시 텍스트")]
+    private TextMeshProUGUI goodAmountText;
+    #endregion
+
     [SerializeField]
     [Tooltip("플레이어, 보스 스탯 UI 오브젝트")]
     private GameObject[] unitStatUIObj;
+
+    [SerializeField]
+    [Tooltip("카메라 흔들림 컴포넌트")]
+    private CamShake csComponent;
 
     [HideInInspector]
     public Player Player;
@@ -100,18 +141,37 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     private BattleOrMainOptionState nowBattleSceneOptionState;
 
     private Camera mainCam;
-    
-    private WaitForSeconds faidDelay = new WaitForSeconds(1);
+
+    private WaitForSeconds oneSecondDelay = new WaitForSeconds(1);
+
+    private GameManager gmInstance;
+
+    private BattleButtonManager bbmInstance;
 
     private Vector3 startAnimCamMoveSpeed = new Vector3(7, 0, 0);
 
     private Vector3 camTargetPos;
+    public void Awake()
+    {
+        if (instance != null)
+        {
+            Destroy(gameObject);
+        }
+        else if(isDontDestroyOnLoad)
+        {
+            DontDestroyOnLoad(gameObject);
+            instance = this;
+        }
+    }
 
     private void Start()
     {
         mainCam = Camera.main;
+        gmInstance = GameManager.Instance;
+        bbmInstance = BattleButtonManager.Instance;
         nowBattleSceneOptionState = BattleOrMainOptionState.None;
-        GameManager.Instance.nowSceneState = NowSceneState.Ingame;
+
+        gmInstance.nowSceneState = NowSceneState.Ingame;
 
         StartCoroutine(StartFaidAnim());
         StartCoroutine(GamePauseObjOnOrOff());
@@ -188,10 +248,10 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
     IEnumerator StartFaidAnim() //처음 게임 페이드 인 연출
     {
-        Color faidOutImageColor = faidOutImageColors[(int)FaidImageColor.Black];
+        Color faidOutImageColor = colors[(int)Colors.Black];
         float nowImageAlpha = 1;
 
-        BattleButtonManager.Instance.ActionButtonsSetActive(false, false, false);
+        bbmInstance.ActionButtonsSetActive(false, false, false);
 
         for (int nowIndex = 0; nowIndex < unitStatUIObj.Length; nowIndex++)
         {
@@ -204,7 +264,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         faidOutImageColor.a = 1;
         faidImage.color = faidOutImageColor;
 
-        yield return faidDelay;
+        yield return oneSecondDelay;
 
         while (nowImageAlpha > 0)
         {
@@ -214,14 +274,14 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
             yield return null;
         }
 
-        yield return faidDelay;
+        yield return oneSecondDelay;
 
         StartCoroutine(IntroducingTheStageAnim());
     }
 
     IEnumerator IntroducingTheStageAnim()
     {
-        Color faidOutImageColor = faidOutImageColors[(int)FaidImageColor.Black];
+        Color faidOutImageColor = colors[(int)Colors.Black];
         float nowImageAlpha = 0;
 
         while (mainCam.transform.position.x < 4f)
@@ -287,7 +347,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         mainCam.transform.position = camTargetPos;
         mainCam.orthographicSize = 9.5f;
 
-        yield return faidDelay;
+        yield return oneSecondDelay;
 
         faidObj.SetActive(false);
         nowGameState = NowGameState.Playing;
@@ -297,7 +357,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
             unitStatUIObj[nowIndex].SetActive(true);
         }
 
-        BattleButtonManager.Instance.ActionButtonsSetActive(true, false, false);
+        bbmInstance.ActionButtonsSetActive(true, false, false);
     }
 
     public void ChangeScene(string changeSceneName)
@@ -307,7 +367,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
     IEnumerator SceneChangeFaidOut(string changeSceneName)
     {
-        Color color = new Color(0,0,0,0);
+        Color color = colors[(int)Colors.Black];
         WaitForSecondsRealtime faidDelay = new WaitForSecondsRealtime(0.01f);
         float nowAlphaPlusPerSecond = 0.025f;
         float nowFaidPanelObjAlpha = 0;
@@ -326,17 +386,66 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         SceneManager.LoadScene(changeSceneName);
     }
 
-    public void StartGameOverPanelAnim()
+    public void StartGameEndPanelAnim(bool isGameOver)
     {
-        StartCoroutine(GameOverPanelAnim());
+        nowGameState = NowGameState.GameEnd;
+        gameEndKind = isGameOver ? GameEndKind.GameOver : GameEndKind.GameClear;
+
+        if (isGameOver) //테스트용 판별 나중에 삭제
+        {
+            StartCoroutine(GameEndPanelAnim());
+        }
+        else
+        {
+            csComponent.GameEndSetting();
+
+            bbmInstance.statUIObj.SetActive(false);
+            bbmInstance.buttonObj.SetActive(false);
+
+            StartCoroutine(BossDeadAnim());
+        }
+
     }
 
-    IEnumerator GameOverPanelAnim() //처음 화면 연출, 게임 오버 텍스트 위로 움직이기, 그 후에 결과창 아래에서 가운데로 보내기
+    IEnumerator BossDeadAnim()
     {
-        Color faidOutImageColor = faidOutImageColors[(int)FaidImageColor.White];
-        float nowImageAlpha = 1;
+        Color faidOutImageColor = colors[(int)Colors.White];
+        float nowImageAlpha = 0;
 
-        nowGameState = NowGameState.GameEnd;
+        faidObj.SetActive(true);
+
+        yield return null;
+
+        while (nowImageAlpha < 1)
+        {
+            if (mainCam.orthographicSize > 6.5f)
+            {
+                mainCam.orthographicSize -= Time.deltaTime * 0.15f;
+            }
+
+            faidOutImageColor.a = nowImageAlpha;
+            faidImage.color = faidOutImageColor;
+
+            if (nowImageAlpha < 0.4f)
+            {
+                nowImageAlpha += Time.deltaTime * 0.07f;
+            }
+            else
+            {
+                nowImageAlpha += Time.deltaTime * 0.5f;
+            }
+
+            yield return null;
+        }
+
+        yield return oneSecondDelay;
+    }
+
+    IEnumerator GameEndPanelAnim() //게임 종료 판넬 애니메이션 (게임 오버인지 판별)
+    {
+        Color faidOutImageColor = colors[(int)Colors.White];
+        WaitForSeconds animDelay = new WaitForSeconds(0.5f);
+        float nowImageAlpha = 1;
 
         yield return null;
 
@@ -346,9 +455,9 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
         gameEndObj[(int)GameEndKind.GameOver].SetActive(true);
 
-        yield return new WaitForSeconds(0.5f);
+        yield return animDelay;
 
-        faidOutImageColor = faidOutImageColors[(int)FaidImageColor.Red];
+        faidOutImageColor = colors[(int)Colors.Red];
 
         while (nowImageAlpha > 0)
         {
@@ -359,5 +468,122 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         }
 
         faidObj.SetActive(false);
+
+        yield return animDelay;
+
+        gameOverText.transform.DOLocalMoveY(300, 0.5f);
+        obtainText.text = $"획득한 몽환의 구슬 : {NowGetBasicGood}개";
+
+        yield return oneSecondDelay;
+
+        obtainObj.SetActive(true);
+
+        yield return oneSecondDelay;
+
+        faidOutImageColor = colors[(int)Colors.White];
+
+        nowImageAlpha = 0;
+
+        while (true)
+        {
+            while (nowImageAlpha < 1)
+            {
+                if (Input.anyKeyDown)
+                {
+                    StartCoroutine(EndFaidAnim());
+                    yield break;
+                }
+                nowImageAlpha += Time.deltaTime * 0.5f;
+                faidOutImageColor.a = nowImageAlpha;
+                guideText.color = faidOutImageColor;
+                yield return null;
+            }
+            while (nowImageAlpha > 0)
+            {
+                if (Input.anyKeyDown)
+                {
+                    StartCoroutine(EndFaidAnim());
+                    yield break;
+                }
+                nowImageAlpha -= Time.deltaTime * 0.8f;
+                faidOutImageColor.a = nowImageAlpha;
+                guideText.color = faidOutImageColor;
+                yield return null;
+            }
+        }
+    }
+
+    IEnumerator EndFaidAnim()
+    {
+        Color faidOutImageColor = colors[(int)Colors.Black];
+        float nowImageAlpha = 0;
+
+        yield return null;
+
+        faidObj.SetActive(true);
+        faidImage.color = faidOutImageColor;
+
+        while (true)
+        {
+            nowImageAlpha += Time.deltaTime;
+            faidOutImageColor.a = nowImageAlpha;
+            faidImage.color = faidOutImageColor;
+
+            if (nowImageAlpha > 1)
+            {
+                break;   
+            }
+            yield return null;
+        }
+
+        StartCoroutine(EndGetGoodAnim());
+    }
+
+    IEnumerator EndGetGoodAnim()
+    {
+        if (NowGetBasicGood > 0)
+        {
+            Color goodAmountTextColor = colors[(int)Colors.Yellow];
+            float nowTextAlpha = 1;
+
+            getGoodObj.SetActive(true);
+
+            getGoodObj.transform.DOLocalMoveY(-15, 0.7f);
+
+            yield return oneSecondDelay;
+
+            getGoodAnim.SetFloat("NowAnimSpeed", 1);
+
+            goodAmountText.text = $"+{NowGetBasicGood}";
+
+            yield return new WaitForSeconds(0.5f);
+
+            goodAmountText.color = goodAmountTextColor;
+
+            while (goodAmountText.fontSize > 70)
+            {
+                goodAmountText.fontSize -= Time.deltaTime * 350;
+                yield return null;
+            }
+
+            yield return oneSecondDelay;
+
+            getGoodObj.transform.DOLocalMoveY(-150, 0.5f).SetEase(Ease.InBack);
+
+            while (nowTextAlpha > 0)
+            {
+                nowTextAlpha -= Time.deltaTime * 5;
+                goodAmountText.color = goodAmountTextColor;
+                goodAmountTextColor.a = nowTextAlpha;
+                yield return null;
+            }
+            gmInstance.Gold += NowGetBasicGood;
+        }
+
+        yield return oneSecondDelay;
+
+        SceneManager.LoadScene("Main");
+
+        yield return null;
     }
 }

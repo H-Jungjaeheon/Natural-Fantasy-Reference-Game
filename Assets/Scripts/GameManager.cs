@@ -75,6 +75,19 @@ public class GameManager : Singleton<GameManager>
     [HideInInspector]
     public NowSceneState nowSceneState;
 
+    public void Awake()
+    {
+        if (instance != null)
+        {
+            Destroy(gameObject);
+        }
+        else if (isDontDestroyOnLoad)
+        {
+            DontDestroyOnLoad(gameObject);
+            instance = this;
+        }
+    }
+
     private void Update()
     {
         if (Input.GetKey(KeyCode.Q))

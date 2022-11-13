@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 5865f2dfc26a653438f7c93422ee0b06
+guid: 6e203b29eacfa9347984821fd2c67375
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,8 +9,9 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - ROKAF Slab Serif
-  fallbackFontReferences: []
+  - ROKAF Sans
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: b4eee6934035b9b4dad7b91d50d37e13, type: 3}
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1
