@@ -41,7 +41,9 @@ public class SlimeEnemy : BasicUnitScript
             if (bsm.nowGameState == NowGameState.Playing)
             {
                 actionCoolTimeObj.SetActive(true);
+                WaitingTimeStart();
                 break;
+               
             }
             yield return null;
         }
@@ -55,7 +57,9 @@ public class SlimeEnemy : BasicUnitScript
             {
                 actionCoolTimeObj.transform.position = transform.position + (Vector3)actionCoolTimeObjPlusPos;
                 actionCoolTimeImage.fillAmount = nowActionCoolTime / maxActionCoolTime;
+
                 nowActionCoolTime += Time.deltaTime;
+
                 if (nowActionCoolTime >= maxActionCoolTime)
                 {
                     WaitingTimeEnd();
@@ -358,22 +362,24 @@ public class SlimeEnemy : BasicUnitScript
         }
     }
 
-    private void WaitingTimeStart() //공격 후의 세팅 (일부 공통) 
+    private void WaitingTimeStart() //공격 후의 세팅 (일부 공통)
     {
         nowState = NowState.Standingby;
 
         if (Hp_F > 0)
         {
             isWaiting = true;
-            StartCoroutine(UISetting());
+            
             if (nowActionCoolTime < maxActionCoolTime)
             {
                 ActionCoolTimeBarSetActive(true);
             }
+
+            StartCoroutine(UISetting());
         }
     }
 
-    protected override IEnumerator Resting()/////////////////////////////////////////////
+    protected override IEnumerator Resting()
     {
         int nowRestingCount = 0;
         WaitForSeconds RestWaitTime = new WaitForSeconds(restWaitTime);
@@ -383,7 +389,7 @@ public class SlimeEnemy : BasicUnitScript
         battleUIObjScript.BattleUIObjSetActiveTrue(ChangeBattleUIAnim.Rest);
         battleUIAnimator.SetBool("NowResting", true);
 
-        while (2 > nowRestingCount)
+        while (nowRestingCount < 2)
         {
             if (Energy_F >= MaxEnergy_F)
             {
@@ -400,15 +406,6 @@ public class SlimeEnemy : BasicUnitScript
 
         nowActionCoolTime = maxActionCoolTime;
         WaitingTimeStart();
-    }
-
-    protected override void Defense()
-    {
-
-    }
-    protected override void SetDefensing(DefensePos nowDefensePos, float setRotation)
-    {
-
     }
 
     protected override IEnumerator Dead()
