@@ -61,10 +61,6 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     [Tooltip("게임 종료 판넬 오브젝트")]
     private GameObject[] gameEndObj;
 
-    //[SerializeField]
-    //[Tooltip("씬 전환 시 필요한 판넬 이미지")]
-    //private Image faidPanelImage;
-
     [SerializeField]
     [Tooltip("페이드에 쓰일 오브젝트")]
     private GameObject faidObj;

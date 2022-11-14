@@ -78,6 +78,7 @@ public class Player : BasicUnitScript
         {
             if (value > maxChangePropertyCoolTime)
             {
+                isChangeProperty = true;
                 StartCoroutine(ChangeProperty(false));
             }
             else
@@ -102,6 +103,7 @@ public class Player : BasicUnitScript
         {
             if (value >= maxPropertyTimeLimit)
             {
+                isChangeProperty = true;
                 StartCoroutine(ChangeProperty(true));
             }
             else
@@ -129,6 +131,8 @@ public class Player : BasicUnitScript
     private bool isToBurn;
 
     private bool isGetGood;
+
+    private bool isChangeProperty;
 
     private float maxNaturePassiveCount;
 
@@ -194,7 +198,6 @@ public class Player : BasicUnitScript
     protected override void Update()
     {
         base.Update();
-        //CountDownPropertyTime();
         Deflect();
         Defense();
         Jump();
@@ -396,27 +399,13 @@ public class Player : BasicUnitScript
                 {
                     NowChangePropertyCoolTime += Time.deltaTime;
                 }
-                if (NowPropertyTimeLimit >= maxPropertyTimeLimit || NowChangePropertyCoolTime >= maxChangePropertyCoolTime)
+                if (isChangeProperty)
                 {
+                    isChangeProperty = false;
                     break;
                 }
             }
             yield return null;
-        }
-    }
-
-    private void CountDownPropertyTime()
-    {
-        if (bsm.nowGameState == NowGameState.Playing && isChangePropertyReady == false && nowState != NowState.Resurrection)
-        {
-            if (nowProperty != NowPlayerProperty.BasicProperty)
-            {
-                NowPropertyTimeLimit += Time.deltaTime;
-            }
-            else
-            {
-                NowChangePropertyCoolTime += Time.deltaTime;
-            }
         }
     }
 
