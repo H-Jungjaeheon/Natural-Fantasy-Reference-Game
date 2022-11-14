@@ -313,11 +313,6 @@ public abstract class BasicUnitScript : MonoBehaviour
         StartSetting();
     }
 
-    protected virtual void Update()
-    {
-        Burning();
-    }
-
     protected void StartSameSetting()
     {
         Cam = Camera.main;
@@ -430,9 +425,9 @@ public abstract class BasicUnitScript : MonoBehaviour
         attackRangeObjComponent.offset = InitializationAttackRangeOffset;
     }
 
-    protected void Burning()
+    protected IEnumerator Burning()
     {
-        if (isBurning)
+        while (isBurning)
         {
             nowBurnDamageLimitTime += Time.deltaTime;
             nowGiveBurnDamageTime += Time.deltaTime;
@@ -452,7 +447,9 @@ public abstract class BasicUnitScript : MonoBehaviour
                 nowBurnDamageStack = 0;
                 nowBurnDamageLimitTime = 0;
                 nowGiveBurnDamageTime = 0;
+                break;
             }
+            yield return null;
         }
     }
 
@@ -472,6 +469,7 @@ public abstract class BasicUnitScript : MonoBehaviour
         if (nowBurnDamageStack == 1)
         {
             isBurning = true;
+            StartCoroutine(Burning());
         }
     }
 

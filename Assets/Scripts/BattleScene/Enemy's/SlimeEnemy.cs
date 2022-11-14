@@ -11,11 +11,6 @@ public class SlimeEnemy : BasicUnitScript
 
     private const int maxRestLimitTurn = 3;
 
-    protected override void Update()
-    {
-        base.Update();
-    }
-
     protected override void StartSetting()
     {
         nowState = NowState.Standingby;
@@ -468,6 +463,7 @@ public class SlimeEnemy : BasicUnitScript
             collision.gameObject.GetComponent<BasicUnitScript>().Hit(Damage_I + Mathf.Round(Damage_I / 2), false);
         }
     }
+
     //IEnumerator TestBulletFire() //360도로 총알 발사되는 것
     //{
     //    //mathf탄막 연습

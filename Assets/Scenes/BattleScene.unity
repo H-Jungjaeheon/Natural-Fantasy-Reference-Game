@@ -2526,7 +2526,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -3.012649, y: -1.7957332}
+  m_Offset: {x: -1.5695623, y: -2.2027817}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -2537,7 +2537,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.380866, y: 1.8182154}
+  m_Size: {x: 0.7748711, y: 0.8743496}
   m_EdgeRadius: 0
 --- !u!50 &541266946
 Rigidbody2D:
@@ -6467,6 +6467,7 @@ GameObject:
   - component: {fileID: 1159378196}
   - component: {fileID: 1159378195}
   - component: {fileID: 1159378199}
+  - component: {fileID: 1159378194}
   m_Layer: 0
   m_Name: SlimeEnemy
   m_TagString: Enemy
@@ -6474,6 +6475,25 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!95 &1159378194
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1159378193}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2b6f03f937361164ea457f3c3316b5d8, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!50 &1159378195
 Rigidbody2D:
   serializedVersion: 4
@@ -6508,7 +6528,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.0008459091, y: -0.9561378}
+  m_Offset: {x: -0.017241478, y: -1.8648144}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -6519,7 +6539,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 4.594063, y: 3.669679}
+  m_Size: {x: 2.3314857, y: 1.8523257}
   m_EdgeRadius: 0
 --- !u!212 &1159378197
 SpriteRenderer:
@@ -6580,8 +6600,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1159378193}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 9.8, y: 1.1, z: 0}
-  m_LocalScale: {x: 1.55, y: 1.55, z: 1}
+  m_LocalPosition: {x: 9.5, y: 5.1, z: 0}
+  m_LocalScale: {x: 3, y: 3, z: 1}
   m_Children:
   - {fileID: 838858992}
   - {fileID: 541266943}
@@ -6603,7 +6623,7 @@ MonoBehaviour:
   actionCoolTimeObj: {fileID: 1146735694}
   nullActionCoolTimeImage: {fileID: 154340400}
   actionCoolTimeImage: {fileID: 1074118521}
-  actionCoolTimeObjPlusPos: {x: 0, y: 2.3}
+  actionCoolTimeObjPlusPos: {x: 0, y: -2.1}
   maxActionCoolTime: 3.5
   setJumpGravityScale_F: 2
   jumpPower_F: 22
@@ -9067,6 +9087,7 @@ MonoBehaviour:
   hitColor: {r: 1, g: 0, b: 0, a: 1}
   returnBasicColor: {r: 1, g: 1, b: 1, a: 1}
   unitShieldHpBars: {fileID: 1902801556}
+  nowChangePropertyCoolTime: 0
   nowProperty: 0
   isSpawnNatureBead: 0
   nowPropertyImage: {fileID: 693409020}
