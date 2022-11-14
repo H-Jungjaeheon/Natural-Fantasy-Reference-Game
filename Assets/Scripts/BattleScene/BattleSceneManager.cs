@@ -77,6 +77,10 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     [Tooltip("색 모음")]
     private Color[] colors;
 
+    private Color nowColor; //이미지에 적용할 색
+
+    float nowAlpha; //이미지에 적용할 알파값
+
     [SerializeField]
     [Tooltip("스테이지 및 보스 소개 연출 이미지")]
     private Image introducingTheStageImage;
@@ -144,6 +148,8 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
     private WaitForSeconds oneSecondDelay = new WaitForSeconds(1);
 
+    private WaitForSeconds zeroPointFiveDelay = new WaitForSeconds(0.5f);
+
     private GameManager gmInstance;
 
     private BattleButtonManager bbmInstance;
@@ -151,6 +157,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     private Vector3 startAnimCamMoveSpeed = new Vector3(7, 0, 0);
 
     private Vector3 camTargetPos;
+
     public void Awake()
     {
         if (instance != null)
@@ -248,8 +255,8 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
     IEnumerator StartFaidAnim() //처음 게임 페이드 인 연출
     {
-        Color faidOutImageColor = colors[(int)Colors.Black];
-        float nowImageAlpha = 1;
+        nowColor = colors[(int)Colors.Black];
+        nowAlpha = 1;
 
         bbmInstance.ActionButtonsSetActive(false, false, false);
 
@@ -261,16 +268,16 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         nowGameState = NowGameState.GameReady;
 
         faidObj.SetActive(true);
-        faidOutImageColor.a = 1;
-        faidImage.color = faidOutImageColor;
+        nowColor.a = 1;
+        faidImage.color = nowColor;
 
         yield return oneSecondDelay;
 
-        while (nowImageAlpha > 0)
+        while (nowAlpha > 0)
         {
-            nowImageAlpha -= Time.deltaTime;
-            faidOutImageColor.a = nowImageAlpha;
-            faidImage.color = faidOutImageColor;
+            nowAlpha -= Time.deltaTime;
+            nowColor.a = nowAlpha;
+            faidImage.color = nowColor;
             yield return null;
         }
 
@@ -281,8 +288,8 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
     IEnumerator IntroducingTheStageAnim()
     {
-        Color faidOutImageColor = colors[(int)Colors.Black];
-        float nowImageAlpha = 0;
+        nowColor = colors[(int)Colors.Black];
+        nowAlpha = 0;
 
         while (mainCam.transform.position.x < 4f)
         {
@@ -298,11 +305,11 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         mainCam.transform.position = camTargetPos;
         mainCam.orthographicSize = 7.5f;
 
-        while (nowImageAlpha < 0.75f)
+        while (nowAlpha < 0.75f)
         {
-            nowImageAlpha += Time.deltaTime * 3;
-            faidOutImageColor.a = nowImageAlpha;
-            faidImage.color = faidOutImageColor;
+            nowAlpha += Time.deltaTime * 3;
+            nowColor.a = nowAlpha;
+            faidImage.color = nowColor;
             yield return null;
         }
 
@@ -319,11 +326,11 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         introducingTheStageImage.rectTransform.DOAnchorPosX(1920, 0.25f);
         introducingTheStageText.rectTransform.DOAnchorPosX(-1920, 0.25f);
 
-        while (nowImageAlpha > 0)
+        while (nowAlpha > 0)
         {
-            nowImageAlpha -= Time.deltaTime * 3;
-            faidOutImageColor.a = nowImageAlpha;
-            faidImage.color = faidOutImageColor;
+            nowAlpha -= Time.deltaTime * 3;
+            nowColor.a = nowAlpha;
+            faidImage.color = nowColor;
             yield return null;
         }
 
@@ -367,18 +374,18 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
     IEnumerator SceneChangeFaidOut(string changeSceneName)
     {
-        Color color = colors[(int)Colors.Black];
+        nowColor = colors[(int)Colors.Black];
         WaitForSecondsRealtime faidDelay = new WaitForSecondsRealtime(0.01f);
         float nowAlphaPlusPerSecond = 0.025f;
-        float nowFaidPanelObjAlpha = 0;
+        nowAlpha = 0;
 
         faidPanelObjImageComponent.transform.SetAsLastSibling();
-        while (nowFaidPanelObjAlpha < 3)
+        while (nowAlpha < 3)
         {
-            color.a = nowFaidPanelObjAlpha;
-            faidPanelObjImageComponent.color = color;
-            
-            nowFaidPanelObjAlpha += nowAlphaPlusPerSecond;
+            nowColor.a = nowAlpha;
+            faidPanelObjImageComponent.color = nowColor;
+
+            nowAlpha += nowAlphaPlusPerSecond;
             yield return faidDelay;
         }
 
@@ -393,7 +400,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
         if (isGameOver) //테스트용 판별 나중에 삭제
         {
-            StartCoroutine(GameEndPanelAnim());
+            StartCoroutine(PlayerDeadAnim());
         }
         else
         {
@@ -407,69 +414,92 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
     }
 
+    IEnumerator PlayerDeadAnim()
+    {
+        nowColor = colors[(int)Colors.White];
+        nowAlpha = 1;
+
+        yield return null;
+
+        deActivableObj.SetActive(false);
+        faidObj.SetActive(true);
+        faidImage.color = nowColor;
+
+        gameEndObj[(int)GameEndKind.GameOver].SetActive(true);
+
+        yield return zeroPointFiveDelay;
+
+        nowColor = colors[(int)Colors.Red];
+
+        while (nowAlpha > 0)
+        {
+            faidImage.color = nowColor;
+            nowColor.a = nowAlpha;
+            nowAlpha -= Time.deltaTime;
+            yield return null;
+        }
+
+        faidObj.SetActive(false);
+
+        StartCoroutine(SameEndAnim());
+    }
+
     IEnumerator BossDeadAnim()
     {
-        Color faidOutImageColor = colors[(int)Colors.White];
-        float nowImageAlpha = 0;
+        nowColor = colors[(int)Colors.White];
+        nowAlpha = 0;
 
         faidObj.SetActive(true);
 
         yield return null;
 
-        while (nowImageAlpha < 1)
+        while (nowAlpha < 1)
         {
             if (mainCam.orthographicSize > 6.5f)
             {
                 mainCam.orthographicSize -= Time.deltaTime * 0.15f;
             }
 
-            faidOutImageColor.a = nowImageAlpha;
-            faidImage.color = faidOutImageColor;
+            nowColor.a = nowAlpha;
+            faidImage.color = nowColor;
 
-            if (nowImageAlpha < 0.4f)
+            if (nowAlpha < 0.4f)
             {
-                nowImageAlpha += Time.deltaTime * 0.07f;
+                nowAlpha += Time.deltaTime * 0.07f;
             }
             else
             {
-                nowImageAlpha += Time.deltaTime * 0.5f;
+                nowAlpha += Time.deltaTime * 0.5f;
             }
 
             yield return null;
         }
 
-        yield return oneSecondDelay;
-    }
-
-    IEnumerator GameEndPanelAnim() //게임 종료 판넬 애니메이션 (게임 오버인지 판별)
-    {
-        Color faidOutImageColor = colors[(int)Colors.White];
-        WaitForSeconds animDelay = new WaitForSeconds(0.5f);
-        float nowImageAlpha = 1;
-
-        yield return null;
-
-        deActivableObj.SetActive(false);
-        faidObj.SetActive(true);
-        faidImage.color = faidOutImageColor;
-
         gameEndObj[(int)GameEndKind.GameOver].SetActive(true);
+        gameOverText.text = "Stage 1 Clear!";
 
-        yield return animDelay;
+        yield return oneSecondDelay;
 
-        faidOutImageColor = colors[(int)Colors.Red];
-
-        while (nowImageAlpha > 0)
+        while (nowAlpha > 0)
         {
-            faidImage.color = faidOutImageColor;
-            faidOutImageColor.a = nowImageAlpha;
-            nowImageAlpha -= Time.deltaTime;
+            faidImage.color = nowColor;
+            nowColor.a = nowAlpha;
+            nowAlpha -= Time.deltaTime;
             yield return null;
         }
 
         faidObj.SetActive(false);
 
-        yield return animDelay;
+        StartCoroutine(SameEndAnim());
+    }
+
+    IEnumerator SameEndAnim() //게임 종료 판넬 애니메이션 (공통)
+    {
+        nowColor = colors[(int)Colors.White];
+
+        nowAlpha = 0;
+
+        yield return zeroPointFiveDelay;
 
         gameOverText.transform.DOLocalMoveY(300, 0.5f);
         obtainText.text = $"획득한 몽환의 구슬 : {NowGetBasicGood}개";
@@ -480,34 +510,34 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
         yield return oneSecondDelay;
 
-        faidOutImageColor = colors[(int)Colors.White];
+        nowColor = colors[(int)Colors.White];
 
-        nowImageAlpha = 0;
+        nowAlpha = 0;
 
         while (true)
         {
-            while (nowImageAlpha < 1)
+            while (nowAlpha < 1)
             {
                 if (Input.anyKeyDown)
                 {
                     StartCoroutine(EndFaidAnim());
                     yield break;
                 }
-                nowImageAlpha += Time.deltaTime * 0.5f;
-                faidOutImageColor.a = nowImageAlpha;
-                guideText.color = faidOutImageColor;
+                nowAlpha += Time.deltaTime * 0.5f;
+                nowColor.a = nowAlpha;
+                guideText.color = nowColor;
                 yield return null;
             }
-            while (nowImageAlpha > 0)
+            while (nowAlpha > 0)
             {
                 if (Input.anyKeyDown)
                 {
                     StartCoroutine(EndFaidAnim());
                     yield break;
                 }
-                nowImageAlpha -= Time.deltaTime * 0.8f;
-                faidOutImageColor.a = nowImageAlpha;
-                guideText.color = faidOutImageColor;
+                nowAlpha -= Time.deltaTime * 0.8f;
+                nowColor.a = nowAlpha;
+                guideText.color = nowColor;
                 yield return null;
             }
         }
@@ -515,21 +545,21 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
     IEnumerator EndFaidAnim()
     {
-        Color faidOutImageColor = colors[(int)Colors.Black];
-        float nowImageAlpha = 0;
+        nowColor = colors[(int)Colors.Black];
+        nowAlpha = 0;
 
         yield return null;
 
         faidObj.SetActive(true);
-        faidImage.color = faidOutImageColor;
+        faidImage.color = nowColor;
 
         while (true)
         {
-            nowImageAlpha += Time.deltaTime;
-            faidOutImageColor.a = nowImageAlpha;
-            faidImage.color = faidOutImageColor;
+            nowAlpha += Time.deltaTime;
+            nowColor.a = nowAlpha;
+            faidImage.color = nowColor;
 
-            if (nowImageAlpha > 1)
+            if (nowAlpha > 1)
             {
                 break;   
             }
@@ -543,8 +573,8 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     {
         if (NowGetBasicGood > 0)
         {
-            Color goodAmountTextColor = colors[(int)Colors.Yellow];
-            float nowTextAlpha = 1;
+            nowColor = colors[(int)Colors.Yellow];
+            nowAlpha = 1;
 
             getGoodObj.SetActive(true);
 
@@ -556,9 +586,9 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
             goodAmountText.text = $"+{NowGetBasicGood}";
 
-            yield return new WaitForSeconds(0.5f);
+            yield return zeroPointFiveDelay;
 
-            goodAmountText.color = goodAmountTextColor;
+            goodAmountText.color = nowColor;
 
             while (goodAmountText.fontSize > 70)
             {
@@ -570,11 +600,11 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
             getGoodObj.transform.DOLocalMoveY(-150, 0.5f).SetEase(Ease.InBack);
 
-            while (nowTextAlpha > 0)
+            while (nowAlpha > 0)
             {
-                nowTextAlpha -= Time.deltaTime * 5;
-                goodAmountText.color = goodAmountTextColor;
-                goodAmountTextColor.a = nowTextAlpha;
+                nowAlpha -= Time.deltaTime * 5;
+                goodAmountText.color = nowColor;
+                nowColor.a = nowAlpha;
                 yield return null;
             }
             gmInstance.Gold += NowGetBasicGood;

@@ -315,7 +315,6 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     protected virtual void Update()
     {
-        UISetting();
         Burning();
     }
 
@@ -392,7 +391,7 @@ public abstract class BasicUnitScript : MonoBehaviour
         nowState = NowState.Standingby;
     }
 
-    protected abstract void UISetting();
+    protected abstract IEnumerator UISetting();
 
     protected virtual void WaitingTimeEnd()
     {

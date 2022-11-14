@@ -462,26 +462,31 @@ public class Player : BasicUnitScript
     }
 
 
-    protected override void UISetting() //대기시간 및 UI세팅
+    protected override IEnumerator UISetting() //대기시간 및 UI세팅
     {
-        if (isWaiting && (nowState == NowState.Standingby || nowState == NowState.Jumping || nowState == NowState.Defensing))
+        while (true)
         {
-            actionCoolTimeObj.transform.position = transform.position + (Vector3)actionCoolTimeObjPlusPos;
-            actionCoolTimeImage.fillAmount = nowActionCoolTime / maxActionCoolTime;
-            nowActionCoolTime += Time.deltaTime;
-            if (nowActionCoolTime >= maxActionCoolTime || isChangePropertyReady)
+            if (isWaiting && (nowState == NowState.Standingby || nowState == NowState.Jumping || nowState == NowState.Defensing))
             {
-                WaitingTimeEnd();
-                ActionCoolTimeBarSetActive(false);
-                if (isChangePropertyReady == false)
+                actionCoolTimeObj.transform.position = transform.position + (Vector3)actionCoolTimeObjPlusPos;
+                actionCoolTimeImage.fillAmount = nowActionCoolTime / maxActionCoolTime;
+                nowActionCoolTime += Time.deltaTime;
+                if (nowActionCoolTime >= maxActionCoolTime || isChangePropertyReady)
                 {
-                    battleButtonManagerInstance.ActionButtonsSetActive(true, false, false);
+                    WaitingTimeEnd();
+                    ActionCoolTimeBarSetActive(false);
+                    if (isChangePropertyReady == false)
+                    {
+                        battleButtonManagerInstance.ActionButtonsSetActive(true, false, false);
+                    }
+                    break;
                 }
             }
-        }
-        else if (nowState == NowState.Deflecting || nowState == NowState.Fainting || nowState == NowState.ChangingProperties)
-        {
-            ActionCoolTimeBarSetActive(false);
+            else if (nowState == NowState.Deflecting || nowState == NowState.Fainting || nowState == NowState.ChangingProperties)
+            {
+                ActionCoolTimeBarSetActive(false);
+            }
+            yield return null;
         }
     }
 
@@ -492,6 +497,7 @@ public class Player : BasicUnitScript
         if (isChangePropertyReady == false && Hp_F > 0)
         {
             isWaiting = true;
+            StartCoroutine(UISetting());
             if (nowActionCoolTime < maxActionCoolTime)
             {
                 ActionCoolTimeBarSetActive(true);

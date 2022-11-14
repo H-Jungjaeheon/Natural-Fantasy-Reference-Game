@@ -87,12 +87,4 @@ public class GameManager : Singleton<GameManager>
             instance = this;
         }
     }
-
-    private void Update()
-    {
-        if (Input.GetKey(KeyCode.Q))
-        {
-            Gold += 50; 
-        }
-    }
 }

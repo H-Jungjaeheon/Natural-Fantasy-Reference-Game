@@ -14,10 +14,6 @@ public class SlimeEnemy : BasicUnitScript
     protected override void Update()
     {
         base.Update();
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            Hp_F -= 10;
-        }
     }
 
     protected override void StartSetting()
@@ -51,19 +47,24 @@ public class SlimeEnemy : BasicUnitScript
         }
     }
 
-    protected override void UISetting()
+    protected override IEnumerator UISetting()
     {
-        if (bsm.nowGameState == NowGameState.Playing && isWaiting)
+        while (true)
         {
-            actionCoolTimeObj.transform.position = transform.position + (Vector3)actionCoolTimeObjPlusPos;
-            actionCoolTimeImage.fillAmount = nowActionCoolTime / maxActionCoolTime;
-            nowActionCoolTime += Time.deltaTime;
-            if (nowActionCoolTime >= maxActionCoolTime)
+            if (bsm.nowGameState == NowGameState.Playing && isWaiting)
             {
-                WaitingTimeEnd();
-                ActionCoolTimeBarSetActive(false);
-                RandBehaviorStart(); //랜덤 행동
+                actionCoolTimeObj.transform.position = transform.position + (Vector3)actionCoolTimeObjPlusPos;
+                actionCoolTimeImage.fillAmount = nowActionCoolTime / maxActionCoolTime;
+                nowActionCoolTime += Time.deltaTime;
+                if (nowActionCoolTime >= maxActionCoolTime)
+                {
+                    WaitingTimeEnd();
+                    ActionCoolTimeBarSetActive(false);
+                    RandBehaviorStart(); //랜덤 행동
+                    break;
+                }
             }
+            yield return null;
         }
     }
 
@@ -364,6 +365,7 @@ public class SlimeEnemy : BasicUnitScript
         if (Hp_F > 0)
         {
             isWaiting = true;
+            StartCoroutine(UISetting());
             if (nowActionCoolTime < maxActionCoolTime)
             {
                 ActionCoolTimeBarSetActive(true);
