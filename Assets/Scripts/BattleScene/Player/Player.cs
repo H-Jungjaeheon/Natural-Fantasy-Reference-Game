@@ -194,7 +194,7 @@ public class Player : BasicUnitScript
     protected override void Update()
     {
         base.Update();
-        CountDownPropertyTime();
+        //CountDownPropertyTime();
         Deflect();
         Defense();
         Jump();
@@ -227,6 +227,8 @@ public class Player : BasicUnitScript
         nowPropertyImage.sprite = nowPropertyIconImages[(int)nowProperty];
         Energy_F = MaxEnergy_F;
         Hp_F = MaxHp_F;
+
+        StartCoroutine(CountDownPropertyTimes());
     }
 
     public override void Hit(float damage, bool isDefending)
@@ -367,6 +369,8 @@ public class Player : BasicUnitScript
         {
             battleButtonManagerInstance.ActionButtonsSetActive(false, true, false);
         }
+
+        StartCoroutine(CountDownPropertyTimes());
     }
 
     public void PropertyChangeStart()
@@ -375,6 +379,29 @@ public class Player : BasicUnitScript
         {
             DreamyFigure_F -= 10;
             StartCoroutine(ChangeProperty(false));
+        }
+    }
+
+    IEnumerator CountDownPropertyTimes() //개발중인 기능 (리메이크)
+    {
+        while (true)
+        {
+            if (bsm.nowGameState == NowGameState.Playing && isChangePropertyReady == false && nowState != NowState.Resurrection)
+            {
+                if (nowProperty != NowPlayerProperty.BasicProperty)
+                {
+                    NowPropertyTimeLimit += Time.deltaTime;
+                }
+                else
+                {
+                    NowChangePropertyCoolTime += Time.deltaTime;
+                }
+                if (NowPropertyTimeLimit >= maxPropertyTimeLimit || NowChangePropertyCoolTime >= maxChangePropertyCoolTime)
+                {
+                    break;
+                }
+            }
+            yield return null;
         }
     }
 

@@ -41,7 +41,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     [HideInInspector]
     public Vector2 enemyCharacterPos; //적 포지션
 
-    private int nowGetBasicGood;
+    private int nowGetBasicGood; //현재 스테이지에서 얻은 재화 개수
 
     public int NowGetBasicGood
     {
@@ -61,9 +61,9 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     [Tooltip("게임 종료 판넬 오브젝트")]
     private GameObject[] gameEndObj;
 
-    [SerializeField]
-    [Tooltip("씬 전환 시 필요한 판넬 오브젝트 이미지 컴포넌트")]
-    private Image faidPanelObjImageComponent;
+    //[SerializeField]
+    //[Tooltip("씬 전환 시 필요한 판넬 이미지")]
+    //private Image faidPanelImage;
 
     [SerializeField]
     [Tooltip("페이드에 쓰일 오브젝트")]
@@ -180,6 +180,8 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
         gmInstance.nowSceneState = NowSceneState.Ingame;
 
+        nowBattleSceneOptionState = BattleOrMainOptionState.None;
+
         StartCoroutine(StartFaidAnim());
         StartCoroutine(GamePauseObjOnOrOff());
     }
@@ -193,9 +195,9 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
                 StartCoroutine(PressEscToGamePausePageChange());
                 break;
             }
-            else if (Input.GetKeyDown(KeyCode.Escape))
+            else if (Input.GetKeyDown(KeyCode.Escape) && nowGameState != NowGameState.GameReady)
             {
-                if (nowBattleSceneOptionState == BattleOrMainOptionState.None && nowGameState == NowGameState.Playing)
+                if (nowBattleSceneOptionState == BattleOrMainOptionState.None)
                 {
                     gamePauseObj[(int)BattleOrMainOptionState.FirstPage].SetActive(true);
                 }
@@ -379,11 +381,13 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         float nowAlphaPlusPerSecond = 0.025f;
         nowAlpha = 0;
 
-        faidPanelObjImageComponent.transform.SetAsLastSibling();
+        faidImage.transform.SetAsLastSibling();
+        faidObj.SetActive(true);
+
         while (nowAlpha < 3)
         {
             nowColor.a = nowAlpha;
-            faidPanelObjImageComponent.color = nowColor;
+            faidImage.color = nowColor;
 
             nowAlpha += nowAlphaPlusPerSecond;
             yield return faidDelay;
