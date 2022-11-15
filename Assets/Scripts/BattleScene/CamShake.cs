@@ -7,8 +7,8 @@ using System;
 public class CamShake : MonoBehaviour
 {
     public static Action<bool, float> CamShakeMod;
+    public static Action<bool> JumpStop;
     public static Action JumpStart;
-    public static Action JumpStop;
 
     [SerializeField]
     [Tooltip("플레이어 점프 시 카메라 올라가는 속도")]
@@ -27,6 +27,8 @@ public class CamShake : MonoBehaviour
 
     private Bloom bloom;
     private Vignette vignette;
+
+    private IEnumerator startJumpCoroutine; //점프 시작할 때 카메라에게 물리 효과를 주는 코루틴
 
     Vector3 initialPosition;
 
@@ -64,8 +66,6 @@ public class CamShake : MonoBehaviour
         CamShakeMod = CamShakeStart;
         JumpStart = CallingStartJump;
         JumpStop = StopJump;
-
-        //bsmInstance = BattleSceneManager.Instance;
     }
 
     public void GameEndSetting()
@@ -79,7 +79,7 @@ public class CamShake : MonoBehaviour
         transform.position = bossPos;
     }
 
-    public void CamShakeStart(bool isHorizontalShake, float timeInput) //가로로 떨림 판별, 떨리는 시간
+    private void CamShakeStart(bool isHorizontalShake, float timeInput) //가로로 떨림 판별, 떨리는 시간
     {
         if (isGameClear == false)
         {
@@ -106,14 +106,20 @@ public class CamShake : MonoBehaviour
     {
         if (isGameClear == false)
         {
-            StartCoroutine(StartJump());
+            startJumpCoroutine = StartJump();
+            StartCoroutine(startJumpCoroutine);
         }
     }
 
-    private void StopJump()
+    private void StopJump(bool isPlayerDead)
     {
         if (isGameClear == false)
         {
+            if (isPlayerDead)
+            {
+                StopCoroutine(startJumpCoroutine);
+            }
+
             rigid.transform.position = objStartPosition;
             transform.position = camStartposition;
             rigid.velocity = Vector2.zero;

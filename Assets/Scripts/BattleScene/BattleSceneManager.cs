@@ -201,7 +201,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
                 StartCoroutine(PressEscToGamePausePageChange());
                 break;
             }
-            else if (Input.GetKeyDown(KeyCode.Escape) && nowGameState != NowGameState.GameReady)
+            else if (Input.GetKeyDown(KeyCode.Escape) && nowGameState != NowGameState.GameEnd && nowGameState != NowGameState.GameReady)
             {
                 if (nowBattleSceneOptionState == BattleOrMainOptionState.None)
                 {
@@ -313,7 +313,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         mainCam.transform.position = camTargetPos;
         mainCam.orthographicSize = 7.5f;
 
-        while (nowAlpha < 0.75f)
+        while (nowAlpha < 0.55f)
         {
             nowAlpha += Time.deltaTime * 3;
             nowColor.a = nowAlpha;
@@ -600,11 +600,13 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
             goodAmountText.color = nowColor;
 
-            while (goodAmountText.fontSize > 70)
+            while (goodAmountText.fontSize > 40)
             {
-                goodAmountText.fontSize -= Time.deltaTime * 350;
+                goodAmountText.fontSize -= Time.deltaTime * 400;
                 yield return null;
             }
+
+            goodAmountText.fontSize = 40;
 
             yield return oneSecondDelay;
 

@@ -158,7 +158,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -170,7 +170,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -182,7 +182,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Android
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -199,9 +199,9 @@ TextureImporter:
       name: money_get-Sheet_0
       rect:
         serializedVersion: 2
-        x: 0
+        x: 15
         y: 0
-        width: 90
+        width: 65
         height: 665
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -220,9 +220,9 @@ TextureImporter:
       name: money_get-Sheet_1
       rect:
         serializedVersion: 2
-        x: 90
+        x: 105
         y: 0
-        width: 90
+        width: 65
         height: 665
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -241,9 +241,9 @@ TextureImporter:
       name: money_get-Sheet_2
       rect:
         serializedVersion: 2
-        x: 180
+        x: 195
         y: 0
-        width: 90
+        width: 65
         height: 665
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -262,9 +262,9 @@ TextureImporter:
       name: money_get-Sheet_3
       rect:
         serializedVersion: 2
-        x: 270
+        x: 285
         y: 0
-        width: 90
+        width: 65
         height: 665
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -283,9 +283,9 @@ TextureImporter:
       name: money_get-Sheet_4
       rect:
         serializedVersion: 2
-        x: 360
+        x: 375
         y: 0
-        width: 90
+        width: 65
         height: 665
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -304,9 +304,9 @@ TextureImporter:
       name: money_get-Sheet_5
       rect:
         serializedVersion: 2
-        x: 450
+        x: 465
         y: 0
-        width: 90
+        width: 65
         height: 665
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -325,9 +325,9 @@ TextureImporter:
       name: money_get-Sheet_6
       rect:
         serializedVersion: 2
-        x: 540
+        x: 545
         y: 0
-        width: 90
+        width: 80
         height: 665
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -367,9 +367,9 @@ TextureImporter:
       name: money_get-Sheet_8
       rect:
         serializedVersion: 2
-        x: 720
+        x: 730
         y: 0
-        width: 90
+        width: 75
         height: 665
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -388,9 +388,9 @@ TextureImporter:
       name: money_get-Sheet_9
       rect:
         serializedVersion: 2
-        x: 810
+        x: 825
         y: 0
-        width: 90
+        width: 65
         height: 665
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -409,9 +409,9 @@ TextureImporter:
       name: money_get-Sheet_10
       rect:
         serializedVersion: 2
-        x: 900
+        x: 915
         y: 0
-        width: 90
+        width: 65
         height: 665
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -430,9 +430,9 @@ TextureImporter:
       name: money_get-Sheet_11
       rect:
         serializedVersion: 2
-        x: 990
+        x: 1005
         y: 0
-        width: 90
+        width: 65
         height: 665
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -451,9 +451,9 @@ TextureImporter:
       name: money_get-Sheet_12
       rect:
         serializedVersion: 2
-        x: 1080
+        x: 1095
         y: 0
-        width: 90
+        width: 65
         height: 665
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -472,9 +472,9 @@ TextureImporter:
       name: money_get-Sheet_13
       rect:
         serializedVersion: 2
-        x: 1170
+        x: 1185
         y: 0
-        width: 90
+        width: 65
         height: 665
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -493,9 +493,9 @@ TextureImporter:
       name: money_get-Sheet_14
       rect:
         serializedVersion: 2
-        x: 1260
+        x: 1275
         y: 0
-        width: 90
+        width: 65
         height: 665
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -514,9 +514,9 @@ TextureImporter:
       name: money_get-Sheet_15
       rect:
         serializedVersion: 2
-        x: 1350
+        x: 1365
         y: 0
-        width: 90
+        width: 65
         height: 665
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -535,9 +535,9 @@ TextureImporter:
       name: money_get-Sheet_16
       rect:
         serializedVersion: 2
-        x: 1440
+        x: 1455
         y: 0
-        width: 90
+        width: 65
         height: 665
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -556,9 +556,9 @@ TextureImporter:
       name: money_get-Sheet_17
       rect:
         serializedVersion: 2
-        x: 1530
+        x: 1545
         y: 0
-        width: 90
+        width: 65
         height: 665
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -577,9 +577,9 @@ TextureImporter:
       name: money_get-Sheet_18
       rect:
         serializedVersion: 2
-        x: 1620
+        x: 1635
         y: 0
-        width: 90
+        width: 65
         height: 665
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -598,9 +598,9 @@ TextureImporter:
       name: money_get-Sheet_19
       rect:
         serializedVersion: 2
-        x: 1710
+        x: 1725
         y: 0
-        width: 90
+        width: 65
         height: 665
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -619,9 +619,9 @@ TextureImporter:
       name: money_get-Sheet_20
       rect:
         serializedVersion: 2
-        x: 1800
+        x: 1815
         y: 0
-        width: 90
+        width: 65
         height: 665
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -640,9 +640,9 @@ TextureImporter:
       name: money_get-Sheet_21
       rect:
         serializedVersion: 2
-        x: 1890
+        x: 1905
         y: 0
-        width: 90
+        width: 65
         height: 665
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -661,9 +661,9 @@ TextureImporter:
       name: money_get-Sheet_22
       rect:
         serializedVersion: 2
-        x: 1980
+        x: 1995
         y: 0
-        width: 90
+        width: 65
         height: 665
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -682,9 +682,9 @@ TextureImporter:
       name: money_get-Sheet_23
       rect:
         serializedVersion: 2
-        x: 2070
+        x: 2085
         y: 0
-        width: 90
+        width: 65
         height: 665
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -703,9 +703,9 @@ TextureImporter:
       name: money_get-Sheet_24
       rect:
         serializedVersion: 2
-        x: 2160
+        x: 2175
         y: 0
-        width: 90
+        width: 65
         height: 665
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -724,9 +724,9 @@ TextureImporter:
       name: money_get-Sheet_25
       rect:
         serializedVersion: 2
-        x: 2250
+        x: 2265
         y: 0
-        width: 90
+        width: 65
         height: 665
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -745,9 +745,9 @@ TextureImporter:
       name: money_get-Sheet_26
       rect:
         serializedVersion: 2
-        x: 2340
+        x: 2355
         y: 0
-        width: 90
+        width: 65
         height: 665
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -766,9 +766,9 @@ TextureImporter:
       name: money_get-Sheet_27
       rect:
         serializedVersion: 2
-        x: 2430
+        x: 2445
         y: 0
-        width: 90
+        width: 65
         height: 665
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -787,9 +787,9 @@ TextureImporter:
       name: money_get-Sheet_28
       rect:
         serializedVersion: 2
-        x: 2520
+        x: 2535
         y: 0
-        width: 90
+        width: 65
         height: 665
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -808,9 +808,9 @@ TextureImporter:
       name: money_get-Sheet_29
       rect:
         serializedVersion: 2
-        x: 2610
+        x: 2625
         y: 0
-        width: 90
+        width: 65
         height: 665
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -829,9 +829,9 @@ TextureImporter:
       name: money_get-Sheet_30
       rect:
         serializedVersion: 2
-        x: 2700
+        x: 2715
         y: 0
-        width: 90
+        width: 65
         height: 665
       alignment: 0
       pivot: {x: 0.5, y: 0.5}

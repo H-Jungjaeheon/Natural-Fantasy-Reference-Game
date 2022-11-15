@@ -64,6 +64,8 @@ public class MainManager : Singleton<MainManager>
     [Tooltip("콘텐츠 버튼 오브젝트들 설명 텍스트")]
     private TextMeshProUGUI[] contentGuidanceTexts;
 
+    private bool isFading;
+
     WaitForSeconds faidDelay = new WaitForSeconds(1);
 
     public void Awake()
@@ -95,42 +97,45 @@ public class MainManager : Singleton<MainManager>
     {
         while (true)
         {
-            if (nowScreenState != ScreenState.MainScreen)
+            if (isFading == false)
             {
-                if (Input.GetKeyDown(KeyCode.Escape))
+                if (nowScreenState != ScreenState.MainScreen)
                 {
-                    switch (nowScreenState)
+                    if (Input.GetKeyDown(KeyCode.Escape))
                     {
-                        case ScreenState.StageSelectScreen:
-                            stgaeSelectObj.SetActive(false);
-                            nowScreenState = ScreenState.MainScreen;
-                            break;
-                        case ScreenState.UpgradeScreen:
-                            upgradeSystemObj.SetActive(false);
-                            nowScreenState = ScreenState.MainScreen;
-                            break;
+                        switch (nowScreenState)
+                        {
+                            case ScreenState.StageSelectScreen:
+                                stgaeSelectObj.SetActive(false);
+                                nowScreenState = ScreenState.MainScreen;
+                                break;
+                            case ScreenState.UpgradeScreen:
+                                upgradeSystemObj.SetActive(false);
+                                nowScreenState = ScreenState.MainScreen;
+                                break;
+                        }
                     }
                 }
-            }
-            else
-            {
-                if (nowMainOptionState == BattleOrMainOptionState.SecondPage || nowMainOptionState == BattleOrMainOptionState.ThirdPage)
+                else
                 {
-                    StartCoroutine(PressEscToGamePausePageChange());
-                    break;
-                }
-                else if (Input.GetKeyDown(KeyCode.Escape) && nowScreenState == ScreenState.MainScreen)
-                {
-                    if (nowMainOptionState == BattleOrMainOptionState.None)
+                    if (nowMainOptionState == BattleOrMainOptionState.SecondPage || nowMainOptionState == BattleOrMainOptionState.ThirdPage)
                     {
-                        gamePauseObj[(int)BattleOrMainOptionState.FirstPage].SetActive(true);
+                        StartCoroutine(PressEscToGamePausePageChange());
+                        break;
                     }
-                    else
+                    else if (Input.GetKeyDown(KeyCode.Escape) && nowScreenState == ScreenState.MainScreen)
                     {
-                        gamePauseObj[(int)BattleOrMainOptionState.FirstPage].SetActive(false);
+                        if (nowMainOptionState == BattleOrMainOptionState.None)
+                        {
+                            gamePauseObj[(int)BattleOrMainOptionState.FirstPage].SetActive(true);
+                        }
+                        else
+                        {
+                            gamePauseObj[(int)BattleOrMainOptionState.FirstPage].SetActive(false);
+                        }
+                        Time.timeScale = (nowMainOptionState == BattleOrMainOptionState.None) ? 0 : 1;
+                        nowMainOptionState = (nowMainOptionState == BattleOrMainOptionState.None) ? BattleOrMainOptionState.FirstPage : BattleOrMainOptionState.None;
                     }
-                    Time.timeScale = (nowMainOptionState == BattleOrMainOptionState.None) ? 0 : 1;
-                    nowMainOptionState = (nowMainOptionState == BattleOrMainOptionState.None) ? BattleOrMainOptionState.FirstPage : BattleOrMainOptionState.None;
                 }
             }
             yield return null;
@@ -191,6 +196,8 @@ public class MainManager : Singleton<MainManager>
         Color color = faidOutImageColor;
         float nowImageAlpha = 1;
 
+        isFading = true;
+
         faidOutObj.SetActive(true);
         faidOutImageColor.a = 1;
         faidOutImage.color = faidOutImageColor;
@@ -204,6 +211,8 @@ public class MainManager : Singleton<MainManager>
             faidOutImage.color = color;
             yield return null;
         }
+
+        isFading = false;
 
         faidOutObj.SetActive(false);
     }

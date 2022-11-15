@@ -316,6 +316,8 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     protected BattleSceneManager bsm;
 
+    protected BattleButtonManager battleButtonManagerInstance; //배틀 버튼 매니저 싱글톤 인스턴스
+
     protected WaitForSeconds changeToBasicColorDelay;
 
     protected virtual void Awake()
@@ -331,13 +333,16 @@ public abstract class BasicUnitScript : MonoBehaviour
     protected void StartSameSetting()
     {
         Cam = Camera.main;
+
         bsm = BattleSceneManager.Instance;
         objectPoolInstance = ObjectPool.Instance;
+        battleButtonManagerInstance = BattleButtonManager.Instance;
 
         startPos_Vector = transform.position;
+
         nowAttackCount_I = 1;
         nowActionCoolTime = 0;
-        maxGiveBurnDamageTime = 4;
+        maxGiveBurnDamageTime = 4; //화상 효과 최대 데미지 횟수
         maxStackableOverlapTime = 10; //화상 효과 중첩 가능 제한시간 초기화
         maxBurnDamageLimitTime = 15; //화상 효과 지속시간 증가 초기화
 

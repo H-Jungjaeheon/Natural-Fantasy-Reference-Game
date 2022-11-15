@@ -64,10 +64,11 @@ public class Player : BasicUnitScript
     private Image unitShieldHpBars;
     #endregion
 
+    #region 속성 관련 변수
     private float maxChangePropertyCoolTime = 35; //최대 속성 변경 시간
 
     public float nowChangePropertyCoolTime; //현재 속성 변경 시간
-
+    
     public float NowChangePropertyCoolTime
     {
         get
@@ -76,10 +77,10 @@ public class Player : BasicUnitScript
         }
         set
         {
-            if (value > maxChangePropertyCoolTime)
+            if (value >= maxChangePropertyCoolTime)
             {
                 isChangeProperty = true;
-                StartCoroutine(ChangeProperty(false));
+                StartCoroutine(ChangeProperty(false, false));
             }
             else
             {
@@ -94,7 +95,7 @@ public class Player : BasicUnitScript
 
     private float maxPropertyTimeLimit = 25; //최대 속성 지속시간
 
-    private float nowPropertyTimeLimit; // 현재 속성 남은 지속시간
+    public float nowPropertyTimeLimit; // 현재 속성 남은 지속시간
 
     public float NowPropertyTimeLimit
     {
@@ -104,25 +105,28 @@ public class Player : BasicUnitScript
             if (value >= maxPropertyTimeLimit)
             {
                 isChangeProperty = true;
-                StartCoroutine(ChangeProperty(true));
+                StartCoroutine(ChangeProperty(true, false));
             }
             else
             {
-                if (nowProperty != NowPlayerProperty.BasicProperty)
+                nowPropertyTimeLimit = value;
+                if (isChangePropertyReady || nowProperty != NowPlayerProperty.BasicProperty)
                 {
                     nowPropertyLimitTimeImage.fillAmount = (maxPropertyTimeLimit - NowPropertyTimeLimit) / maxPropertyTimeLimit;
                 }
-                nowPropertyTimeLimit = value;
             }
         }
     }
 
-    [HideInInspector]
-    public NowPlayerProperty nowProperty; //현재 속성 상태
-
     private int nextPropertyIndex; //다음 바뀔 속성의 인덱스
 
     private bool isChangePropertyReady; //속성 변경 준비 판별
+
+    private IEnumerator propertyTimeCount; //속성 지속시간 세는 코루틴
+
+    [HideInInspector]
+    public NowPlayerProperty nowProperty; //현재 속성 상태
+    #endregion
 
     private bool isResurrectionOpportunityExists;
 
@@ -156,8 +160,6 @@ public class Player : BasicUnitScript
 
     [HideInInspector]
     public bool isSpawnNatureBead;
-
-    private BattleButtonManager battleButtonManagerInstance; //배틀 버튼 매니저 싱글톤 인스턴스
 
     [SerializeField]
     [Tooltip("현재 플레이어 속성 아이콘")]
@@ -206,7 +208,10 @@ public class Player : BasicUnitScript
         Jump();
     }
 
-    protected override void StartSetting() //초기 세팅 (일부 공통)
+    /// <summary>
+    /// 초기 세팅
+    /// </summary>
+    protected override void StartSetting()
     {
         var gameManager_Ins = GameManager.Instance;
         int energyPerLevel = gameManager_Ins.statLevels[(int)UpgradeableStatKind.Energy] * 3; //레벨당 기력 증가식 (최대 30 증가)
@@ -224,11 +229,10 @@ public class Player : BasicUnitScript
 
         nowState = NowState.Standingby;
         nowProperty = NowPlayerProperty.BasicProperty;
-        battleButtonManagerInstance = BattleButtonManager.Instance;
         isResurrectionOpportunityExists = true;
 
         bsm.playerCharacterPos = transform.position;
-        nextPropertyIndex = (int)NowPlayerProperty.TheHolySpiritProperty;//Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
+        nextPropertyIndex = (int)NowPlayerProperty.AngelProperty; //Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
         nowPropertyImage.sprite = nowPropertyIconImages[(int)nowProperty];
 
         Energy = MaxEnergy;
@@ -239,7 +243,8 @@ public class Player : BasicUnitScript
         originalRestWaitTime = restWaitTime;
         originalSpeed = Speed;
 
-        StartCoroutine(CountDownPropertyTimes());
+        propertyTimeCount = CountDownPropertyTimes();
+        StartCoroutine(propertyTimeCount);
     }
 
     public override void Hit(float damage, bool isDefending)
@@ -311,12 +316,22 @@ public class Player : BasicUnitScript
         transform.rotation = Quaternion.Euler(0, setRotation, 0);
     }
 
-    IEnumerator ChangeProperty(bool isChangeBasicProperty)
+    /// <summary>
+    /// 속성 변경하는 구간 (무적시간, 속성 변경 애니메이션 실행)
+    /// </summary>
+    /// <param name="isChangeBasicProperty"> 기본 속성으로 변경 유무 </param>
+    /// <param name="isForcedChange"> 속성 강제 변경 유무 </param>
+    /// <returns></returns>
+    IEnumerator ChangeProperty(bool isChangeBasicProperty, bool isForcedChange)
     {
         isChangePropertyReady = true;
 
         NowChangePropertyCoolTime = 0;
-        NowPropertyTimeLimit = 0;
+
+        if (isForcedChange)
+        {
+            NowPropertyTimeLimit = 0;
+        }
 
         while (true)
         {
@@ -327,8 +342,14 @@ public class Player : BasicUnitScript
             yield return null;
         }
 
+        if (isForcedChange == false)
+        {
+            NowPropertyTimeLimit = 0;
+        }
+
         nowState = NowState.ChangingProperties;
         Invincibility(true);
+
         battleButtonManagerInstance.ActionButtonsSetActive(false, false, false);
         transform.rotation = Quaternion.identity;
         nowActionCoolTime = 0;
@@ -360,6 +381,7 @@ public class Player : BasicUnitScript
             StartCoroutine(PropertyPassiveAbilityStart());
             nextPropertyIndex = ((NowPlayerProperty)nextPropertyIndex == NowPlayerProperty.AngelProperty) ? (int)NowPlayerProperty.NatureProperty : nextPropertyIndex + 1;
         }
+
         StartCoroutine(EndingPropertyChanges());
         nowPropertyLimitTimeImage.color = propertyColors[(int)nowProperty];
         nowPropertyImage.sprite = nowPropertyIconImages[(int)nowProperty];
@@ -381,7 +403,8 @@ public class Player : BasicUnitScript
             battleButtonManagerInstance.ActionButtonsSetActive(false, true, false);
         }
 
-        StartCoroutine(CountDownPropertyTimes());
+        propertyTimeCount = CountDownPropertyTimes();
+        StartCoroutine(propertyTimeCount); 
     }
 
     public void PropertyChangeStart()
@@ -389,11 +412,12 @@ public class Player : BasicUnitScript
         if (nowState == NowState.Standingby && DreamyFigure >= 10)
         {
             DreamyFigure -= 10;
-            StartCoroutine(ChangeProperty(false));
+            StopCoroutine(propertyTimeCount); //실행중인 속성 지속시간 세는 코루틴 중지 (중복 실행 방지)
+            StartCoroutine(ChangeProperty(false, true));
         }
     }
 
-    IEnumerator CountDownPropertyTimes() //개발중인 기능 (리메이크)
+    IEnumerator CountDownPropertyTimes()
     {
         while (true)
         {
@@ -474,14 +498,17 @@ public class Player : BasicUnitScript
         {
             battleButtonManagerInstance.ActionButtonsSetActive(true, false, false);
         }
+
         if (nowActionCoolTime != 0)
         {
             ActionCoolTimeBarSetActive(true);
         }
+
         if (!Input.GetKey(KeyCode.A))
         {
             transform.rotation = Quaternion.identity;
         }
+
         yield return null;
     }
 
@@ -495,10 +522,12 @@ public class Player : BasicUnitScript
                 actionCoolTimeObj.transform.position = transform.position + (Vector3)actionCoolTimeObjPlusPos;
                 actionCoolTimeImage.fillAmount = nowActionCoolTime / maxActionCoolTime;
                 nowActionCoolTime += Time.deltaTime;
+
                 if (nowActionCoolTime >= maxActionCoolTime || isChangePropertyReady)
                 {
                     WaitingTimeEnd();
                     ActionCoolTimeBarSetActive(false);
+
                     if (isChangePropertyReady == false)
                     {
                         battleButtonManagerInstance.ActionButtonsSetActive(true, false, false);
@@ -510,6 +539,7 @@ public class Player : BasicUnitScript
             {
                 ActionCoolTimeBarSetActive(false);
             }
+
             yield return null;
         }
     }
@@ -529,7 +559,6 @@ public class Player : BasicUnitScript
             }
 
             StartCoroutine(UISetting());
-
         }
     }
 
@@ -539,7 +568,9 @@ public class Player : BasicUnitScript
         {
             nowState = NowState.Jumping;
             battleButtonManagerInstance.ActionButtonsSetActive(false, false, false);
+
             CamShake.JumpStart();
+
             rigid.AddForce(Vector2.up * jumpPower_F, ForceMode2D.Impulse);
             rigid.gravityScale = setJumpGravityScale_F - 0.5f;
             animator.SetTrigger("Jumping");
@@ -561,7 +592,7 @@ public class Player : BasicUnitScript
             }
 
             animator.SetBool("JumpIntermediateMotion", false);
-            CamShake.JumpStop();
+            CamShake.JumpStop(false);
             transform.position = startPos_Vector;
             rigid.velocity = Vector2.zero;
             rigid.gravityScale = 0;
@@ -576,6 +607,7 @@ public class Player : BasicUnitScript
             rigid.gravityScale -= Time.deltaTime * 3f;
             yield return null;
         }
+
         animator.SetBool("JumpIntermediateMotion", true);
         rigid.gravityScale = setJumpGravityScale_F * 1.5f;
     }
@@ -624,6 +656,7 @@ public class Player : BasicUnitScript
         battleUIAnimator.SetBool("NowResting", false);
 
         nowState = NowState.Standingby;
+
         if (isChangePropertyReady == false)
         {
             battleButtonManagerInstance.ActionButtonsSetActive(true, false, false);
@@ -649,17 +682,25 @@ public class Player : BasicUnitScript
         animator.SetTrigger("BasicAttack");
     }
 
-    IEnumerator Attacking(bool isLastAttack, int nowAttackCount_I, float delayTime, float linkedAttacksLimitTime) //3연공 재귀로 구현
+    /// <summary>
+    /// 기본 공격 실행
+    /// </summary>
+    /// <param name="isLastAttack"> 연속 공격의 마지막(3회차) 공격인지 판별 </param>
+    /// <param name="nowAttackCount"> 현재 공격 회차 </param>
+    /// <param name="maxDelayTime"> 연타 방지용 시간 (기본공격 애니메이션 시작 및 타격 지점까지 딜레이) </param>
+    /// <param name="maxLinkedAttacksLimitTime"> 히트 액션(연속 공격) 성공 시간 </param>
+    /// <returns></returns>
+    IEnumerator Attacking(bool isLastAttack, int nowAttackCount, float maxDelayTime, float maxLinkedAttacksLimitTime)
     {
         bool isComplete = false;
         bool isFail = false;
 
         float nowdelayTime = 0;
-        float nowattacktime_f = 0;
+        float nowattacktime = 0;
 
         int maxEnemyIndex;
 
-        while (nowdelayTime < delayTime) //연타 방지용 (기본공격 애니메이션 시작 및 타격 지점까지 딜레이)
+        while (nowdelayTime < maxDelayTime)
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
@@ -671,7 +712,7 @@ public class Player : BasicUnitScript
 
         if (rangeInEnemy.Count != 0) //기본공격 실행 함수 및 공격 애니메이션 타격 지점
         {
-            switch (nowAttackCount_I)
+            switch (nowAttackCount)
             {
                 case 1:
                     CamShake.CamShakeMod(true, 2f);
@@ -711,9 +752,9 @@ public class Player : BasicUnitScript
             }
         }
 
-        while (linkedAttacksLimitTime > nowattacktime_f) //연공 타이밍 계산
+        while (maxLinkedAttacksLimitTime > nowattacktime) //연공 타이밍 계산
         {
-            nowattacktime_f += Time.deltaTime;
+            nowattacktime += Time.deltaTime;
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 isComplete = true;
@@ -723,15 +764,15 @@ public class Player : BasicUnitScript
 
         if (isLastAttack == false && isFail == false && isComplete)
         {
-            nowAttackCount_I++;
-            switch (nowAttackCount_I) //공격 실행 애니메이션 시작
+            nowAttackCount++;
+            switch (nowAttackCount) //공격 실행 애니메이션 시작
             {
                 case 2:
-                    StartCoroutine(Attacking(false, nowAttackCount_I, 0.2f, 0.25f));
+                    StartCoroutine(Attacking(false, nowAttackCount, 0.2f, 0.25f));
                     animator.SetTrigger("BasicSecondAttackHitActionCompleat");
                     break;
                 case 3:
-                    StartCoroutine(Attacking(true, nowAttackCount_I, 0.35f, 0));
+                    StartCoroutine(Attacking(true, nowAttackCount, 0.35f, 0));
                     animator.SetTrigger("BasicThirdAttackHitActionCompleat");
                     break;
             }
@@ -851,14 +892,12 @@ public class Player : BasicUnitScript
         if (nowProperty == NowPlayerProperty.AngelProperty && isResurrectionOpportunityExists)
         {
             isResurrectionOpportunityExists = false;
-            while (nowState != NowState.Standingby)
-            {
-                yield return null;
-            }
             StartCoroutine(Resurrection());
+            yield return null;
         }
         else
         {
+            CamShake.JumpStop(true);
             nowState = NowState.Dead;
             bsm.StartGameEndPanelAnim(true);
         }
@@ -869,17 +908,25 @@ public class Player : BasicUnitScript
         int recoveryFixedValue = 20;
         int ResurrectionStatsValueSharingValue = 5;
 
+        nowState = NowState.Resurrection;
         Invincibility(true);
         AngelPropertyBuff(true);
-        nowState = NowState.Resurrection;
-        WaitingTimeEnd();
+
+        while (nowState != NowState.Standingby)
+        {
+            yield return null;
+        }
+
         ActionCoolTimeBarSetActive(false);
+        //WaitingTimeEnd();
+
         battleButtonManagerInstance.ActionButtonsSetActive(false, false, false);
 
         while (true)
         {
             Hp += Time.deltaTime * (MaxHp / recoveryFixedValue);
-            Energy += (Energy < maxEnergy / ResurrectionStatsValueSharingValue) ? Time.deltaTime * (maxEnergy / recoveryFixedValue) : 0;
+            Energy += (Energy <= maxEnergy / ResurrectionStatsValueSharingValue) ? Time.deltaTime * (maxEnergy / recoveryFixedValue) : 0;
+
             if (Hp >= MaxHp / ResurrectionStatsValueSharingValue && Energy >= maxEnergy / ResurrectionStatsValueSharingValue)
             {
                 Hp = MaxHp / ResurrectionStatsValueSharingValue;
@@ -892,9 +939,12 @@ public class Player : BasicUnitScript
             yield return null;
         }
 
-        battleButtonManagerInstance.ActionButtonsSetActive(true, false, false);
-        nowState = NowState.Standingby;
         NowPropertyTimeLimit = 10;
+        nowState = NowState.Standingby;
+        battleButtonManagerInstance.ActionButtonsSetActive(true, false, false);
+
+        propertyTimeCount = CountDownPropertyTimes();
+        StartCoroutine(propertyTimeCount);
 
         while (NowPropertyTimeLimit > 0)
         {
