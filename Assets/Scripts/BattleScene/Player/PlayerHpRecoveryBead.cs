@@ -65,7 +65,7 @@ public class PlayerHpRecoveryBead : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            Player.Hp_F += recoveryAmount;
+            Player.Hp += recoveryAmount;
             DeleteSetting();
         }
     }

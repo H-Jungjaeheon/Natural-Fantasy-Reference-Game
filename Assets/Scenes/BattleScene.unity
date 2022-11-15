@@ -6631,14 +6631,14 @@ MonoBehaviour:
   nowState: 0
   rangeInEnemy: []
   rangeInDeflectAbleObj: []
-  hp_F: 350
-  maxHp_F: 350
-  energy_F: 30
-  maxEnergy_F: 30
+  hp: 250
+  maxHp: 250
+  energy: 30
+  maxEnergy: 30
   isHaveDreamyFigure: 0
-  dreamyFigure_F: 0
-  damage_I: 5
-  Speed_F: 4.5
+  dreamyFigure: 0
+  damage: 4
+  Speed: 4
   unitHpBars: {fileID: 1135723117}
   unitLightHpBars: {fileID: 1437239399}
   unitEnergyBars: {fileID: 994072189}
@@ -9064,14 +9064,14 @@ MonoBehaviour:
   nowState: 0
   rangeInEnemy: []
   rangeInDeflectAbleObj: []
-  hp_F: 25
-  maxHp_F: 25
-  energy_F: 1
-  maxEnergy_F: 15
+  hp: 25
+  maxHp: 25
+  energy: 15
+  maxEnergy: 15
   isHaveDreamyFigure: 1
-  dreamyFigure_F: 0
-  damage_I: 4
-  Speed_F: 7
+  dreamyFigure: 0
+  damage: 4
+  Speed: 7
   unitHpBars: {fileID: 939537340}
   unitLightHpBars: {fileID: 1390554749}
   unitEnergyBars: {fileID: 529741880}

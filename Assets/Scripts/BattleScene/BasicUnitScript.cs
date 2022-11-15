@@ -101,30 +101,30 @@ public abstract class BasicUnitScript : MonoBehaviour
     [Header("스탯 관련 변수")]
     [Tooltip("체력")]
     [SerializeField]
-    private float hp_F;
-    public float Hp_F
+    private float hp;
+    public float Hp
     {
-        get { return hp_F; }
+        get { return hp; }
         set
         {
-            if (value >= MaxHp_F)
+            if (value >= MaxHp)
             {
-                hp_F = MaxHp_F;
+                hp = MaxHp;
             }
             else
             {
-                if (value > lightHp_F)
+                if (value > lightHp)
                 {
-                    lightHp_F = Hp_F;
+                    lightHp = Hp;
                 }
                 if (value <= 0)
                 {
-                    hp_F = 0;
+                    hp = 0;
                     StartCoroutine(Dead());
                 }
                 else
                 {
-                    hp_F = value;
+                    hp = value;
                 }
             }
 
@@ -133,36 +133,36 @@ public abstract class BasicUnitScript : MonoBehaviour
                 StartCoroutine(HpDiminishedProduction());
             }
 
-            hpText.text = $"{(Hp_F):N0}/{(MaxHp_F):N0}";
-            unitHpBars.fillAmount = Hp_F / MaxHp_F;
+            hpText.text = $"{(Hp):N0}/{(MaxHp):N0}";
+            unitHpBars.fillAmount = Hp / MaxHp;
         }
     }
 
-    protected float lightHp_F;
+    protected float lightHp;
 
     [Tooltip("최대 체력")]
     [SerializeField]
-    protected float maxHp_F;
+    protected float maxHp;
 
-    public float MaxHp_F
+    public float MaxHp
     {
-        get { return maxHp_F; }
-        set { maxHp_F = value; }
+        get { return maxHp; }
+        set { maxHp = value; }
     }
 
     [Tooltip("기력")]
     [SerializeField]
-    protected float energy_F;
-    public float Energy_F
+    protected float energy;
+    public float Energy
     {
-        get { return energy_F; }
+        get { return energy; }
         set
         {
-            energy_F = (value < 0) ? energy_F = 0 : energy_F = value;
+            energy = (value < 0) ? energy = 0 : energy = value;
             
-            energyText.text = $"{(Energy_F):N0}/{(MaxEnergy_F):N0}";
+            energyText.text = $"{(Energy):N0}/{(MaxEnergy):N0}";
             
-            unitEnergyBars.fillAmount = Energy_F / MaxEnergy_F;
+            unitEnergyBars.fillAmount = Energy / MaxEnergy;
             
             if (value <= 0)
             {
@@ -174,11 +174,11 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     [Tooltip("최대 기력")]
     [SerializeField]
-    protected float maxEnergy_F;
-    public float MaxEnergy_F
+    protected float maxEnergy;
+    public float MaxEnergy
     {
-        get { return maxEnergy_F; }
-        set { maxEnergy_F = value; }
+        get { return maxEnergy; }
+        set { maxEnergy = value; }
     }
 
     [Tooltip("몽환 게이지 유무 판별")]
@@ -187,33 +187,33 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     [Tooltip("몽환 게이지")]
     [SerializeField]
-    protected float dreamyFigure_F;
-    public float DreamyFigure_F
+    protected float dreamyFigure;
+    public float DreamyFigure
     {
-        get { return dreamyFigure_F; }
+        get { return dreamyFigure; }
         set
         {
-            dreamyFigure_F = (value >= maxDreamyFigure_F) ? dreamyFigure_F = maxDreamyFigure_F : dreamyFigure_F = value;
-            dreamyFigureText.text = $"{DreamyFigure_F}/{maxDreamyFigure_F}";
-            unitDreamyFigureBars.fillAmount = DreamyFigure_F / maxDreamyFigure_F;
+            dreamyFigure = (value >= maxDreamyFigure) ? dreamyFigure = maxDreamyFigure : dreamyFigure = value;
+            dreamyFigureText.text = $"{DreamyFigure}/{maxDreamyFigure}";
+            unitDreamyFigureBars.fillAmount = DreamyFigure / maxDreamyFigure;
         }
     }
 
     [HideInInspector]
-    public const float maxDreamyFigure_F = 20; //최대 몽환 게이지
+    public const float maxDreamyFigure = 20; //최대 몽환 게이지
 
     [Tooltip("공격력")]
     [SerializeField]
-    protected float damage_I;
-    public float Damage_I
+    protected float damage;
+    public float Damage
     {
-        get { return damage_I; }
-        set { damage_I = value; }
+        get { return damage; }
+        set { damage = value; }
     }
 
     [Tooltip("이동속도")]
     [SerializeField]
-    protected float Speed_F;
+    protected float Speed;
     #endregion
 
     #region 화상 관련 변수
@@ -312,6 +312,8 @@ public abstract class BasicUnitScript : MonoBehaviour
     public Color returnBasicColor;
     #endregion
 
+    protected ObjectPool objectPoolInstance; //오브젝트 풀 싱글톤 인스턴스
+
     protected BattleSceneManager bsm;
 
     protected WaitForSeconds changeToBasicColorDelay;
@@ -319,28 +321,25 @@ public abstract class BasicUnitScript : MonoBehaviour
     protected virtual void Awake()
     {
         StartSameSetting();
+    }
+
+    protected virtual void Start()
+    {
         StartSetting();
     }
 
     protected void StartSameSetting()
     {
         Cam = Camera.main;
+        bsm = BattleSceneManager.Instance;
+        objectPoolInstance = ObjectPool.Instance;
+
         startPos_Vector = transform.position;
         nowAttackCount_I = 1;
         nowActionCoolTime = 0;
         maxGiveBurnDamageTime = 4;
         maxStackableOverlapTime = 10; //화상 효과 중첩 가능 제한시간 초기화
         maxBurnDamageLimitTime = 15; //화상 효과 지속시간 증가 초기화
-        bsm = BattleSceneManager.Instance;
-
-        hpText.text = $"{(Hp_F):N0}/{(MaxHp_F):N0}";
-        energyText.text = $"{(Energy_F):N0}/{(MaxEnergy_F):N0}";
-        dreamyFigureText.text = $"{DreamyFigure_F}/{maxDreamyFigure_F}";
-
-        unitHpBars.fillAmount = Hp_F / MaxHp_F;
-        unitEnergyBars.fillAmount = Energy_F / MaxEnergy_F;
-        unitDreamyFigureBars.fillAmount = DreamyFigure_F / maxDreamyFigure_F;
-        unitLightHpBars.fillAmount = lightHp_F / MaxHp_F;
 
         changeToBasicColorDelay = new WaitForSeconds(0.1f);
     }
@@ -353,14 +352,14 @@ public abstract class BasicUnitScript : MonoBehaviour
         {
             if (isDefending)
             {
-                Energy_F -= 1;
-                DreamyFigure_F += 1;
+                Energy -= 1;
+                DreamyFigure += 1;
             }
             else
             {
                 spriteRenderer.color = hitColor;
-                Hp_F -= damage;
-                DreamyFigure_F += 2;
+                Hp -= damage;
+                DreamyFigure += 2;
                 StartCoroutine(ChangeToBasicColor());
             }
         }
@@ -374,19 +373,19 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     protected IEnumerator HpDiminishedProduction()
     {
-        float nowReductionSpeed = MaxHp_F / 12;
+        float nowReductionSpeed = MaxHp / 12;
         isHpDiminishedProduction = true;
         yield return new WaitForSeconds(0.7f);
-        while (lightHp_F > Hp_F)
+        while (lightHp > Hp)
         {
-            lightHp_F -= Time.deltaTime * nowReductionSpeed;
+            lightHp -= Time.deltaTime * nowReductionSpeed;
             nowReductionSpeed += Time.deltaTime * 2;
-            unitLightHpBars.fillAmount = lightHp_F / MaxHp_F;
+            unitLightHpBars.fillAmount = lightHp / MaxHp;
             yield return null;
         }
-        lightHp_F = Hp_F;
+        lightHp = Hp;
         isHpDiminishedProduction = false;
-        unitLightHpBars.fillAmount = lightHp_F / MaxHp_F;
+        unitLightHpBars.fillAmount = lightHp / MaxHp;
     }
 
     protected void ReleaseDefense()
@@ -445,7 +444,7 @@ public abstract class BasicUnitScript : MonoBehaviour
             {
                 if (isInvincibility == false)
                 {
-                    Hp_F -= 1;
+                    Hp -= 1;
                 }
                 nowGiveBurnDamageTime = 0;
             }

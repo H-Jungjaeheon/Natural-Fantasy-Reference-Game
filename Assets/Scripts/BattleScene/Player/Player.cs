@@ -40,7 +40,7 @@ public class Player : BasicUnitScript
                     hpText.color = basicHpTextColor;
                     TheHolySpiritPropertyBuff(false);
                     TheHolySpiritPropertyDeBuff(true);
-                    hpText.text = $"{(Hp_F):N0}/{(MaxHp_F):N0}";
+                    hpText.text = $"{(Hp):N0}/{(MaxHp):N0}";
                 }
             }
             else
@@ -134,9 +134,9 @@ public class Player : BasicUnitScript
 
     private bool isChangeProperty;
 
-    private float maxNaturePassiveCount;
+    private float maxNaturePassiveCount; //자연 속성 최대 구슬 개수
 
-    private float nowNaturePassiveCount;
+    private float nowNaturePassiveCount; //자연 속성 현재 구슬 개수
     public float NowNaturePassiveCount
     {
         get { return nowNaturePassiveCount; }
@@ -158,8 +158,6 @@ public class Player : BasicUnitScript
     public bool isSpawnNatureBead;
 
     private BattleButtonManager battleButtonManagerInstance; //배틀 버튼 매니저 싱글톤 인스턴스
-
-    private ObjectPool objectPoolInstance; //오브젝트 풀 싱글톤 인스턴스
 
     [SerializeField]
     [Tooltip("현재 플레이어 속성 아이콘")]
@@ -191,6 +189,16 @@ public class Player : BasicUnitScript
     private Color[] propertyColors;
     #endregion
 
+    #region 스탯 원본 수치 (버프/디버프에 사용)
+    private float originalDamage; //현재 플레이어 기본 데미지 수치
+
+    private float originalMaxActionCoolTime; //현재 플레이어 기본 행동 쿨타임 수치
+
+    private float originalRestWaitTime; //현재 플레이어 기본 휴식 시간 수치
+
+    private float originalSpeed; //현재 플레이어 기본 이동속도 수치
+    #endregion
+
     private void Update()
     {
         Deflect();
@@ -202,14 +210,14 @@ public class Player : BasicUnitScript
     {
         var gameManager_Ins = GameManager.Instance;
         int energyPerLevel = gameManager_Ins.statLevels[(int)UpgradeableStatKind.Energy] * 3; //레벨당 기력 증가식 (최대 30 증가)
-        int maxHpPerLevel = (int)MaxHp_F / 10 * (gameManager_Ins.statLevels[(int)UpgradeableStatKind.Hp]); //레벨당 체력 증가식 (최대 100% 증가)
-        float damagePerLevel = (Damage_I * 10 / 100) * gameManager_Ins.statLevels[(int)UpgradeableStatKind.Damage]; //레벨당 공격력 증가식 (최대 100% 증가)
+        int maxHpPerLevel = (int)MaxHp / 10 * (gameManager_Ins.statLevels[(int)UpgradeableStatKind.Hp]); //레벨당 체력 증가식 (최대 100% 증가)
+        float damagePerLevel = (Damage * 10 / 100) * gameManager_Ins.statLevels[(int)UpgradeableStatKind.Damage]; //레벨당 공격력 증가식 (최대 100% 증가)
         float maxActionCoolTimePerLevel = (gameManager_Ins.ReduceCoolTimeLevel * 0.1f); //레벨당 최대 쿨타임 차감식 (임시)
 
         maxActionCoolTime -= maxActionCoolTimePerLevel;
-        MaxHp_F += maxHpPerLevel;
-        MaxEnergy_F += energyPerLevel;
-        Damage_I += damagePerLevel;
+        MaxHp += maxHpPerLevel;
+        MaxEnergy += energyPerLevel;
+        Damage += damagePerLevel;
 
         restWaitTime = 1.25f;
         maxNaturePassiveCount = 5;
@@ -217,14 +225,19 @@ public class Player : BasicUnitScript
         nowState = NowState.Standingby;
         nowProperty = NowPlayerProperty.BasicProperty;
         battleButtonManagerInstance = BattleButtonManager.Instance;
-        objectPoolInstance = ObjectPool.Instance;
         isResurrectionOpportunityExists = true;
 
-        BattleSceneManager.Instance.playerCharacterPos = transform.position;
-        nextPropertyIndex = Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
+        bsm.playerCharacterPos = transform.position;
+        nextPropertyIndex = (int)NowPlayerProperty.TheHolySpiritProperty;//Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
         nowPropertyImage.sprite = nowPropertyIconImages[(int)nowProperty];
-        Energy_F = MaxEnergy_F;
-        Hp_F = MaxHp_F;
+
+        Energy = MaxEnergy;
+        Hp = MaxHp;
+
+        originalDamage = Damage;
+        originalMaxActionCoolTime = maxActionCoolTime;
+        originalRestWaitTime = restWaitTime;
+        originalSpeed = Speed;
 
         StartCoroutine(CountDownPropertyTimes());
     }
@@ -239,15 +252,15 @@ public class Player : BasicUnitScript
             }
             else if (isDefending)
             {
-                Energy_F -= 1;
-                DreamyFigure_F += 1;
+                Energy -= 1;
+                DreamyFigure += 1;
                 animator.SetTrigger("DefenceIntermediateMotion");
             }
             else
             {
                 spriteRenderer.color = hitColor;
-                Hp_F -= nowProperty == NowPlayerProperty.ForceProperty ? damage * 2f : damage;
-                DreamyFigure_F += 2;
+                Hp -= nowProperty == NowPlayerProperty.ForceProperty ? damage * 2f : damage;
+                DreamyFigure += 2;
                 StartCoroutine(ChangeToBasicColor());
             }
         }
@@ -255,7 +268,7 @@ public class Player : BasicUnitScript
 
     protected override void Defense()
     {
-        if (bsm.nowGameState == NowGameState.Playing && nowState == NowState.Standingby && Hp_F > 0 && isChangePropertyReady == false)
+        if (bsm.nowGameState == NowGameState.Playing && nowState == NowState.Standingby && Hp > 0 && isChangePropertyReady == false)
         {
             if (Input.GetKey(KeyCode.A))
             {
@@ -325,7 +338,7 @@ public class Player : BasicUnitScript
             nowProperty = NowPlayerProperty.BasicProperty;
             if(nowProperty == NowPlayerProperty.TheHolySpiritProperty)
             {
-                hpText.text = $"{(Hp_F):N0}/{(MaxHp_F):N0}";
+                hpText.text = $"{(Hp):N0}/{(MaxHp):N0}";
             }
         }
         else
@@ -359,7 +372,7 @@ public class Player : BasicUnitScript
         nowState = NowState.Standingby;
         Invincibility(false);
         
-        if (BattleButtonManager.Instance.nowButtonPage == ButtonPage.FirstPage)
+        if (battleButtonManagerInstance.nowButtonPage == ButtonPage.FirstPage)
         {
             battleButtonManagerInstance.ActionButtonsSetActive(true, false, true);
         }
@@ -373,9 +386,9 @@ public class Player : BasicUnitScript
 
     public void PropertyChangeStart()
     {
-        if (nowState == NowState.Standingby && DreamyFigure_F >= 10)
+        if (nowState == NowState.Standingby && DreamyFigure >= 10)
         {
-            DreamyFigure_F -= 10;
+            DreamyFigure -= 10;
             StartCoroutine(ChangeProperty(false));
         }
     }
@@ -505,7 +518,7 @@ public class Player : BasicUnitScript
     {
         nowState = NowState.Standingby;
 
-        if (isChangePropertyReady == false && Hp_F > 0)
+        if (isChangePropertyReady == false && Hp > 0)
         {
             isWaiting = true;
             
@@ -522,7 +535,7 @@ public class Player : BasicUnitScript
 
     private void Jump()
     {
-        if (bsm.nowGameState == NowGameState.Playing && nowState == NowState.Standingby && Input.GetKey(KeyCode.Space) && Hp_F > 0 && isChangePropertyReady == false)
+        if (bsm.nowGameState == NowGameState.Playing && nowState == NowState.Standingby && Input.GetKey(KeyCode.Space) && Hp > 0 && isChangePropertyReady == false)
         {
             nowState = NowState.Jumping;
             battleButtonManagerInstance.ActionButtonsSetActive(false, false, false);
@@ -597,13 +610,13 @@ public class Player : BasicUnitScript
 
         while (3 > nowRestingCount)
         {
-            if (Energy_F >= MaxEnergy_F)
+            if (Energy >= MaxEnergy)
             {
-                Energy_F = MaxEnergy_F;
+                Energy = MaxEnergy;
                 break;
             }
             yield return RestWaitTime;
-            Energy_F += 1;
+            Energy += 1;
             nowRestingCount += 1;
         }
 
@@ -619,7 +632,7 @@ public class Player : BasicUnitScript
 
     IEnumerator GoToAttack()
     {
-        Vector3 Movetransform = new Vector3(Speed_F, 0, 0); //이동을 위해 더해줄 연산
+        Vector3 Movetransform = new Vector3(Speed, 0, 0); //이동을 위해 더해줄 연산
         Vector3 Targettransform = new Vector3(bsm.enemyCharacterPos.x - 5.5f, transform.position.y); //목표 위치
 
         animator.SetBool("Moving", true);
@@ -678,7 +691,7 @@ public class Player : BasicUnitScript
 
                     bool isDefence = (unitScriptComponenet.nowState == NowState.Defensing && unitScriptComponenet.nowDefensivePosition == DefensePos.Left) ? true : false;
 
-                    unitScriptComponenet.Hit(CurrentRandomDamage(Damage_I), isDefence);
+                    unitScriptComponenet.Hit(CurrentRandomDamage(Damage), isDefence);
 
                     if (isGetGood == false)
                     {
@@ -751,7 +764,7 @@ public class Player : BasicUnitScript
 
     IEnumerator Return() //근접공격 후 돌아오기
     {
-        Vector3 Movetransform = new Vector3(Speed_F, 0, 0);
+        Vector3 Movetransform = new Vector3(Speed, 0, 0);
         transform.rotation = Quaternion.Euler(0, 180, 0);
 
         animator.SetBool("Moving", true);
@@ -766,7 +779,7 @@ public class Player : BasicUnitScript
 
         animator.SetBool("Moving", false);
 
-        if (Energy_F > 0)
+        if (Energy > 0)
         {
             WaitingTimeStart();
         }
@@ -778,10 +791,10 @@ public class Player : BasicUnitScript
 
     public void SkillUse(int nowUseSkillIndex, int nowUseSkillNeedEnergy)
     {
-        if (nowState == NowState.Standingby && Energy_F >= nowUseSkillNeedEnergy)
+        if (nowState == NowState.Standingby && Energy >= nowUseSkillNeedEnergy)
         {
             nowState = NowState.Attacking;
-            Energy_F -= nowUseSkillNeedEnergy;
+            Energy -= nowUseSkillNeedEnergy;
 
             battleButtonManagerInstance.ActionButtonsSetActive(false, false, false);
 
@@ -823,7 +836,7 @@ public class Player : BasicUnitScript
 
         animator.SetBool("FirstSkill", false);
 
-        if (Energy_F > 0)
+        if (Energy > 0)
         {
             WaitingTimeStart();
         }
@@ -865,14 +878,14 @@ public class Player : BasicUnitScript
 
         while (true)
         {
-            Hp_F += Time.deltaTime * (MaxHp_F / recoveryFixedValue);
-            Energy_F += (Energy_F < maxEnergy_F / ResurrectionStatsValueSharingValue) ? Time.deltaTime * (maxEnergy_F / recoveryFixedValue) : 0;
-            if (Hp_F >= MaxHp_F / ResurrectionStatsValueSharingValue && Energy_F >= maxEnergy_F / ResurrectionStatsValueSharingValue)
+            Hp += Time.deltaTime * (MaxHp / recoveryFixedValue);
+            Energy += (Energy < maxEnergy / ResurrectionStatsValueSharingValue) ? Time.deltaTime * (maxEnergy / recoveryFixedValue) : 0;
+            if (Hp >= MaxHp / ResurrectionStatsValueSharingValue && Energy >= maxEnergy / ResurrectionStatsValueSharingValue)
             {
-                Hp_F = MaxHp_F / ResurrectionStatsValueSharingValue;
-                if (Energy_F <= maxEnergy_F / ResurrectionStatsValueSharingValue)
+                Hp = MaxHp / ResurrectionStatsValueSharingValue;
+                if (Energy <= maxEnergy / ResurrectionStatsValueSharingValue)
                 {
-                    Energy_F = maxEnergy_F / ResurrectionStatsValueSharingValue;
+                    Energy = maxEnergy / ResurrectionStatsValueSharingValue;
                 }
                 break;
             }
@@ -896,31 +909,23 @@ public class Player : BasicUnitScript
     {
         angelPropertyBuffing = isBuffing;
 
-        Damage_I = isBuffing ? Damage_I * 2 : Damage_I / 2;
-        maxActionCoolTime = isBuffing ? maxActionCoolTime - 1 : maxActionCoolTime + 1;
+        Damage = isBuffing ? Damage * 2 : originalDamage;
+        maxActionCoolTime = isBuffing ? maxActionCoolTime - 1 : originalMaxActionCoolTime;
     }
 
     private void TheHolySpiritPropertyBuff(bool isBuffing)
     {
-        float originalRestWaitTime = 1.25f;
-        float reducedMaxActionCoolTime = maxActionCoolTime / 4;
-        float reducedRestWaitTime = originalRestWaitTime / 5;
-
-        maxActionCoolTime = isBuffing ? maxActionCoolTime - reducedMaxActionCoolTime : maxActionCoolTime + reducedMaxActionCoolTime;
-        restWaitTime = isBuffing ? restWaitTime - reducedRestWaitTime : restWaitTime + reducedRestWaitTime;
-        Damage_I = isBuffing ? Damage_I * 1.5f : Damage_I / 1.5f;
+        maxActionCoolTime = isBuffing ? maxActionCoolTime - (maxActionCoolTime / 4) : originalMaxActionCoolTime;
+        restWaitTime = isBuffing ? restWaitTime - (originalRestWaitTime / 5) : originalRestWaitTime;
+        Damage = isBuffing ? Damage * 1.5f : originalDamage;
     }
 
     private void TheHolySpiritPropertyDeBuff(bool isDeBuffing)
     {
-        float originalRestWaitTime = 1.25f;
-        float reducedMaxActionCoolTime = maxActionCoolTime / 4;
-        float reducedRestWaitTime = originalRestWaitTime / 5;
-
-        maxActionCoolTime = isDeBuffing ? maxActionCoolTime + reducedMaxActionCoolTime : maxActionCoolTime - reducedMaxActionCoolTime;
-        restWaitTime = isDeBuffing ? restWaitTime + reducedRestWaitTime : restWaitTime - reducedRestWaitTime;
-        Damage_I = isDeBuffing ? Damage_I / 1.5f : Damage_I * 1.5f;
-        Speed_F = isDeBuffing ? Speed_F / 1.25f : Speed_F * 1.25f;
+        maxActionCoolTime = isDeBuffing ? maxActionCoolTime + (maxActionCoolTime / 4) : originalMaxActionCoolTime;
+        restWaitTime = isDeBuffing ? restWaitTime + (originalRestWaitTime / 5) : originalRestWaitTime;
+        Damage = isDeBuffing ? Damage / 1.5f : originalDamage;
+        Speed = isDeBuffing ? Speed / 1.25f : originalSpeed;
     }
 
     protected override IEnumerator Fainting()
@@ -960,10 +965,10 @@ public class Player : BasicUnitScript
         animator.SetBool("Stuning", false);
         battleUIAnimator.SetBool("NowFainting", false);
 
-        Energy_F += 8; //나중에 매개변수로 레벨에 따라서 기력 차는 양 증가
+        Energy += 8; //나중에 매개변수로 레벨에 따라서 기력 차는 양 증가
         nowActionCoolTime = maxActionCoolTime;
 
-        if (isChangePropertyReady == false && Hp_F > 0)
+        if (isChangePropertyReady == false && Hp > 0)
         {
             battleButtonManagerInstance.ActionButtonsSetActive(true, false, false);
         }
@@ -995,16 +1000,16 @@ public class Player : BasicUnitScript
                 break;
 
             case NowPlayerProperty.ForceProperty:
-                float enhancedDamage = Damage_I / 2f;
+                float enhancedDamage = Damage / 2f;
                 float reducedMaxActionCoolTime = maxActionCoolTime / 5;
 
                 maxActionCoolTime -= reducedMaxActionCoolTime;
-                Damage_I += enhancedDamage;
+                Damage += enhancedDamage;
                 while (nowProperty == NowPlayerProperty.ForceProperty)
                 {
                     yield return null;
                 }
-                Damage_I -= enhancedDamage;
+                Damage -= enhancedDamage;
                 maxActionCoolTime += reducedMaxActionCoolTime;
                 break;
 
@@ -1033,7 +1038,7 @@ public class Player : BasicUnitScript
                 shieldHp_F = 0;
                 unitShieldHpBars.fillAmount = ShieldHp_F / maxShieldHp_F;
                 hpText.color = basicHpTextColor;
-                hpText.text = $"{(Hp_F):N0}/{(MaxHp_F):N0}";
+                hpText.text = $"{(Hp):N0}/{(MaxHp):N0}";
                 break;
         }
     }

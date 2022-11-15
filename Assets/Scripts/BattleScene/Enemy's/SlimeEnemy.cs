@@ -21,8 +21,8 @@ public class SlimeEnemy : BasicUnitScript
         bsm.enemyCharacterPos = transform.position;
         bsm.Enemy = gameObject;
 
-        Hp_F = MaxHp_F;
-        Energy_F = MaxEnergy_F;
+        Energy = MaxEnergy;
+        Hp = MaxHp;
 
         restWaitTime = 1.85f;
 
@@ -82,7 +82,7 @@ public class SlimeEnemy : BasicUnitScript
 
             if (behaviorProbability <= 20)
             {
-                if (Energy_F <= MaxEnergy_F / 3 && restLimitTurn >= maxRestLimitTurn)
+                if (Energy <= MaxEnergy / 3 && restLimitTurn >= maxRestLimitTurn)
                 {
                     restLimitTurn = 0;
                     nowCoroutine = Resting();
@@ -130,12 +130,12 @@ public class SlimeEnemy : BasicUnitScript
 
     IEnumerator GoToAttack(bool isBasicCloseAttack)
     {
-        Vector3 Movetransform = new Vector3(Speed_F, 0, 0); //이동을 위해 더해줄 연산
+        Vector3 Movetransform = new Vector3(Speed, 0, 0); //이동을 위해 더해줄 연산
         Vector3 Targettransform = new Vector3(0, transform.position.y); //목표 위치
 
         nowState = NowState.Attacking;
         Targettransform.x = (isBasicCloseAttack) ? bsm.playerCharacterPos.x + 5.5f : bsm.playerCharacterPos.x + 8;
-        Energy_F -= (isBasicCloseAttack) ? 2 : 3;
+        Energy -= (isBasicCloseAttack) ? 2 : 3;
 
         animator.SetBool("Moving", true);
 
@@ -184,7 +184,7 @@ public class SlimeEnemy : BasicUnitScript
                 {
                     var nowRangeInEnemysComponent = rangeInEnemy[nowIndex].GetComponent<BasicUnitScript>();
                     bool isDefence = (nowRangeInEnemysComponent.nowDefensivePosition == DefensePos.Right && nowRangeInEnemysComponent.nowState == NowState.Defensing) ? true : false;
-                    nowRangeInEnemysComponent.Hit(Damage_I, isDefence);
+                    nowRangeInEnemysComponent.Hit(Damage, isDefence);
                 }
             }
         }
@@ -243,7 +243,7 @@ public class SlimeEnemy : BasicUnitScript
 
     IEnumerator Return() //근접공격 후 돌아오기
     {
-        Vector3 Movetransform = new Vector3(Speed_F, 0, 0);
+        Vector3 Movetransform = new Vector3(Speed, 0, 0);
         transform.rotation = Quaternion.Euler(0, 180, 0);
 
         animator.SetBool("Moving", true);
@@ -260,7 +260,7 @@ public class SlimeEnemy : BasicUnitScript
 
         animator.SetBool("Moving", false);
 
-        if (Energy_F > 0)
+        if (Energy > 0)
         {
             WaitingTimeStart();
         }
@@ -275,18 +275,18 @@ public class SlimeEnemy : BasicUnitScript
         Vector2 spawnSlimeBulletPosition;
 
         nowState = NowState.Attacking;
-        Energy_F -= 2;
+        Energy -= 2;
 
         yield return new WaitForSeconds(1.5f);
 
-        var slimeBullet = ObjectPool.Instance.GetObject((int)PoolObjKind.SlimeEnemyBullet);
+        var slimeBullet = objectPoolInstance.GetObject((int)PoolObjKind.SlimeEnemyBullet);
 
         spawnSlimeBulletPosition.x = transform.position.x;
         spawnSlimeBulletPosition.y = slimeBullet.transform.position.y;
 
         slimeBullet.transform.position = spawnSlimeBulletPosition;
 
-        if (Energy_F > 0)
+        if (Energy > 0)
         {
             WaitingTimeStart();
         }
@@ -302,7 +302,7 @@ public class SlimeEnemy : BasicUnitScript
 
         nowState = NowState.Attacking;
         
-        Energy_F -= 3;
+        Energy -= 3;
 
         //발사 애니메이션 실행
         yield return new WaitForSeconds(3);
@@ -310,11 +310,11 @@ public class SlimeEnemy : BasicUnitScript
 
         for (int nowLaunchCount = 0; nowLaunchCount < 3; nowLaunchCount++)
         {
-            ObjectPool.Instance.GetObject((int)PoolObjKind.SlimeEnemyHowitzerBullet);
+            objectPoolInstance.GetObject((int)PoolObjKind.SlimeEnemyHowitzerBullet);
             yield return launchDelay;
         }
 
-        if (Energy_F > 0)
+        if (Energy > 0)
         {
             WaitingTimeStart();
         }
@@ -332,7 +332,7 @@ public class SlimeEnemy : BasicUnitScript
 
         nowState = NowState.Attacking;
         
-        Energy_F -= 5;
+        Energy -= 5;
 
         if (randLaunch > 49)
         {
@@ -345,7 +345,7 @@ public class SlimeEnemy : BasicUnitScript
 
         for (int nowLaunchCount = 0; nowLaunchCount < 2; nowLaunchCount++)
         {
-            GameObject nowLaunchLaserObj = ObjectPool.Instance.GetObject((int)PoolObjKind.SlimeEnemyLaser);
+            GameObject nowLaunchLaserObj = objectPoolInstance.GetObject((int)PoolObjKind.SlimeEnemyLaser);
             EnemysLaser nowLaunchEnemyLaser = nowLaunchLaserObj.GetComponent<EnemysLaser>();
 
             nowLaunchEnemyLaser.launchAngle = (isLaunchUp) ? -80 : -70;
@@ -356,7 +356,7 @@ public class SlimeEnemy : BasicUnitScript
             yield return launchDelay;
         }
 
-        if (Energy_F > 0)
+        if (Energy > 0)
         {
             WaitingTimeStart();
         }
@@ -370,7 +370,7 @@ public class SlimeEnemy : BasicUnitScript
     {
         nowState = NowState.Standingby;
 
-        if (Hp_F > 0)
+        if (Hp > 0)
         {
             isWaiting = true;
             
@@ -396,13 +396,13 @@ public class SlimeEnemy : BasicUnitScript
 
         while (nowRestingCount < 2)
         {
-            if (Energy_F >= MaxEnergy_F)
+            if (Energy >= MaxEnergy)
             {
-                Energy_F = MaxEnergy_F;
+                Energy = MaxEnergy;
                 break;
             }
             yield return RestWaitTime;
-            Energy_F += 1;
+            Energy += 1;
             nowRestingCount += 1;
         }
 
@@ -462,7 +462,7 @@ public class SlimeEnemy : BasicUnitScript
         battleUIAnimator.SetBool("NowFainting", false);
         battleUIObjScript.BattleUIObjSetActiveFalse();
 
-        Energy_F = MaxEnergy_F; 
+        Energy = MaxEnergy; 
         WaitingTimeStart();
     }
 
@@ -471,7 +471,7 @@ public class SlimeEnemy : BasicUnitScript
         if (isPhysicalAttacking && collision.gameObject.CompareTag("Player"))
         {
             CamShake.CamShakeMod(false, 2f);
-            collision.gameObject.GetComponent<BasicUnitScript>().Hit(Damage_I + Mathf.Round(Damage_I / 2), false);
+            collision.gameObject.GetComponent<BasicUnitScript>().Hit(Damage + Mathf.Round(Damage / 2), false);
         }
     }
 
