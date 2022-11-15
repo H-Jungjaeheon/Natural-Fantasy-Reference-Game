@@ -61,6 +61,9 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     [Tooltip("게임 종료 판넬 오브젝트")]
     private GameObject[] gameEndObj;
 
+    #region 화면 페이드(Fade) 연출 관련
+    [Header("화면 페이드(Fade) 연출 관련")]
+
     [SerializeField]
     [Tooltip("페이드에 쓰일 오브젝트")]
     private GameObject faidObj;
@@ -76,6 +79,10 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     private Color nowColor; //이미지에 적용할 색
 
     float nowAlpha; //이미지에 적용할 알파값
+    #endregion
+
+    #region 스테이지 시작 연출 관련
+    [Header("스테이지 시작 연출 관련")]
 
     [SerializeField]
     [Tooltip("스테이지 및 보스 소개 연출 이미지")]
@@ -84,9 +91,11 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     [SerializeField]
     [Tooltip("스테이지 및 보스 소개 텍스트")]
     private TextMeshProUGUI introducingTheStageText;
+    #endregion
 
     #region 게임 오버 관련 
     [Header("게임 오버 관련")]
+
     [SerializeField]
     [Tooltip("게임 오버 텍스트")]
     private TextMeshProUGUI gameOverText;
@@ -108,6 +117,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
     #region 재화 획득 애니메이션 관련 
     [Header("재화 획득 애니메이션 관련")]
+
     [SerializeField]
     [Tooltip("재화 획득 애니메이션 오브젝트")]
     private GameObject getGoodObj;

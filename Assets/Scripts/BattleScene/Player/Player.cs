@@ -508,12 +508,15 @@ public class Player : BasicUnitScript
         if (isChangePropertyReady == false && Hp_F > 0)
         {
             isWaiting = true;
-            StartCoroutine(UISetting());
+            
             if (nowActionCoolTime < maxActionCoolTime)
             {
                 ActionCoolTimeBarSetActive(true);
+                battleButtonManagerInstance.ActionButtonsSetActive(false, false, false);
             }
-            battleButtonManagerInstance.ActionButtonsSetActive(false, false, false);
+
+            StartCoroutine(UISetting());
+
         }
     }
 
