@@ -137,12 +137,16 @@ public class SlimeEnemy : BasicUnitScript
         Targettransform.x = (isBasicCloseAttack) ? bsm.playerCharacterPos.x + 5.5f : bsm.playerCharacterPos.x + 8;
         Energy_F -= (isBasicCloseAttack) ? 2 : 3;
 
+        animator.SetBool("Moving", true);
+
         while (transform.position.x > Targettransform.x) //이동중
         {
             transform.position -= Movetransform * Time.deltaTime;
             yield return null;
         }
         transform.position = Targettransform; //이동 완료
+
+        animator.SetBool("Moving", false);
 
         if (isBasicCloseAttack)
         {
@@ -241,6 +245,9 @@ public class SlimeEnemy : BasicUnitScript
     {
         Vector3 Movetransform = new Vector3(Speed_F, 0, 0);
         transform.rotation = Quaternion.Euler(0, 180, 0);
+
+        animator.SetBool("Moving", true);
+
         while (transform.position.x < startPos_Vector.x)
         {
             transform.position += Movetransform * Time.deltaTime;
@@ -250,6 +257,8 @@ public class SlimeEnemy : BasicUnitScript
         transform.rotation = Quaternion.identity;
         transform.position = startPos_Vector;
         nowAttackCount_I = 1;
+
+        animator.SetBool("Moving", false);
 
         if (Energy_F > 0)
         {
@@ -383,6 +392,7 @@ public class SlimeEnemy : BasicUnitScript
 
         battleUIObjScript.BattleUIObjSetActiveTrue(ChangeBattleUIAnim.Rest);
         battleUIAnimator.SetBool("NowResting", true);
+        animator.SetBool("Resting", true);
 
         while (nowRestingCount < 2)
         {
@@ -397,6 +407,7 @@ public class SlimeEnemy : BasicUnitScript
         }
 
         battleUIAnimator.SetBool("NowResting", false);
+        animator.SetBool("Resting", false);
         battleUIObjScript.BattleUIObjSetActiveFalse();
 
         nowActionCoolTime = maxActionCoolTime;

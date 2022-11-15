@@ -172,10 +172,6 @@ public class Player : BasicUnitScript
     [SerializeField]
     [Tooltip("플레이어 속성 아이콘 스프라이트 모음")]
     private Sprite[] nowPropertyIconImages;
-
-    [SerializeField]
-    [Tooltip("플레이어 애니메이션")]
-    private Animator playerAnimator;
     
     #region 체력 텍스트 색 값들
     [Header("체력 텍스트 색 값들")]
@@ -245,7 +241,7 @@ public class Player : BasicUnitScript
             {
                 Energy_F -= 1;
                 DreamyFigure_F += 1;
-                playerAnimator.SetTrigger("DefenceIntermediateMotion");
+                animator.SetTrigger("DefenceIntermediateMotion");
             }
             else
             {
@@ -286,7 +282,7 @@ public class Player : BasicUnitScript
             {
                 string nowDefenceAnimName = (nowDefensivePosition == DefensePos.Up) ? "Defence(Top)" : "Defence(Left&Right)";
 
-                playerAnimator.SetBool(nowDefenceAnimName, false);
+                animator.SetBool(nowDefenceAnimName, false);
                 ReleaseDefense();
             }
         }
@@ -296,7 +292,7 @@ public class Player : BasicUnitScript
     {
         string nowDefenceAnimName = (nowDefensePos == DefensePos.Up) ? "Defence(Top)" : "Defence(Left&Right)";
 
-        playerAnimator.SetBool(nowDefenceAnimName, true);
+        animator.SetBool(nowDefenceAnimName, true);
         nowState = NowState.Defensing;
         nowDefensivePosition = nowDefensePos;
         transform.rotation = Quaternion.Euler(0, setRotation, 0);
@@ -433,8 +429,8 @@ public class Player : BasicUnitScript
         transform.rotation = Quaternion.Euler(0, setRotation, 0);
         ChangeAttackRange(new Vector2(0.7f, 2.6f), new Vector2(0, 0));
 
-        playerAnimator.SetBool("Paring", true);
-        playerAnimator.SetBool("Defence(Left&Right)", false);
+        animator.SetBool("Paring", true);
+        animator.SetBool("Defence(Left&Right)", false);
 
         yield return new WaitForSeconds(0.15f); //치기 전까지 기다림
         
@@ -452,7 +448,7 @@ public class Player : BasicUnitScript
         }
         yield return new WaitForSeconds(0.25f); //애니메이션 종료까지 기다림
         
-        playerAnimator.SetBool("Paring", false);
+        animator.SetBool("Paring", false);
         
         InitializationAttackRange();
 
@@ -530,7 +526,7 @@ public class Player : BasicUnitScript
             CamShake.JumpStart();
             rigid.AddForce(Vector2.up * jumpPower_F, ForceMode2D.Impulse);
             rigid.gravityScale = setJumpGravityScale_F - 0.5f;
-            playerAnimator.SetTrigger("Jumping");
+            animator.SetTrigger("Jumping");
             StartCoroutine(JumpDelay());
         }
         else if (nowState == NowState.Jumping && transform.position.y < startPos_Vector.y)
@@ -548,7 +544,7 @@ public class Player : BasicUnitScript
                 }
             }
 
-            playerAnimator.SetBool("JumpIntermediateMotion", false);
+            animator.SetBool("JumpIntermediateMotion", false);
             CamShake.JumpStop();
             transform.position = startPos_Vector;
             rigid.velocity = Vector2.zero;
@@ -564,7 +560,7 @@ public class Player : BasicUnitScript
             rigid.gravityScale -= Time.deltaTime * 3f;
             yield return null;
         }
-        playerAnimator.SetBool("JumpIntermediateMotion", true);
+        animator.SetBool("JumpIntermediateMotion", true);
         rigid.gravityScale = setJumpGravityScale_F * 1.5f;
     }
 
@@ -623,7 +619,7 @@ public class Player : BasicUnitScript
         Vector3 Movetransform = new Vector3(Speed_F, 0, 0); //이동을 위해 더해줄 연산
         Vector3 Targettransform = new Vector3(bsm.enemyCharacterPos.x - 5.5f, transform.position.y); //목표 위치
 
-        playerAnimator.SetBool("Moving", true);
+        animator.SetBool("Moving", true);
 
         while (transform.position.x < Targettransform.x) //이동중
         {
@@ -632,9 +628,9 @@ public class Player : BasicUnitScript
         }
         transform.position = Targettransform; //이동 완료
 
-        playerAnimator.SetBool("Moving", false);
+        animator.SetBool("Moving", false);
         StartCoroutine(Attacking(false, nowAttackCount_I, 0.2f, 0.2f)); //첫번째 공격 실행
-        playerAnimator.SetTrigger("BasicAttack");
+        animator.SetTrigger("BasicAttack");
     }
 
     IEnumerator Attacking(bool isLastAttack, int nowAttackCount_I, float delayTime, float linkedAttacksLimitTime) //3연공 재귀로 구현
@@ -716,11 +712,11 @@ public class Player : BasicUnitScript
             {
                 case 2:
                     StartCoroutine(Attacking(false, nowAttackCount_I, 0.2f, 0.25f));
-                    playerAnimator.SetTrigger("BasicSecondAttackHitActionCompleat");
+                    animator.SetTrigger("BasicSecondAttackHitActionCompleat");
                     break;
                 case 3:
                     StartCoroutine(Attacking(true, nowAttackCount_I, 0.35f, 0));
-                    playerAnimator.SetTrigger("BasicThirdAttackHitActionCompleat");
+                    animator.SetTrigger("BasicThirdAttackHitActionCompleat");
                     break;
             }
         }
@@ -755,7 +751,7 @@ public class Player : BasicUnitScript
         Vector3 Movetransform = new Vector3(Speed_F, 0, 0);
         transform.rotation = Quaternion.Euler(0, 180, 0);
 
-        playerAnimator.SetBool("Moving", true);
+        animator.SetBool("Moving", true);
         while (transform.position.x > startPos_Vector.x)
         {
             transform.position -= Movetransform * Time.deltaTime;
@@ -765,7 +761,7 @@ public class Player : BasicUnitScript
         transform.position = startPos_Vector;
         nowAttackCount_I = 1;
 
-        playerAnimator.SetBool("Moving", false);
+        animator.SetBool("Moving", false);
 
         if (Energy_F > 0)
         {
@@ -790,7 +786,7 @@ public class Player : BasicUnitScript
             {
                 case 1:
                     StartCoroutine(SwordAuraSkill());
-                    playerAnimator.SetBool("FirstSkill", true);
+                    animator.SetBool("FirstSkill", true);
                     break;
             }
         }
@@ -822,7 +818,7 @@ public class Player : BasicUnitScript
 
         yield return new WaitForSeconds(0.3f);
 
-        playerAnimator.SetBool("FirstSkill", false);
+        animator.SetBool("FirstSkill", false);
 
         if (Energy_F > 0)
         {
@@ -939,14 +935,14 @@ public class Player : BasicUnitScript
 
         if (nowDefensivePosition == DefensePos.Left || nowDefensivePosition == DefensePos.Right)
         {
-            playerAnimator.SetBool("Defence(Left&Right)", false);
+            animator.SetBool("Defence(Left&Right)", false);
         }
         else if (nowDefensivePosition == DefensePos.Up)
         {
-            playerAnimator.SetBool("Defence(Top)", false);
+            animator.SetBool("Defence(Top)", false);
         }
 
-        playerAnimator.SetBool("Stuning", true);
+        animator.SetBool("Stuning", true);
         nowDefensivePosition = DefensePos.None;
         battleButtonManagerInstance.ActionButtonsSetActive(false, false, false);
 
@@ -958,7 +954,7 @@ public class Player : BasicUnitScript
         yield return new WaitForSeconds(5); //나중에 매개변수로 레벨에 따라서 기절 시간 넣기
 
         battleUIObjScript.BattleUIObjSetActiveFalse();
-        playerAnimator.SetBool("Stuning", false);
+        animator.SetBool("Stuning", false);
         battleUIAnimator.SetBool("NowFainting", false);
 
         Energy_F += 8; //나중에 매개변수로 레벨에 따라서 기력 차는 양 증가

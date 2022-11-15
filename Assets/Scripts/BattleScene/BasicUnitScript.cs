@@ -289,10 +289,18 @@ public abstract class BasicUnitScript : MonoBehaviour
     [Tooltip("현재 상태 표시해주는 UI 오브젝트 스크립트")]
     protected BattleUIObj battleUIObjScript;
 
+    #region 애니메이터 모음
+    [Header("애니메이터 모음")]
+    [Tooltip("유닛 애니메이션")]
+    public Animator animator;
+
     [SerializeField]
     [Tooltip("현재 상태 표시해주는 UI 애니메이션")]
     protected Animator battleUIAnimator;
+    #endregion
 
+    #region 맞았을 때의 요소 모음
+    [Header("맞았을 때의 요소 모음")]
     [SerializeField]
     [Tooltip("자신의 스프라이트 렌더러")]
     protected SpriteRenderer spriteRenderer;
@@ -302,6 +310,7 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     [Tooltip("타격 색 변경 후 원래 색으로 되돌림")]
     public Color returnBasicColor;
+    #endregion
 
     protected BattleSceneManager bsm;
 
