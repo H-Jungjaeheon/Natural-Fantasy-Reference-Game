@@ -225,7 +225,7 @@ public class Player : BasicUnitScript
         isResurrectionOpportunityExists = true;
 
         BattleSceneManager.Instance.playerCharacterPos = transform.position;
-        nextPropertyIndex = (int)NowPlayerProperty.FlameProperty; //Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
+        nextPropertyIndex = Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
         nowPropertyImage.sprite = nowPropertyIconImages[(int)nowProperty];
         Energy_F = MaxEnergy_F;
         Hp_F = MaxHp_F;
