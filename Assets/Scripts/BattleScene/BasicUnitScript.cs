@@ -117,7 +117,7 @@ public abstract class BasicUnitScript : MonoBehaviour
                 {
                     lightHp = Hp;
                 }
-                if (value <= 0)
+                if (value <= 0 && isResurrectionReady == false)
                 {
                     hp = 0;
                     StartCoroutine(Dead());
@@ -310,6 +310,8 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     [Tooltip("타격 색 변경 후 원래 색으로 되돌림")]
     public Color returnBasicColor;
+
+    protected bool isResurrectionReady; //부활 준비 여부 판별
     #endregion
 
     protected ObjectPool objectPoolInstance; //오브젝트 풀 싱글톤 인스턴스

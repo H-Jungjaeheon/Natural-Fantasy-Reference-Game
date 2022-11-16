@@ -77,8 +77,9 @@ public class Player : BasicUnitScript
         }
         set
         {
-            if (value >= maxChangePropertyCoolTime)
+            if (value > maxChangePropertyCoolTime)
             {
+                nowChangePropertyCoolTime = maxChangePropertyCoolTime;
                 isChangeProperty = true;
                 StartCoroutine(ChangeProperty(false, false));
             }
@@ -102,8 +103,9 @@ public class Player : BasicUnitScript
         get { return nowPropertyTimeLimit; }
         set
         {
-            if (value >= maxPropertyTimeLimit)
+            if (value > maxPropertyTimeLimit && isResurrectionReady == false && nowState != NowState.Resurrection)
             {
+                nowPropertyTimeLimit = maxPropertyTimeLimit;
                 isChangeProperty = true;
                 StartCoroutine(ChangeProperty(true, false));
             }
@@ -128,13 +130,13 @@ public class Player : BasicUnitScript
     public NowPlayerProperty nowProperty; //현재 속성 상태
     #endregion
 
-    private bool isResurrectionOpportunityExists;
+    private bool isResurrectionOpportunityExists; //부활 조건
 
     private bool angelPropertyBuffing;
 
-    private bool isToBurn;
+    private bool isToBurn; 
 
-    private bool isGetGood;
+    private bool isGetGood; //재화 획득 여부 판별
 
     private bool isChangeProperty;
 
@@ -392,8 +394,9 @@ public class Player : BasicUnitScript
         yield return new WaitForSeconds(2);
         isChangePropertyReady = false;
         nowState = NowState.Standingby;
+
         Invincibility(false);
-        
+
         if (battleButtonManagerInstance.nowButtonPage == ButtonPage.FirstPage)
         {
             battleButtonManagerInstance.ActionButtonsSetActive(true, false, true);
@@ -421,7 +424,7 @@ public class Player : BasicUnitScript
     {
         while (true)
         {
-            if (bsm.nowGameState == NowGameState.Playing && isChangePropertyReady == false && nowState != NowState.Resurrection)
+            if (bsm.nowGameState == NowGameState.Playing && isChangePropertyReady == false && isResurrectionReady == false)
             {
                 if (nowProperty != NowPlayerProperty.BasicProperty)
                 {
@@ -431,6 +434,7 @@ public class Player : BasicUnitScript
                 {
                     NowChangePropertyCoolTime += Time.deltaTime;
                 }
+
                 if (isChangeProperty)
                 {
                     isChangeProperty = false;
@@ -897,7 +901,6 @@ public class Player : BasicUnitScript
         }
         else
         {
-            CamShake.JumpStop(true);
             nowState = NowState.Dead;
             bsm.StartGameEndPanelAnim(true);
         }
@@ -908,17 +911,16 @@ public class Player : BasicUnitScript
         int recoveryFixedValue = 20;
         int ResurrectionStatsValueSharingValue = 5;
 
-        nowState = NowState.Resurrection;
-        Invincibility(true);
-        AngelPropertyBuff(true);
+        isResurrectionReady = true;
 
         while (nowState != NowState.Standingby)
         {
             yield return null;
         }
 
+        Invincibility(true);
+        AngelPropertyBuff(true);
         ActionCoolTimeBarSetActive(false);
-        //WaitingTimeEnd();
 
         battleButtonManagerInstance.ActionButtonsSetActive(false, false, false);
 
@@ -940,13 +942,16 @@ public class Player : BasicUnitScript
         }
 
         NowPropertyTimeLimit = 10;
-        nowState = NowState.Standingby;
+
+        isResurrectionReady = false;
+        nowState = NowState.Resurrection;
+
+        nowActionCoolTime = maxActionCoolTime;
+        WaitingTimeStart();
+
         battleButtonManagerInstance.ActionButtonsSetActive(true, false, false);
 
-        propertyTimeCount = CountDownPropertyTimes();
-        StartCoroutine(propertyTimeCount);
-
-        while (NowPropertyTimeLimit > 0)
+        while (maxPropertyTimeLimit > NowPropertyTimeLimit)
         {
             yield return null;
         }
