@@ -343,7 +343,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         }
 
 
-        while (introducingTheStageImage.rectTransform.anchoredPosition.x < 1920)
+        while (introducingTheStageImage.rectTransform.anchoredPosition.x < 1910)
         {
             yield return null;
         }
