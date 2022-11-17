@@ -16,6 +16,14 @@ public class EnemysLaser : MonoBehaviour
     [Tooltip("궤도 표기 오브젝트")]
     private GameObject orbitalIndicationObj;
 
+    [SerializeField]
+    [Tooltip("레이저 애니메이션 오브젝트")]
+    private GameObject laserAnimationObj;
+
+    [SerializeField]
+    [Tooltip("레이저 애니메이터")]
+    private Animator laserAnimator;
+
     public List<GameObject> targetInRange = new List<GameObject>();
     
     [HideInInspector]
@@ -26,12 +34,9 @@ public class EnemysLaser : MonoBehaviour
 
     private Vector3 onEnableRotation; //활성화 시 초기 회전값
 
-    private WaitForSeconds OrbitalIndicationDelay;
+    private WaitForSeconds orbitalIndicationDelay = new WaitForSeconds(1); //레이저 궤도 표기 시간
 
-    void Awake()
-    {
-        OrbitalIndicationDelay = new WaitForSeconds(0.9f);
-    }
+    private WaitForSeconds laserAnimDelay = new WaitForSeconds(0.5f); //레이저 발사 애니메이션 시간
 
     private void OnEnable()
     {
@@ -40,18 +45,20 @@ public class EnemysLaser : MonoBehaviour
 
     IEnumerator OrbitalIndication()
     {
-        orbitalIndicationObj.SetActive(false);
-
         yield return null;
 
-        orbitalIndicationObj.transform.position = onEnablePos;
+        transform.position = onEnablePos;
 
         onEnableRotation.z = launchAngle;
-        orbitalIndicationObj.transform.rotation = Quaternion.Euler(onEnableRotation);
 
-        orbitalIndicationObj.SetActive(true);
+        transform.rotation = Quaternion.Euler(onEnableRotation);
 
-        yield return OrbitalIndicationDelay;
+        yield return orbitalIndicationDelay;
+        
+        orbitalIndicationObj.SetActive(false);
+        laserAnimationObj.SetActive(true);
+
+        laserAnimator.SetTrigger("LazerLaunch");
 
         StartCoroutine(GiveDamage());
     }
@@ -59,12 +66,15 @@ public class EnemysLaser : MonoBehaviour
     IEnumerator GiveDamage()
     {
         bool isCameraShaking = false;
+
         for (int nowIndex = targetInRange.Count - 1; nowIndex >= 0; nowIndex--) //공격과 동시에 리스트 정리
         {
             if (targetInRange[nowIndex] == true)
             {
                 BasicUnitScript hitObjsUnitScript = targetInRange[nowIndex].GetComponent<BasicUnitScript>();
+                
                 hitObjsUnitScript.Hit(damage, false);
+                
                 if (isCameraShaking == false)
                 {
                     CamShake.CamShakeMod(false, 2f);
@@ -75,8 +85,12 @@ public class EnemysLaser : MonoBehaviour
             }
         }
 
+        yield return laserAnimDelay;
+
+        orbitalIndicationObj.SetActive(true);
+        laserAnimationObj.SetActive(false);
+
         ReturnToObjPool();
-        yield return null;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

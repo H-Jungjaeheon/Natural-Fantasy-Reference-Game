@@ -1856,7 +1856,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!82 &422841400
 AudioSource:
   m_ObjectHideFlags: 0
@@ -7610,7 +7610,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 20/20
+  m_text: 0/20
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3ee4c3128ff499145bbf0fcc6946f212, type: 2}
   m_sharedMaterial: {fileID: 7794740675150224420, guid: 3ee4c3128ff499145bbf0fcc6946f212, type: 2}
@@ -9102,6 +9102,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 441f70fc7af0ef64e9d14720e3cdafe7, type: 3}
   - {fileID: 21300000, guid: 2fd95d5be0356814f835f3e30fc4f631, type: 3}
   - {fileID: 21300000, guid: 04dadd18cab83314fb8fe6ed3adbc3e6, type: 3}
+  nowStatHpUiBg:
+  - {fileID: 21300000, guid: 0d798ffd2428cd043841758b9a14597f, type: 3}
+  - {fileID: 21300000, guid: cb7d05c1cbb6aa84f942618504db97d4, type: 3}
   basicHpTextColor: {r: 0.69803923, g: 0.101960786, b: 0.101960786, a: 1}
   shieldHpTextColor: {r: 0.8980392, g: 0.9019608, b: 0.69803923, a: 1}
   propertyColors:

@@ -174,7 +174,11 @@ public class Player : BasicUnitScript
     [SerializeField]
     [Tooltip("플레이어 속성 아이콘 스프라이트 모음")]
     private Sprite[] nowPropertyIconImages;
-    
+
+    [SerializeField]
+    [Tooltip("상태에 따른 체력바 배경 스프라이트 모음")]
+    private Sprite[] nowStatHpUiBg;
+
     #region 체력 텍스트 색 값들
     [Header("체력 텍스트 색 값들")]
     [SerializeField]
@@ -251,7 +255,7 @@ public class Player : BasicUnitScript
 
     public override void Hit(float damage, bool isDefending)
     {
-        if (isInvincibility == false)
+        if (IsInvincibility == false)
         {
             if (ShieldHp_F > 0 && !isDefending)
             {

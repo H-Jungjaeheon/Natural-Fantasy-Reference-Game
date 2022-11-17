@@ -86,7 +86,27 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     private bool isHpDiminishedProduction;
 
-    protected bool isInvincibility; //현재 무적인지 판별
+    private bool isInvincibility; //현재 무적인지 판별
+
+    public bool IsInvincibility
+    {
+        get
+        {
+            return isInvincibility;
+        }
+        set
+        {
+            if (value)
+            {
+                print("참");
+            }
+            else
+            {
+                print("거짓");
+            }
+            isInvincibility = value;
+        }
+    }
 
     [HideInInspector]
     public List<GameObject> rangeInEnemy = new List<GameObject>(); //공격 범위 내의 적 리스트
@@ -433,7 +453,8 @@ public abstract class BasicUnitScript : MonoBehaviour
         attackRangeObjComponent.offset = attackRangeColliderOffset;
     }
 
-    protected void Invincibility(bool isInvincibilityOn) => isInvincibility = isInvincibilityOn; //무적 ON or OFF
+    protected void Invincibility(bool isInvincibilityOn) => IsInvincibility = isInvincibilityOn; //무적 ON or OFF
+
     protected void InitializationAttackRange()
     {
         attackRangeObjComponent.size = InitializationAttackRangeSize;

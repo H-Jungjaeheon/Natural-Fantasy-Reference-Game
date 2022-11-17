@@ -102,7 +102,7 @@ public class SlimeEnemy : BasicUnitScript
                     }
                     else if (behaviorProbability <= 100)
                     {
-                        nowCoroutine = GoToAttack(true); //원래는 레이저 공격(후에 변경)
+                        nowCoroutine = LaserAttack();
                         StartCoroutine(nowCoroutine);
                     }
                 }
@@ -338,7 +338,6 @@ public class SlimeEnemy : BasicUnitScript
         if (randLaunch > 49)
         {
             isLaunchUp = true;
-            print("위 공격");
         }
 
         animator.SetBool("LazerAttack", true);
@@ -350,9 +349,9 @@ public class SlimeEnemy : BasicUnitScript
             GameObject nowLaunchLaserObj = objectPoolInstance.GetObject((int)PoolObjKind.SlimeEnemyLaser);
             EnemysLaser nowLaunchEnemyLaser = nowLaunchLaserObj.GetComponent<EnemysLaser>();
 
-            nowLaunchEnemyLaser.launchAngle = (isLaunchUp) ? -169 : -160;
-            nowLaunchEnemyLaser.onEnablePos.x = (isLaunchUp) ? -4.9f : -4.3f;
-            nowLaunchEnemyLaser.onEnablePos.y = (isLaunchUp) ? 3.5f : 1.3f;
+            nowLaunchEnemyLaser.launchAngle = (isLaunchUp) ? -170 : -160;
+            nowLaunchEnemyLaser.onEnablePos.x = (isLaunchUp) ? -4.9f : -4.2f;
+            nowLaunchEnemyLaser.onEnablePos.y = (isLaunchUp) ? 3.75f : 1.33f;
             isLaunchUp = (isLaunchUp) ? false : true;
 
             yield return launchDelay;
