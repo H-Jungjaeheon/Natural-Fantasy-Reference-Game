@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2539679086241746675}
   - component: {fileID: 2539679086241746676}
-  - component: {fileID: 2539679086241746677}
+  - component: {fileID: 2245213806640771525}
+  - component: {fileID: 9105966743275172753}
   m_Layer: 0
   m_Name: SlimeEnemyLaser
   m_TagString: Untagged
@@ -25,13 +26,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2539679086241746679}
-  m_LocalRotation: {x: -0, y: 0, z: -0.5735764, w: 0.8191521}
+  m_LocalRotation: {x: 0, y: 0, z: -0.84810525, w: 0.52982783}
   m_LocalPosition: {x: -5, y: 1, z: 0}
-  m_LocalScale: {x: 0.25, y: 35, z: 1}
+  m_LocalScale: {x: 0.57, y: 5, z: 1}
   m_Children: []
   m_Father: {fileID: 8244858251081304337}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -70}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -150}
 --- !u!212 &2539679086241746676
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -72,8 +73,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 3
-  m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
-  m_Color: {r: 0.9245283, g: 0.14078279, b: 0.047970813, a: 0.5372549}
+  m_Sprite: {fileID: 21300000, guid: 1ad2137011771a242a745b0325b16bab, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -83,8 +84,8 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!70 &2539679086241746677
-CapsuleCollider2D:
+--- !u!61 &2245213806640771525
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -93,12 +94,41 @@ CapsuleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 3, y: 1}
-  m_Direction: 0
+  m_Offset: {x: 0, y: 0.00006418582}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 51.2, y: 1.4}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 51.2, y: 0.051110297}
+  m_EdgeRadius: 0
+--- !u!95 &9105966743275172753
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2539679086241746679}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 5d342ca1173ff24429b05b4f3c732340, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &7564255012160748176
 GameObject:
   m_ObjectHideFlags: 0

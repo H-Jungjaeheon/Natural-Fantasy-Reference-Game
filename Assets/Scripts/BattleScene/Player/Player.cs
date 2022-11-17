@@ -234,7 +234,7 @@ public class Player : BasicUnitScript
         isResurrectionOpportunityExists = true;
 
         bsm.playerCharacterPos = transform.position;
-        nextPropertyIndex = (int)NowPlayerProperty.AngelProperty; //Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
+        nextPropertyIndex = Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
         nowPropertyImage.sprite = nowPropertyIconImages[(int)nowProperty];
 
         Energy = MaxEnergy;

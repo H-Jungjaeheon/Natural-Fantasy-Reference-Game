@@ -1856,7 +1856,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!82 &422841400
 AudioSource:
   m_ObjectHideFlags: 0
@@ -4560,7 +4560,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   changeObjScale:
-  - {x: 0.45, y: 0.45}
+  - {x: 0.35, y: 0.35}
   - {x: 0.8, y: 0.8}
   changeYPos:
   - 3.5
@@ -9090,6 +9090,7 @@ MonoBehaviour:
   returnBasicColor: {r: 1, g: 1, b: 1, a: 1}
   unitShieldHpBars: {fileID: 1902801556}
   nowChangePropertyCoolTime: 0
+  nowPropertyTimeLimit: 0
   nowProperty: 0
   isSpawnNatureBead: 0
   nowPropertyImage: {fileID: 693409020}

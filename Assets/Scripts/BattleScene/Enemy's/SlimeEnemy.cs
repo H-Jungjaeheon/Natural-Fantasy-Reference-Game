@@ -38,7 +38,6 @@ public class SlimeEnemy : BasicUnitScript
                 actionCoolTimeObj.SetActive(true);
                 WaitingTimeStart();
                 break;
-               
             }
             yield return null;
         }
@@ -78,53 +77,51 @@ public class SlimeEnemy : BasicUnitScript
 
         if (nowState == NowState.Standingby)
         {
-            //int behaviorProbability = Random.Range(1, 101);
+            int behaviorProbability = Random.Range(1, 101);
 
-            StartCoroutine(ShootBullet());
-
-            //if (behaviorProbability <= 20)
-            //{
-            //    if (Energy <= MaxEnergy / 3 && restLimitTurn >= maxRestLimitTurn)
-            //    {
-            //        restLimitTurn = 0;
-            //        nowCoroutine = Resting();
-            //        StartCoroutine(nowCoroutine);
-            //    }
-            //    else
-            //    {
-            //        behaviorProbability = Random.Range(1, 101);
-            //        if (behaviorProbability <= 20)
-            //        {
-            //            nowCoroutine = GoToAttack(false);
-            //            StartCoroutine(nowCoroutine);
-            //        }
-            //        else if (behaviorProbability <= 60)
-            //        {
-            //            nowCoroutine = HowitzerAttack();
-            //            StartCoroutine(nowCoroutine);
-            //        }
-            //        else if (behaviorProbability <= 100)
-            //        {
-            //            nowCoroutine = LaserAttack();
-            //            StartCoroutine(nowCoroutine);
-            //        }
-            //    }
-            //}
-            //else if (behaviorProbability <= 55)
-            //{
-            //    nowCoroutine = GoToAttack(true);
-            //    StartCoroutine(nowCoroutine);
-            //}
-            //else if (behaviorProbability <= 80)
-            //{
-            //    nowCoroutine = GoToAttack(false);
-            //    StartCoroutine(nowCoroutine);
-            //}
-            //else if (behaviorProbability <= 100)
-            //{
-            //    nowCoroutine = ShootBullet();
-            //    StartCoroutine(nowCoroutine);
-            //}
+            if (behaviorProbability <= 20)
+            {
+                if (Energy <= MaxEnergy / 3 && restLimitTurn >= maxRestLimitTurn)
+                {
+                    restLimitTurn = 0;
+                    nowCoroutine = Resting();
+                    StartCoroutine(nowCoroutine);
+                }
+                else
+                {
+                    behaviorProbability = Random.Range(1, 101);
+                    if (behaviorProbability <= 20)
+                    {
+                        nowCoroutine = GoToAttack(false);
+                        StartCoroutine(nowCoroutine);
+                    }
+                    else if (behaviorProbability <= 60)
+                    {
+                        nowCoroutine = HowitzerAttack();
+                        StartCoroutine(nowCoroutine);
+                    }
+                    else if (behaviorProbability <= 100)
+                    {
+                        nowCoroutine = GoToAttack(true); //원래는 레이저 공격(후에 변경)
+                        StartCoroutine(nowCoroutine);
+                    }
+                }
+            }
+            else if (behaviorProbability <= 55)
+            {
+                nowCoroutine = GoToAttack(true);
+                StartCoroutine(nowCoroutine);
+            }
+            else if (behaviorProbability <= 80)
+            {
+                nowCoroutine = GoToAttack(false);
+                StartCoroutine(nowCoroutine);
+            }
+            else if (behaviorProbability <= 100)
+            {
+                nowCoroutine = ShootBullet();
+                StartCoroutine(nowCoroutine);
+            }
 
             restLimitTurn++;
         }
@@ -152,7 +149,7 @@ public class SlimeEnemy : BasicUnitScript
 
         if (isBasicCloseAttack)
         {
-            nowCoroutine = Attacking(true, nowAttackCount_I, 1f); //기본공격 실행
+            nowCoroutine = Attacking(true, nowAttackCount_I, 0.65f); //기본공격 실행
             StartCoroutine(nowCoroutine);
         }
         else
@@ -170,7 +167,9 @@ public class SlimeEnemy : BasicUnitScript
     IEnumerator Attacking(bool isLastAttack, int nowAttackCount_I, float delayTime)
     {
         float nowdelayTime = 0;
-        //공격 애니메이션 실행
+
+        animator.SetTrigger("BasicAttack");
+
         while (nowdelayTime < delayTime) //공격 준비 동작
         {
             nowdelayTime += Time.deltaTime;
@@ -330,7 +329,7 @@ public class SlimeEnemy : BasicUnitScript
     {
         WaitForSeconds launchDelay = new WaitForSeconds(1f);
         bool isLaunchUp = false;
-        int randLaunch = Random.Range(0, 100);
+        int randLaunch = Random.Range(1, 101);
 
         nowState = NowState.Attacking;
         
@@ -339,24 +338,27 @@ public class SlimeEnemy : BasicUnitScript
         if (randLaunch > 49)
         {
             isLaunchUp = true;
+            print("위 공격");
         }
 
-        //발사 준비 애니메이션 실행
+        animator.SetBool("LazerAttack", true);
+
         yield return new WaitForSeconds(1.5f);
-        //발사 애니메이션 실행
 
         for (int nowLaunchCount = 0; nowLaunchCount < 2; nowLaunchCount++)
         {
             GameObject nowLaunchLaserObj = objectPoolInstance.GetObject((int)PoolObjKind.SlimeEnemyLaser);
             EnemysLaser nowLaunchEnemyLaser = nowLaunchLaserObj.GetComponent<EnemysLaser>();
 
-            nowLaunchEnemyLaser.launchAngle = (isLaunchUp) ? -80 : -70;
-            nowLaunchEnemyLaser.onEnablePos.x = (isLaunchUp) ? -7.5f : -6.7f;
-            nowLaunchEnemyLaser.onEnablePos.y = (isLaunchUp) ? 3 : 0;
+            nowLaunchEnemyLaser.launchAngle = (isLaunchUp) ? -169 : -160;
+            nowLaunchEnemyLaser.onEnablePos.x = (isLaunchUp) ? -4.9f : -4.3f;
+            nowLaunchEnemyLaser.onEnablePos.y = (isLaunchUp) ? 3.5f : 1.3f;
             isLaunchUp = (isLaunchUp) ? false : true;
 
             yield return launchDelay;
         }
+
+        animator.SetBool("LazerAttack", false);
 
         if (Energy > 0)
         {
