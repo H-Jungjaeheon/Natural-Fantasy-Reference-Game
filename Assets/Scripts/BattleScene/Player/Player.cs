@@ -23,6 +23,12 @@ public enum PropertyColor
     White
 }
 
+public enum NowStatUIState
+{
+    Basic,
+    Invincibility
+}
+
 public class Player : BasicUnitScript
 {
     #region 쉴드 관련 변수 / 오브젝트
@@ -1033,6 +1039,11 @@ public class Player : BasicUnitScript
         }
 
         WaitingTimeStart();
+    }
+
+    protected override void InvincibilityEvent(bool isInvincibilityTrue)
+    {
+        unitHpBarBg.sprite = (isInvincibilityTrue) ? nowStatHpUiBg[(int)NowStatUIState.Invincibility] : nowStatHpUiBg[(int)NowStatUIState.Basic];
     }
 
     private IEnumerator PropertyPassiveAbilityStart()

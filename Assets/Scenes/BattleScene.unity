@@ -1856,7 +1856,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!82 &422841400
 AudioSource:
   m_ObjectHideFlags: 0
@@ -6639,7 +6639,8 @@ MonoBehaviour:
   dreamyFigure: 0
   damage: 4
   Speed: 4
-  unitHpBars: {fileID: 1135723117}
+  unitHpBar: {fileID: 1135723117}
+  unitHpBarBg: {fileID: 409947379}
   unitLightHpBars: {fileID: 1437239399}
   unitEnergyBars: {fileID: 994072189}
   unitDreamyFigureBars: {fileID: 1198872407}
@@ -9072,7 +9073,8 @@ MonoBehaviour:
   dreamyFigure: 0
   damage: 4
   Speed: 7
-  unitHpBars: {fileID: 939537340}
+  unitHpBar: {fileID: 939537340}
+  unitHpBarBg: {fileID: 439962034}
   unitLightHpBars: {fileID: 1390554749}
   unitEnergyBars: {fileID: 529741880}
   unitDreamyFigureBars: {fileID: 916333784}

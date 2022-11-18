@@ -96,14 +96,7 @@ public abstract class BasicUnitScript : MonoBehaviour
         }
         set
         {
-            if (value)
-            {
-                print("참");
-            }
-            else
-            {
-                print("거짓");
-            }
+            InvincibilityEvent(value);
             isInvincibility = value;
         }
     }
@@ -154,7 +147,7 @@ public abstract class BasicUnitScript : MonoBehaviour
             }
 
             hpText.text = $"{(Hp):N0}/{(MaxHp):N0}";
-            unitHpBars.fillAmount = Hp / MaxHp;
+            unitHpBar.fillAmount = Hp / MaxHp;
         }
     }
 
@@ -255,9 +248,11 @@ public abstract class BasicUnitScript : MonoBehaviour
     #endregion
 
     #region 스탯 UI 이미지 모음
-    [SerializeField]
     [Tooltip("유닛 체력바 이미지")]
-    private Image unitHpBars;
+    public Image unitHpBar;
+
+    [Tooltip("유닛 체력바 배경 이미지")]
+    public Image unitHpBarBg;
 
     [SerializeField]
     [Tooltip("유닛 체력바 연출 이미지")]
@@ -440,6 +435,11 @@ public abstract class BasicUnitScript : MonoBehaviour
     }
 
     protected void ActionCoolTimeBarSetActive(bool SetActive) => actionCoolTimeObj.SetActive(SetActive);
+
+    protected virtual void InvincibilityEvent(bool isInvincibilityTrue)
+    {
+        
+    }
 
     protected abstract IEnumerator Dead();
 
