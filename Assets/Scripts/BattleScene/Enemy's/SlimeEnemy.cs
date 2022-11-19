@@ -192,7 +192,7 @@ public class SlimeEnemy : BasicUnitScript
 
         if (isLastAttack == true)
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.45f);
         }
 
         nowCoroutine = Return();

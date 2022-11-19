@@ -182,6 +182,10 @@ public class Player : BasicUnitScript
     private Sprite[] nowPropertyIconImages;
 
     [SerializeField]
+    [Tooltip("상태에 따른 체력바 스프라이트 모음")]
+    private Sprite[] nowStateHpUi;
+
+    [SerializeField]
     [Tooltip("상태에 따른 체력바 배경 스프라이트 모음")]
     private Sprite[] nowStatHpUiBg;
 
@@ -1044,6 +1048,7 @@ public class Player : BasicUnitScript
     protected override void InvincibilityEvent(bool isInvincibilityTrue)
     {
         unitHpBarBg.sprite = (isInvincibilityTrue) ? nowStatHpUiBg[(int)NowStatUIState.Invincibility] : nowStatHpUiBg[(int)NowStatUIState.Basic];
+        unitHpBar.sprite = (isInvincibilityTrue) ? nowStateHpUi[(int)NowStatUIState.Invincibility] : nowStateHpUi[(int)NowStatUIState.Basic];
     }
 
     private IEnumerator PropertyPassiveAbilityStart()

@@ -36,7 +36,7 @@ public class CamShake : MonoBehaviour
 
     Vector3 camStartposition;
 
-    Vector3 zeroPosition = new Vector3(0,0,0);
+    Vector3 zeroPosition = new Vector3(0, 0, 0);
 
     WaitForSeconds shakeDelay = new WaitForSeconds(0.03f);
 
@@ -70,13 +70,24 @@ public class CamShake : MonoBehaviour
 
     public void GameEndSetting()
     {
+        StartCoroutine(GameEndCamAnim());
+        isGameClear = true;
+
+    }
+
+    IEnumerator GameEndCamAnim()
+    {
         Vector3 bossPos = BattleSceneManager.Instance.Enemy.transform.position;
         bossPos.y -= 0.5f;
         bossPos.z = -10;
 
-        isGameClear = true;
         initialPosition = bossPos;
-        transform.position = bossPos;
+
+        while (true)
+        {
+            transform.position = Vector3.Lerp(bossPos, transform.position, 3);
+            yield return null;
+        }
     }
 
     private void CamShakeStart(bool isHorizontalShake, float timeInput) //가로로 떨림 판별, 떨리는 시간
