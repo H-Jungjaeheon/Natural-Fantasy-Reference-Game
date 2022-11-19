@@ -72,20 +72,20 @@ public class CamShake : MonoBehaviour
     {
         StartCoroutine(GameEndCamAnim());
         isGameClear = true;
-
     }
 
     IEnumerator GameEndCamAnim()
     {
         Vector3 bossPos = BattleSceneManager.Instance.Enemy.transform.position;
-        bossPos.y -= 0.5f;
+
+        bossPos.y -= 4.6f;
         bossPos.z = -10;
 
         initialPosition = bossPos;
 
         while (true)
         {
-            transform.position = Vector3.Lerp(bossPos, transform.position, 3);
+            transform.position = Vector3.Lerp(transform.position, bossPos, 5 * Time.deltaTime);
             yield return null;
         }
     }

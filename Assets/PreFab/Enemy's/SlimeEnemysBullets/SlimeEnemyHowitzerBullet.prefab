@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6404968251905402416}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 13, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.5, y: 2, z: 1}
   m_Children:
   - {fileID: 7821325870390794359}
@@ -137,7 +137,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 4
   speed: 30
-  startYPos: 13
+  startYPos: 16
   thisBulletPoolObjKind: 3
   orbitalIndicationObj: {fileID: 7821325870390794358}
 --- !u!1 &7821325870390794358
@@ -165,8 +165,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7821325870390794358}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -4.1, z: 0}
-  m_LocalScale: {x: 0.15, y: 8, z: 1}
+  m_LocalPosition: {x: 0, y: -5, z: 0}
+  m_LocalScale: {x: 0.15, y: 9, z: 1}
   m_Children: []
   m_Father: {fileID: 6404968251905402420}
   m_RootOrder: 0
