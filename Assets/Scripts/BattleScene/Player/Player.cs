@@ -248,7 +248,7 @@ public class Player : BasicUnitScript
         isResurrectionOpportunityExists = true;
 
         bsm.playerCharacterPos = transform.position;
-        nextPropertyIndex = Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
+        nextPropertyIndex = (int)NowPlayerProperty.TheHolySpiritProperty;//Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
         nowPropertyImage.sprite = nowPropertyIconImages[(int)nowProperty];
 
         Energy = MaxEnergy;
@@ -263,6 +263,11 @@ public class Player : BasicUnitScript
         StartCoroutine(propertyTimeCount);
     }
 
+    /// <summary>
+    /// 공격에 맞았을 때
+    /// </summary>
+    /// <param name="damage"> 받을 데미지 </param>
+    /// <param name="isDefending"> 방어중인지 판별 </param>
     public override void Hit(float damage, bool isDefending)
     {
         if (IsInvincibility == false)
@@ -287,6 +292,9 @@ public class Player : BasicUnitScript
         }
     }
 
+    /// <summary>
+    /// 방어 실행
+    /// </summary>
     protected override void Defense()
     {
         if (bsm.nowGameState == NowGameState.Playing && nowState == NowState.Standingby && Hp > 0 && isChangePropertyReady == false)
@@ -322,6 +330,11 @@ public class Player : BasicUnitScript
         }
     }
 
+    /// <summary>
+    /// 현재 방어 설정
+    /// </summary>
+    /// <param name="nowDefensePos"></param>
+    /// <param name="setRotation"></param>
     protected override void SetDefensing(DefensePos nowDefensePos, float setRotation)
     {
         string nowDefenceAnimName = (nowDefensePos == DefensePos.Up) ? "Defence(Top)" : "Defence(Left&Right)";
@@ -434,6 +447,10 @@ public class Player : BasicUnitScript
         }
     }
 
+    /// <summary>
+    /// 속성 변경에 필요한 카운트 다운
+    /// </summary>
+    /// <returns></returns>
     IEnumerator CountDownPropertyTimes()
     {
         while (true)
@@ -681,6 +698,10 @@ public class Player : BasicUnitScript
         }
     }
 
+    /// <summary>
+    /// 근접공격시 적 위치까지 이동
+    /// </summary>
+    /// <returns></returns>
     IEnumerator GoToAttack()
     {
         Vector3 Movetransform = new Vector3(Speed, 0, 0); //이동을 위해 더해줄 연산
