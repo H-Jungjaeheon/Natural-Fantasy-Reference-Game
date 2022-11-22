@@ -128,7 +128,7 @@ public class Player : BasicUnitScript
 
     private int nextPropertyIndex; //다음 바뀔 속성의 인덱스
 
-    private bool isChangePropertyReady; //속성 변경 준비 판별
+    public bool isChangePropertyReady; //속성 변경 준비 판별
 
     private IEnumerator propertyTimeCount; //속성 지속시간 세는 코루틴
 
@@ -248,7 +248,7 @@ public class Player : BasicUnitScript
         isResurrectionOpportunityExists = true;
 
         bsm.playerCharacterPos = transform.position;
-        nextPropertyIndex = (int)NowPlayerProperty.TheHolySpiritProperty;//Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
+        nextPropertyIndex = (int)NowPlayerProperty.ForceProperty;//Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
         nowPropertyImage.sprite = nowPropertyIconImages[(int)nowProperty];
 
         Energy = MaxEnergy;
@@ -547,8 +547,11 @@ public class Player : BasicUnitScript
         yield return null;
     }
 
-
-    protected override IEnumerator UISetting() //대기시간 및 UI세팅
+    /// <summary>
+    /// 대기시간 및 UI세팅
+    /// </summary>
+    /// <returns></returns>
+    protected override IEnumerator UISetting() 
     {
         while (true)
         {
@@ -567,6 +570,7 @@ public class Player : BasicUnitScript
                     {
                         battleButtonManagerInstance.ActionButtonsSetActive(true, false, false);
                     }
+                    print("tlfgod");
                     break;
                 }
             }
