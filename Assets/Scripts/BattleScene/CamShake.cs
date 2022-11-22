@@ -30,6 +30,8 @@ public class CamShake : MonoBehaviour
 
     private IEnumerator startJumpCoroutine; //점프 시작할 때 카메라에게 물리 효과를 주는 코루틴
 
+    private IEnumerator nowShakeCoroutine; //카메라에게 흔들림 효과를 주는 코루틴
+
     Vector3 initialPosition;
 
     Vector3 objStartPosition;
@@ -40,7 +42,7 @@ public class CamShake : MonoBehaviour
 
     WaitForSeconds shakeDelay = new WaitForSeconds(0.03f);
 
-    bool isGameClear;
+    private bool isGameClear;
 
     void Awake()
     {
@@ -66,6 +68,8 @@ public class CamShake : MonoBehaviour
         CamShakeMod = CamShakeStart;
         JumpStart = CallingStartJump;
         JumpStop = StopJump;
+
+        nowShakeCoroutine = CamHorizontalShake(0); //초기화
     }
 
     public void GameEndSetting()
@@ -94,14 +98,18 @@ public class CamShake : MonoBehaviour
     {
         if (isGameClear == false)
         {
+            StopCoroutine(nowShakeCoroutine);
+
             if (isHorizontalShake)
             {
-                StartCoroutine(CamHorizontalShake(timeInput));
+                nowShakeCoroutine = CamHorizontalShake(timeInput);
             }
             else
             {
-                StartCoroutine(CamVerticalShake(timeInput));
+                nowShakeCoroutine = CamVerticalShake(timeInput);
             }
+
+            StartCoroutine(nowShakeCoroutine);
         }
     }
 
@@ -155,6 +163,7 @@ public class CamShake : MonoBehaviour
     {
         int multiplication = -1;
         Vector3 nowCamPos = initialPosition;
+
         for (int nowShakeCount = 0; nowShakeCount < 11; nowShakeCount++)
         {
             nowCamPos.x = shakeAmount * multiplication;
@@ -168,12 +177,15 @@ public class CamShake : MonoBehaviour
             yield return shakeDelay;
             rigid.transform.position = initialPosition;
         }
+
+        transform.position = initialPosition;
     }
 
     IEnumerator CamVerticalShake(float shakeAmount)
     {
         int multiplication = -1;
         Vector3 plusPos = zeroPosition;
+
         for (int nowShakeCount = 0; nowShakeCount < 11; nowShakeCount++)
         {
             plusPos.x = -(shakeAmount * multiplication);
@@ -188,7 +200,7 @@ public class CamShake : MonoBehaviour
             transform.position -= plusPos;
             plusPos = zeroPosition;
         }
-        plusPos = initialPosition;
-        transform.position = plusPos;
+
+        transform.position = initialPosition;
     }
 }

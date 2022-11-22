@@ -938,34 +938,44 @@ public class Player : BasicUnitScript
         }
     }
 
+    /// <summary>
+    /// 사망시 실행하는 함수
+    /// </summary>
+    /// <returns></returns>
     protected override IEnumerator Dead()
     {
-        if (nowProperty == NowPlayerProperty.AngelProperty && isResurrectionOpportunityExists)
+        if (nowProperty == NowPlayerProperty.AngelProperty && isResurrectionOpportunityExists) //부활 가능할 때 (가능하며 천사 속성일 때)
         {
             isResurrectionOpportunityExists = false;
             StartCoroutine(Resurrection());
             yield return null;
         }
-        else
+        else //부활이 불가능할 때 (가능 하지만, 천사 속성이 아닐 때 or 부활을 이미 했을 때)
         {
             nowState = NowState.Dead;
             bsm.StartGameEndPanelAnim(true);
         }
     }
 
+    /// <summary>
+    /// 부활 실행 함수
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator Resurrection()
     {
         int recoveryFixedValue = 20;
         int ResurrectionStatsValueSharingValue = 5;
 
-        isResurrectionReady = true;
+        Invincibility(true); //현재 무적 상태 : 참
 
-        while (nowState != NowState.Standingby)
+        isResurrectionReady = true; //부활 준비 : 참
+
+        while (nowState != NowState.Standingby) //플레이어 상태가 대기 상태일 때까지 대기
         {
             yield return null;
         }
 
-        Invincibility(true);
+        nowState = NowState.Resurrection;
         AngelPropertyBuff(true);
         ActionCoolTimeBarSetActive(false);
 
@@ -991,7 +1001,6 @@ public class Player : BasicUnitScript
         NowPropertyTimeLimit = 10;
 
         isResurrectionReady = false;
-        nowState = NowState.Resurrection;
 
         nowActionCoolTime = maxActionCoolTime;
         WaitingTimeStart();
@@ -1007,6 +1016,10 @@ public class Player : BasicUnitScript
         Invincibility(false);
     }
 
+    /// <summary>
+    /// 천사 속성 버프 or 버프 해제
+    /// </summary>
+    /// <param name="isBuffing"> 버프 걸기 판별 (버프를 걸어주는가?) </param>
     private void AngelPropertyBuff(bool isBuffing)
     {
         angelPropertyBuffing = isBuffing;
@@ -1015,6 +1028,10 @@ public class Player : BasicUnitScript
         maxActionCoolTime = isBuffing ? maxActionCoolTime - 1 : originalMaxActionCoolTime;
     }
 
+    /// <summary>
+    /// 성령 속성 버프 or 버프 해제
+    /// </summary>
+    /// <param name="isBuffing"> 버프 걸기 판별 (버프를 걸어주는가?) </param>
     private void TheHolySpiritPropertyBuff(bool isBuffing)
     {
         maxActionCoolTime = isBuffing ? maxActionCoolTime - (maxActionCoolTime / 4) : originalMaxActionCoolTime;
@@ -1022,6 +1039,10 @@ public class Player : BasicUnitScript
         Damage = isBuffing ? Damage * 1.5f : originalDamage;
     }
 
+    /// <summary>
+    /// 성령 속성 디버프 or 디버프 해제
+    /// </summary>
+    /// <param name="isDeBuffing"> 디버프 걸기 판별 (디버프를 걸어주는가?) </param>
     private void TheHolySpiritPropertyDeBuff(bool isDeBuffing)
     {
         maxActionCoolTime = isDeBuffing ? maxActionCoolTime + (maxActionCoolTime / 4) : originalMaxActionCoolTime;
@@ -1030,6 +1051,10 @@ public class Player : BasicUnitScript
         Speed = isDeBuffing ? Speed / 1.25f : originalSpeed;
     }
 
+    /// <summary>
+    /// 기절 함수
+    /// </summary>
+    /// <returns></returns>
     protected override IEnumerator Fainting()
     {
         while (true)
