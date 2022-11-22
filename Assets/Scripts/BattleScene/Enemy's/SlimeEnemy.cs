@@ -19,6 +19,9 @@ public class SlimeEnemy : BasicUnitScript
     //    }
     //}
 
+    /// <summary>
+    /// 게임 처음 세팅
+    /// </summary>
     protected override void StartSetting()
     {
         nowState = NowState.Standingby;
@@ -37,6 +40,10 @@ public class SlimeEnemy : BasicUnitScript
         StartCoroutine(WaitUntilTheGameStarts());
     }
 
+    /// <summary>
+    /// 오프닝 시간동안 대기
+    /// </summary>
+    /// <returns></returns>
     IEnumerator WaitUntilTheGameStarts()
     {
         while (true)
@@ -51,6 +58,10 @@ public class SlimeEnemy : BasicUnitScript
         }
     }
 
+    /// <summary>
+    /// 공격 쿨타임
+    /// </summary>
+    /// <returns></returns>
     protected override IEnumerator UISetting()
     {
         while (true)
@@ -74,6 +85,9 @@ public class SlimeEnemy : BasicUnitScript
         }
     }
 
+    /// <summary>
+    /// 보스 랜덤 공격 뽑기
+    /// </summary>
     public void RandBehaviorStart()
     {
         // StartCoroutine(Resting()); //- 휴식
@@ -85,7 +99,6 @@ public class SlimeEnemy : BasicUnitScript
 
         if (nowState == NowState.Standingby)
         {
-
             int behaviorProbability = Random.Range(1, 101);
 
             if (behaviorProbability <= 20)
@@ -173,6 +186,13 @@ public class SlimeEnemy : BasicUnitScript
         base.Hit(damage, isDefending);
     }
 
+    /// <summary>
+    /// 공격 함수
+    /// </summary>
+    /// <param name="isLastAttack"> 마지막 차례의 공격인지 판별 </param>
+    /// <param name="nowAttackCount_I"></param>
+    /// <param name="delayTime"></param>
+    /// <returns></returns>
     IEnumerator Attacking(bool isLastAttack, int nowAttackCount_I, float delayTime)
     {
         float nowdelayTime = 0;
@@ -208,7 +228,11 @@ public class SlimeEnemy : BasicUnitScript
         StartCoroutine(nowCoroutine);
     }
 
-    IEnumerator DefenselessCloseAttack() //내려찍기 공격
+    /// <summary>
+    /// 내려찍기 공격
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator DefenselessCloseAttack()
     {
         WaitForSeconds defenselessCloseAttackDelay = new WaitForSeconds(0.3f);
 
@@ -224,13 +248,13 @@ public class SlimeEnemy : BasicUnitScript
             yield return null;
         }
 
+        isPhysicalAttacking = true;
+
         rigid.gravityScale = -0.7f;
 
         speedVectorWithPattern.x = 0;
 
         yield return defenselessCloseAttackDelay; //내려찍기 준비시간
-
-        isPhysicalAttacking = true;
 
         rigid.AddForce(Vector2.down * jumpPower_F * 3, ForceMode2D.Impulse);
 
@@ -251,7 +275,11 @@ public class SlimeEnemy : BasicUnitScript
         StartCoroutine(nowCoroutine);
     }
 
-    IEnumerator Return() //근접공격 후 돌아오기
+    /// <summary>
+    /// 근접공격 후 제자리로 돌아오는 함수
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator Return()
     {
         Vector3 Movetransform = new Vector3(Speed, 0, 0);
         transform.rotation = Quaternion.Euler(0, 180, 0);
@@ -361,6 +389,7 @@ public class SlimeEnemy : BasicUnitScript
             nowLaunchEnemyLaser.launchAngle = (isLaunchUp) ? -170 : -160;
             nowLaunchEnemyLaser.onEnablePos.x = (isLaunchUp) ? -4.9f : -4.2f;
             nowLaunchEnemyLaser.onEnablePos.y = (isLaunchUp) ? 3.75f : 1.33f;
+
             isLaunchUp = (isLaunchUp) ? false : true;
 
             yield return launchDelay;
@@ -378,7 +407,10 @@ public class SlimeEnemy : BasicUnitScript
         }
     }
 
-    private void WaitingTimeStart() //공격 후의 세팅 (일부 공통)
+    /// <summary>
+    /// 공격 후의 세팅
+    /// </summary>
+    private void WaitingTimeStart()
     {
         nowState = NowState.Standingby;
 
@@ -395,9 +427,14 @@ public class SlimeEnemy : BasicUnitScript
         }
     }
 
+    /// <summary>
+    /// 휴식 함수
+    /// </summary>
+    /// <returns></returns>
     protected override IEnumerator Resting()
     {
-        int nowRestingCount = 0;
+        int nowRestingCount = 0; //현재 쉰 횟수
+
         WaitForSeconds RestWaitTime = new WaitForSeconds(restWaitTime);
 
         nowState = NowState.Resting;
@@ -426,6 +463,10 @@ public class SlimeEnemy : BasicUnitScript
         WaitingTimeStart();
     }
 
+    /// <summary>
+    /// 죽을 때 함수
+    /// </summary>
+    /// <returns></returns>
     protected override IEnumerator Dead()
     {
         nowState = NowState.Dead;
@@ -453,6 +494,10 @@ public class SlimeEnemy : BasicUnitScript
         yield return null;
     }
 
+    /// <summary>
+    /// 기절 함수
+    /// </summary>
+    /// <returns></returns>
     protected override IEnumerator Fainting()
     {
         while (true)
@@ -478,6 +523,10 @@ public class SlimeEnemy : BasicUnitScript
         WaitingTimeStart();
     }
 
+    /// <summary>
+    /// 몸으로 공격하는 패턴일 때 피격 판정
+    /// </summary>
+    /// <param name="collision"></param>
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (isPhysicalAttacking && collision.gameObject.CompareTag("Player"))

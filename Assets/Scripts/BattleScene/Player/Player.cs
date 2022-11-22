@@ -128,7 +128,7 @@ public class Player : BasicUnitScript
 
     private int nextPropertyIndex; //다음 바뀔 속성의 인덱스
 
-    public bool isChangePropertyReady; //속성 변경 준비 판별
+    private bool isChangePropertyReady; //속성 변경 준비 판별
 
     private IEnumerator propertyTimeCount; //속성 지속시간 세는 코루틴
 
@@ -229,11 +229,11 @@ public class Player : BasicUnitScript
     /// </summary>
     protected override void StartSetting()
     {
-        var gameManager_Ins = GameManager.Instance;
-        int energyPerLevel = gameManager_Ins.statLevels[(int)UpgradeableStatKind.Energy] * 3; //레벨당 기력 증가식 (최대 30 증가)
-        int maxHpPerLevel = (int)MaxHp / 10 * (gameManager_Ins.statLevels[(int)UpgradeableStatKind.Hp]); //레벨당 체력 증가식 (최대 100% 증가)
-        float damagePerLevel = (Damage * 10 / 100) * gameManager_Ins.statLevels[(int)UpgradeableStatKind.Damage]; //레벨당 공격력 증가식 (최대 100% 증가)
-        float maxActionCoolTimePerLevel = (gameManager_Ins.ReduceCoolTimeLevel * 0.1f); //레벨당 최대 쿨타임 차감식 (임시)
+        var gameManagerIns = GameManager.Instance;
+        int energyPerLevel = gameManagerIns.statLevels[(int)UpgradeableStatKind.Energy] * 3; //레벨당 기력 증가식 (최대 30 증가)
+        int maxHpPerLevel = (int)MaxHp / 10 * (gameManagerIns.statLevels[(int)UpgradeableStatKind.Hp]); //레벨당 체력 증가식 (최대 100% 증가)
+        float damagePerLevel = (Damage * 10 / 100) * gameManagerIns.statLevels[(int)UpgradeableStatKind.Damage]; //레벨당 공격력 증가식 (최대 100% 증가)
+        float maxActionCoolTimePerLevel = (gameManagerIns.ReduceCoolTimeLevel * 0.1f); //레벨당 최대 쿨타임 차감식 (임시)
 
         maxActionCoolTime -= maxActionCoolTimePerLevel;
         MaxHp += maxHpPerLevel;
@@ -248,7 +248,7 @@ public class Player : BasicUnitScript
         isResurrectionOpportunityExists = true;
 
         bsm.playerCharacterPos = transform.position;
-        nextPropertyIndex = (int)NowPlayerProperty.ForceProperty;//Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
+        nextPropertyIndex = (int)NowPlayerProperty.AngelProperty;//Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
         nowPropertyImage.sprite = nowPropertyIconImages[(int)nowProperty];
 
         Energy = MaxEnergy;
@@ -333,8 +333,8 @@ public class Player : BasicUnitScript
     /// <summary>
     /// 현재 방어 설정
     /// </summary>
-    /// <param name="nowDefensePos"></param>
-    /// <param name="setRotation"></param>
+    /// <param name="nowDefensePos"> 현재 방어 위치 상태 </param>
+    /// <param name="setRotation"> 현재 방어 캐릭터 로테이션 값 </param>
     protected override void SetDefensing(DefensePos nowDefensePos, float setRotation)
     {
         string nowDefenceAnimName = (nowDefensePos == DefensePos.Up) ? "Defence(Top)" : "Defence(Left&Right)";
@@ -491,6 +491,11 @@ public class Player : BasicUnitScript
         }
     }
 
+    /// <summary>
+    /// 패링 실행 함수
+    /// </summary>
+    /// <param name="setRotation"> 패링 방향 </param>
+    /// <returns></returns>
     IEnumerator Deflecting(int setRotation)
     {
         bool isAlreadyShake = false;
@@ -570,13 +575,16 @@ public class Player : BasicUnitScript
                     {
                         battleButtonManagerInstance.ActionButtonsSetActive(true, false, false);
                     }
-                    print("tlfgod");
                     break;
                 }
             }
             else if (nowState == NowState.Deflecting || nowState == NowState.Fainting || nowState == NowState.ChangingProperties)
             {
                 ActionCoolTimeBarSetActive(false);
+                if (nowState == NowState.Fainting || nowState == NowState.ChangingProperties)
+                {
+                    break;
+                }
             }
 
             yield return null;
