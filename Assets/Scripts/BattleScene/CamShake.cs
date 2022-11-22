@@ -99,6 +99,7 @@ public class CamShake : MonoBehaviour
         if (isGameClear == false)
         {
             StopCoroutine(nowShakeCoroutine);
+            transform.position = initialPosition;
 
             if (isHorizontalShake)
             {

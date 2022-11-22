@@ -99,7 +99,7 @@ public class SlimeEnemy : BasicUnitScript
 
         if (nowState == NowState.Standingby)
         {
-            StartCoroutine(HowitzerAttack());
+            StartCoroutine(GoToAttack(false));
             //int behaviorProbability = Random.Range(1, 101);
 
             //if (behaviorProbability <= 20)

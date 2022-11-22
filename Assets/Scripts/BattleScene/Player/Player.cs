@@ -109,11 +109,15 @@ public class Player : BasicUnitScript
         get { return nowPropertyTimeLimit; }
         set
         {
-            if (value > maxPropertyTimeLimit && isResurrectionReady == false && nowState != NowState.Resurrection)
+            if (value > maxPropertyTimeLimit && isResurrectionReady == false && nowState != NowState.Resurrection && nowState != NowState.Attacking)
             {
                 nowPropertyTimeLimit = maxPropertyTimeLimit;
-                isChangeProperty = true;
-                StartCoroutine(ChangeProperty(true, false));
+
+                if (isResurrectionReady == false)
+                {
+                    isChangeProperty = true;
+                    StartCoroutine(ChangeProperty(true, false));
+                }
             }
             else
             {
@@ -472,6 +476,11 @@ public class Player : BasicUnitScript
                     break;
                 }
             }
+            else if (isResurrectionReady)
+            {
+                break;
+            }
+
             yield return null;
         }
     }
@@ -947,6 +956,7 @@ public class Player : BasicUnitScript
         if (nowProperty == NowPlayerProperty.AngelProperty && isResurrectionOpportunityExists) //부활 가능할 때 (가능하며 천사 속성일 때)
         {
             isResurrectionOpportunityExists = false;
+            isResurrectionReady = true; //부활 준비 : 참
             StartCoroutine(Resurrection());
             yield return null;
         }
@@ -967,8 +977,6 @@ public class Player : BasicUnitScript
         int ResurrectionStatsValueSharingValue = 5;
 
         Invincibility(true); //현재 무적 상태 : 참
-
-        isResurrectionReady = true; //부활 준비 : 참
 
         while (nowState != NowState.Standingby) //플레이어 상태가 대기 상태일 때까지 대기
         {
@@ -1001,6 +1009,9 @@ public class Player : BasicUnitScript
         NowPropertyTimeLimit = 10;
 
         isResurrectionReady = false;
+
+        propertyTimeCount = CountDownPropertyTimes();
+        StartCoroutine(propertyTimeCount);
 
         nowActionCoolTime = maxActionCoolTime;
         WaitingTimeStart();
