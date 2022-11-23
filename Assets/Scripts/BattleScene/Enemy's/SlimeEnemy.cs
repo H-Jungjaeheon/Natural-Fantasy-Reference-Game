@@ -99,7 +99,7 @@ public class SlimeEnemy : BasicUnitScript
 
         if (nowState == NowState.Standingby)
         {
-            StartCoroutine(GoToAttack(false));
+            StartCoroutine(LaserAttack());
             //int behaviorProbability = Random.Range(1, 101);
 
             //if (behaviorProbability <= 20)
@@ -397,7 +397,10 @@ public class SlimeEnemy : BasicUnitScript
         }
 
         animator.SetBool("LazerAttack", false);
+        animator.SetTrigger("LazerAttackEnd");
 
+        yield return launchDelay;
+        
         if (Energy > 0)
         {
             WaitingTimeStart();

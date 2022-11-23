@@ -73,7 +73,7 @@ public class Player : BasicUnitScript
     #region 속성 관련 변수
     private float maxChangePropertyCoolTime = 35; //최대 속성 변경 시간
 
-    public float nowChangePropertyCoolTime; //현재 속성 변경 시간
+    private float nowChangePropertyCoolTime; //현재 속성 변경 시간
     
     public float NowChangePropertyCoolTime
     {
@@ -102,14 +102,14 @@ public class Player : BasicUnitScript
 
     private float maxPropertyTimeLimit = 25; //최대 속성 지속시간
 
-    public float nowPropertyTimeLimit; // 현재 속성 남은 지속시간
+    private float nowPropertyTimeLimit; // 현재 속성 남은 지속시간
 
     public float NowPropertyTimeLimit
     {
         get { return nowPropertyTimeLimit; }
         set
         {
-            if (value > maxPropertyTimeLimit && isResurrectionReady == false && nowState != NowState.Resurrection && nowState != NowState.Attacking)
+            if (value > maxPropertyTimeLimit && isResurrectionReady == false && nowState != NowState.Resurrection && nowState != NowState.Attacking && nowState != NowState.Jumping)
             {
                 nowPropertyTimeLimit = maxPropertyTimeLimit;
 
@@ -252,7 +252,7 @@ public class Player : BasicUnitScript
         isResurrectionOpportunityExists = true;
 
         bsm.playerCharacterPos = transform.position;
-        nextPropertyIndex = (int)NowPlayerProperty.AngelProperty;//Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
+        nextPropertyIndex = Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
         nowPropertyImage.sprite = nowPropertyIconImages[(int)nowProperty];
 
         Energy = MaxEnergy;
@@ -420,6 +420,10 @@ public class Player : BasicUnitScript
         nowPropertyImage.sprite = nowPropertyIconImages[(int)nowProperty];
     }
 
+    /// <summary>
+    /// 속성 변경 마무리 함수
+    /// </summary>
+    /// <returns></returns>
     IEnumerator EndingPropertyChanges() //나중에 애니메이션 나오면 일반함수로 전환, 그리고 속성 변경 애니메이션 끝날때쯤 변경한 이 함수 실행
     {
         yield return new WaitForSeconds(2);
@@ -485,6 +489,9 @@ public class Player : BasicUnitScript
         }
     }
 
+    /// <summary>
+    /// 패링 실행 함수
+    /// </summary>
     private void Deflect()
     {
         if (Input.GetKeyDown(KeyCode.Space) && nowState == NowState.Defensing)
@@ -599,8 +606,11 @@ public class Player : BasicUnitScript
             yield return null;
         }
     }
-
-    private void WaitingTimeStart() //공격 후의 세팅 (일부 공통, 한번만 실행) 
+     
+    /// <summary>
+    /// 공격 후 공격 쿨타임 실행 함수
+    /// </summary>
+    private void WaitingTimeStart()
     {
         nowState = NowState.Standingby;
 
@@ -618,6 +628,9 @@ public class Player : BasicUnitScript
         }
     }
 
+    /// <summary>
+    /// 점프 실행 함수
+    /// </summary>
     private void Jump()
     {
         if (bsm.nowGameState == NowGameState.Playing && nowState == NowState.Standingby && Input.GetKey(KeyCode.Space) && Hp > 0 && isChangePropertyReady == false)
@@ -654,6 +667,11 @@ public class Player : BasicUnitScript
             rigid.gravityScale = 0;
         }
     }
+
+    /// <summary>
+    /// 점프 후 중력값 조절하는 함수
+    /// </summary>
+    /// <returns></returns>
     IEnumerator JumpDelay()
     {
         yield return new WaitForSeconds(0.3f);
@@ -668,6 +686,9 @@ public class Player : BasicUnitScript
         rigid.gravityScale = setJumpGravityScale_F * 1.5f;
     }
 
+    /// <summary>
+    /// 근접 공격(적에게 이동해야하는 공격)실행 함수
+    /// </summary>
     public void CloseAttackStart()
     {
         if (nowState == NowState.Standingby)
@@ -677,7 +698,10 @@ public class Player : BasicUnitScript
             StartCoroutine(GoToAttack());
         }
     }
-
+    
+    /// <summary>
+    /// 휴식 실행 함수
+    /// </summary>
     public void RestStart()
     {
         if (nowState == NowState.Standingby)
@@ -688,6 +712,10 @@ public class Player : BasicUnitScript
         }
     }
 
+    /// <summary>
+    /// 휴식 함수
+    /// </summary>
+    /// <returns></returns>
     protected override IEnumerator Resting()
     {
         int nowRestingCount = 0;
@@ -854,6 +882,11 @@ public class Player : BasicUnitScript
         }
     }
 
+    /// <summary>
+    /// 현재 적에게 줄 랜덤 데미지 뽑는 함수
+    /// </summary>
+    /// <param name="nowPlayerDamage"> 현재 플레이어 데미지 </param>
+    /// <returns></returns>
     private float CurrentRandomDamage(float nowPlayerDamage)
     {
         int randDamage = Random.Range(-2, 2); //랜덤 데미지 증감
@@ -863,7 +896,11 @@ public class Player : BasicUnitScript
         return nowPlayerDamage;
     }
 
-    IEnumerator Return() //근접공격 후 돌아오기
+    /// <summary>
+    /// 근접 공격(적에게 이동해야하는 공격) 후 복귀 함수
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator Return()
     {
         Vector3 Movetransform = new Vector3(Speed, 0, 0);
         transform.rotation = Quaternion.Euler(0, 180, 0);
@@ -890,6 +927,11 @@ public class Player : BasicUnitScript
         }
     }
 
+    /// <summary>
+    /// 현재 선택한 스킬 실행 함수
+    /// </summary>
+    /// <param name="nowUseSkillIndex"> 현재 실행할 스킬 인덱스 </param>
+    /// <param name="nowUseSkillNeedEnergy"> 현재 실행할 스킬 필요 기력 </param>
     public void SkillUse(int nowUseSkillIndex, int nowUseSkillNeedEnergy)
     {
         if (nowState == NowState.Standingby && Energy >= nowUseSkillNeedEnergy)
@@ -909,6 +951,10 @@ public class Player : BasicUnitScript
         }
     }
 
+    /// <summary>
+    /// 검기 발사 스킬 함수
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator SwordAuraSkill()
     {
         float nowDelayTime = 0;
@@ -1114,12 +1160,20 @@ public class Player : BasicUnitScript
         WaitingTimeStart();
     }
 
+    /// <summary>
+    /// 무적 상태일 때 UI 표시 효과
+    /// </summary>
+    /// <param name="isInvincibilityTrue"> 무적 상태에 돌입하는가? </param>
     protected override void InvincibilityEvent(bool isInvincibilityTrue)
     {
         unitHpBarBg.sprite = (isInvincibilityTrue) ? nowStatHpUiBg[(int)NowStatUIState.Invincibility] : nowStatHpUiBg[(int)NowStatUIState.Basic];
         unitHpBar.sprite = (isInvincibilityTrue) ? nowStateHpUi[(int)NowStatUIState.Invincibility] : nowStateHpUi[(int)NowStatUIState.Basic];
     }
 
+    /// <summary>
+    /// 속성 패시브 효과 실행 함수
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator PropertyPassiveAbilityStart()
     {
         NowChangePropertyCoolTime = 0;

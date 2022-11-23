@@ -1,34 +1,37 @@
 fileFormatVersion: 2
-guid: 10b803f7d7a8c8e42960b78d608df32e
+guid: fec3a6f5f8a168e4c8b088f99748d3ed
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7363166705265310760
-    second: Slime_Idle_0
+      213: 1059429015729918479
+    second: Slime_Razer_cl_0
   - first:
-      213: -5053397183770984521
-    second: Slime_Idle_1
+      213: 3680760675804054567
+    second: Slime_Razer_cl_1
   - first:
-      213: 2562226924957090973
-    second: Slime_Idle_2
+      213: 3620176539282676530
+    second: Slime_Razer_cl_2
   - first:
-      213: -5823576197350583881
-    second: Slime_Idle_3
+      213: 1481801075377875600
+    second: Slime_Razer_cl_3
   - first:
-      213: 1838681140112674480
-    second: Slime_Idle_4
+      213: 427970364527951191
+    second: Slime_Razer_cl_4
   - first:
-      213: -1405210446015081617
-    second: Slime_Idle_5
+      213: 1908669572792080213
+    second: Slime_Razer_cl_5
   - first:
-      213: 1813432566855913528
-    second: Slime_Idle_6
+      213: -5311897398242736671
+    second: Slime_Razer_cl_6
   - first:
-      213: -2326420697060349729
-    second: Slime_Idle_7
+      213: 4806703392405813612
+    second: Slime_Razer_cl_7
   - first:
-      213: -4963006180359112437
-    second: Slime_Idle_8
+      213: 361795074839035158
+    second: Slime_Razer_cl_8
+  - first:
+      213: -2407944775729459893
+    second: Slime_Razer_cl_9
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -130,7 +133,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Slime_Idle_0
+      name: Slime_Razer_cl_0
       rect:
         serializedVersion: 2
         x: 0
@@ -144,14 +147,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 82c72515b193f2660800000000000000
-      internalID: 7363166705265310760
+      spriteID: f02d253a319d3be00800000000000000
+      internalID: 1059429015729918479
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Slime_Idle_1
+      name: Slime_Razer_cl_1
       rect:
         serializedVersion: 2
         x: 452
@@ -165,14 +168,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7bffe50190abed9b0800000000000000
-      internalID: -5053397183770984521
+      spriteID: 72407884550b41330800000000000000
+      internalID: 3680760675804054567
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Slime_Idle_2
+      name: Slime_Razer_cl_2
       rect:
         serializedVersion: 2
         x: 904
@@ -186,14 +189,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d94420020dbde8320800000000000000
-      internalID: 2562226924957090973
+      spriteID: 23b9528c1637d3230800000000000000
+      internalID: 3620176539282676530
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Slime_Idle_3
+      name: Slime_Razer_cl_3
       rect:
         serializedVersion: 2
         x: 1356
@@ -207,14 +210,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7b19f7a9d408e2fa0800000000000000
-      internalID: -5823576197350583881
+      spriteID: 09aa0b52a3a609410800000000000000
+      internalID: 1481801075377875600
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Slime_Idle_4
+      name: Slime_Razer_cl_4
       rect:
         serializedVersion: 2
         x: 1808
@@ -228,14 +231,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0be40a351ce448910800000000000000
-      internalID: 1838681140112674480
+      spriteID: 75d351077c470f500800000000000000
+      internalID: 427970364527951191
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Slime_Idle_5
+      name: Slime_Razer_cl_5
       rect:
         serializedVersion: 2
         x: 2260
@@ -249,14 +252,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f635a926b80bf7ce0800000000000000
-      internalID: -1405210446015081617
+      spriteID: 5575ed72dd4fc7a10800000000000000
+      internalID: 1908669572792080213
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Slime_Idle_6
+      name: Slime_Razer_cl_6
       rect:
         serializedVersion: 2
         x: 2712
@@ -270,14 +273,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8305293cf4b9a2910800000000000000
-      internalID: 1813432566855913528
+      spriteID: 1e58b6eb5795846b0800000000000000
+      internalID: -5311897398242736671
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Slime_Idle_7
+      name: Slime_Razer_cl_7
       rect:
         serializedVersion: 2
         x: 3164
@@ -291,14 +294,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fd8e991b3b4e6bfd0800000000000000
-      internalID: -2326420697060349729
+      spriteID: c697305b447d4b240800000000000000
+      internalID: 4806703392405813612
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Slime_Idle_8
+      name: Slime_Razer_cl_8
       rect:
         serializedVersion: 2
         x: 3616
@@ -312,8 +315,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b0970a19c2cdf1bb0800000000000000
-      internalID: -4963006180359112437
+      spriteID: 61d344524ba550500800000000000000
+      internalID: 361795074839035158
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Slime_Razer_cl_9
+      rect:
+        serializedVersion: 2
+        x: 4068
+        y: 0
+        width: 452
+        height: 552
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b4d43ebfbf2459ed0800000000000000
+      internalID: -2407944775729459893
       vertices: []
       indices: 
       edges: []
