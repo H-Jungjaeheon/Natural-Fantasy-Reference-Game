@@ -369,6 +369,8 @@ public class Player : BasicUnitScript
             NowPropertyTimeLimit = 0;
         }
 
+        WaitingTimeEnd();
+
         while (true)
         {
             if (nowState == NowState.Standingby && angelPropertyBuffing == false)
@@ -654,6 +656,7 @@ public class Player : BasicUnitScript
         else if (nowState == NowState.Jumping && transform.position.y < startPos_Vector.y)
         {
             nowState = NowState.Standingby;
+
             if (isWaiting == false && isChangePropertyReady == false)
             {
                 if (battleButtonManagerInstance.nowButtonPage == ButtonPage.SecondPage)
