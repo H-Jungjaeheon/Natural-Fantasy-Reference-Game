@@ -408,7 +408,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         nowGameState = NowGameState.GameEnd;
         gameEndKind = isGameOver ? GameEndKind.GameOver : GameEndKind.GameClear;
 
-        if (isGameOver) //테스트용 판별 나중에 삭제
+        if (isGameOver)
         {
             StartCoroutine(PlayerDeadAnim());
         }
@@ -428,6 +428,8 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     {
         nowColor = colors[(int)Colors.White];
         nowAlpha = 1;
+
+        CamShake.JumpStop(true);
 
         yield return null;
 

@@ -20,10 +20,6 @@ public class EnemysLaser : MonoBehaviour
     [Tooltip("레이저 애니메이션 오브젝트")]
     private GameObject laserAnimationObj;
 
-    [SerializeField]
-    [Tooltip("레이저 애니메이터")]
-    private Animator laserAnimator;
-
     public List<GameObject> targetInRange = new List<GameObject>();
     
     [HideInInspector]
@@ -57,8 +53,6 @@ public class EnemysLaser : MonoBehaviour
         
         orbitalIndicationObj.SetActive(false);
         laserAnimationObj.SetActive(true);
-
-        laserAnimator.SetTrigger("LazerLaunch");
 
         StartCoroutine(GiveDamage());
     }

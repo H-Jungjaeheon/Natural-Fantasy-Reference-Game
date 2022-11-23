@@ -135,7 +135,7 @@ public class CamShake : MonoBehaviour
     {
         if (isGameClear == false)
         {
-            if (isPlayerDead)
+            if (isPlayerDead && startJumpCoroutine != null)
             {
                 StopCoroutine(startJumpCoroutine);
             }

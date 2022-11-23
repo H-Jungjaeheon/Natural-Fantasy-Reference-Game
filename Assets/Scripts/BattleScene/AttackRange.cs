@@ -49,12 +49,19 @@ public class AttackRange : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 방향 전환
+    /// </summary>
     private void ChangeRotation()
     {
         setColliderXPos *= -1;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision) //적이 범위에 들어올 시
+    /// <summary>
+    /// 적이 공격 범위에 들어오면 실행
+    /// </summary>
+    /// <param name="collision"> 공격 범위에 들어온 오브젝트 콜라이더 </param>
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("DeflectAbleObj"))
         {
@@ -83,6 +90,10 @@ public class AttackRange : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 적이 공격 범위에서 나가면 실행
+    /// </summary>
+    /// <param name="collision"> 공격 범위에서 나간 오브젝트 콜라이더 </param>
     private void OnTriggerExit2D(Collider2D collision) //적이 범위에 나갈 시
     {
         if (collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Player"))

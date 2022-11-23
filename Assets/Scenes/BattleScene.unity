@@ -3661,7 +3661,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.2, y: 0}
+  m_Offset: {x: 0.18, y: -0.08}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -3672,7 +3672,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.1, y: 2.6}
+  m_Size: {x: 1.1347138, y: 2.6809988}
   m_EdgeRadius: 0
 --- !u!50 &693950550
 Rigidbody2D:
@@ -6624,7 +6624,7 @@ MonoBehaviour:
   nullActionCoolTimeImage: {fileID: 154340400}
   actionCoolTimeImage: {fileID: 1074118521}
   actionCoolTimeObjPlusPos: {x: 0, y: -2.1}
-  maxActionCoolTime: 3.5
+  maxActionCoolTime: 3
   setJumpGravityScale_F: 2
   jumpPower_F: 22
   nowDefensivePosition: 0
@@ -9029,7 +9029,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.040972322, y: 0.00030493736}
+  m_Offset: {x: 0.13354297, y: -0.086479664}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -9040,7 +9040,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.2316568, y: 2.63514}
+  m_Size: {x: 0.93080354, y: 2.6698537}
   m_EdgeRadius: 0
 --- !u!114 &1717870245
 MonoBehaviour:
@@ -9072,7 +9072,7 @@ MonoBehaviour:
   isHaveDreamyFigure: 1
   dreamyFigure: 0
   damage: 4
-  Speed: 7
+  Speed: 7.5
   unitHpBar: {fileID: 939537340}
   unitHpBarBg: {fileID: 439962034}
   unitLightHpBars: {fileID: 1390554749}
@@ -9091,6 +9091,7 @@ MonoBehaviour:
   hitColor: {r: 1, g: 0, b: 0, a: 1}
   returnBasicColor: {r: 1, g: 1, b: 1, a: 1}
   unitShieldHpBars: {fileID: 1902801556}
+  nowChangePropertyCoolTime: 0
   nowProperty: 0
   isSpawnNatureBead: 0
   nowPropertyImage: {fileID: 693409020}

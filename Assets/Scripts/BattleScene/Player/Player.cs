@@ -73,7 +73,7 @@ public class Player : BasicUnitScript
     #region 속성 관련 변수
     private float maxChangePropertyCoolTime = 35; //최대 속성 변경 시간
 
-    private float nowChangePropertyCoolTime; //현재 속성 변경 시간
+    public float nowChangePropertyCoolTime; //현재 속성 변경 시간
     
     public float NowChangePropertyCoolTime
     {
@@ -102,7 +102,7 @@ public class Player : BasicUnitScript
 
     private float maxPropertyTimeLimit = 25; //최대 속성 지속시간
 
-    private float nowPropertyTimeLimit; // 현재 속성 남은 지속시간
+    public float nowPropertyTimeLimit; // 현재 속성 남은 지속시간
 
     public float NowPropertyTimeLimit
     {
@@ -238,6 +238,9 @@ public class Player : BasicUnitScript
         int maxHpPerLevel = (int)MaxHp / 10 * (gameManagerIns.statLevels[(int)UpgradeableStatKind.Hp]); //레벨당 체력 증가식 (최대 100% 증가)
         float damagePerLevel = (Damage * 10 / 100) * gameManagerIns.statLevels[(int)UpgradeableStatKind.Damage]; //레벨당 공격력 증가식 (최대 100% 증가)
         float maxActionCoolTimePerLevel = (gameManagerIns.ReduceCoolTimeLevel * 0.1f); //레벨당 최대 쿨타임 차감식 (임시)
+
+        InitializationAttackRangeSize = new Vector2(1.1f, 2.68f);
+        InitializationAttackRangeOffset = new Vector2(0.18f, -0.08f);
 
         maxActionCoolTime -= maxActionCoolTimePerLevel;
         MaxHp += maxHpPerLevel;
@@ -520,12 +523,12 @@ public class Player : BasicUnitScript
         nowDefensivePosition = DefensePos.None;
         battleButtonManagerInstance.ActionButtonsSetActive(false, false, false);
         transform.rotation = Quaternion.Euler(0, setRotation, 0);
-        ChangeAttackRange(new Vector2(0.7f, 2.6f), new Vector2(0, 0));
+        ChangeAttackRange(new Vector2(0.85f, 2.68f), new Vector2(0.06f, -0.08f));
 
         animator.SetBool("Paring", true);
         animator.SetBool("Defence(Left&Right)", false);
 
-        yield return new WaitForSeconds(0.15f); //치기 전까지 기다림
+        yield return new WaitForSeconds(0.15f);
         
         for (int nowIndex = 0; nowIndex < rangeInDeflectAbleObj.Count; nowIndex++)
         {
@@ -539,7 +542,7 @@ public class Player : BasicUnitScript
                 rangeInDeflectAbleObj[nowIndex].GetComponent<EnemysBullet>().Reflex(BulletState.Deflecting);
             }
         }
-        yield return new WaitForSeconds(0.25f); //애니메이션 종료까지 기다림
+        yield return new WaitForSeconds(0.25f);
         
         animator.SetBool("Paring", false);
         
@@ -636,6 +639,9 @@ public class Player : BasicUnitScript
         if (bsm.nowGameState == NowGameState.Playing && nowState == NowState.Standingby && Input.GetKey(KeyCode.Space) && Hp > 0 && isChangePropertyReady == false)
         {
             nowState = NowState.Jumping;
+
+            transform.rotation = Quaternion.Euler(0, 0, 0);
+
             battleButtonManagerInstance.ActionButtonsSetActive(false, false, false);
 
             CamShake.JumpStart();

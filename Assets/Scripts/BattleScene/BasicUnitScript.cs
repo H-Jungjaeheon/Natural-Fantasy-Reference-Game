@@ -296,9 +296,9 @@ public abstract class BasicUnitScript : MonoBehaviour
     [Tooltip("자신의 공격 범위 콜라이더")]
     protected BoxCollider2D attackRangeObjComponent;
 
-    protected Vector2 InitializationAttackRangeSize = new Vector2(1.1f, 2.6f);
+    protected Vector2 InitializationAttackRangeSize;
 
-    protected Vector2 InitializationAttackRangeOffset = new Vector2(0.2f, 0);
+    protected Vector2 InitializationAttackRangeOffset;
 
     [SerializeField]
     [Tooltip("현재 상태 표시해주는 UI 오브젝트 스크립트")]
@@ -447,6 +447,11 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     protected abstract IEnumerator Resting();
 
+    /// <summary>
+    /// 공격 범위 변경
+    /// </summary>
+    /// <param name="attackRangeColliderSize"> 공격 범위 변경(크기) </param>
+    /// <param name="attackRangeColliderOffset"> 공격 범위 변경(위치) </param>
     protected void ChangeAttackRange(Vector2 attackRangeColliderSize, Vector2 attackRangeColliderOffset)
     {
         attackRangeObjComponent.size = attackRangeColliderSize;
