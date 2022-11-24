@@ -74,7 +74,7 @@ public class Player : BasicUnitScript
     #region 속성 관련 변수
     private float maxChangePropertyCoolTime = 35; //최대 속성 변경 시간
 
-    public float nowChangePropertyCoolTime; //현재 속성 변경 시간
+    private float nowChangePropertyCoolTime; //현재 속성 변경 시간
     
     public float NowChangePropertyCoolTime
     {
@@ -103,7 +103,7 @@ public class Player : BasicUnitScript
 
     private float maxPropertyTimeLimit = 25; //최대 속성 지속시간
 
-    public float nowPropertyTimeLimit; // 현재 속성 남은 지속시간
+    private float nowPropertyTimeLimit; // 현재 속성 남은 지속시간
 
     public float NowPropertyTimeLimit
     {
@@ -366,7 +366,7 @@ public class Player : BasicUnitScript
             NowPropertyTimeLimit = 0;
         }
 
-        //WaitingTimeEnd();
+        WaitingTimeEnd();
 
         while (true)
         {
@@ -388,7 +388,6 @@ public class Player : BasicUnitScript
 
         battleButtonManagerInstance.ActionButtonsSetActive(false, false, false);
         transform.rotation = Quaternion.identity;
-        nowActionCoolTime = 0;
 
         if (isChangeBasicProperty)
         {

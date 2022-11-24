@@ -9067,7 +9067,7 @@ MonoBehaviour:
   rangeInDeflectAbleObj: []
   hp: 25
   maxHp: 25
-  energy: 5
+  energy: 15
   maxEnergy: 15
   isHaveDreamyFigure: 1
   dreamyFigure: 0
@@ -9091,8 +9091,6 @@ MonoBehaviour:
   hitColor: {r: 1, g: 0, b: 0, a: 1}
   returnBasicColor: {r: 1, g: 1, b: 1, a: 1}
   unitShieldHpBars: {fileID: 1902801556}
-  nowChangePropertyCoolTime: 0
-  nowPropertyTimeLimit: 0
   nowProperty: 0
   isSpawnNatureBead: 0
   nowPropertyImage: {fileID: 693409020}
