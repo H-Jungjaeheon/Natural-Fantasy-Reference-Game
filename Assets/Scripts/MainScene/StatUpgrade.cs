@@ -98,7 +98,7 @@ public class StatUpgrade : MonoBehaviour
         {
             int nowReflectStatLevel = gameManager.statLevels[(int)nowReflectLevelData];
 
-            goodsRequiredForTheCurrentUpgrade[(int)nowReflectLevelData] = 35 + (nowReflectStatLevel * 70);
+            goodsRequiredForTheCurrentUpgrade[(int)nowReflectLevelData] = 30 + (nowReflectStatLevel * 70);
 
             if (nowReflectStatLevel == 5 || nowReflectStatLevel == 8 || nowReflectStatLevel == 10)
             {
@@ -119,7 +119,7 @@ public class StatUpgrade : MonoBehaviour
             {
                 int nowReflectStatLevel = gameManager.statLevels[nowIndex];
 
-                goodsRequiredForTheCurrentUpgrade[nowIndex] = 35 + (nowReflectStatLevel * 70);
+                goodsRequiredForTheCurrentUpgrade[nowIndex] = 30 + (nowReflectStatLevel * 70);
                 for (int nowLevelIndex = 1; nowLevelIndex <= nowReflectStatLevel; nowLevelIndex++)
                 {
                     if (nowLevelIndex == 5 || nowLevelIndex == 8 || nowLevelIndex == 10)

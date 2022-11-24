@@ -86,7 +86,7 @@ public class Player : BasicUnitScript
         {
             if (value > maxChangePropertyCoolTime)
             {
-                nowChangePropertyCoolTime = maxChangePropertyCoolTime;
+                //nowChangePropertyCoolTime = maxChangePropertyCoolTime;
                 isChangeProperty = true;
                 StartCoroutine(ChangeProperty(false, false));
             }
@@ -367,6 +367,7 @@ public class Player : BasicUnitScript
         }
 
         WaitingTimeEnd();
+        ActionCoolTimeBarSetActive(false);
 
         while (true)
         {
