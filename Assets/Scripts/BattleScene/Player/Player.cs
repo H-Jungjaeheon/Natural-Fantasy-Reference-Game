@@ -26,7 +26,8 @@ public enum PropertyColor
 public enum NowStatUIState
 {
     Basic,
-    Invincibility
+    Invincibility,
+    Shield
 }
 
 public class Player : BasicUnitScript
@@ -43,7 +44,7 @@ public class Player : BasicUnitScript
                 shieldHp_F = 0;
                 if (nowProperty == NowPlayerProperty.TheHolySpiritProperty)
                 {
-                    hpText.color = basicHpTextColor;
+                    hpText.color = hpTextColors[(int)NowStatUIState.Basic];
                     TheHolySpiritPropertyBuff(false);
                     TheHolySpiritPropertyDeBuff(true);
                     hpText.text = $"{(Hp):N0}/{(MaxHp):N0}";
@@ -196,12 +197,8 @@ public class Player : BasicUnitScript
     #region 체력 텍스트 색 값들
     [Header("체력 텍스트 색 값들")]
     [SerializeField]
-    [Tooltip("기본 체력 텍스트 색")]
-    private Color basicHpTextColor;
-
-    [SerializeField]
-    [Tooltip("성령 속성 보호막 체력 텍스트 색")]
-    private Color shieldHpTextColor;
+    [Tooltip("체력 텍스트 색 모음")]
+    private Color[] hpTextColors;
     #endregion
 
     #region 속성 상징 색
@@ -369,7 +366,7 @@ public class Player : BasicUnitScript
             NowPropertyTimeLimit = 0;
         }
 
-        WaitingTimeEnd();
+        //WaitingTimeEnd();
 
         while (true)
         {
@@ -387,6 +384,7 @@ public class Player : BasicUnitScript
 
         nowState = NowState.ChangingProperties;
         Invincibility(true);
+        hpText.color = hpTextColors[(int)NowStatUIState.Invincibility];
 
         battleButtonManagerInstance.ActionButtonsSetActive(false, false, false);
         transform.rotation = Quaternion.identity;
@@ -432,10 +430,20 @@ public class Player : BasicUnitScript
     IEnumerator EndingPropertyChanges() //나중에 애니메이션 나오면 일반함수로 전환, 그리고 속성 변경 애니메이션 끝날때쯤 변경한 이 함수 실행
     {
         yield return new WaitForSeconds(2);
+
         isChangePropertyReady = false;
         nowState = NowState.Standingby;
 
         Invincibility(false);
+
+        if (nowProperty == NowPlayerProperty.TheHolySpiritProperty)
+        {
+            hpText.color = hpTextColors[(int)NowStatUIState.Shield];
+        }
+        else
+        {
+            hpText.color = hpTextColors[(int)NowStatUIState.Basic];
+        }
 
         if (battleButtonManagerInstance.nowButtonPage == ButtonPage.FirstPage)
         {
@@ -1032,6 +1040,7 @@ public class Player : BasicUnitScript
         int ResurrectionStatsValueSharingValue = 5;
 
         Invincibility(true); //현재 무적 상태 : 참
+        hpText.color = hpTextColors[(int)NowStatUIState.Invincibility];
 
         while (nowState != NowState.Standingby) //플레이어 상태가 대기 상태일 때까지 대기
         {
@@ -1080,6 +1089,7 @@ public class Player : BasicUnitScript
 
         AngelPropertyBuff(false);
         Invincibility(false);
+        hpText.color = hpTextColors[(int)NowStatUIState.Basic];
     }
 
     /// <summary>
@@ -1224,7 +1234,7 @@ public class Player : BasicUnitScript
 
                 ShieldHp_F = 2;
                 TheHolySpiritPropertyBuff(true);
-                hpText.color = shieldHpTextColor;
+                
                 unitShieldHpBars.fillAmount = ShieldHp_F / maxShieldHp_F;
 
                 while (nowProperty == NowPlayerProperty.TheHolySpiritProperty)
@@ -1244,7 +1254,7 @@ public class Player : BasicUnitScript
 
                 shieldHp_F = 0;
                 unitShieldHpBars.fillAmount = ShieldHp_F / maxShieldHp_F;
-                hpText.color = basicHpTextColor;
+                hpText.color = hpTextColors[(int)NowStatUIState.Invincibility];
                 hpText.text = $"{(Hp):N0}/{(MaxHp):N0}";
                 break;
         }
