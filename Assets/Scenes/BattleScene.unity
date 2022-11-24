@@ -9067,7 +9067,7 @@ MonoBehaviour:
   rangeInDeflectAbleObj: []
   hp: 25
   maxHp: 25
-  energy: 15
+  energy: 5
   maxEnergy: 15
   isHaveDreamyFigure: 1
   dreamyFigure: 0
