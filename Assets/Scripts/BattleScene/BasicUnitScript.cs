@@ -466,6 +466,10 @@ public abstract class BasicUnitScript : MonoBehaviour
         attackRangeObjComponent.offset = InitializationAttackRangeOffset;
     }
 
+    /// <summary>
+    /// 화상 효과(데미지) 함수
+    /// </summary>
+    /// <returns></returns>
     protected IEnumerator Burning()
     {
         while (isBurning)
@@ -482,7 +486,7 @@ public abstract class BasicUnitScript : MonoBehaviour
                 nowGiveBurnDamageTime = 0;
             }
 
-            if (nowBurnDamageLimitTime >= maxBurnDamageLimitTime)
+            if (nowBurnDamageLimitTime >= maxBurnDamageLimitTime || Hp <= 0)
             {
                 isBurning = false;
                 nowBurnDamageStack = 0;
@@ -494,6 +498,9 @@ public abstract class BasicUnitScript : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 화상 효과 시작 함수
+    /// </summary>
     public void BurnDamageStart()
     {
         if (nowBurnDamageStack == 5 || nowBurnDamageLimitTime >= maxStackableOverlapTime)

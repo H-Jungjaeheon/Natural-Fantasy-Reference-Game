@@ -86,7 +86,6 @@ public class Player : BasicUnitScript
         {
             if (value > maxChangePropertyCoolTime)
             {
-                //nowChangePropertyCoolTime = maxChangePropertyCoolTime;
                 isChangeProperty = true;
                 StartCoroutine(ChangeProperty(false, false));
             }
@@ -646,7 +645,7 @@ public class Player : BasicUnitScript
     /// </summary>
     private void Jump()
     {
-        if (bsm.nowGameState == NowGameState.Playing && nowState == NowState.Standingby && Input.GetKey(KeyCode.Space) && Hp > 0 && isChangePropertyReady == false)
+        if (bsm.nowGameState == NowGameState.Playing && isChangePropertyReady == false && nowState == NowState.Standingby && Input.GetKey(KeyCode.Space) && Hp > 0)
         {
             nowState = NowState.Jumping;
 

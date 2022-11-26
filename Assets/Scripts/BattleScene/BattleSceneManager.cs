@@ -463,8 +463,6 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
         faidObj.SetActive(true);
 
-        yield return null;
-
         while (nowAlpha < 1)
         {
             if (mainCam.orthographicSize > 6.5f)
