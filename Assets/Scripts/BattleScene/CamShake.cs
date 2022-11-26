@@ -51,15 +51,9 @@ public class CamShake : MonoBehaviour
         PPV.profile.TryGetSettings(out vignette);
     }
 
-    void Update()
-    {
-        RepetitionSetting();
-        //if (Input.GetKeyDown(KeyCode.F1))
-        //{
-        //    bloom.intensity.value += 10;
-        //}
-    }
-
+    /// <summary>
+    /// 시작 세팅
+    /// </summary>
     public void StartSetting()
     {
         initialPosition = rigid.transform.position;
@@ -69,15 +63,24 @@ public class CamShake : MonoBehaviour
         JumpStart = CallingStartJump;
         JumpStop = StopJump;
 
+        StartCoroutine(RepetitionSetting());
+
         nowShakeCoroutine = CamHorizontalShake(0); //초기화
     }
 
+    /// <summary>
+    /// 게임 종료 세팅
+    /// </summary>
     public void GameEndSetting()
     {
         StartCoroutine(GameEndCamAnim());
         isGameClear = true;
     }
 
+    /// <summary>
+    /// 게임 종료 카메라 움직임 함수
+    /// </summary>
+    /// <returns></returns>
     IEnumerator GameEndCamAnim()
     {
         Vector3 bossPos = BattleSceneManager.Instance.Enemy.transform.position;
@@ -94,7 +97,12 @@ public class CamShake : MonoBehaviour
         }
     }
 
-    private void CamShakeStart(bool isHorizontalShake, float timeInput) //가로로 떨림 판별, 떨리는 시간
+    /// <summary>
+    /// 카메라 흔들림 효과 함수
+    /// </summary>
+    /// <param name="isHorizontalShake"> 가로로 흔들림 판별(false이면 세로로 흔들림) </param>
+    /// <param name="timeInput"> 흔들림 효과 시간 </param>
+    private void CamShakeStart(bool isHorizontalShake, float timeInput)
     {
         if (isGameClear == false)
         {
@@ -114,39 +122,53 @@ public class CamShake : MonoBehaviour
         }
     }
 
-    private void RepetitionSetting()
+    /// <summary>
+    /// 실시간 카메라 Y좌표 업데이트 함수
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator RepetitionSetting()
     {
-        if (isGameClear == false)
+        while (true)
         {
             initialPosition.y = rigid.transform.position.y;
+            if (isGameClear)
+            {
+                yield break;
+            }
+            yield return null;
         }
     }
 
+    /// <summary>
+    /// 점프 시작 시 카메라 움직임 호출 함수
+    /// </summary>
     private void CallingStartJump()
     {
-        if (isGameClear == false)
-        {
-            startJumpCoroutine = StartJump();
-            StartCoroutine(startJumpCoroutine);
-        }
+        startJumpCoroutine = StartJump();
+        StartCoroutine(startJumpCoroutine);
     }
 
+    /// <summary>
+    /// 점프 종료 시 카메라 움직임
+    /// </summary>
+    /// <param name="isPlayerDead"> 현재 플레이어 죽음 판별 </param>
     private void StopJump(bool isPlayerDead)
     {
-        if (isGameClear == false)
+        if (isPlayerDead && startJumpCoroutine != null)
         {
-            if (isPlayerDead && startJumpCoroutine != null)
-            {
-                StopCoroutine(startJumpCoroutine);
-            }
-
-            rigid.transform.position = objStartPosition;
-            transform.position = camStartposition;
-            rigid.velocity = Vector2.zero;
-            rigid.gravityScale = 0;
+            StopCoroutine(startJumpCoroutine);
         }
+
+        rigid.transform.position = objStartPosition;
+        transform.position = camStartposition;
+        rigid.velocity = Vector2.zero;
+        rigid.gravityScale = 0;
     }
 
+    /// <summary>
+    /// 점프 시작 시 카메라 움직임
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator StartJump()
     {
         rigid.AddForce(Vector2.up * jumpCamPower_F, ForceMode2D.Impulse);
@@ -160,6 +182,11 @@ public class CamShake : MonoBehaviour
         rigid.gravityScale = 1.5f;
     }
 
+    /// <summary>
+    /// 카메라 가로 흔들림 효과 함수
+    /// </summary>
+    /// <param name="shakeAmount"> 흔들림 강도 </param>
+    /// <returns></returns>
     IEnumerator CamHorizontalShake(float shakeAmount) 
     {
         int multiplication = -1;
@@ -182,6 +209,11 @@ public class CamShake : MonoBehaviour
         transform.position = initialPosition;
     }
 
+    /// <summary>
+    /// 카메라 세로 흔들림 효과 함수
+    /// </summary>
+    /// <param name="shakeAmount"> 흔들림 강도 </param>
+    /// <returns></returns>
     IEnumerator CamVerticalShake(float shakeAmount)
     {
         int multiplication = -1;
@@ -204,4 +236,9 @@ public class CamShake : MonoBehaviour
 
         transform.position = initialPosition;
     }
+
+    //if (Input.GetKeyDown(KeyCode.F1))
+    //{
+    //    bloom.intensity.value += 10;
+    //}
 }

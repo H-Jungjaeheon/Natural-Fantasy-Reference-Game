@@ -71,31 +71,35 @@ public class BattleButtonManager : Singleton<BattleButtonManager>
     private void StartSetting()
     {
         playerComponent = BattleSceneManager.Instance.Player;
-        SkillChooseButton.onClick.AddListener(() => ActionButtonsSetActive(false, true, true));
-        OutSkillChooseButton.onClick.AddListener(() => ActionButtonsSetActive(true, false, false));
+        SkillChooseButton.onClick.AddListener(() => ButtonsPageChange(false, true));
+        OutSkillChooseButton.onClick.AddListener(() => ButtonsPageChange(true, false));
         SkillButtons[(int)Skills.FirstSkill].onClick.AddListener(() => playerComponent.SkillUse(1, 5));
     }
 
+    public void ActionButtonsetActive(bool setActive) => buttonObj.SetActive(setActive);
+
     /// <summary>
-    /// 매개변수 : 기본 페이지 활성화 여부, 스킬 페이지 활성화 여부, 스킬 스크롤 초기화 여부
+    /// 행동 버튼 비활성화 or 활성화
     /// </summary>
-    /// <param name="firstPageSetActive"></param>
-    /// <param name="secondPageSetActive"></param>
-    public void ActionButtonsSetActive(bool firstPageSetActive, bool secondPageSetActive, bool isScrollInitialization) 
+    /// <param name="firstPageSetActive"> 기본 버튼 페이지 활성화 여부(false면 스킬 버튼 페이지 활성화) </param>
+    /// <param name="isScrollInitialization"> 스킬 버튼 스크롤 초기화 여부 </param>
+    public void ButtonsPageChange(bool firstPageSetActive, bool isScrollInitialization) 
     {
-        if (firstPageSetActive)
+        if (firstPageSetActive) //현재 페이지 상태 변경
         {
             nowButtonPage = ButtonPage.FirstPage;
         }
-        else if(secondPageSetActive)
+        else
         {
             nowButtonPage = ButtonPage.SecondPage;
-            if (isScrollInitialization)
+
+            if (isScrollInitialization) //초기화 매개변수가 참일때 스킬 스크롤 초기화
             {
                 content.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, 20, 0);
             }
         }
-        ButtonPageObjs[(int)ButtonPage.FirstPage].SetActive(firstPageSetActive);
-        ButtonPageObjs[(int)ButtonPage.SecondPage].SetActive(secondPageSetActive);
+
+        ButtonPageObjs[(int)ButtonPage.FirstPage].SetActive(firstPageSetActive); //기본 버튼 페이지 활성 or 비활성
+        ButtonPageObjs[(int)ButtonPage.SecondPage].SetActive(!firstPageSetActive); //스킬 버튼 페이지 활성 or 비활성
     }
 }

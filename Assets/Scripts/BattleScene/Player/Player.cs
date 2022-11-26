@@ -74,7 +74,7 @@ public class Player : BasicUnitScript
     #region 속성 관련 변수
     private float maxChangePropertyCoolTime = 35; //최대 속성 변경 시간
 
-    private float nowChangePropertyCoolTime; //현재 속성 변경 시간
+    public float nowChangePropertyCoolTime; //현재 속성 변경 시간
     
     public float NowChangePropertyCoolTime
     {
@@ -386,7 +386,7 @@ public class Player : BasicUnitScript
         Invincibility(true);
         hpText.color = hpTextColors[(int)NowStatUIState.Invincibility];
 
-        battleButtonManagerInstance.ActionButtonsSetActive(false, false, false);
+        battleButtonManagerInstance.ActionButtonsetActive(false);
         transform.rotation = Quaternion.identity;
 
         if (isChangeBasicProperty)
@@ -444,14 +444,7 @@ public class Player : BasicUnitScript
             hpText.color = hpTextColors[(int)NowStatUIState.Basic];
         }
 
-        if (battleButtonManagerInstance.nowButtonPage == ButtonPage.FirstPage)
-        {
-            battleButtonManagerInstance.ActionButtonsSetActive(true, false, true);
-        }
-        else
-        {
-            battleButtonManagerInstance.ActionButtonsSetActive(false, true, false);
-        }
+        battleButtonManagerInstance.ActionButtonsetActive(true);
 
         propertyTimeCount = CountDownPropertyTimes();
         StartCoroutine(propertyTimeCount); 
@@ -530,8 +523,10 @@ public class Player : BasicUnitScript
 
         nowState = NowState.Deflecting;
         nowDefensivePosition = DefensePos.None;
-        battleButtonManagerInstance.ActionButtonsSetActive(false, false, false);
         transform.rotation = Quaternion.Euler(0, setRotation, 0);
+
+        battleButtonManagerInstance.ActionButtonsetActive(false);
+
         ChangeAttackRange(new Vector2(0.85f, 2.68f), new Vector2(0.06f, -0.08f));
 
         animator.SetBool("Paring", true);
@@ -564,7 +559,7 @@ public class Player : BasicUnitScript
 
         if (isWaiting == false && isChangePropertyReady == false)
         {
-            battleButtonManagerInstance.ActionButtonsSetActive(true, false, false);
+            battleButtonManagerInstance.ActionButtonsetActive(true);
         }
 
         if (nowActionCoolTime != 0)
@@ -601,7 +596,8 @@ public class Player : BasicUnitScript
 
                     if (isChangePropertyReady == false)
                     {
-                        battleButtonManagerInstance.ActionButtonsSetActive(true, false, false);
+                        battleButtonManagerInstance.ActionButtonsetActive(true);
+                        battleButtonManagerInstance.ButtonsPageChange(true, false);
                     }
                     break;
                 }
@@ -633,7 +629,7 @@ public class Player : BasicUnitScript
             if (nowActionCoolTime < maxActionCoolTime)
             {
                 ActionCoolTimeBarSetActive(true);
-                battleButtonManagerInstance.ActionButtonsSetActive(false, false, false);
+                battleButtonManagerInstance.ActionButtonsetActive(false);
             }
 
             StartCoroutine(UISetting());
@@ -651,7 +647,7 @@ public class Player : BasicUnitScript
 
             transform.rotation = Quaternion.Euler(0, 0, 0);
 
-            battleButtonManagerInstance.ActionButtonsSetActive(false, false, false);
+            battleButtonManagerInstance.ActionButtonsetActive(false);
 
             CamShake.JumpStart();
 
@@ -666,14 +662,7 @@ public class Player : BasicUnitScript
 
             if (isWaiting == false && isChangePropertyReady == false)
             {
-                if (battleButtonManagerInstance.nowButtonPage == ButtonPage.SecondPage)
-                {
-                    battleButtonManagerInstance.ActionButtonsSetActive(false, true, false);
-                }
-                else
-                {
-                    battleButtonManagerInstance.ActionButtonsSetActive(true, false, false);
-                }
+                battleButtonManagerInstance.ActionButtonsetActive(true);
             }
 
             animator.SetBool("JumpIntermediateMotion", false);
@@ -710,7 +699,7 @@ public class Player : BasicUnitScript
         if (nowState == NowState.Standingby)
         {
             nowState = NowState.Attacking;
-            battleButtonManagerInstance.ActionButtonsSetActive(false, false, false);
+            battleButtonManagerInstance.ActionButtonsetActive(false);
             StartCoroutine(GoToAttack());
         }
     }
@@ -723,7 +712,7 @@ public class Player : BasicUnitScript
         if (nowState == NowState.Standingby)
         {
             nowState = NowState.Resting;
-            battleButtonManagerInstance.ActionButtonsSetActive(false, false, false);
+            battleButtonManagerInstance.ActionButtonsetActive(false);
             StartCoroutine(Resting());
         }
     }
@@ -759,7 +748,8 @@ public class Player : BasicUnitScript
 
         if (isChangePropertyReady == false)
         {
-            battleButtonManagerInstance.ActionButtonsSetActive(true, false, false);
+            battleButtonManagerInstance.ActionButtonsetActive(true);
+            battleButtonManagerInstance.ButtonsPageChange(true, false);
         }
     }
 
@@ -955,7 +945,8 @@ public class Player : BasicUnitScript
             nowState = NowState.Attacking;
             Energy -= nowUseSkillNeedEnergy;
 
-            battleButtonManagerInstance.ActionButtonsSetActive(false, false, false);
+            battleButtonManagerInstance.ButtonsPageChange(true, false);
+            battleButtonManagerInstance.ActionButtonsetActive(false);
 
             switch (nowUseSkillIndex)
             {
@@ -1050,7 +1041,7 @@ public class Player : BasicUnitScript
         AngelPropertyBuff(true);
         ActionCoolTimeBarSetActive(false);
 
-        battleButtonManagerInstance.ActionButtonsSetActive(false, false, false);
+        battleButtonManagerInstance.ActionButtonsetActive(false);
 
         while (true)
         {
@@ -1079,7 +1070,8 @@ public class Player : BasicUnitScript
         nowActionCoolTime = maxActionCoolTime;
         WaitingTimeStart();
 
-        battleButtonManagerInstance.ActionButtonsSetActive(true, false, false);
+        battleButtonManagerInstance.ActionButtonsetActive(true);
+        battleButtonManagerInstance.ButtonsPageChange(true, false);
 
         while (maxPropertyTimeLimit > NowPropertyTimeLimit)
         {
@@ -1154,7 +1146,7 @@ public class Player : BasicUnitScript
 
         animator.SetBool("Stuning", true);
         nowDefensivePosition = DefensePos.None;
-        battleButtonManagerInstance.ActionButtonsSetActive(false, false, false);
+        battleButtonManagerInstance.ActionButtonsetActive(false);
 
         yield return new WaitForSeconds(0.2f);
 
@@ -1172,7 +1164,8 @@ public class Player : BasicUnitScript
 
         if (isChangePropertyReady == false && Hp > 0)
         {
-            battleButtonManagerInstance.ActionButtonsSetActive(true, false, false);
+            battleButtonManagerInstance.ActionButtonsetActive(true);
+            battleButtonManagerInstance.ButtonsPageChange(true, false);
         }
 
         WaitingTimeStart();

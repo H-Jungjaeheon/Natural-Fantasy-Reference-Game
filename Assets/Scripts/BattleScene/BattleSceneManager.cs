@@ -266,7 +266,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         nowColor = colors[(int)Colors.Black];
         nowAlpha = 1;
 
-        bbmInstance.ActionButtonsSetActive(false, false, false);
+        bbmInstance.ActionButtonsetActive(false);
 
         for (int nowIndex = 0; nowIndex < unitStatUIObj.Length; nowIndex++)
         {
@@ -372,7 +372,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
             unitStatUIObj[nowIndex].SetActive(true);
         }
 
-        bbmInstance.ActionButtonsSetActive(true, false, false);
+        bbmInstance.ActionButtonsetActive(true);
     }
 
     public void ChangeScene(string changeSceneName)

@@ -21,14 +21,11 @@ public class PlayerHpRecoveryBead : MonoBehaviour
         StartSetting();
     }
 
-    void Update()
-    {
-        DeleteTimeLimit();
-        DeterminePlayerProperties();
-    }
-
     private void StartSetting()
     {
+        StartCoroutine(DeleteTimeLimit());
+        StartCoroutine(DeterminePlayerProperties());
+
         maxDeleteTimeLimit = 5;
         OP = ObjectPool.Instance;
         Player = BattleSceneManager.Instance.Player;
@@ -51,17 +48,21 @@ public class PlayerHpRecoveryBead : MonoBehaviour
         }
     }
 
-    private void DeleteTimeLimit()
+    private IEnumerator DeleteTimeLimit()
     {
-        nowDeleteTimeLimit += Time.deltaTime;
-        if (nowDeleteTimeLimit >= maxDeleteTimeLimit)
+        while (true)
         {
-            DeleteSetting();
+            nowDeleteTimeLimit += Time.deltaTime;
+            if (nowDeleteTimeLimit >= maxDeleteTimeLimit)
+            {
+                DeleteSetting();
+                yield break;
+            }
+            yield return null;
         }
     }
 
-
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision) //나중에 인터페이스로 충돌 상호작용 제작
     {
         if (collision.gameObject.CompareTag("Player"))
         {
@@ -77,11 +78,16 @@ public class PlayerHpRecoveryBead : MonoBehaviour
         Player.NowNaturePassiveCount = 0;
     }
 
-    private void DeterminePlayerProperties()
+    private IEnumerator DeterminePlayerProperties()
     {
-        if (Player.nowProperty != NowPlayerProperty.NatureProperty)
+        while (true)
         {
-            DeleteSetting();
+            if (Player.nowProperty != NowPlayerProperty.NatureProperty)
+            {
+                DeleteSetting();
+                yield break;
+            }
+            yield return null;
         }
     }
 }
