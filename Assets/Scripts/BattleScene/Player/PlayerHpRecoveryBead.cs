@@ -23,12 +23,12 @@ public class PlayerHpRecoveryBead : MonoBehaviour
 
     private void StartSetting()
     {
-        StartCoroutine(DeleteTimeLimit());
-        StartCoroutine(DeterminePlayerProperties());
-
         maxDeleteTimeLimit = 5;
         OP = ObjectPool.Instance;
-        Player = BattleSceneManager.Instance.Player;
+        Player = BattleSceneManager.Instance.player;
+
+        StartCoroutine(DeleteTimeLimit());
+        StartCoroutine(DeterminePlayerProperties());
     }
 
     private void OnEnable()

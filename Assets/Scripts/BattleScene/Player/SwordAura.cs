@@ -69,7 +69,7 @@ public class SwordAura : MonoBehaviour
         OnEnableSetting();
     }
 
-    void FixedUpdate()
+    void Update()
     {
         AuraMove();
         AuraSpin();
@@ -78,7 +78,7 @@ public class SwordAura : MonoBehaviour
     private void StartSetting()
     {
         bsm = BattleSceneManager.Instance;
-        playerScript = bsm.Player.GetComponent<Player>();
+        playerScript = bsm.player.GetComponent<Player>();
 
         spawnPlusVector = new Vector2(2.5f, 0);
         movingPlusVector = new Vector2(speed, 0);
@@ -94,16 +94,16 @@ public class SwordAura : MonoBehaviour
     public void OnEnableSetting()
     {
         sR.sprite = swordAuraImages[(int)NowSwordAuraState.Basic];
-        transform.position = bsm.Player.transform.position + (Vector3)spawnPlusVector;
+        transform.position = bsm.player.transform.position + (Vector3)spawnPlusVector;
         transform.rotation = Quaternion.identity;
         damage = 0;
         damage += (4 + 0); //나중에 스킬 강화나 데미지 강화 레벨에 비례해서 증가
         isEnemyHit = false;
     }
 
-    private void AuraMove() => transform.position += (Vector3)movingPlusVector * Time.deltaTime;
+    private void AuraMove() => transform.position += (Vector3)movingPlusVector * Time.unscaledDeltaTime;
 
-    private void AuraSpin() => transform.eulerAngles += basicSpinVector * Time.deltaTime;
+    private void AuraSpin() => transform.eulerAngles += basicSpinVector * Time.unscaledDeltaTime;
     
     private void OnTriggerEnter2D(Collider2D collision)
     {

@@ -331,7 +331,7 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     protected ObjectPool objectPoolInstance; //오브젝트 풀 싱글톤 인스턴스
 
-    protected BattleSceneManager bsm;
+    protected BattleSceneManager bsm; //배틀 씬 매니저 싱글톤 인스턴스
 
     protected BattleButtonManager battleButtonManagerInstance; //배틀 버튼 매니저 싱글톤 인스턴스
 
@@ -368,6 +368,11 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     protected abstract void StartSetting();
 
+    /// <summary>
+    /// 데미지가 들어왔을 때 실행하는 함수
+    /// </summary>
+    /// <param name="damage"> 들어온 데미지 </param>
+    /// <param name="isDefending"> 현재 들어온 공격의 방어 성공 유무 </param>
     public virtual void Hit(float damage, bool isDefending)
     {
         if (isInvincibility == false)
@@ -379,7 +384,7 @@ public abstract class BasicUnitScript : MonoBehaviour
             }
             else
             {
-                spriteRenderer.color = hitColor;
+                spriteRenderer.color = hitColor; //맞았을 때의 효과 : 색 변경
                 Hp -= damage;
                 DreamyFigure += 2;
                 StartCoroutine(ChangeToBasicColor());
@@ -387,17 +392,25 @@ public abstract class BasicUnitScript : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 맞았을 때의 효과 : 원래 색으로 변경
+    /// </summary>
+    /// <returns></returns>
     protected IEnumerator ChangeToBasicColor()
     {
         yield return changeToBasicColorDelay;
         spriteRenderer.color = returnBasicColor;
     }
 
+    /// <summary>
+    /// 체력 줄어드는 체력바 효과 함수
+    /// </summary>
+    /// <returns></returns>
     protected IEnumerator HpDiminishedProduction()
     {
         float nowReductionSpeed = MaxHp / 12;
         isHpDiminishedProduction = true;
-        yield return new WaitForSeconds(0.7f);
+        yield return new WaitForSeconds(0.6f);
         while (lightHp > Hp)
         {
             lightHp -= Time.deltaTime * nowReductionSpeed;

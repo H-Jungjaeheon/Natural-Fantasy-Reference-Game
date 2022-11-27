@@ -51,7 +51,7 @@ public class EnemysHowitzerBullet : MonoBehaviour
 
     IEnumerator OrbitalIndication()
     {
-        onEnablePos.x = BattleSceneManager.Instance.Player.transform.position.x;
+        onEnablePos.x = BattleSceneManager.Instance.player.transform.position.x;
         onEnablePos.y = startYPos;
         transform.position = onEnablePos;
 

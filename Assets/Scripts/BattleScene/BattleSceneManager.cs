@@ -131,19 +131,17 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     private TextMeshProUGUI goodAmountText;
     #endregion
 
-    [SerializeField]
-    [Tooltip("플레이어, 보스 스탯 UI 오브젝트")]
-    private GameObject[] unitStatUIObj;
+    [Tooltip("스탯(플레이어, 보스) UI 오브젝트")]
+    public GameObject statUIObj;
 
     [SerializeField]
     [Tooltip("카메라 흔들림 컴포넌트")]
     private CamShake csComponent;
 
-    [HideInInspector]
-    public Player Player;
+    public Player player;
 
     [HideInInspector]
-    public GameObject Enemy;
+    public GameObject enemy;
 
     [HideInInspector]
     public NowGameState nowGameState;
@@ -182,11 +180,14 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         mainCam = Camera.main;
         gmInstance = GameManager.Instance;
         bbmInstance = BattleButtonManager.Instance;
+
         nowBattleSceneOptionState = BattleOrMainOptionState.None;
 
         gmInstance.nowSceneState = NowSceneState.Ingame;
 
         nowBattleSceneOptionState = BattleOrMainOptionState.None;
+
+        playerCharacterPos = player.transform.position;
 
         StartCoroutine(StartFaidAnim());
         StartCoroutine(GamePauseObjOnOrOff());
@@ -261,17 +262,18 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         nowBattleSceneOptionState = (BattleOrMainOptionState)nowChange;
     }
 
-    IEnumerator StartFaidAnim() //처음 게임 페이드 인 연출
+    /// <summary>
+    /// 전투 시작 시 페이드 연출
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator StartFaidAnim()
     {
         nowColor = colors[(int)Colors.Black];
         nowAlpha = 1;
 
-        bbmInstance.ActionButtonsetActive(false);
+        bbmInstance.ActionButtonSetActive(false);
 
-        for (int nowIndex = 0; nowIndex < unitStatUIObj.Length; nowIndex++)
-        {
-            unitStatUIObj[nowIndex].SetActive(false);
-        }
+        statUIObj.SetActive(false);
 
         nowGameState = NowGameState.GameReady;
 
@@ -294,6 +296,10 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         StartCoroutine(IntroducingTheStageAnim());
     }
 
+    /// <summary>
+    /// 게임 인트로 애니메이션 함수(보스 소개)
+    /// </summary>
+    /// <returns></returns>
     IEnumerator IntroducingTheStageAnim()
     {
         nowColor = colors[(int)Colors.Black];
@@ -367,17 +373,9 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         faidObj.SetActive(false);
         nowGameState = NowGameState.Playing;
 
-        for (int nowIndex = 0; nowIndex < unitStatUIObj.Length; nowIndex++)
-        {
-            unitStatUIObj[nowIndex].SetActive(true);
-        }
+        statUIObj.SetActive(true);
 
-        bbmInstance.ActionButtonsetActive(true);
-    }
-
-    public void ChangeScene(string changeSceneName)
-    {
-        StartCoroutine(SceneChangeFaidOut(changeSceneName));
+        bbmInstance.ActionButtonSetActive(true);
     }
 
     IEnumerator SceneChangeFaidOut(string changeSceneName)
@@ -403,6 +401,10 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         SceneManager.LoadScene(changeSceneName);
     }
 
+    /// <summary>
+    /// 게임 마무리 애니메이션 함수
+    /// </summary>
+    /// <param name="isGameOver"> 게임오버 판별 </param>
     public void StartGameEndPanelAnim(bool isGameOver)
     {
         nowGameState = NowGameState.GameEnd;
@@ -416,14 +418,20 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         {
             csComponent.GameEndSetting();
 
-            bbmInstance.statUIObj.SetActive(false);
-            bbmInstance.buttonObj.SetActive(false);
+            statUIObj.SetActive(false);
+            bbmInstance.ActionButtonSetActive(false);
+
+            player.GameClearSetting();
 
             StartCoroutine(BossDeadAnim());
         }
 
     }
 
+    /// <summary>
+    /// 플레이어 사망(게임 오버)시 페이드 애니메이션 함수
+    /// </summary>
+    /// <returns></returns>
     IEnumerator PlayerDeadAnim()
     {
         nowColor = colors[(int)Colors.White];

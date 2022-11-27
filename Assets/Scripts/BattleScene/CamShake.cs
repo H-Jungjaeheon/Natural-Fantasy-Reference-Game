@@ -83,7 +83,7 @@ public class CamShake : MonoBehaviour
     /// <returns></returns>
     IEnumerator GameEndCamAnim()
     {
-        Vector3 bossPos = BattleSceneManager.Instance.Enemy.transform.position;
+        Vector3 bossPos = BattleSceneManager.Instance.enemy.transform.position;
 
         bossPos.y -= 4.6f;
         bossPos.z = -10;
@@ -151,10 +151,10 @@ public class CamShake : MonoBehaviour
     /// <summary>
     /// 점프 종료 시 카메라 움직임
     /// </summary>
-    /// <param name="isPlayerDead"> 현재 플레이어 죽음 판별 </param>
-    private void StopJump(bool isPlayerDead)
+    /// <param name="isStopJumpCoroutine"> 점프 시작 효과 코루틴 종료 요청 </param>
+    private void StopJump(bool isStopJumpCoroutine)
     {
-        if (isPlayerDead && startJumpCoroutine != null)
+        if (isStopJumpCoroutine && startJumpCoroutine != null)
         {
             StopCoroutine(startJumpCoroutine);
         }
@@ -195,7 +195,7 @@ public class CamShake : MonoBehaviour
         for (int nowShakeCount = 0; nowShakeCount < 11; nowShakeCount++)
         {
             nowCamPos.x = shakeAmount * multiplication;
-            nowCamPos.y = (BattleSceneManager.Instance.Player.nowState == NowState.Jumping) ? initialPosition.y : objStartPosition.y;
+            nowCamPos.y = (BattleSceneManager.Instance.player.nowState == NowState.Jumping) ? initialPosition.y : objStartPosition.y;
 
             rigid.transform.position = nowCamPos;
 

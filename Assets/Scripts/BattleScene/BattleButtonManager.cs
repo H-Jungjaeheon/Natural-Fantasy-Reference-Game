@@ -19,9 +19,6 @@ public class BattleButtonManager : Singleton<BattleButtonManager>
     [Tooltip("버튼 오브젝트")]
     public GameObject buttonObj;
 
-    [Tooltip("스탯 UI 오브젝트")]
-    public GameObject statUIObj;
-
     #region 행동 버튼모음
     [Header("행동 버튼모음")]
     [Tooltip("스킬선택 버튼")]
@@ -62,21 +59,23 @@ public class BattleButtonManager : Singleton<BattleButtonManager>
         }
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         StartSetting();
     }
 
+    /// <summary>
+    /// 시작 세팅 모음
+    /// </summary>
     private void StartSetting()
     {
-        playerComponent = BattleSceneManager.Instance.Player;
+        playerComponent = BattleSceneManager.Instance.player;
         SkillChooseButton.onClick.AddListener(() => ButtonsPageChange(false, true));
         OutSkillChooseButton.onClick.AddListener(() => ButtonsPageChange(true, false));
         SkillButtons[(int)Skills.FirstSkill].onClick.AddListener(() => playerComponent.SkillUse(1, 5));
     }
 
-    public void ActionButtonsetActive(bool setActive) => buttonObj.SetActive(setActive);
+    public void ActionButtonSetActive(bool setActive) => buttonObj.SetActive(setActive);
 
     /// <summary>
     /// 행동 버튼 비활성화 or 활성화

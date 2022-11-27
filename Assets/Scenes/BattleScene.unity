@@ -527,7 +527,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isDontDestroyOnLoad: 0
   buttonObj: {fileID: 2019013854}
-  statUIObj: {fileID: 1292796639}
   SkillChooseButton: {fileID: 619574704}
   OutSkillChooseButton: {fileID: 1614225774}
   SkillButtons:
@@ -1855,7 +1854,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!82 &422841400
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2641,8 +2640,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 30
-  m_fontSizeBase: 30
+  m_fontSize: 27
+  m_fontSizeBase: 27
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -5994,12 +5993,10 @@ MonoBehaviour:
   getGoodObj: {fileID: 1638764455}
   getGoodAnim: {fileID: 2100326395}
   goodAmountText: {fileID: 681186756}
-  unitStatUIObj:
-  - {fileID: 198296260}
-  - {fileID: 1672928958}
+  statUIObj: {fileID: 1292796639}
   csComponent: {fileID: 824615374}
-  Player: {fileID: 1717870245}
-  Enemy: {fileID: 1159378193}
+  player: {fileID: 1717870245}
+  enemy: {fileID: 0}
   nowGameState: 0
 --- !u!4 &1076351709
 Transform:
@@ -6176,8 +6173,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 30
-  m_fontSizeBase: 30
+  m_fontSize: 28
+  m_fontSizeBase: 28
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -6624,7 +6621,7 @@ MonoBehaviour:
   nullActionCoolTimeImage: {fileID: 154340400}
   actionCoolTimeImage: {fileID: 1074118521}
   actionCoolTimeObjPlusPos: {x: 0, y: -2.1}
-  maxActionCoolTime: 3
+  maxActionCoolTime: 3.1
   setJumpGravityScale_F: 2
   jumpPower_F: 22
   nowDefensivePosition: 0
@@ -8218,7 +8215,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -18, y: 40}
+  m_AnchoredPosition: {x: -16.5, y: 40}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1513043155
@@ -8243,8 +8240,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 10
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 3ee4c3128ff499145bbf0fcc6946f212, type: 2}
-  m_sharedMaterial: {fileID: 7794740675150224420, guid: 3ee4c3128ff499145bbf0fcc6946f212, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: ada401c159fd2da4bac3b64c7aeee562, type: 2}
+  m_sharedMaterial: {fileID: -7133704171958719014, guid: ada401c159fd2da4bac3b64c7aeee562, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -8268,8 +8265,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 28
-  m_fontSizeBase: 28
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -11049,7 +11046,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 200/200
+  m_text: 25/25
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ada401c159fd2da4bac3b64c7aeee562, type: 2}
   m_sharedMaterial: {fileID: -7133704171958719014, guid: ada401c159fd2da4bac3b64c7aeee562, type: 2}
@@ -11076,8 +11073,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 30
-  m_fontSizeBase: 30
+  m_fontSize: 28
+  m_fontSizeBase: 28
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

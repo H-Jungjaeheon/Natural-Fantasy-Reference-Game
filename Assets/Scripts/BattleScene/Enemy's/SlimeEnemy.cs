@@ -22,7 +22,7 @@ public class SlimeEnemy : BasicUnitScript
         isWaiting = true;
 
         bsm.enemyCharacterPos = transform.position;
-        bsm.Enemy = gameObject;
+        bsm.enemy = gameObject;
 
         Energy = MaxEnergy;
         Hp = MaxHp;
@@ -466,6 +466,9 @@ public class SlimeEnemy : BasicUnitScript
     {
         nowState = NowState.Dead;
         bsm.NowGetBasicGood += 50;
+
+        animator.SetTrigger("Dead");
+        spriteRenderer.sortingOrder = 5;
 
         rigid.velocity = Vector2.zero;
         rigid.gravityScale = 0;
