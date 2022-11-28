@@ -24,9 +24,10 @@ public class ObjectPool : Singleton<ObjectPool>
         for (int nowObjIndex = 0; nowObjIndex < usePrefabObjs.Length; nowObjIndex++)
         {
             objPools.Add(nowObjIndex, new Queue<GameObject>());
-            Initialize(1, nowObjIndex);//
+            Initialize(1, nowObjIndex);
         }
     }
+
     private void Initialize(int count, int nowPoolIndex) //시작 생성 (오브젝트 생성 개수, 현재 설정중인 풀 인덱스)
     {
         for (int nowCount = 0; nowCount < count; nowCount++)

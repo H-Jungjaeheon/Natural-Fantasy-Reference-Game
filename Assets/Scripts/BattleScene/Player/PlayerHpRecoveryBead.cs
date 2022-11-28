@@ -26,17 +26,19 @@ public class PlayerHpRecoveryBead : MonoBehaviour
         maxDeleteTimeLimit = 5;
         OP = ObjectPool.Instance;
         Player = BattleSceneManager.Instance.player;
+    }
 
-        StartCoroutine(DeleteTimeLimit());
-        StartCoroutine(DeterminePlayerProperties());
+    private void Update()
+    {
+        DeleteTimeLimit();
+        DeterminePlayerProperties(); 
     }
 
     private void OnEnable()
     {
         int upwardPlacementProbability = 35;
-
-        nowDeleteTimeLimit = 0;
         int randomSpawnPositionProbability = Random.Range(0, 100);
+
         if (randomSpawnPositionProbability < upwardPlacementProbability)
         {
             transform.position = new Vector2(-10, 5);
@@ -48,17 +50,13 @@ public class PlayerHpRecoveryBead : MonoBehaviour
         }
     }
 
-    private IEnumerator DeleteTimeLimit()
+    private void DeleteTimeLimit()
     {
-        while (true)
+        nowDeleteTimeLimit += Time.deltaTime;
+
+        if (nowDeleteTimeLimit >= maxDeleteTimeLimit)
         {
-            nowDeleteTimeLimit += Time.deltaTime;
-            if (nowDeleteTimeLimit >= maxDeleteTimeLimit)
-            {
-                DeleteSetting();
-                yield break;
-            }
-            yield return null;
+            DeleteSetting();
         }
     }
 
@@ -73,21 +71,18 @@ public class PlayerHpRecoveryBead : MonoBehaviour
 
     private void DeleteSetting()
     {
+        nowDeleteTimeLimit = 0;
+
         OP.ReturnObject(gameObject, (int)PoolObjKind.PlayerHpRecoveryBead);
         Player.isSpawnNatureBead = false;
         Player.NowNaturePassiveCount = 0;
     }
 
-    private IEnumerator DeterminePlayerProperties()
+    private void DeterminePlayerProperties()
     {
-        while (true)
+        if (Player.nowProperty != NowPlayerProperty.NatureProperty)
         {
-            if (Player.nowProperty != NowPlayerProperty.NatureProperty)
-            {
-                DeleteSetting();
-                yield break;
-            }
-            yield return null;
+            DeleteSetting();
         }
     }
 }
