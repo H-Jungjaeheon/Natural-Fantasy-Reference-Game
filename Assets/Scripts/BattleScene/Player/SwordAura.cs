@@ -75,6 +75,9 @@ public class SwordAura : MonoBehaviour
         AuraSpin();
     }
 
+    /// <summary>
+    /// 시작 세팅 함수
+    /// </summary>
     private void StartSetting()
     {
         bsm = BattleSceneManager.Instance;
@@ -85,12 +88,18 @@ public class SwordAura : MonoBehaviour
         basicSpinVector = new Vector3(0, 0, 2000);
     }
 
+    /// <summary>
+    /// 강화 성공 시 세팅 함수 
+    /// </summary>
     private void EnchantedSetting()
     {
         sR.sprite = swordAuraImages[(int)NowSwordAuraState.Enchanted];
         damage += 2; //나중에 스킬 강화나 데미지 강화 레벨에 비례해서 증가
     }
 
+    /// <summary>
+    /// 활성화시 세팅 함수
+    /// </summary>
     public void OnEnableSetting()
     {
         sR.sprite = swordAuraImages[(int)NowSwordAuraState.Basic];
@@ -101,8 +110,14 @@ public class SwordAura : MonoBehaviour
         isEnemyHit = false;
     }
 
+    /// <summary>
+    /// 검기 움직임 함수
+    /// </summary>
     private void AuraMove() => transform.position += (Vector3)movingPlusVector * Time.unscaledDeltaTime;
 
+    /// <summary>
+    /// 검기 회전 함수
+    /// </summary>
     private void AuraSpin() => transform.eulerAngles += basicSpinVector * Time.unscaledDeltaTime;
     
     private void OnTriggerEnter2D(Collider2D collision)
