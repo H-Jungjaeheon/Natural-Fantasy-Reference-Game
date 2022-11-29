@@ -5967,8 +5967,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a46a9f355caeb8429883af9a0db867b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thisDamageText: {fileID: 0}
-  textColors: []
+  thisDamageText: {fileID: 1261268472}
+  textColors:
+  - {r: 1, g: 0, b: 0, a: 1}
+  - {r: 1, g: 0.69879586, b: 0, a: 1}
+  - {r: 0, g: 0, b: 0, a: 1}
 --- !u!4 &1076187181
 Transform:
   m_ObjectHideFlags: 0
