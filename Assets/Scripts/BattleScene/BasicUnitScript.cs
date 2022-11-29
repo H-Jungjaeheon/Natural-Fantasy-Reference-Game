@@ -326,6 +326,10 @@ public abstract class BasicUnitScript : MonoBehaviour
     [Tooltip("타격 색 변경 후 원래 색으로 되돌림")]
     public Color returnBasicColor;
 
+    [SerializeField]
+    [Tooltip("데미지 텍스트 스폰 위치 정밀 조정(자신 위치에서 더해줌)")]
+    protected Vector3 plusVector;
+
     protected bool isResurrectionReady; //부활 준비 여부 판별
     #endregion
 
@@ -375,12 +379,16 @@ public abstract class BasicUnitScript : MonoBehaviour
     /// <param name="isDefending"> 현재 들어온 공격의 방어 성공 유무 </param>
     public virtual void Hit(float damage, bool isDefending)
     {
+        var damageText = objectPoolInstance.GetObject((int)PoolObjKind.DamageText); //데미지 텍스트 소환(오브젝트 풀)
+        float calculatedDamage = damage; //추가 연산을 끝낸 최종 데미지값
+
         if (isInvincibility == false)
         {
             if (isDefending)
             {
                 Energy -= 1;
                 DreamyFigure += 1;
+                damageText.GetComponent<DamageText>().TextCustom(TextState.Blocking, transform.position + plusVector, calculatedDamage);
             }
             else
             {
@@ -388,7 +396,12 @@ public abstract class BasicUnitScript : MonoBehaviour
                 Hp -= damage;
                 DreamyFigure += 2;
                 StartCoroutine(ChangeToBasicColor());
+                damageText.GetComponent<DamageText>().TextCustom(TextState.BasicDamage, transform.position + plusVector, calculatedDamage);
             }
+        }
+        else
+        {
+            damageText.GetComponent<DamageText>().TextCustom(TextState.Blocking, transform.position + plusVector, calculatedDamage);
         }
     }
 

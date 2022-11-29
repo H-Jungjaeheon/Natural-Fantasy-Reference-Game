@@ -296,6 +296,9 @@ public class Player : BasicUnitScript
     /// <param name="isDefending"> 방어중인지 판별 </param>
     public override void Hit(float damage, bool isDefending)
     {
+        var damageText = objectPoolInstance.GetObject((int)PoolObjKind.DamageText); //데미지 텍스트 소환(오브젝트 풀)
+        TextState nowTextState = TextState.Blocking; //현재 데미지 텍스트 상태
+
         if (IsInvincibility == false)
         {
             if (ShieldHp_F > 0 && !isDefending)
@@ -311,11 +314,21 @@ public class Player : BasicUnitScript
             else
             {
                 spriteRenderer.color = hitColor;
-                Hp -= nowProperty == NowPlayerProperty.ForceProperty ? damage * 2f : damage;
+
+                if (nowProperty == NowPlayerProperty.ForceProperty)
+                {
+                    damage *= 2;
+                }
+                nowTextState = TextState.BasicDamage; //나중에 치명타 추가되면 치명타 조건 구분해서 넣기
+
+                Hp -= damage;
+
                 DreamyFigure += 2;
                 StartCoroutine(ChangeToBasicColor());
             }
         }
+
+        damageText.GetComponent<DamageText>().TextCustom(nowTextState, transform.position + plusVector, damage);
     }
 
     /// <summary>
