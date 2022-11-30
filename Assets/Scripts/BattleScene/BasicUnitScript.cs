@@ -26,6 +26,13 @@ public enum NowState
     Dead
 }
 
+public enum StateColor
+{
+    BasicColor,
+    HitColor,
+    BurningColor
+}
+
 public enum NowEnemyProperty
 {
     Mutant,
@@ -314,17 +321,14 @@ public abstract class BasicUnitScript : MonoBehaviour
     protected Animator battleUIAnimator;
     #endregion
 
-    #region 맞았을 때의 요소 모음
-    [Header("맞았을 때의 요소 모음")]
+    #region 피해 요소 모음
+    [Header("피해 요소 모음")]
     [SerializeField]
     [Tooltip("자신의 스프라이트 렌더러")]
     protected SpriteRenderer spriteRenderer;
 
-    [Tooltip("타격 시 잠깐동안 캐릭터가 바뀔 색")]
-    public Color hitColor;
-
-    [Tooltip("타격 색 변경 후 원래 색으로 되돌림")]
-    public Color returnBasicColor;
+    [Tooltip("상태에 따른 유닛 색 모음")]
+    public Color[] stateColors;
 
     [SerializeField]
     [Tooltip("데미지 텍스트 스폰 위치 정밀 조정(자신 위치에서 더해줌)")]
@@ -391,7 +395,7 @@ public abstract class BasicUnitScript : MonoBehaviour
             }
             else
             {
-                spriteRenderer.color = hitColor; //맞았을 때의 효과 : 색 변경
+                spriteRenderer.color = stateColors[(int)StateColor.HitColor]; //맞았을 때의 효과 : 색 변경
                 Hp -= damage;
                 DreamyFigure += 2;
                 StartCoroutine(ChangeToBasicColor());
@@ -409,7 +413,14 @@ public abstract class BasicUnitScript : MonoBehaviour
     protected IEnumerator ChangeToBasicColor()
     {
         yield return changeToBasicColorDelay;
-        spriteRenderer.color = returnBasicColor;
+        if (isBurning)
+        {
+            spriteRenderer.color = stateColors[(int)StateColor.BurningColor];
+        }
+        else
+        {
+            spriteRenderer.color = stateColors[(int)StateColor.BasicColor];
+        }
     }
 
     /// <summary>
@@ -512,6 +523,7 @@ public abstract class BasicUnitScript : MonoBehaviour
             if (nowBurnDamageLimitTime >= maxBurnDamageLimitTime || Hp <= 0)
             {
                 isBurning = false;
+                spriteRenderer.color = stateColors[(int)StateColor.BasicColor];
                 nowBurnDamageStack = 0;
                 nowBurnDamageLimitTime = 0;
                 nowGiveBurnDamageTime = 0;
@@ -540,6 +552,7 @@ public abstract class BasicUnitScript : MonoBehaviour
         if (nowBurnDamageStack == 1)
         {
             isBurning = true;
+            spriteRenderer.color = stateColors[(int)StateColor.BurningColor];
             StartCoroutine(Burning());
         }
     }

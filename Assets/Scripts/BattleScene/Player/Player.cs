@@ -248,7 +248,7 @@ public class Player : BasicUnitScript
 
         isResurrectionOpportunityExists = true;
 
-        nextPropertyIndex = Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
+        nextPropertyIndex = (int)NowPlayerProperty.FlameProperty;//Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
         nowPropertyImage.sprite = nowPropertyIconImages[(int)nowProperty];
 
         Energy = MaxEnergy;
@@ -311,7 +311,7 @@ public class Player : BasicUnitScript
             }
             else
             {
-                spriteRenderer.color = hitColor;
+                spriteRenderer.color = stateColors[(int)StateColor.HitColor]; //맞았을 때의 효과 : 색 변경
 
                 if (nowProperty == NowPlayerProperty.ForceProperty)
                 {
