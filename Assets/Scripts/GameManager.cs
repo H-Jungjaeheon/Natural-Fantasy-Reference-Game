@@ -53,14 +53,6 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
-    private int slimeBossMaterial;
-
-    public int SlimeBossMaterial
-    {
-        get { return slimeBossMaterial; }
-        set { slimeBossMaterial = value; }
-    }
-
     private int reduceCoolTimeLevel;
     public int ReduceCoolTimeLevel 
     {
