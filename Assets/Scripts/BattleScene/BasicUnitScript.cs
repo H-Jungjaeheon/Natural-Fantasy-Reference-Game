@@ -380,7 +380,7 @@ public abstract class BasicUnitScript : MonoBehaviour
     public virtual void Hit(float damage, bool isDefending)
     {
         var damageText = objectPoolInstance.GetObject((int)PoolObjKind.DamageText); //데미지 텍스트 소환(오브젝트 풀)
-        float calculatedDamage = damage; //추가 연산을 끝낸 최종 데미지값
+        TextState nowTextState = TextState.Blocking; //현재 데미지 텍스트 상태
 
         if (isInvincibility == false)
         {
@@ -388,7 +388,6 @@ public abstract class BasicUnitScript : MonoBehaviour
             {
                 Energy -= 1;
                 DreamyFigure += 1;
-                damageText.GetComponent<DamageText>().TextCustom(TextState.Blocking, transform.position + plusVector, calculatedDamage);
             }
             else
             {
@@ -396,13 +395,11 @@ public abstract class BasicUnitScript : MonoBehaviour
                 Hp -= damage;
                 DreamyFigure += 2;
                 StartCoroutine(ChangeToBasicColor());
-                damageText.GetComponent<DamageText>().TextCustom(TextState.BasicDamage, transform.position + plusVector, calculatedDamage);
+                nowTextState = TextState.BasicDamage;
             }
         }
-        else
-        {
-            damageText.GetComponent<DamageText>().TextCustom(TextState.Blocking, transform.position + plusVector, calculatedDamage);
-        }
+
+        damageText.GetComponent<DamageText>().TextCustom(nowTextState, transform.position + plusVector, damage);
     }
 
     /// <summary>
