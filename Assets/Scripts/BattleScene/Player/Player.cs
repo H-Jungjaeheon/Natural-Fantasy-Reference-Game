@@ -246,8 +246,6 @@ public class Player : BasicUnitScript
         restWaitTime = 1.25f;
         maxNaturePassiveCount = 5;
 
-        nowState = NowState.Standingby;
-        nowProperty = NowPlayerProperty.BasicProperty;
         isResurrectionOpportunityExists = true;
 
         nextPropertyIndex = Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
