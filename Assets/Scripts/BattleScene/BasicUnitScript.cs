@@ -504,7 +504,7 @@ public abstract class BasicUnitScript : MonoBehaviour
             {
                 if (isInvincibility == false)
                 {
-                    Hp -= 1;
+                    Hit(1, false);
                 }
                 nowGiveBurnDamageTime = 0;
             }
