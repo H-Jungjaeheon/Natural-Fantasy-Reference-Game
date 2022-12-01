@@ -252,7 +252,7 @@ public class Player : BasicUnitScript
 
         isResurrectionOpportunityExists = true;
 
-        nextPropertyIndex = (int)NowPlayerProperty.FlameProperty;//Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
+        nextPropertyIndex = Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
         nowPropertyImage.sprite = nowPropertyIconImages[(int)nowProperty];
 
         Energy = MaxEnergy;
@@ -835,10 +835,24 @@ public class Player : BasicUnitScript
 
         int maxEnemyIndex;
 
+        switch (nowAttackCount)
+        {
+            case 1:
+                timingObj.HitActionTimingStart(10);
+                break;
+            case 2:
+                timingObj.HitActionTimingStart(15);
+                break;
+            case 3:
+                timingObj.HitActionTimingStart(8);
+                break;
+        }
+
         while (nowdelayTime < maxDelayTime)
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
+                timingObj.pressSpace(true);
                 isFail = true;
             }
             nowdelayTime += Time.deltaTime;
@@ -892,6 +906,7 @@ public class Player : BasicUnitScript
             nowattacktime += Time.deltaTime;
             if (Input.GetKeyDown(KeyCode.Space))
             {
+                timingObj.pressSpace(false);
                 isComplete = true;
             }
             yield return null;

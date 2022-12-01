@@ -8,17 +8,20 @@ public class HitActionTiming : MonoBehaviour
     [Tooltip("현재 타이밍 표시 바 오브젝트")]
     private GameObject barObj;
 
-    private Vector2 barStartPos = new Vector2(-0.9f, 0); //현재 타이밍 표시 바 시작 초기화 위치
+    private Vector2 barStartPos; //현재 타이밍 표시 바 시작 초기화 위치
 
     private Vector2 plusVector = new Vector2(0, 0);
 
     private const float maxDistance = 1.1f; //현재 타이밍 표시 바 최대 X값
 
-    private float barSpeed; //현재 타이밍 표시 바 속도
-    
     IEnumerator movingCoroutine;
 
     WaitForSeconds delay = new WaitForSeconds(0.5f);
+
+    private void Awake()
+    {
+        barStartPos = new Vector2(barObj.transform.position.x, barObj.transform.position.y);
+    }
 
     private void OnEnable()
     {
@@ -34,8 +37,8 @@ public class HitActionTiming : MonoBehaviour
     /// <param name="nowSpeed"> 현재 공격 타이밍 표시 바 속도 </param>
     public void HitActionTimingStart(float nowSpeed)
     {
-        gameObject.SetActive(true);
         plusVector.x = nowSpeed;
+        gameObject.SetActive(true);
     }
 
     /// <summary>
@@ -55,9 +58,10 @@ public class HitActionTiming : MonoBehaviour
             
         }
 
-        yield return delay;
+        //yield return delay;
 
         gameObject.SetActive(false); //나중에 실패 or 성공 연출 나오면 실패 연출 실행 후 끄기
+        yield return null;
     }
 
     /// <summary>
@@ -66,13 +70,16 @@ public class HitActionTiming : MonoBehaviour
     /// <returns></returns>
     IEnumerator barMoving()
     {
-        while (barObj.transform.position.x <= maxDistance)
+        print(barObj.transform.position.x);
+        print(maxDistance);
+
+        while (barObj.transform.position.x < maxDistance)
         {
             barObj.transform.Translate(plusVector * Time.deltaTime);
             yield return null;
         }
 
-        yield return delay;
+        //yield return delay;
 
         gameObject.SetActive(false); //나중에 실패 연출 나오면 실패 연출 실행 후 끄기
     }
