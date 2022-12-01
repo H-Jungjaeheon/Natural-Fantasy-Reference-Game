@@ -193,6 +193,10 @@ public class Player : BasicUnitScript
     [Tooltip("상태에 따른 체력바 배경 스프라이트 모음")]
     private Sprite[] nowStatHpUiBg;
 
+    [SerializeField]
+    [Tooltip("히트 액션 타이밍 표시 오브젝트")]
+    private HitActionTiming timingObj;
+
     #region 체력 텍스트 색 값들
     [Header("체력 텍스트 색 값들")]
     [SerializeField]
