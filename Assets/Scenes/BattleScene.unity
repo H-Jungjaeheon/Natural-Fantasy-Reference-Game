@@ -8498,6 +8498,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   barObj: {fileID: 1811611993}
+  playerObj: {fileID: 1717870240}
 --- !u!212 &1585697087
 SpriteRenderer:
   m_ObjectHideFlags: 0

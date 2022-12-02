@@ -70,10 +70,7 @@ public class HitActionTiming : MonoBehaviour
     /// <returns></returns>
     IEnumerator barMoving()
     {
-        print(barObj.transform.position.x);
-        print(maxDistance);
-
-        while (barObj.transform.position.x < maxDistance)
+        while (barObj.transform.localPosition.x < maxDistance)
         {
             barObj.transform.Translate(plusVector * Time.deltaTime);
             yield return null;

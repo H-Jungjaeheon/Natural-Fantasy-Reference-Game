@@ -841,10 +841,7 @@ public class Player : BasicUnitScript
                 timingObj.HitActionTimingStart(10);
                 break;
             case 2:
-                timingObj.HitActionTimingStart(15);
-                break;
-            case 3:
-                timingObj.HitActionTimingStart(8);
+                timingObj.HitActionTimingStart(11);
                 break;
         }
 
@@ -852,7 +849,7 @@ public class Player : BasicUnitScript
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                timingObj.pressSpace(true);
+                StartCoroutine(timingObj.pressSpace(true));
                 isFail = true;
             }
             nowdelayTime += Time.deltaTime;
@@ -906,7 +903,7 @@ public class Player : BasicUnitScript
             nowattacktime += Time.deltaTime;
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                timingObj.pressSpace(false);
+                StartCoroutine(timingObj.pressSpace(false));
                 isComplete = true;
             }
             yield return null;
