@@ -1021,10 +1021,13 @@ public class Player : BasicUnitScript
         float maxDelayTime = 0.6f;
         bool isFailEnchant = true;
 
+        timingObj.HitActionTimingStart(7);
+
         while (nowDelayTime < maxDelayTime)
         {
             if (Input.GetKeyDown(KeyCode.Space) && nowDelayTime > 0.4f && nowDelayTime < 0.55f)
             {
+                StartCoroutine(timingObj.pressSpace(false));
                 isFailEnchant = false;
             }
             nowDelayTime += Time.deltaTime;

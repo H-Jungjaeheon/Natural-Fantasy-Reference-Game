@@ -16,16 +16,16 @@ public class HitActionTiming : MonoBehaviour
 
     IEnumerator movingCoroutine;
 
-    WaitForSeconds delay = new WaitForSeconds(0.5f);
+    //WaitForSeconds delay = new WaitForSeconds(0.5f);
 
     private void Awake()
     {
-        barStartPos = new Vector2(barObj.transform.position.x, barObj.transform.position.y);
+        barStartPos = new Vector2(barObj.transform.localPosition.x, barObj.transform.localPosition.y);
     }
 
     private void OnEnable()
     {
-        barObj.transform.position = barStartPos;
+        barObj.transform.localPosition = barStartPos;
 
         movingCoroutine = barMoving();
         StartCoroutine(movingCoroutine);
