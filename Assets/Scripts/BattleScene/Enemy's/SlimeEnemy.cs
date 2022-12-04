@@ -5,6 +5,8 @@ public class SlimeEnemy : BasicUnitScript
 {
     private Vector2 speedVectorWithPattern = new Vector2(0, 0); //이동이 필요한 패턴 사용 시 사용할 속도 벡터
 
+    private Vector2 spawnPos = new Vector2(0, 0); //패턴에 소환하는 오브젝트들 초기 위치 설정 벡터
+
     private bool isPhysicalAttacking; //특정 패턴 사용 시 몸체 충돌 데미지 판정 판별 변수
 
     private int restLimitTurn;
@@ -88,7 +90,7 @@ public class SlimeEnemy : BasicUnitScript
         // StartCoroutine(ShootBullet()); //- 원거리 총알 발사 공격
         // StartCoroutine(HowitzerAttack()); //- 3연 곡사포 공격
         // StartCoroutine(LaserAttack()); //- 레이저 발사 공격
-
+        // StartCoroutine(TrapSkill()); //트랩 설치(2페이즈)
 
         if (nowState == NowState.Standingby)
         {
@@ -154,7 +156,6 @@ public class SlimeEnemy : BasicUnitScript
 
         while (transform.position.x > Targettransform.x) //이동중
         {
-            movetransform.x = Speed;
             transform.position -= movetransform * Time.deltaTime;
             yield return null;
         }
@@ -280,7 +281,6 @@ public class SlimeEnemy : BasicUnitScript
 
         while (transform.position.x < startPos_Vector.x)
         {
-            movetransform.x = Speed;
             transform.position += movetransform * Time.deltaTime;
             yield return null;
         }
@@ -336,7 +336,6 @@ public class SlimeEnemy : BasicUnitScript
         WaitForSeconds launchDelay = new WaitForSeconds(0.7f);
 
         nowState = NowState.Attacking;
-        
         Energy -= 3;
 
         //발사 애니메이션 실행
@@ -366,7 +365,6 @@ public class SlimeEnemy : BasicUnitScript
         int randLaunch = Random.Range(1, 101);
 
         nowState = NowState.Attacking;
-        
         Energy -= 5;
 
         if (randLaunch > 49)
@@ -409,16 +407,33 @@ public class SlimeEnemy : BasicUnitScript
 
     IEnumerator TrapSkill()
     {
+        WaitForSeconds shootDelay = new WaitForSeconds(0.65f);
+
+        nowState = NowState.Attacking;
+        Energy -= 3;
+
         //애니메이션 실행
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1.5f);
 
         for (int nowIndex = 0; nowIndex < 2; nowIndex++)
         {
+            var trapObj = objectPoolInstance.GetObject((int)PoolObjKind.SlimeEnemyTrap);
 
-            yield return new WaitForSeconds(0.5f);
+            spawnPos.x = 8.5f;
+            spawnPos.y = 1.2f;
+
+            trapObj.transform.position = spawnPos;
+            yield return shootDelay;
         }
 
-        yield return null;
+        if (Energy > 0)
+        {
+            WaitingTimeStart();
+        }
+        else
+        {
+            nowState = NowState.Standingby;
+        }
     }
 
     IEnumerator RainSkill()

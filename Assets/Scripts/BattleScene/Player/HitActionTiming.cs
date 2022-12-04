@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class HitActionTiming : MonoBehaviour
@@ -14,7 +13,7 @@ public class HitActionTiming : MonoBehaviour
 
     private const float maxDistance = 1.1f; //현재 타이밍 표시 바 최대 X값
 
-    IEnumerator movingCoroutine;
+    IEnumerator movingCoroutine; //현재 실행중인 타이밍 바 움직이는 코루틴
 
     //WaitForSeconds delay = new WaitForSeconds(0.5f);
 

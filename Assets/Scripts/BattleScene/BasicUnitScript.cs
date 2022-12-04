@@ -240,7 +240,11 @@ public abstract class BasicUnitScript : MonoBehaviour
     public float Speed 
     {
         get { return speed; }
-        set { speed = value; }
+        set 
+        {
+            speed = value;
+            movetransform.x = value;
+        }
     }
     #endregion
 
@@ -272,8 +276,9 @@ public abstract class BasicUnitScript : MonoBehaviour
     protected float maxGiveBurnDamageTime;
     #endregion
 
-    #region 디버프 관련 변수 모음
-    public bool isSlowing;
+    #region 이동속도 감소 디버프 관련 변수 모음
+    [HideInInspector]
+    public int hitSlowCount; //현재 충돌중인 이동속도 감소 효과 장애물 개수
     #endregion
 
     #region 스탯 UI 이미지 모음
@@ -385,7 +390,8 @@ public abstract class BasicUnitScript : MonoBehaviour
         objectPoolInstance = ObjectPool.Instance;
         battleButtonManagerInstance = BattleButtonManager.Instance;
 
-        startPos_Vector = transform.position;
+        startPos_Vector = transform.position; //시작 위치 저장
+        movetransform.x = Speed; //시작 이동속도로 움직임 벡터 X값 저장
 
         nowAttackCount_I = 1;
         nowActionCoolTime = 0;
@@ -588,13 +594,11 @@ public abstract class BasicUnitScript : MonoBehaviour
     {
         if (isDebuffOn)
         {
-            Speed -= (originalSpeed * percentage / 100);
-            isSlowing = true;
+            Speed = (originalSpeed - originalSpeed * percentage / 100);
         }
         else
         {
             Speed = originalSpeed;
-            isSlowing = false;
         }
     }
 

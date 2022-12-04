@@ -796,7 +796,6 @@ public class Player : BasicUnitScript
 
         while (transform.position.x < targettransform.x) //이동중
         {
-            movetransform.x = Speed;
             transform.position += movetransform * Time.deltaTime;
             yield return null;
         }
@@ -956,7 +955,6 @@ public class Player : BasicUnitScript
         animator.SetBool("Moving", true);
         while (transform.position.x > startPos_Vector.x)
         {
-            movetransform.x = Speed;
             transform.position -= movetransform * Time.deltaTime;
             yield return null;
         }

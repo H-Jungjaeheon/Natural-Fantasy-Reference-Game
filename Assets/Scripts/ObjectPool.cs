@@ -9,7 +9,8 @@ public enum PoolObjKind
     SlimeEnemyBullet,
     SlimeEnemyHowitzerBullet,
     SlimeEnemyLaser,
-    DamageText
+    DamageText,
+    SlimeEnemyTrap
 }
 
 public class ObjectPool : Singleton<ObjectPool>
