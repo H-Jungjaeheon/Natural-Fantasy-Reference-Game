@@ -211,16 +211,6 @@ public class Player : BasicUnitScript
     private Color[] propertyColors;
     #endregion
 
-    #region 스탯 원본 수치 (버프/디버프에 사용)
-    private float originalDamage; //현재 플레이어 기본 데미지 수치
-
-    private float originalMaxActionCoolTime; //현재 플레이어 기본 행동 쿨타임 수치
-
-    private float originalRestWaitTime; //현재 플레이어 기본 휴식 시간 수치
-
-    private float originalSpeed; //현재 플레이어 기본 이동속도 수치
-    #endregion
-
     private void Update()
     {
         Deflect();
@@ -800,17 +790,17 @@ public class Player : BasicUnitScript
     /// <returns></returns>
     IEnumerator GoToAttack()
     {
-        Vector3 Movetransform = new Vector3(Speed, 0, 0); //이동을 위해 더해줄 연산
-        Vector3 Targettransform = new Vector3(bsm.enemyCharacterPos.x - 5.5f, transform.position.y); //목표 위치
+        Vector3 targettransform = new Vector3(bsm.enemyCharacterPos.x - 5.5f, transform.position.y); //목표 위치
 
         animator.SetBool("Moving", true);
 
-        while (transform.position.x < Targettransform.x) //이동중
+        while (transform.position.x < targettransform.x) //이동중
         {
-            transform.position += Movetransform * Time.deltaTime;
+            movetransform.x = Speed;
+            transform.position += movetransform * Time.deltaTime;
             yield return null;
         }
-        transform.position = Targettransform; //이동 완료
+        transform.position = targettransform; //이동 완료
 
         animator.SetBool("Moving", false);
         StartCoroutine(Attacking(false, nowAttackCount_I, 0.2f, 0.2f)); //첫번째 공격 실행
@@ -961,13 +951,13 @@ public class Player : BasicUnitScript
     /// <returns></returns>
     IEnumerator Return()
     {
-        Vector3 Movetransform = new Vector3(Speed, 0, 0);
         transform.rotation = Quaternion.Euler(0, 180, 0);
 
         animator.SetBool("Moving", true);
         while (transform.position.x > startPos_Vector.x)
         {
-            transform.position -= Movetransform * Time.deltaTime;
+            movetransform.x = Speed;
+            transform.position -= movetransform * Time.deltaTime;
             yield return null;
         }
         transform.rotation = Quaternion.identity;

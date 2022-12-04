@@ -89,6 +89,7 @@ public class SlimeEnemy : BasicUnitScript
         // StartCoroutine(HowitzerAttack()); //- 3연 곡사포 공격
         // StartCoroutine(LaserAttack()); //- 레이저 발사 공격
 
+
         if (nowState == NowState.Standingby)
         {
             int behaviorProbability = Random.Range(1, 101);
@@ -143,7 +144,6 @@ public class SlimeEnemy : BasicUnitScript
 
     IEnumerator GoToAttack(bool isBasicCloseAttack)
     {
-        Vector3 Movetransform = new Vector3(Speed, 0, 0); //이동을 위해 더해줄 연산
         Vector3 Targettransform = new Vector3(0, transform.position.y); //목표 위치
 
         nowState = NowState.Attacking;
@@ -154,7 +154,8 @@ public class SlimeEnemy : BasicUnitScript
 
         while (transform.position.x > Targettransform.x) //이동중
         {
-            transform.position -= Movetransform * Time.deltaTime;
+            movetransform.x = Speed;
+            transform.position -= movetransform * Time.deltaTime;
             yield return null;
         }
         transform.position = Targettransform; //이동 완료
@@ -273,14 +274,14 @@ public class SlimeEnemy : BasicUnitScript
     /// <returns></returns>
     IEnumerator Return()
     {
-        Vector3 Movetransform = new Vector3(Speed, 0, 0);
         transform.rotation = Quaternion.Euler(0, 180, 0);
 
         animator.SetBool("Moving", true);
 
         while (transform.position.x < startPos_Vector.x)
         {
-            transform.position += Movetransform * Time.deltaTime;
+            movetransform.x = Speed;
+            transform.position += movetransform * Time.deltaTime;
             yield return null;
         }
 
@@ -300,7 +301,11 @@ public class SlimeEnemy : BasicUnitScript
         }
     }
 
-    IEnumerator ShootBullet() //원거리 발사 공격
+    /// <summary>
+    /// 원거리 탄환 발사 공격
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator ShootBullet()
     {
         Vector2 spawnSlimeBulletPosition;
 
@@ -400,6 +405,32 @@ public class SlimeEnemy : BasicUnitScript
         {
             nowState = NowState.Standingby;
         }
+    }
+
+    IEnumerator TrapSkill()
+    {
+        //애니메이션 실행
+        yield return new WaitForSeconds(2);
+
+        for (int nowIndex = 0; nowIndex < 2; nowIndex++)
+        {
+
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        yield return null;
+    }
+
+    IEnumerator RainSkill()
+    {
+
+        yield return null;
+    }
+
+    IEnumerator ThornSkill()
+    {
+
+        yield return null;
     }
 
     /// <summary>

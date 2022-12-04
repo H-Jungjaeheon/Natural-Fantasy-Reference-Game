@@ -81,6 +81,8 @@ public abstract class BasicUnitScript : MonoBehaviour
     [SerializeField]
     protected float jumpPower_F;
 
+    protected Vector3 movetransform; //이동을 위해 더해줄 Vector값
+
     protected float restWaitTime;
 
     [HideInInspector]
@@ -233,7 +235,23 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     [Tooltip("이동속도")]
     [SerializeField]
-    protected float Speed;
+    private float speed;
+
+    public float Speed 
+    {
+        get { return speed; }
+        set { speed = value; }
+    }
+    #endregion
+
+    #region 스탯 원본 수치 (버프/디버프에 사용)
+    protected float originalDamage; //현재 플레이어 기본 데미지 수치
+
+    protected float originalMaxActionCoolTime; //현재 플레이어 기본 행동 쿨타임 수치
+
+    protected float originalRestWaitTime; //현재 플레이어 기본 휴식 시간 수치
+
+    protected float originalSpeed; //현재 플레이어 기본 이동속도 수치
     #endregion
 
     #region 화상 관련 변수
@@ -252,6 +270,10 @@ public abstract class BasicUnitScript : MonoBehaviour
     protected float nowGiveBurnDamageTime;
 
     protected float maxGiveBurnDamageTime;
+    #endregion
+
+    #region 디버프 관련 변수 모음
+    public bool isSlowing;
     #endregion
 
     #region 스탯 UI 이미지 모음
@@ -554,6 +576,25 @@ public abstract class BasicUnitScript : MonoBehaviour
             isBurning = true;
             spriteRenderer.color = stateColors[(int)StateColor.BurningColor];
             StartCoroutine(Burning());
+        }
+    }
+
+    /// <summary>
+    /// 이동속도 감소 디버프 활성화 or 비활성화 함수
+    /// </summary>
+    /// <param name="isDebuffOn"> 디버프 활성화 유무(false시 비활성화) </param>
+    /// <param name="percentage"> 이동속도 감소 % 수치 </param>
+    public void SlowDebuff(bool isDebuffOn, int percentage)
+    {
+        if (isDebuffOn)
+        {
+            Speed -= (originalSpeed * percentage / 100);
+            isSlowing = true;
+        }
+        else
+        {
+            Speed = originalSpeed;
+            isSlowing = false;
         }
     }
 
