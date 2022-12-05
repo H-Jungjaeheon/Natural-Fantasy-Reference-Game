@@ -94,53 +94,51 @@ public class SlimeEnemy : BasicUnitScript
 
         if (nowState == NowState.Standingby)
         {
-            StartCoroutine(GoToAttack(false));
+            int behaviorProbability = Random.Range(1, 101);
 
-            //int behaviorProbability = Random.Range(1, 101);
-
-            //if (behaviorProbability <= 20)
-            //{
-            //    if (Energy <= MaxEnergy / 3 && restLimitTurn >= maxRestLimitTurn)
-            //    {
-            //        restLimitTurn = 0;
-            //        nowCoroutine = Resting();
-            //        StartCoroutine(nowCoroutine);
-            //    }
-            //    else
-            //    {
-            //        behaviorProbability = Random.Range(1, 101);
-            //        if (behaviorProbability <= 20)
-            //        {
-            //            nowCoroutine = GoToAttack(false);
-            //            StartCoroutine(nowCoroutine);
-            //        }
-            //        else if (behaviorProbability <= 60)
-            //        {
-            //            nowCoroutine = HowitzerAttack();
-            //            StartCoroutine(nowCoroutine);
-            //        }
-            //        else if (behaviorProbability <= 100)
-            //        {
-            //            nowCoroutine = LaserAttack();
-            //            StartCoroutine(nowCoroutine);
-            //        }
-            //    }
-            //}
-            //else if (behaviorProbability <= 55)
-            //{
-            //    nowCoroutine = GoToAttack(true);
-            //    StartCoroutine(nowCoroutine);
-            //}
-            //else if (behaviorProbability <= 80)
-            //{
-            //    nowCoroutine = GoToAttack(false);
-            //    StartCoroutine(nowCoroutine);
-            //}
-            //else if (behaviorProbability <= 100)
-            //{
-            //    nowCoroutine = ShootBullet();
-            //    StartCoroutine(nowCoroutine);
-            //}
+            if (behaviorProbability <= 20)
+            {
+                if (Energy <= MaxEnergy / 3 && restLimitTurn >= maxRestLimitTurn)
+                {
+                    restLimitTurn = 0;
+                    nowCoroutine = Resting();
+                    StartCoroutine(nowCoroutine);
+                }
+                else
+                {
+                    behaviorProbability = Random.Range(1, 101);
+                    if (behaviorProbability <= 20)
+                    {
+                        nowCoroutine = GoToAttack(false);
+                        StartCoroutine(nowCoroutine);
+                    }
+                    else if (behaviorProbability <= 60)
+                    {
+                        nowCoroutine = HowitzerAttack();
+                        StartCoroutine(nowCoroutine);
+                    }
+                    else if (behaviorProbability <= 100)
+                    {
+                        nowCoroutine = LaserAttack();
+                        StartCoroutine(nowCoroutine);
+                    }
+                }
+            }
+            else if (behaviorProbability <= 55)
+            {
+                nowCoroutine = GoToAttack(true);
+                StartCoroutine(nowCoroutine);
+            }
+            else if (behaviorProbability <= 80)
+            {
+                nowCoroutine = GoToAttack(false);
+                StartCoroutine(nowCoroutine);
+            }
+            else if (behaviorProbability <= 100)
+            {
+                nowCoroutine = ShootBullet();
+                StartCoroutine(nowCoroutine);
+            }
 
             restLimitTurn++;
         }
@@ -232,9 +230,9 @@ public class SlimeEnemy : BasicUnitScript
     {
         WaitForSeconds defenselessCloseAttackDelay = new WaitForSeconds(0.3f);
 
-        yield return new WaitForSeconds(0.5f); //점프 전 대기 시간
-
         animator.SetBool("Jumping", true);
+
+        yield return new WaitForSeconds(0.5f); //점프 전 대기 시간
 
         rigid.AddForce(Vector2.up * jumpPower_F, ForceMode2D.Impulse);
         rigid.gravityScale = setJumpGravityScale_F;
@@ -321,14 +319,18 @@ public class SlimeEnemy : BasicUnitScript
         nowState = NowState.Attacking;
         Energy -= 2;
 
-        yield return new WaitForSeconds(1.5f);
+        animator.SetBool("FrontShoot", true);
+
+        yield return new WaitForSeconds(0.7f);
 
         var slimeBullet = objectPoolInstance.GetObject((int)PoolObjKind.SlimeEnemyBullet);
 
-        spawnSlimeBulletPosition.x = transform.position.x;
-        spawnSlimeBulletPosition.y = slimeBullet.transform.position.y;
+        spawnSlimeBulletPosition.x = 6;
+        spawnSlimeBulletPosition.y = -1.65f;
 
         slimeBullet.transform.position = spawnSlimeBulletPosition;
+
+        animator.SetBool("FrontShoot", false);
 
         if (Energy > 0)
         {
