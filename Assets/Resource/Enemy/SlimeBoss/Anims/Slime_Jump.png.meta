@@ -1,13 +1,28 @@
 fileFormatVersion: 2
-guid: a47bdeebc9bd827488771d7a77bf9142
+guid: be9c37ca7835dcc4cafc2ea83e2e9120
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2863435159494591679
-    second: Slime_Shock_0
+      213: 5382167627188048159
+    second: Slime_Jump_0
   - first:
-      213: -7952067060804634253
-    second: Slime_Shock_1
+      213: -5147708284862113673
+    second: Slime_Jump_1
+  - first:
+      213: -3990743588009198662
+    second: Slime_Jump_2
+  - first:
+      213: -1444114931856350182
+    second: Slime_Jump_3
+  - first:
+      213: -3735395149132666992
+    second: Slime_Jump_4
+  - first:
+      213: 6333983866823460071
+    second: Slime_Jump_5
+  - first:
+      213: -4274184094072194683
+    second: Slime_Jump_6
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -109,7 +124,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Slime_Shock_0
+      name: Slime_Jump_0
       rect:
         serializedVersion: 2
         x: 0
@@ -117,35 +132,140 @@ TextureImporter:
         width: 452
         height: 552
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fb40a0f3b17fcb720800000000000000
-      internalID: 2863435159494591679
+      spriteID: f119624e0fc41ba40800000000000000
+      internalID: 5382167627188048159
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Slime_Shock_1
+      name: Slime_Jump_1
       rect:
         serializedVersion: 2
-        x: 0
+        x: 452
         y: 0
         width: 452
         height: 552
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 379b7aad32594a190800000000000000
-      internalID: -7952067060804634253
+      spriteID: 7785571b69aaf88b0800000000000000
+      internalID: -5147708284862113673
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Slime_Jump_2
+      rect:
+        serializedVersion: 2
+        x: 904
+        y: 0
+        width: 452
+        height: 552
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: abb3b0fb9d70e98c0800000000000000
+      internalID: -3990743588009198662
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Slime_Jump_3
+      rect:
+        serializedVersion: 2
+        x: 1356
+        y: 0
+        width: 452
+        height: 552
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a146dd7ee1975fbe0800000000000000
+      internalID: -1444114931856350182
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Slime_Jump_4
+      rect:
+        serializedVersion: 2
+        x: 1808
+        y: 0
+        width: 452
+        height: 552
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 097ea3027e5392cc0800000000000000
+      internalID: -3735395149132666992
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Slime_Jump_5
+      rect:
+        serializedVersion: 2
+        x: 2260
+        y: 0
+        width: 452
+        height: 552
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7e4411b94c4d6e750800000000000000
+      internalID: 6333983866823460071
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Slime_Jump_6
+      rect:
+        serializedVersion: 2
+        x: 2712
+        y: 0
+        width: 452
+        height: 552
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 589b338463c0fa4c0800000000000000
+      internalID: -4274184094072194683
       vertices: []
       indices: 
       edges: []

@@ -1,13 +1,28 @@
 fileFormatVersion: 2
-guid: a47bdeebc9bd827488771d7a77bf9142
+guid: 1c523c0dbe1cb394ab0953b7165c9093
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2863435159494591679
-    second: Slime_Shock_0
+      213: 1591550974466868223
+    second: Slime_Down_0
   - first:
-      213: -7952067060804634253
-    second: Slime_Shock_1
+      213: -6309063888215938134
+    second: Slime_Down_1
+  - first:
+      213: -3696433599040338040
+    second: Slime_Down_2
+  - first:
+      213: 1849805384723741574
+    second: Slime_Down_3
+  - first:
+      213: 6864663738185315917
+    second: Slime_Down_4
+  - first:
+      213: 7420760380816548324
+    second: Slime_Down_5
+  - first:
+      213: 1280462965610838843
+    second: Slime_Down_6
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -109,7 +124,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Slime_Shock_0
+      name: Slime_Down_0
       rect:
         serializedVersion: 2
         x: 0
@@ -117,35 +132,140 @@ TextureImporter:
         width: 452
         height: 552
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fb40a0f3b17fcb720800000000000000
-      internalID: 2863435159494591679
+      spriteID: ff3460bcd23561610800000000000000
+      internalID: 1591550974466868223
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Slime_Shock_1
+      name: Slime_Down_1
       rect:
         serializedVersion: 2
-        x: 0
+        x: 452
         y: 0
         width: 452
         height: 552
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 379b7aad32594a190800000000000000
-      internalID: -7952067060804634253
+      spriteID: aabe4ad02d3b178a0800000000000000
+      internalID: -6309063888215938134
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Slime_Down_2
+      rect:
+        serializedVersion: 2
+        x: 904
+        y: 0
+        width: 452
+        height: 552
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 887c169e931a3bcc0800000000000000
+      internalID: -3696433599040338040
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Slime_Down_3
+      rect:
+        serializedVersion: 2
+        x: 1356
+        y: 0
+        width: 452
+        height: 552
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 68b301c5234dba910800000000000000
+      internalID: 1849805384723741574
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Slime_Down_4
+      rect:
+        serializedVersion: 2
+        x: 1808
+        y: 0
+        width: 452
+        height: 552
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d467a01ac4f244f50800000000000000
+      internalID: 6864663738185315917
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Slime_Down_5
+      rect:
+        serializedVersion: 2
+        x: 2260
+        y: 0
+        width: 452
+        height: 552
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e1ecdddf36dbf660800000000000000
+      internalID: 7420760380816548324
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Slime_Down_6
+      rect:
+        serializedVersion: 2
+        x: 2712
+        y: 0
+        width: 452
+        height: 552
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b3bf645784e15c110800000000000000
+      internalID: 1280462965610838843
       vertices: []
       indices: 
       edges: []
