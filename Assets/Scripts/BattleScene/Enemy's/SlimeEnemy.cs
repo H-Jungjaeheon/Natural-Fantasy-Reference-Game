@@ -91,54 +91,56 @@ public class SlimeEnemy : BasicUnitScript
         // StartCoroutine(HowitzerAttack()); //- 3연 곡사포 공격
         // StartCoroutine(LaserAttack()); //- 레이저 발사 공격
         // StartCoroutine(TrapSkill()); //트랩 설치(2페이즈)
+        // StartCoroutine(RainSkill()); //독 폭포 패턴(2페이즈)
 
         if (nowState == NowState.Standingby)
         {
-            int behaviorProbability = Random.Range(1, 101);
+            StartCoroutine(RainSkill());
+            //int behaviorProbability = Random.Range(1, 101);
 
-            if (behaviorProbability <= 20)
-            {
-                if (Energy <= MaxEnergy / 3 && restLimitTurn >= maxRestLimitTurn)
-                {
-                    restLimitTurn = 0;
-                    nowCoroutine = Resting();
-                    StartCoroutine(nowCoroutine);
-                }
-                else
-                {
-                    behaviorProbability = Random.Range(1, 101);
-                    if (behaviorProbability <= 20)
-                    {
-                        nowCoroutine = GoToAttack(false);
-                        StartCoroutine(nowCoroutine);
-                    }
-                    else if (behaviorProbability <= 60)
-                    {
-                        nowCoroutine = HowitzerAttack();
-                        StartCoroutine(nowCoroutine);
-                    }
-                    else if (behaviorProbability <= 100)
-                    {
-                        nowCoroutine = LaserAttack();
-                        StartCoroutine(nowCoroutine);
-                    }
-                }
-            }
-            else if (behaviorProbability <= 55)
-            {
-                nowCoroutine = GoToAttack(true);
-                StartCoroutine(nowCoroutine);
-            }
-            else if (behaviorProbability <= 80)
-            {
-                nowCoroutine = GoToAttack(false);
-                StartCoroutine(nowCoroutine);
-            }
-            else if (behaviorProbability <= 100)
-            {
-                nowCoroutine = ShootBullet();
-                StartCoroutine(nowCoroutine);
-            }
+            //if (behaviorProbability <= 20)
+            //{
+            //    if (Energy <= MaxEnergy / 3 && restLimitTurn >= maxRestLimitTurn)
+            //    {
+            //        restLimitTurn = 0;
+            //        nowCoroutine = Resting();
+            //        StartCoroutine(nowCoroutine);
+            //    }
+            //    else
+            //    {
+            //        behaviorProbability = Random.Range(1, 101);
+            //        if (behaviorProbability <= 20)
+            //        {
+            //            nowCoroutine = GoToAttack(false);
+            //            StartCoroutine(nowCoroutine);
+            //        }
+            //        else if (behaviorProbability <= 60)
+            //        {
+            //            nowCoroutine = HowitzerAttack();
+            //            StartCoroutine(nowCoroutine);
+            //        }
+            //        else if (behaviorProbability <= 100)
+            //        {
+            //            nowCoroutine = LaserAttack();
+            //            StartCoroutine(nowCoroutine);
+            //        }
+            //    }
+            //}
+            //else if (behaviorProbability <= 55)
+            //{
+            //    nowCoroutine = GoToAttack(true);
+            //    StartCoroutine(nowCoroutine);
+            //}
+            //else if (behaviorProbability <= 80)
+            //{
+            //    nowCoroutine = GoToAttack(false);
+            //    StartCoroutine(nowCoroutine);
+            //}
+            //else if (behaviorProbability <= 100)
+            //{
+            //    nowCoroutine = ShootBullet();
+            //    StartCoroutine(nowCoroutine);
+            //}
 
             restLimitTurn++;
         }
@@ -449,8 +451,48 @@ public class SlimeEnemy : BasicUnitScript
 
     IEnumerator RainSkill()
     {
+        nowState = NowState.Attacking;
+        Energy -= 6;
 
-        yield return null;
+        yield return new WaitForSeconds(1); //점프 전 대기 시간
+
+        for (int nowIndex = 0; nowIndex < 3; nowIndex++)
+        {   
+            if (nowIndex == 0)
+            {
+                //rigid.gravityScale = 2f;
+                rigid.AddForce(Vector2.up * 13, ForceMode2D.Impulse);
+                rigid.gravityScale = setJumpGravityScale_F;
+                yield return new WaitForSeconds(0.7f); //내려찍기 준비시간
+            }
+            else
+            {
+                rigid.AddForce(Vector2.up * 13, ForceMode2D.Impulse);
+                rigid.gravityScale = setJumpGravityScale_F;
+                yield return new WaitForSeconds(0.4f); //내려찍기 준비시간   
+            }
+
+            rigid.AddForce(Vector2.down * jumpPower_F * 6, ForceMode2D.Impulse);
+
+            while (transform.position.y > startPos_Vector.y)
+            {
+                yield return null;
+            }
+
+            CamShake.CamShakeMod(true, 3f);
+            transform.position = new Vector2(transform.position.x, startPos_Vector.y);
+            rigid.velocity = Vector2.zero;
+            rigid.gravityScale = 0;
+        }
+
+        if (Energy > 0)
+        {
+            WaitingTimeStart();
+        }
+        else
+        {
+            nowState = NowState.Standingby;
+        }
     }
 
     IEnumerator ThornSkill()

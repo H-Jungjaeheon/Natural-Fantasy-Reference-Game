@@ -26,7 +26,6 @@ public class EnemysLaser : MonoBehaviour
 
     public List<GameObject> targetInRange = new List<GameObject>();
     
-    [HideInInspector]
     public float launchAngle;
 
     [HideInInspector]
@@ -69,7 +68,7 @@ public class EnemysLaser : MonoBehaviour
 
         for (int nowHitCount = 0; nowHitCount < hitCount; nowHitCount++)
         {
-            for (int nowIndex = targetInRange.Count - 1; nowIndex >= 0; nowIndex--) //공격과 동시에 리스트 정리
+            for (int nowIndex = 0; nowIndex < targetInRange.Count; nowIndex++) //공격
             {
                 if (targetInRange[nowIndex] == true)
                 {
@@ -82,8 +81,6 @@ public class EnemysLaser : MonoBehaviour
                         CamShake.CamShakeMod(false, 2f);
                         isCameraShaking = true;
                     }
-
-                    targetInRange.Remove(targetInRange[nowIndex]);
                 }
             }
 
@@ -91,6 +88,11 @@ public class EnemysLaser : MonoBehaviour
             {
                 yield return laserHitDelay;
             }
+        }
+
+        for (int nowIndex = targetInRange.Count - 1; nowIndex >= 0; nowIndex--) //리스트 정리
+        {
+            targetInRange.Remove(targetInRange[nowIndex]);
         }
 
         yield return laserAnimDelay;
