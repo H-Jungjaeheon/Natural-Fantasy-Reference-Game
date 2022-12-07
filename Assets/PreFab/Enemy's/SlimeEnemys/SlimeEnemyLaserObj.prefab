@@ -151,7 +151,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   thisBulletPoolObjKind: 4
   damage: 6
-  hitCount: 0
+  hitCount: 1
+  waitTime: 1
   orbitalIndicationObj: {fileID: 5828405001588555900}
   laserAnimationObj: {fileID: 8463982626768415853}
   targetInRange: []

@@ -17,6 +17,10 @@ public class EnemysLaser : MonoBehaviour
     private int hitCount;
 
     [SerializeField]
+    [Tooltip("발사 대기시간(범위 표시시간)")]
+    private float waitTime;
+
+    [SerializeField]
     [Tooltip("궤도 표기 오브젝트")]
     private GameObject orbitalIndicationObj;
 
@@ -26,6 +30,7 @@ public class EnemysLaser : MonoBehaviour
 
     public List<GameObject> targetInRange = new List<GameObject>();
     
+    [HideInInspector]
     public float launchAngle;
 
     [HideInInspector]
@@ -33,11 +38,16 @@ public class EnemysLaser : MonoBehaviour
 
     private Vector3 onEnableRotation; //활성화 시 초기 회전값
 
-    private WaitForSeconds orbitalIndicationDelay = new WaitForSeconds(1); //레이저 궤도 표기 시간
+    private WaitForSeconds orbitalIndicationDelay; //레이저 궤도 표기 시간
 
     private WaitForSeconds laserAnimDelay = new WaitForSeconds(0.5f); //레이저 발사 애니메이션 시간
 
     private WaitForSeconds laserHitDelay = new WaitForSeconds(0.2f);
+
+    private void Start()
+    {
+        orbitalIndicationDelay = new WaitForSeconds(waitTime);
+    }
 
     private void OnEnable()
     {

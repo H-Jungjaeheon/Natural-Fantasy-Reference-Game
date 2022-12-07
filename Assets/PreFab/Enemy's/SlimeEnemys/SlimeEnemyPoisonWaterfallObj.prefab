@@ -152,6 +152,7 @@ MonoBehaviour:
   thisBulletPoolObjKind: 7
   damage: 1
   hitCount: 5
+  waitTime: 1.5
   orbitalIndicationObj: {fileID: 8579576798007951969}
   laserAnimationObj: {fileID: 8579576799186998936}
   targetInRange: []

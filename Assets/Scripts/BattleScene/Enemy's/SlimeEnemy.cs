@@ -456,19 +456,17 @@ public class SlimeEnemy : BasicUnitScript
 
         yield return new WaitForSeconds(1); //점프 전 대기 시간
 
-        for (int nowIndex = 0; nowIndex < 3; nowIndex++)
+        for (int nowIndex = 0; nowIndex < 2; nowIndex++)
         {   
+            rigid.gravityScale = setJumpGravityScale_F;
+            rigid.AddForce(Vector2.up * 13, ForceMode2D.Impulse);
+
             if (nowIndex == 0)
             {
-                //rigid.gravityScale = 2f;
-                rigid.AddForce(Vector2.up * 13, ForceMode2D.Impulse);
-                rigid.gravityScale = setJumpGravityScale_F;
                 yield return new WaitForSeconds(0.7f); //내려찍기 준비시간
             }
             else
             {
-                rigid.AddForce(Vector2.up * 13, ForceMode2D.Impulse);
-                rigid.gravityScale = setJumpGravityScale_F;
                 yield return new WaitForSeconds(0.4f); //내려찍기 준비시간   
             }
 
@@ -480,10 +478,17 @@ public class SlimeEnemy : BasicUnitScript
             }
 
             CamShake.CamShakeMod(true, 3f);
-            transform.position = new Vector2(transform.position.x, startPos_Vector.y);
+            transform.position = new Vector2(startPos_Vector.x, startPos_Vector.y);
             rigid.velocity = Vector2.zero;
-            rigid.gravityScale = 0;
         }
+
+        rigid.gravityScale = 0;
+
+        GameObject waterfallObj = objectPoolInstance.GetObject((int)PoolObjKind.SlimePoisonWaterfall);
+        EnemysLaser nowWaterfallObj = waterfallObj.GetComponent<EnemysLaser>();
+
+        nowWaterfallObj.onEnablePos.x = Random.Range(-10, 6);
+        nowWaterfallObj.onEnablePos.y = 6.75f;
 
         if (Energy > 0)
         {
