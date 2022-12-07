@@ -5,12 +5,16 @@ using UnityEngine;
 public class EnemysLaser : MonoBehaviour
 {
     [SerializeField]
+    [Tooltip("오브젝트 풀의 총알 종류")]
+    private PoolObjKind thisBulletPoolObjKind;
+
+    [SerializeField]
     [Tooltip("레이저 데미지")]
     private int damage;
 
     [SerializeField]
-    [Tooltip("오브젝트 풀의 총알 종류")]
-    private PoolObjKind thisBulletPoolObjKind;
+    [Tooltip("레이저 타격 횟수")]
+    private int hitCount;
 
     [SerializeField]
     [Tooltip("궤도 표기 오브젝트")]
@@ -33,6 +37,8 @@ public class EnemysLaser : MonoBehaviour
     private WaitForSeconds orbitalIndicationDelay = new WaitForSeconds(1); //레이저 궤도 표기 시간
 
     private WaitForSeconds laserAnimDelay = new WaitForSeconds(0.5f); //레이저 발사 애니메이션 시간
+
+    private WaitForSeconds laserHitDelay = new WaitForSeconds(0.2f);
 
     private void OnEnable()
     {
@@ -61,21 +67,29 @@ public class EnemysLaser : MonoBehaviour
     {
         bool isCameraShaking = false;
 
-        for (int nowIndex = targetInRange.Count - 1; nowIndex >= 0; nowIndex--) //공격과 동시에 리스트 정리
+        for (int nowHitCount = 0; nowHitCount < hitCount; nowHitCount++)
         {
-            if (targetInRange[nowIndex] == true)
+            for (int nowIndex = targetInRange.Count - 1; nowIndex >= 0; nowIndex--) //공격과 동시에 리스트 정리
             {
-                BasicUnitScript hitObjsUnitScript = targetInRange[nowIndex].GetComponent<BasicUnitScript>();
-                
-                hitObjsUnitScript.Hit(damage, false);
-                
-                if (isCameraShaking == false)
+                if (targetInRange[nowIndex] == true)
                 {
-                    CamShake.CamShakeMod(false, 2f);
-                    isCameraShaking = true;
-                }
+                    BasicUnitScript hitObjsUnitScript = targetInRange[nowIndex].GetComponent<BasicUnitScript>();
 
-                targetInRange.Remove(targetInRange[nowIndex]);
+                    hitObjsUnitScript.Hit(damage, false);
+
+                    if (isCameraShaking == false)
+                    {
+                        CamShake.CamShakeMod(false, 2f);
+                        isCameraShaking = true;
+                    }
+
+                    targetInRange.Remove(targetInRange[nowIndex]);
+                }
+            }
+
+            if (hitCount > 1)
+            {
+                yield return laserHitDelay;
             }
         }
 
