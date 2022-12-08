@@ -226,8 +226,8 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     [Tooltip("공격력")]
     [SerializeField]
-    protected float damage;
-    public float Damage
+    protected int damage;
+    public int Damage
     {
         get { return damage; }
         set { damage = value; }
@@ -249,7 +249,7 @@ public abstract class BasicUnitScript : MonoBehaviour
     #endregion
 
     #region 스탯 원본 수치 (버프/디버프에 사용)
-    protected float originalDamage; //현재 플레이어 기본 데미지 수치
+    protected int originalDamage; //현재 플레이어 기본 데미지 수치
 
     protected float originalMaxActionCoolTime; //현재 플레이어 기본 행동 쿨타임 수치
 

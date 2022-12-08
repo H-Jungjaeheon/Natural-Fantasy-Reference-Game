@@ -95,52 +95,51 @@ public class SlimeEnemy : BasicUnitScript
 
         if (nowState == NowState.Standingby)
         {
-            StartCoroutine(RainSkill());
-            //int behaviorProbability = Random.Range(1, 101);
+            int behaviorProbability = Random.Range(1, 101);
 
-            //if (behaviorProbability <= 20)
-            //{
-            //    if (Energy <= MaxEnergy / 3 && restLimitTurn >= maxRestLimitTurn)
-            //    {
-            //        restLimitTurn = 0;
-            //        nowCoroutine = Resting();
-            //        StartCoroutine(nowCoroutine);
-            //    }
-            //    else
-            //    {
-            //        behaviorProbability = Random.Range(1, 101);
-            //        if (behaviorProbability <= 20)
-            //        {
-            //            nowCoroutine = GoToAttack(false);
-            //            StartCoroutine(nowCoroutine);
-            //        }
-            //        else if (behaviorProbability <= 60)
-            //        {
-            //            nowCoroutine = HowitzerAttack();
-            //            StartCoroutine(nowCoroutine);
-            //        }
-            //        else if (behaviorProbability <= 100)
-            //        {
-            //            nowCoroutine = LaserAttack();
-            //            StartCoroutine(nowCoroutine);
-            //        }
-            //    }
-            //}
-            //else if (behaviorProbability <= 55)
-            //{
-            //    nowCoroutine = GoToAttack(true);
-            //    StartCoroutine(nowCoroutine);
-            //}
-            //else if (behaviorProbability <= 80)
-            //{
-            //    nowCoroutine = GoToAttack(false);
-            //    StartCoroutine(nowCoroutine);
-            //}
-            //else if (behaviorProbability <= 100)
-            //{
-            //    nowCoroutine = ShootBullet();
-            //    StartCoroutine(nowCoroutine);
-            //}
+            if (behaviorProbability <= 20)
+            {
+                if (Energy <= MaxEnergy / 3 && restLimitTurn >= maxRestLimitTurn)
+                {
+                    restLimitTurn = 0;
+                    nowCoroutine = Resting();
+                    StartCoroutine(nowCoroutine);
+                }
+                else
+                {
+                    behaviorProbability = Random.Range(1, 101);
+                    if (behaviorProbability <= 20)
+                    {
+                        nowCoroutine = GoToAttack(false);
+                        StartCoroutine(nowCoroutine);
+                    }
+                    else if (behaviorProbability <= 60)
+                    {
+                        nowCoroutine = HowitzerAttack();
+                        StartCoroutine(nowCoroutine);
+                    }
+                    else if (behaviorProbability <= 100)
+                    {
+                        nowCoroutine = LaserAttack();
+                        StartCoroutine(nowCoroutine);
+                    }
+                }
+            }
+            else if (behaviorProbability <= 55)
+            {
+                nowCoroutine = GoToAttack(true);
+                StartCoroutine(nowCoroutine);
+            }
+            else if (behaviorProbability <= 80)
+            {
+                nowCoroutine = GoToAttack(false);
+                StartCoroutine(nowCoroutine);
+            }
+            else if (behaviorProbability <= 100)
+            {
+                nowCoroutine = ShootBullet();
+                StartCoroutine(nowCoroutine);
+            }
 
             restLimitTurn++;
         }

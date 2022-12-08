@@ -6786,8 +6786,8 @@ MonoBehaviour:
   nowState: 0
   rangeInEnemy: []
   rangeInDeflectAbleObj: []
-  hp: 150
-  maxHp: 150
+  hp: 111
+  maxHp: 111
   energy: 30
   maxEnergy: 30
   isHaveDreamyFigure: 0
@@ -9477,7 +9477,7 @@ MonoBehaviour:
   maxEnergy: 15
   isHaveDreamyFigure: 1
   dreamyFigure: 0
-  damage: 4
+  damage: 2
   speed: 8
   hitSlowCount: 0
   unitHpBar: {fileID: 939537340}

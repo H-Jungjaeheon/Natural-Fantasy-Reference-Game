@@ -226,7 +226,7 @@ public class Player : BasicUnitScript
         var gameManagerIns = GameManager.Instance;
         int energyPerLevel = gameManagerIns.statLevels[(int)UpgradeableStatKind.Energy] * 3; //레벨당 기력 증가식 (최대 30 증가)
         int maxHpPerLevel = (int)MaxHp / 10 * (gameManagerIns.statLevels[(int)UpgradeableStatKind.Hp]); //레벨당 체력 증가식 (최대 100% 증가)
-        float damagePerLevel = (Damage * 10 / 100) * gameManagerIns.statLevels[(int)UpgradeableStatKind.Damage]; //레벨당 공격력 증가식 (최대 100% 증가)
+        int damagePerLevel = (Damage * 10 / 100) * gameManagerIns.statLevels[(int)UpgradeableStatKind.Damage]; //레벨당 공격력 증가식 (최대 100% 증가)
         float maxActionCoolTimePerLevel = (gameManagerIns.ReduceCoolTimeLevel * 0.1f); //레벨당 최대 쿨타임 차감식 (임시)
 
         InitializationAttackRangeSize = new Vector2(1.1f, 2.68f);
@@ -937,9 +937,14 @@ public class Player : BasicUnitScript
     /// <returns></returns>
     private float CurrentRandomDamage(float nowPlayerDamage)
     {
-        int randDamage = Random.Range(-2, 2); //랜덤 데미지 증감
+        int randDamage = Random.Range(-1, 2); //랜덤 데미지 증감
 
         nowPlayerDamage += randDamage;
+
+        if (nowPlayerDamage < 1)
+        {
+            nowPlayerDamage = 1;
+        }
 
         return nowPlayerDamage;
     }
@@ -1147,7 +1152,7 @@ public class Player : BasicUnitScript
     {
         maxActionCoolTime = isBuffing ? maxActionCoolTime - (maxActionCoolTime / 4) : originalMaxActionCoolTime;
         restWaitTime = isBuffing ? restWaitTime - (originalRestWaitTime / 5) : originalRestWaitTime;
-        Damage = isBuffing ? Damage * 1.5f : originalDamage;
+        Damage = isBuffing ? (int)(Damage * 1.5f) : originalDamage;
     }
 
     /// <summary>
@@ -1158,7 +1163,7 @@ public class Player : BasicUnitScript
     {
         maxActionCoolTime = isDeBuffing ? maxActionCoolTime + (maxActionCoolTime / 4) : originalMaxActionCoolTime;
         restWaitTime = isDeBuffing ? restWaitTime + (originalRestWaitTime / 5) : originalRestWaitTime;
-        Damage = isDeBuffing ? Damage / 1.5f : originalDamage;
+        Damage = isDeBuffing ? (int)(Damage / 1.5f) : originalDamage;
         Speed = isDeBuffing ? Speed / 1.25f : originalSpeed;
     }
 
@@ -1253,15 +1258,17 @@ public class Player : BasicUnitScript
                 break;
 
             case NowPlayerProperty.ForceProperty:
-                float enhancedDamage = Damage / 2f;
+                int enhancedDamage = (int)(Damage / 2f);
                 float reducedMaxActionCoolTime = maxActionCoolTime / 5;
 
                 maxActionCoolTime -= reducedMaxActionCoolTime;
                 Damage += enhancedDamage;
+
                 while (nowProperty == NowPlayerProperty.ForceProperty)
                 {
                     yield return null;
                 }
+
                 Damage -= enhancedDamage;
                 maxActionCoolTime += reducedMaxActionCoolTime;
                 break;
