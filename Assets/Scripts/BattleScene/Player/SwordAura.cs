@@ -9,12 +9,11 @@ public enum NowSwordAuraState
 public class SwordAura : MonoBehaviour
 {
     #region 검기 관련 스탯 모음
-    [Header("검기 관련 스탯 모음")]
-    [SerializeField]
-    private float speed;
+    private const int speed = 65;
 
-    [SerializeField]
-    private int damage;
+    private int damage; //기본 대미지
+
+    private int enchantedDamage; //강화 성공 시 대미지
 
     private bool isEnchanted;
 
@@ -26,14 +25,11 @@ public class SwordAura : MonoBehaviour
         }
         set
         {
-            if (value == false)
+            isEnchanted = value;
+
+            if(value == true) 
             {
-                isEnchanted = value;
-            }
-            else 
-            {
-                isEnchanted = false;
-                EnchantedSetting();
+                sR.sprite = swordAuraImages[(int)NowSwordAuraState.Enchanted]; //강화 성공한 스프라이트로 교체
             }
         }
     }
@@ -47,7 +43,7 @@ public class SwordAura : MonoBehaviour
     [Tooltip("검기 오브젝트 스프라이트 렌더러")]
     private SpriteRenderer sR;
 
-    Vector2 movingPlusVector;
+    Vector3 movingPlusVector;
 
     Vector2 spawnPlusVector;
 
@@ -88,17 +84,14 @@ public class SwordAura : MonoBehaviour
         playerScript = bsm.player.GetComponent<Player>();
 
         spawnPlusVector = new Vector2(2.5f, 0);
-        movingPlusVector = new Vector2(speed, 0);
+        movingPlusVector = new Vector3(speed, 0, 0);
         basicSpinVector = new Vector3(0, 0, 2000);
-    }
 
-    /// <summary>
-    /// 강화 성공 시 세팅 함수 
-    /// </summary>
-    private void EnchantedSetting()
-    {
-        sR.sprite = swordAuraImages[(int)NowSwordAuraState.Enchanted]; //강화 성공한 스프라이트로 교체
-        damage += (2 + (gm.statLevels[(int)UpgradeableStatKind.Damage] / 3)); //강화 성공 기본 추가 데미지(2) + 레벨당 증가 단위
+        damage = 3; //기본 대미지 세팅
+       
+        damage += (3 * gm.statLevels[(int)UpgradeableStatKind.Damage] / 2); //레벨당 데미지 증가 연산 
+
+        enchantedDamage = damage + damage / 2; //강화 성공 대미지 연산
     }
 
     /// <summary>
@@ -112,9 +105,6 @@ public class SwordAura : MonoBehaviour
 
         transform.position = bsm.player.transform.position + (Vector3)spawnPlusVector; //포지션 초기화(발사 시작점)
         transform.rotation = Quaternion.identity; //로테이션값 초기화
-        
-        damage = 0; //데미지 초기화
-        damage += (4 + gm.statLevels[(int)UpgradeableStatKind.Damage] * 2); //레벨당 데미지 증가 연산 
     }
 
     /// <summary>
@@ -133,13 +123,11 @@ public class SwordAura : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            if (playerScript.nowProperty == NowPlayerProperty.ForceProperty)
-            {
-                damage += damage / 4; //힘 속성 데미지 증가 연산
-            }
+            int nowDamage = (isEnchanted) ? enchantedDamage : damage; //최종 대미지 판별(강화 실패 : 기본 대미지, 강화 성공 : 강화 대미지)
+            
+            busComponent.Hit(nowDamage, false);
 
-            busComponent.Hit(damage, false);
-            busComponent.GetBasicGood();
+            busComponent.GetBasicGood(); //재화 획득
 
             if (isEnemyHit == false) //적에게 처음 닿았을 시
             {
@@ -154,6 +142,11 @@ public class SwordAura : MonoBehaviour
         }
         else if(collision.gameObject.CompareTag("ObjDestroy"))
         {
+            if (isEnchanted)
+            {
+                isEnchanted = false;
+            }
+
             ObjectPool.Instance.ReturnObject(gameObject, (int)PoolObjKind.PlayerSwordAura);
         }
     }

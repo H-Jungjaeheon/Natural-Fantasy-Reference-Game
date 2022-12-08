@@ -226,7 +226,7 @@ public class Player : BasicUnitScript
         var gameManagerIns = GameManager.Instance;
         int energyPerLevel = gameManagerIns.statLevels[(int)UpgradeableStatKind.Energy] * 3; //레벨당 기력 증가식 (최대 30 증가)
         int maxHpPerLevel = (int)MaxHp / 10 * (gameManagerIns.statLevels[(int)UpgradeableStatKind.Hp]); //레벨당 체력 증가식 (최대 100% 증가)
-        int damagePerLevel = (Damage * 10 / 100) * gameManagerIns.statLevels[(int)UpgradeableStatKind.Damage]; //레벨당 공격력 증가식 (최대 100% 증가)
+        int damagePerLevel = Damage * gameManagerIns.statLevels[(int)UpgradeableStatKind.Damage] / 2; //레벨당 공격력 증가식 (최대 500% 증가)
         float maxActionCoolTimePerLevel = (gameManagerIns.ReduceCoolTimeLevel * 0.1f); //레벨당 최대 쿨타임 차감식 (임시)
 
         InitializationAttackRangeSize = new Vector2(1.1f, 2.68f);

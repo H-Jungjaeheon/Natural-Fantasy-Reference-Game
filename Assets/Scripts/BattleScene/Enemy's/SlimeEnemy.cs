@@ -568,7 +568,7 @@ public class SlimeEnemy : BasicUnitScript
     protected override IEnumerator Dead()
     {
         nowState = NowState.Dead;
-        bsm.NowGetBasicGood += 50;
+        bsm.NowGetBasicGood += 50000;
 
         animator.SetTrigger("Dead");
         spriteRenderer.sortingOrder = 5;
