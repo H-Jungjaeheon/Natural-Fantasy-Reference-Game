@@ -176,6 +176,7 @@ public class SlimeEnemy : BasicUnitScript
         }
     }
 
+
     public override void Hit(float damage, bool isDefending)
     {
         base.Hit(damage, isDefending);
