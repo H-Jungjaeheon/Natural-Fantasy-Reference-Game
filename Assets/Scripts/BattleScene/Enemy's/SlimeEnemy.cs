@@ -458,7 +458,7 @@ public class SlimeEnemy : BasicUnitScript
         for (int nowIndex = 0; nowIndex < 2; nowIndex++)
         {   
             rigid.gravityScale = setJumpGravityScale_F;
-            rigid.AddForce(Vector2.up * 13, ForceMode2D.Impulse);
+            rigid.AddForce(Vector2.up * 14, ForceMode2D.Impulse);
 
             if (nowIndex == 0)
             {
@@ -568,7 +568,7 @@ public class SlimeEnemy : BasicUnitScript
     protected override IEnumerator Dead()
     {
         nowState = NowState.Dead;
-        bsm.NowGetBasicGood += 50000;
+        bsm.NowGetBasicGood += 50;
 
         animator.SetTrigger("Dead");
         spriteRenderer.sortingOrder = 5;

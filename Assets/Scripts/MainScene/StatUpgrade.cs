@@ -154,8 +154,8 @@ public class StatUpgrade : MonoBehaviour
                 curChooseStatText.text = "공격력 강화";
 
                 curChooseStatEnhanceContentText.text = (gameManager.statLevels[nowUpgradeableStatIndex] < maxStatLevel) ?
-                   curChooseStatEnhanceContentText.text = $"공격력이 {gameManager.statLevels[nowUpgradeableStatIndex] * 10}% 상승합니다. > 공격력이 {(gameManager.statLevels[nowUpgradeableStatIndex] + 1) * 10}% 상승합니다." :
-                   curChooseStatEnhanceContentText.text = $"공격력이 {gameManager.statLevels[nowUpgradeableStatIndex] * 10}% 상승합니다.";
+                   curChooseStatEnhanceContentText.text = $"공격력이 {gameManager.statLevels[nowUpgradeableStatIndex] * 50}% 상승합니다. > 공격력이 {(gameManager.statLevels[nowUpgradeableStatIndex] + 1) * 50}% 상승합니다." :
+                   curChooseStatEnhanceContentText.text = $"공격력이 {gameManager.statLevels[nowUpgradeableStatIndex] * 50}% 상승합니다.";
 
                 break;
             case UpgradeableStatKind.Energy:

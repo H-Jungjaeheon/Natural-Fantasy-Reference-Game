@@ -3807,7 +3807,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.63457626, y: 0.2373454}
+  m_Offset: {x: 0.8, y: 0.2}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -3818,7 +3818,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2.0438662, y: 1.0513865}
+  m_Size: {x: 2.4, y: 0.8}
   m_EdgeRadius: 0
 --- !u!50 &693950550
 Rigidbody2D:
@@ -6312,8 +6312,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190335
-  m_fontColor: {r: 1, g: 0, b: 0, a: 1}
+    rgba: 4284831231
+  m_fontColor: {r: 1, g: 0.3339622, b: 0.39790195, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -7854,8 +7854,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294926847
-  m_fontColor: {r: 1, g: 0.38113207, b: 1, a: 1}
+    rgba: 4293289959
+  m_fontColor: {r: 0.9056604, g: 0.40498397, b: 0.90098035, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -7872,8 +7872,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 19
-  m_fontSizeBase: 19
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -8551,15 +8551,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: 10
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: ada401c159fd2da4bac3b64c7aeee562, type: 2}
-  m_sharedMaterial: {fileID: -7133704171958719014, guid: ada401c159fd2da4bac3b64c7aeee562, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 71a4b8b83d3eca243b94f1a154516a75, type: 2}
+  m_sharedMaterial: {fileID: 4602666851924344844, guid: 71a4b8b83d3eca243b94f1a154516a75, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4293809387
-  m_fontColor: {r: 0.9206966, g: 0.3304112, b: 0.9339623, a: 1}
+    rgba: 4293289959
+  m_fontColor: {r: 0.90588236, g: 0.40392157, b: 0.9019608, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -8576,13 +8576,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20
-  m_fontSizeBase: 20
+  m_fontSize: 21
+  m_fontSizeBase: 21
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 1
+  m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -11624,8 +11624,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190335
-  m_fontColor: {r: 1, g: 0, b: 0, a: 1}
+    rgba: 4284831231
+  m_fontColor: {r: 1, g: 0.33333334, b: 0.39607844, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:

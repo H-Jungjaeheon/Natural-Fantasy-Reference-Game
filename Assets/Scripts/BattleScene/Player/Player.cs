@@ -824,6 +824,11 @@ public class Player : BasicUnitScript
 
         int maxEnemyIndex;
 
+        if (nowAttackCount == 3)
+        {
+            ChangeAttackRange(new Vector2(2.3f, 3), new Vector2(0.8f, 0.13f));
+        }
+
         switch (nowAttackCount)
         {
             case 1:
@@ -922,6 +927,7 @@ public class Player : BasicUnitScript
 
             if (isLastAttack == true)
             {
+                ChangeAttackRange(new Vector2(2.4f, 0.8f), new Vector2(0.8f, 0.2f));
                 yield return new WaitForSeconds(0.5f);
             }
 
