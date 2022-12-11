@@ -38,7 +38,7 @@ public class EnemysBullet : MonoBehaviour
 
     private void OnEnable()
     {
-        nowBulletState = BulletState.Firing;
+        Reflex(BulletState.Firing);
     }
 
     void Update()
@@ -60,7 +60,19 @@ public class EnemysBullet : MonoBehaviour
         //Fire(position, Vector2.one * 0.2f, (position - transform.position).normalized, 5, 1, Bullet.BulletType.Enemy, system);
     }
 
-    public void Reflex(BulletState isReflexToPlayer) => nowBulletState = isReflexToPlayer;
+    public void Reflex(BulletState isReflexToPlayer)
+    {
+        nowBulletState = isReflexToPlayer;
+
+        if (isReflexToPlayer == BulletState.Deflecting)
+        {
+            transform.rotation = Quaternion.Euler(0, 0, 180);
+        }
+        else
+        {
+            transform.rotation = Quaternion.Euler(0, 0, 0);
+        }
+    }
 
     private void OnTriggerStay2D(Collider2D collision)
     {

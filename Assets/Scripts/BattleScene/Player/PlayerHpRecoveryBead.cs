@@ -8,7 +8,11 @@ public class PlayerHpRecoveryBead : MonoBehaviour
     [Tooltip("체력 회복량")]
     private int recoveryAmount;
 
+    private Vector3 floatingSpeed = new Vector3(0, 0, 0);
+
     private float nowDeleteTimeLimit;
+
+    private float nowYPos;
 
     private int maxDeleteTimeLimit;
 
@@ -31,7 +35,8 @@ public class PlayerHpRecoveryBead : MonoBehaviour
     private void Update()
     {
         DeleteTimeLimit();
-        DeterminePlayerProperties(); 
+        DeterminePlayerProperties();
+        FloatingEffect();
     }
 
     private void OnEnable()
@@ -42,12 +47,17 @@ public class PlayerHpRecoveryBead : MonoBehaviour
         if (randomSpawnPositionProbability < upwardPlacementProbability)
         {
             transform.position = new Vector2(-10, 5);
+            nowYPos = 5.25f;
         }
         else
         {
             int randomSpawnXPosition = Random.Range(-7, 16);
             transform.position = new Vector2(randomSpawnXPosition, -1);
+            nowYPos = -0.75f;
         }
+
+        floatingSpeed.x = transform.position.x;
+        floatingSpeed.z = transform.position.z;
     }
 
     private void DeleteTimeLimit()
@@ -67,6 +77,12 @@ public class PlayerHpRecoveryBead : MonoBehaviour
             Player.Hp += recoveryAmount;
             DeleteSetting();
         }
+    }
+
+    private void FloatingEffect()
+    {
+        floatingSpeed.y = nowYPos + Mathf.Sin(Time.time * 1.5f) * 0.75f;
+        transform.position = floatingSpeed;
     }
 
     private void DeleteSetting()

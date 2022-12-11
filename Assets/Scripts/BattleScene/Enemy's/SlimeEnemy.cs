@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class SlimeEnemy : BasicUnitScript
 {
+    [SerializeField]
+    [Tooltip("자신의 피격 범위")]
+    private BoxCollider2D ownCollider;
+
     private Vector2 speedVectorWithPattern = new Vector2(0, 0); //이동이 필요한 패턴 사용 시 사용할 속도 벡터
 
     private Vector2 spawnPos = new Vector2(0, 0); //패턴에 소환하는 오브젝트들 초기 위치 설정 벡터
@@ -92,54 +96,56 @@ public class SlimeEnemy : BasicUnitScript
         // StartCoroutine(LaserAttack()); //- 레이저 발사 공격
         // StartCoroutine(TrapSkill()); //트랩 설치(2페이즈)
         // StartCoroutine(RainSkill()); //독 폭포 패턴(2페이즈)
+        // StartCoroutine(ThornSkill()); //가시 패턴(2페이즈, 궁극기)
 
         if (nowState == NowState.Standingby)
         {
-            int behaviorProbability = Random.Range(1, 101);
+            StartCoroutine(ThornSkill());
+            //int behaviorProbability = Random.Range(1, 101);
 
-            if (behaviorProbability <= 20)
-            {
-                if (Energy <= MaxEnergy / 3 && restLimitTurn >= maxRestLimitTurn)
-                {
-                    restLimitTurn = 0;
-                    nowCoroutine = Resting();
-                    StartCoroutine(nowCoroutine);
-                }
-                else
-                {
-                    behaviorProbability = Random.Range(1, 101);
-                    if (behaviorProbability <= 20)
-                    {
-                        nowCoroutine = GoToAttack(false);
-                        StartCoroutine(nowCoroutine);
-                    }
-                    else if (behaviorProbability <= 60)
-                    {
-                        nowCoroutine = HowitzerAttack();
-                        StartCoroutine(nowCoroutine);
-                    }
-                    else if (behaviorProbability <= 100)
-                    {
-                        nowCoroutine = LaserAttack();
-                        StartCoroutine(nowCoroutine);
-                    }
-                }
-            }
-            else if (behaviorProbability <= 55)
-            {
-                nowCoroutine = GoToAttack(true);
-                StartCoroutine(nowCoroutine);
-            }
-            else if (behaviorProbability <= 80)
-            {
-                nowCoroutine = GoToAttack(false);
-                StartCoroutine(nowCoroutine);
-            }
-            else if (behaviorProbability <= 100)
-            {
-                nowCoroutine = ShootBullet();
-                StartCoroutine(nowCoroutine);
-            }
+            //if (behaviorProbability <= 20)
+            //{
+            //    if (Energy <= MaxEnergy / 3 && restLimitTurn >= maxRestLimitTurn)
+            //    {
+            //        restLimitTurn = 0;
+            //        nowCoroutine = Resting();
+            //        StartCoroutine(nowCoroutine);
+            //    }
+            //    else
+            //    {
+            //        behaviorProbability = Random.Range(1, 101);
+            //        if (behaviorProbability <= 20)
+            //        {
+            //            nowCoroutine = GoToAttack(false);
+            //            StartCoroutine(nowCoroutine);
+            //        }
+            //        else if (behaviorProbability <= 60)
+            //        {
+            //            nowCoroutine = HowitzerAttack();
+            //            StartCoroutine(nowCoroutine);
+            //        }
+            //        else if (behaviorProbability <= 100)
+            //        {
+            //            nowCoroutine = LaserAttack();
+            //            StartCoroutine(nowCoroutine);
+            //        }
+            //    }
+            //}
+            //else if (behaviorProbability <= 55)
+            //{
+            //    nowCoroutine = GoToAttack(true);
+            //    StartCoroutine(nowCoroutine);
+            //}
+            //else if (behaviorProbability <= 80)
+            //{
+            //    nowCoroutine = GoToAttack(false);
+            //    StartCoroutine(nowCoroutine);
+            //}
+            //else if (behaviorProbability <= 100)
+            //{
+            //    nowCoroutine = ShootBullet();
+            //    StartCoroutine(nowCoroutine);
+            //}
 
             restLimitTurn++;
         }
@@ -279,7 +285,7 @@ public class SlimeEnemy : BasicUnitScript
     }
 
     /// <summary>
-    /// 근접공격 후 제자리로 돌아오는 함수
+    /// 근접공격 후 제자리로 귀환
     /// </summary>
     /// <returns></returns>
     IEnumerator Return()
@@ -300,14 +306,7 @@ public class SlimeEnemy : BasicUnitScript
 
         animator.SetBool("Moving", false);
 
-        if (Energy > 0)
-        {
-            WaitingTimeStart();
-        }
-        else
-        {
-            nowState = NowState.Standingby;
-        }
+        AttackEndSetting();
     }
 
     /// <summary>
@@ -334,16 +333,13 @@ public class SlimeEnemy : BasicUnitScript
 
         animator.SetBool("FrontShoot", false);
 
-        if (Energy > 0)
-        {
-            WaitingTimeStart();
-        }
-        else
-        {
-            nowState = NowState.Standingby;
-        }
+        AttackEndSetting();
     }
 
+    /// <summary>
+    /// 곡사포 발사 공격
+    /// </summary>
+    /// <returns></returns>
     IEnumerator HowitzerAttack()
     {
         WaitForSeconds launchDelay = new WaitForSeconds(0.7f);
@@ -361,16 +357,13 @@ public class SlimeEnemy : BasicUnitScript
             yield return launchDelay;
         }
 
-        if (Energy > 0)
-        {
-            WaitingTimeStart();
-        }
-        else
-        {
-            nowState = NowState.Standingby;
-        }
+        AttackEndSetting();
     }
 
+    /// <summary>
+    /// 레이저 발사 공격
+    /// </summary>
+    /// <returns></returns>
     IEnumerator LaserAttack()
     {
         WaitForSeconds launchDelay = new WaitForSeconds(1f);
@@ -408,16 +401,13 @@ public class SlimeEnemy : BasicUnitScript
 
         yield return launchDelay;
 
-        if (Energy > 0)
-        {
-            WaitingTimeStart();
-        }
-        else
-        {
-            nowState = NowState.Standingby;
-        }
+        AttackEndSetting();
     }
 
+    /// <summary>
+    /// 함정 설치
+    /// </summary>
+    /// <returns></returns>
     IEnumerator TrapSkill()
     {
         WaitForSeconds shootDelay = new WaitForSeconds(0.65f);
@@ -439,16 +429,13 @@ public class SlimeEnemy : BasicUnitScript
             yield return shootDelay;
         }
 
-        if (Energy > 0)
-        {
-            WaitingTimeStart();
-        }
-        else
-        {
-            nowState = NowState.Standingby;
-        }
+        AttackEndSetting();
     }
 
+    /// <summary>
+    /// 독 폭포
+    /// </summary>
+    /// <returns></returns>
     IEnumerator RainSkill()
     {
         nowState = NowState.Attacking;
@@ -490,6 +477,124 @@ public class SlimeEnemy : BasicUnitScript
         nowWaterfallObj.onEnablePos.x = Random.Range(-10, 6);
         nowWaterfallObj.onEnablePos.y = 6.75f;
 
+        AttackEndSetting();
+    }
+
+    /// <summary>
+    /// 어퍼컷(궁극기)
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator ThornSkill()
+    {
+        Vector2 attackPos = new Vector2(0, 5.1f);
+        Vector2 nowOffset = new Vector2(0, 0);
+
+        float nowOffsetY = -1.84f;
+        float nowAttackPosX = -19;
+
+        nowState = NowState.Attacking;
+        Energy -= 15;
+        Damage *= 2;
+
+        //바닥으로 들어가는 애니메이션 재생
+        while (true)
+        {
+            if (nowOffsetY <= -4)
+            {
+                nowOffsetY = -4;
+                nowOffset.y = nowOffsetY;
+                ownCollider.offset = nowOffset;
+                break;
+            }
+
+            ownCollider.offset = nowOffset;
+            nowOffset.y = nowOffsetY;
+            nowOffsetY -= Time.deltaTime * 2f;
+
+            yield return null;
+        }
+
+        transform.position = attackPos;
+        isPhysicalAttacking = true;
+
+        for (int nowCount = 0; nowCount < 3; nowCount++)
+        {
+            nowAttackPosX += 9.5f;
+            attackPos.x = nowAttackPosX;
+            transform.position = attackPos;
+
+            //공격 범위 표시
+            yield return new WaitForSeconds(1.5f);
+            //공격 범위 삭제
+            //공격 애니메이션 실행
+
+            while (true)
+            {
+                if (nowOffsetY >= -1.84f)
+                {
+                    nowOffsetY = -1.84f;
+                    nowOffset.y = nowOffsetY;
+                    ownCollider.offset = nowOffset;
+                    break;
+                }
+
+                ownCollider.offset = nowOffset;
+                nowOffset.y = nowOffsetY;
+                nowOffsetY += Time.deltaTime * 6;
+
+                yield return null;
+            }
+
+            yield return new WaitForSeconds(0.5f);
+            //내려가는 애니메이션 실행
+            while (true)
+            {
+                if (nowOffsetY <= -4)
+                {
+                    nowOffsetY = -4;
+                    nowOffset.y = nowOffsetY;
+                    ownCollider.offset = nowOffset;
+                    break;
+                }
+
+                ownCollider.offset = nowOffset;
+                nowOffset.y = nowOffsetY;
+                nowOffsetY -= Time.deltaTime * 4.5f;
+
+                yield return null;
+            }
+        }
+
+        isPhysicalAttacking = false;
+        Damage /= 2;
+
+        //올라오는 애니메이션 실행
+
+        while (true)
+        {
+            if (nowOffsetY >= -1.84f)
+            {
+                nowOffsetY = -1.84f;
+                nowOffset.y = nowOffsetY;
+                ownCollider.offset = nowOffset;
+                break;
+            }
+
+            ownCollider.offset = nowOffset;
+            nowOffset.y = nowOffsetY;
+            nowOffsetY += Time.deltaTime * 2f;
+
+            yield return null;
+        }
+
+        AttackEndSetting();
+    }
+
+    /// <summary>
+    /// 공격 종료 후 처리 함수
+    /// </summary>
+    private void AttackEndSetting()
+    {
         if (Energy > 0)
         {
             WaitingTimeStart();
@@ -498,12 +603,6 @@ public class SlimeEnemy : BasicUnitScript
         {
             nowState = NowState.Standingby;
         }
-    }
-
-    IEnumerator ThornSkill()
-    {
-
-        yield return null;
     }
 
     /// <summary>
@@ -615,9 +714,11 @@ public class SlimeEnemy : BasicUnitScript
 
         battleUIObjScript.BattleUIObjSetActiveTrue(ChangeBattleUIAnim.Faint);
         battleUIAnimator.SetBool("NowFainting", true);
+        animator.SetBool("Fainting", true);
 
         yield return new WaitForSeconds(8);
 
+        animator.SetBool("Fainting", false);
         battleUIAnimator.SetBool("NowFainting", false);
         battleUIObjScript.BattleUIObjSetActiveFalse();
 
