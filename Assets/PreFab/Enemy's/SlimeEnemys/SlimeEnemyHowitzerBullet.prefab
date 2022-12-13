@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 6404968251905402420}
   - component: {fileID: 6404968251905402419}
-  - component: {fileID: 6404968251905402418}
   - component: {fileID: 6404968251905402417}
   - component: {fileID: 6404968251905402414}
+  - component: {fileID: 7304987078947629021}
   m_Layer: 0
   m_Name: SlimeEnemyHowitzerBullet
   m_TagString: Untagged
@@ -27,14 +27,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6404968251905402416}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 2, z: 1}
+  m_LocalScale: {x: 2, y: 2.7, z: 1}
   m_Children:
   - {fileID: 7821325870390794359}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!212 &6404968251905402419
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -75,8 +75,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 5
-  m_Sprite: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
-  m_Color: {r: 0.18629311, g: 0.8207547, b: 0.15098791, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 66fb1ed88b1270f419a679b90415db9b, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -86,22 +86,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!70 &6404968251905402418
-CapsuleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6404968251905402416}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: -0.0034188952, y: 0}
-  m_Size: {x: 0.85640657, y: 1}
-  m_Direction: 0
 --- !u!50 &6404968251905402417
 Rigidbody2D:
   serializedVersion: 4
@@ -140,6 +124,22 @@ MonoBehaviour:
   startYPos: 16
   thisBulletPoolObjKind: 3
   orbitalIndicationObj: {fileID: 7821325870390794358}
+--- !u!70 &7304987078947629021
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6404968251905402416}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.005278706, y: -0.000000022075792}
+  m_Size: {x: 1.0062419, y: 0.5125824}
+  m_Direction: 1
 --- !u!1 &7821325870390794358
 GameObject:
   m_ObjectHideFlags: 0
@@ -164,13 +164,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7821325870390794358}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -5, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: -5, y: 0, z: 0}
   m_LocalScale: {x: 0.15, y: 9, z: 1}
   m_Children: []
   m_Father: {fileID: 6404968251905402420}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!212 &7821325870390794356
 SpriteRenderer:
   m_ObjectHideFlags: 0

@@ -85,7 +85,7 @@ public class SwordAura : MonoBehaviour
 
         spawnPlusVector = new Vector2(2.5f, 0);
         movingPlusVector = new Vector3(speed, 0, 0);
-        basicSpinVector = new Vector3(0, 0, 2000);
+        basicSpinVector = new Vector3(0, 0, 1500);
 
         damage = 3; //기본 대미지 세팅
        
@@ -115,7 +115,7 @@ public class SwordAura : MonoBehaviour
     /// <summary>
     /// 검기 회전 함수
     /// </summary>
-    private void AuraSpin() => transform.eulerAngles += basicSpinVector * Time.deltaTime;
+    private void AuraSpin() => transform.eulerAngles += basicSpinVector * Time.deltaTime * 3;
     
     private void OnTriggerEnter2D(Collider2D collision)
     {
