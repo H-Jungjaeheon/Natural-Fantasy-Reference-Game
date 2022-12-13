@@ -197,6 +197,10 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         StartCoroutine(GamePauseObjOnOrOff());
     }
 
+    /// <summary>
+    /// 일시정지 화면 띄우기(화면 끄기 및 세팅 등의 화면 넘기기)
+    /// </summary>
+    /// <returns></returns>
     IEnumerator GamePauseObjOnOrOff()
     {
         while (true)
@@ -299,7 +303,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
         yield return oneSecondDelay;
 
-        introCoroutine = IntroducingTheStageAnim();
+        introCoroutine = IntroAnim();
         StartCoroutine(introCoroutine);
     }
 
@@ -307,10 +311,22 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     {
         while (isIntroducing)
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (Input.anyKeyDown)
             {
+                float duration = 0;
+
                 StopCoroutine(introCoroutine);
-                //여기에 인트로에 필요한 화면들 없애는 코드 넣기
+                DOTween.PauseAll();
+
+                if (introducingTheStageImage.rectTransform.anchoredPosition.x >= -1000) //인트로 애니메이션이 시작된지 얼마 되지 않았다면 이미지 바로 사라짐
+                {
+                    duration = 0.25f;
+                }
+
+                introducingTheStageImage.rectTransform.DOAnchorPosX(1920, duration);
+                introducingTheStageText.rectTransform.DOAnchorPosX(-1920, duration);
+
+                StartCoroutine(EndIntroAnim());
                 break;
             }
             yield return null;
@@ -318,10 +334,10 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     }
 
     /// <summary>
-    /// 게임 인트로 애니메이션 함수(보스 소개)
+    /// 스테이지 인트로 애니메이션 함수(보스 소개)
     /// </summary>
     /// <returns></returns>
-    IEnumerator IntroducingTheStageAnim()
+    IEnumerator IntroAnim()
     {
         isIntroducing = true;
 
@@ -352,8 +368,8 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
             yield return null;
         }
 
-        introducingTheStageImage.rectTransform.DOAnchorPosX(0, 0.5f);
-        introducingTheStageText.rectTransform.DOAnchorPosX(0, 0.5f);
+        introducingTheStageImage.rectTransform.DOAnchorPosX(0, 0.3f);
+        introducingTheStageText.rectTransform.DOAnchorPosX(0, 0.3f);
 
         while (introducingTheStageImage.rectTransform.anchoredPosition.x < 0)
         {
@@ -365,6 +381,11 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         introducingTheStageImage.rectTransform.DOAnchorPosX(1920, 0.25f);
         introducingTheStageText.rectTransform.DOAnchorPosX(-1920, 0.25f);
 
+        StartCoroutine(EndIntroAnim());
+    }
+
+    IEnumerator EndIntroAnim()
+    {
         while (nowAlpha > 0)
         {
             nowAlpha -= Time.deltaTime * 3;
@@ -403,6 +424,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         bbmInstance.ActionButtonSetActive(true);
 
         isIntroducing = false;
+        yield return null;
     }
 
     IEnumerator SceneChangeFaidOut(string changeSceneName)
