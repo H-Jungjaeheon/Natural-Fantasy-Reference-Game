@@ -100,7 +100,7 @@ public class SlimeEnemy : BasicUnitScript
 
         if (nowState == NowState.Standingby)
         {
-            StartCoroutine(HowitzerAttack());
+            StartCoroutine(ThornSkill());
             //int behaviorProbability = Random.Range(1, 101);
 
             //if (behaviorProbability <= 20)
@@ -486,6 +486,7 @@ public class SlimeEnemy : BasicUnitScript
     /// <returns></returns>
     IEnumerator ThornSkill()
     {
+        Vector2 rangePos = new Vector2(0, -0.5f);
         Vector2 attackPos = new Vector2(0, 5.1f);
         Vector2 nowOffset = new Vector2(0, 0);
 
@@ -520,12 +521,18 @@ public class SlimeEnemy : BasicUnitScript
         for (int nowCount = 0; nowCount < 3; nowCount++)
         {
             nowAttackPosX += 9.5f;
+
+            rangePos.x = nowAttackPosX;
             attackPos.x = nowAttackPosX;
+
             transform.position = attackPos;
 
-            //공격 범위 표시
+            var displayObj = objectPoolInstance.GetObject((int)PoolObjKind.RangeDisplay);
+            displayObj.transform.position = rangePos;
+
+            displayObj.GetComponent<RangeDisplayObj>().OnEnableSetting(new Vector2(6.8f, 5.5f), 1.5f);
+
             yield return new WaitForSeconds(1.5f);
-            //공격 범위 삭제
             //공격 애니메이션 실행
 
             while (true)

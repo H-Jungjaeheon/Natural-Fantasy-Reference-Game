@@ -1033,12 +1033,12 @@ public class Player : BasicUnitScript
             yield return null;
         }
 
-        var enchantedSwordAuraObj = objectPoolInstance.GetObject((int)PoolObjKind.PlayerSwordAura);
-        var enchantedSwordAuraObjComponent = enchantedSwordAuraObj.GetComponent<SwordAura>();
+        var swordAuraObj = objectPoolInstance.GetObject((int)PoolObjKind.PlayerSwordAura);
+        var swordAuraObjComponent = swordAuraObj.GetComponent<SwordAura>();
 
         if (isFailEnchant == false)
         {
-            enchantedSwordAuraObjComponent.IsEnchanted = true;
+            swordAuraObjComponent.IsEnchanted = true;
         }
 
         yield return new WaitForSeconds(0.3f);

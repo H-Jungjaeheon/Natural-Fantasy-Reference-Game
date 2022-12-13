@@ -91,6 +91,10 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     [SerializeField]
     [Tooltip("스테이지 및 보스 소개 텍스트")]
     private TextMeshProUGUI introducingTheStageText;
+
+    private bool isIntroducing;
+
+    private IEnumerator introCoroutine;
     #endregion
 
     #region 게임 오버 관련 
@@ -212,7 +216,9 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
                 {
                     gamePauseObj[(int)BattleOrMainOptionState.FirstPage].SetActive(false);
                 }
+
                 yield return null;
+
                 Time.timeScale = (nowBattleSceneOptionState == BattleOrMainOptionState.None) ? 0 : 1;
                 nowBattleSceneOptionState = (nowBattleSceneOptionState == BattleOrMainOptionState.None) ? BattleOrMainOptionState.FirstPage : BattleOrMainOptionState.None;
                 nowGameState = (nowGameState == NowGameState.Playing) ? NowGameState.Pausing : NowGameState.Playing;
@@ -293,7 +299,22 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
         yield return oneSecondDelay;
 
-        StartCoroutine(IntroducingTheStageAnim());
+        introCoroutine = IntroducingTheStageAnim();
+        StartCoroutine(introCoroutine);
+    }
+
+    IEnumerator IntroSkip()
+    {
+        while (isIntroducing)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                StopCoroutine(introCoroutine);
+                //여기에 인트로에 필요한 화면들 없애는 코드 넣기
+                break;
+            }
+            yield return null;
+        }
     }
 
     /// <summary>
@@ -302,6 +323,10 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     /// <returns></returns>
     IEnumerator IntroducingTheStageAnim()
     {
+        isIntroducing = true;
+
+        StartCoroutine(IntroSkip());
+
         nowColor = colors[(int)Colors.Black];
         nowAlpha = 0;
 
@@ -354,7 +379,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
             yield return null;
         }
 
-        while (mainCam.transform.position.x > 0)
+        while (mainCam.transform.position.x > 0) //카메라 확대에서 원래 시야만큼 돌리기
         {
             mainCam.transform.position -= startAnimCamMoveSpeed * (Time.deltaTime * 3);
             mainCam.orthographicSize += Time.deltaTime * 10.5f;
@@ -376,6 +401,8 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         statUIObj.SetActive(true);
 
         bbmInstance.ActionButtonSetActive(true);
+
+        isIntroducing = false;
     }
 
     IEnumerator SceneChangeFaidOut(string changeSceneName)
