@@ -8,6 +8,7 @@ TagManager:
   - Enemy
   - DeflectAbleObj
   - ObjDestroy
+  - PlayerProjectile
   layers:
   - Default
   - TransparentFX

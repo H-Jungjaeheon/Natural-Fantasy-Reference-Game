@@ -100,7 +100,7 @@ public class SlimeEnemy : BasicUnitScript
 
         if (nowState == NowState.Standingby)
         {
-            StartCoroutine(ThornSkill());
+            StartCoroutine(GoToAttack(false));
             //int behaviorProbability = Random.Range(1, 101);
 
             //if (behaviorProbability <= 20)
