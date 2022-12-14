@@ -62,7 +62,7 @@ public class WaterFallMachine : MonoBehaviour
     /// <returns></returns>
     IEnumerator SwitchDown()
     {
-        transform.DOMoveY(0, 5).SetEase(Ease.OutSine);
+        transform.DOMoveY(0, 3.5f).SetEase(Ease.OutSine);
 
         while(transform.position.y > 0)
         { 
@@ -88,7 +88,7 @@ public class WaterFallMachine : MonoBehaviour
     /// <returns></returns>
     IEnumerator SwitchUp()
     {
-        transform.DOMoveY(24, 5).SetEase(Ease.InSine);
+        transform.DOMoveY(24, 3.5f).SetEase(Ease.InSine);
 
         while (transform.position.y < 24)
         {
@@ -117,7 +117,6 @@ public class WaterFallMachine : MonoBehaviour
 
         while (true)
         {
-            print("tlfgod");
             waterFallKind = (waterFallKind == WaterFallKind.SlimeWater) ?
                 waterFallKind = WaterFallKind.Water : waterFallKind + 1; //현재 폭포 순서가 SlimeWater이면, Water로 순서 변경 (아니면 다음 순서의 폭포로 변경)
 

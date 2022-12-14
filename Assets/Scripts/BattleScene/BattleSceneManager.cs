@@ -135,6 +135,18 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     private TextMeshProUGUI goodAmountText;
     #endregion
 
+    [SerializeField]
+    [Tooltip("보스 오브젝트 모음")]
+    private GameObject[] bossObjs;
+
+    [SerializeField]
+    [Tooltip("스테이지 기믹 오브젝트 모음")]
+    private GameObject[] gimmickObjs;
+
+    [SerializeField]
+    [Tooltip("스테이지 배경 리소스 모음")]
+    private Sprite[] bgResources;
+
     [Tooltip("스탯(플레이어, 보스) UI 오브젝트")]
     public GameObject statUIObj;
 
