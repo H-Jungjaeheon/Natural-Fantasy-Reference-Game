@@ -2,11 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemysLaser : MonoBehaviour
+public enum EffectKind
+{
+    None,
+    BurnEffect,
+    SlowEffect
+}
+
+public enum DmgLimit
+{
+    Player,
+    Enemy,
+    All
+}
+
+public class Laser : MonoBehaviour
 {
     [SerializeField]
     [Tooltip("오브젝트 풀의 총알 종류")]
     private PoolObjKind thisBulletPoolObjKind;
+
+    [SerializeField]
+    [Tooltip("해당 공격 피격 시 걸리는 효과")]
+    private EffectKind effectKind;
+
+    [SerializeField]
+    [Tooltip("타격 시 피해 한정(타겟 한정)")]
+    private DmgLimit dmgLimit;
 
     [SerializeField]
     [Tooltip("레이저 데미지")]
@@ -115,19 +137,17 @@ public class EnemysLaser : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        if (collision.CompareTag("Player") && (dmgLimit == DmgLimit.Player || dmgLimit == DmgLimit.All))
+        {
+            targetInRange.Add(collision.gameObject);
+        }
+        else if (collision.CompareTag("Enemy") && (dmgLimit == DmgLimit.Enemy || dmgLimit == DmgLimit.All))
         {
             targetInRange.Add(collision.gameObject);
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player"))
-        {
-            targetInRange.Remove(collision.gameObject);
-        }
-    }
+    private void OnTriggerExit2D(Collider2D collision) => targetInRange.Remove(collision.gameObject);
 
     private void ReturnToObjPool() => ObjectPool.Instance.ReturnObject(gameObject, (int)thisBulletPoolObjKind);
 }

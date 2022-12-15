@@ -150,6 +150,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   thisBulletPoolObjKind: 4
+  effectKind: 0
+  dmgLimit: 0
   damage: 6
   hitCount: 1
   waitTime: 1

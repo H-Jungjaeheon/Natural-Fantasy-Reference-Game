@@ -104,51 +104,52 @@ public class SlimeEnemy : BasicUnitScript
 
         if (nowState == NowState.Standingby)
         {
-            int behaviorProbability = Random.Range(1, 101);
+            StartCoroutine(LaserAttack());
+            //int behaviorProbability = Random.Range(1, 101);
 
-            if (behaviorProbability <= 20)
-            {
-                if (Energy <= MaxEnergy / 3 && restLimitTurn >= maxRestLimitTurn)
-                {
-                    restLimitTurn = 0;
-                    nowCoroutine = Resting();
-                    StartCoroutine(nowCoroutine);
-                }
-                else
-                {
-                    behaviorProbability = Random.Range(1, 101);
-                    if (behaviorProbability <= 20)
-                    {
-                        nowCoroutine = GoToAttack(false);
-                        StartCoroutine(nowCoroutine);
-                    }
-                    else if (behaviorProbability <= 60)
-                    {
-                        nowCoroutine = HowitzerAttack();
-                        StartCoroutine(nowCoroutine);
-                    }
-                    else if (behaviorProbability <= 100)
-                    {
-                        nowCoroutine = LaserAttack();
-                        StartCoroutine(nowCoroutine);
-                    }
-                }
-            }
-            else if (behaviorProbability <= 55)
-            {
-                nowCoroutine = GoToAttack(true);
-                StartCoroutine(nowCoroutine);
-            }
-            else if (behaviorProbability <= 80)
-            {
-                nowCoroutine = GoToAttack(false);
-                StartCoroutine(nowCoroutine);
-            }
-            else if (behaviorProbability <= 100)
-            {
-                nowCoroutine = ShootBullet();
-                StartCoroutine(nowCoroutine);
-            }
+            //if (behaviorProbability <= 20)
+            //{
+            //    if (Energy <= MaxEnergy / 3 && restLimitTurn >= maxRestLimitTurn)
+            //    {
+            //        restLimitTurn = 0;
+            //        nowCoroutine = Resting();
+            //        StartCoroutine(nowCoroutine);
+            //    }
+            //    else
+            //    {
+            //        behaviorProbability = Random.Range(1, 101);
+            //        if (behaviorProbability <= 20)
+            //        {
+            //            nowCoroutine = GoToAttack(false);
+            //            StartCoroutine(nowCoroutine);
+            //        }
+            //        else if (behaviorProbability <= 60)
+            //        {
+            //            nowCoroutine = HowitzerAttack();
+            //            StartCoroutine(nowCoroutine);
+            //        }
+            //        else if (behaviorProbability <= 100)
+            //        {
+            //            nowCoroutine = LaserAttack();
+            //            StartCoroutine(nowCoroutine);
+            //        }
+            //    }
+            //}
+            //else if (behaviorProbability <= 55)
+            //{
+            //    nowCoroutine = GoToAttack(true);
+            //    StartCoroutine(nowCoroutine);
+            //}
+            //else if (behaviorProbability <= 80)
+            //{
+            //    nowCoroutine = GoToAttack(false);
+            //    StartCoroutine(nowCoroutine);
+            //}
+            //else if (behaviorProbability <= 100)
+            //{
+            //    nowCoroutine = ShootBullet();
+            //    StartCoroutine(nowCoroutine);
+            //}
 
             restLimitTurn++;
         }
@@ -388,7 +389,7 @@ public class SlimeEnemy : BasicUnitScript
         for (int nowLaunchCount = 0; nowLaunchCount < 2; nowLaunchCount++)
         {
             GameObject nowLaunchLaserObj = objectPoolInstance.GetObject((int)PoolObjKind.SlimeEnemyLaser);
-            EnemysLaser nowLaunchEnemyLaser = nowLaunchLaserObj.GetComponent<EnemysLaser>();
+            Laser nowLaunchEnemyLaser = nowLaunchLaserObj.GetComponent<Laser>();
 
             nowLaunchEnemyLaser.launchAngle = (isLaunchUp) ? 10 : 20;
             nowLaunchEnemyLaser.onEnablePos.x = (isLaunchUp) ? -4.9f : -4.2f;
@@ -475,7 +476,7 @@ public class SlimeEnemy : BasicUnitScript
         rigid.gravityScale = 0;
 
         GameObject waterfallObj = objectPoolInstance.GetObject((int)PoolObjKind.SlimePoisonWaterfall);
-        EnemysLaser nowWaterfallObj = waterfallObj.GetComponent<EnemysLaser>();
+        Laser nowWaterfallObj = waterfallObj.GetComponent<Laser>();
 
         nowWaterfallObj.onEnablePos.x = Random.Range(-10, 6);
         nowWaterfallObj.onEnablePos.y = 6.75f;
