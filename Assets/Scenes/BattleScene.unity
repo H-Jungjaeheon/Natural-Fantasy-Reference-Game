@@ -6207,6 +6207,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDontDestroyOnLoad: 0
+  stageData:
+  - bossObjs: {fileID: 0}
+    gimmickObjs: {fileID: 0}
+    bgResources: {fileID: 0}
+  - bossObjs: {fileID: 1159378193}
+    gimmickObjs: {fileID: 1306652335}
+    bgResources: {fileID: 0}
+  - bossObjs: {fileID: 0}
+    gimmickObjs: {fileID: 0}
+    bgResources: {fileID: 0}
+  - bossObjs: {fileID: 0}
+    gimmickObjs: {fileID: 0}
+    bgResources: {fileID: 0}
+  - bossObjs: {fileID: 0}
+    gimmickObjs: {fileID: 0}
+    bgResources: {fileID: 0}
+  - bossObjs: {fileID: 0}
+    gimmickObjs: {fileID: 0}
+    bgResources: {fileID: 0}
+  - bossObjs: {fileID: 0}
+    gimmickObjs: {fileID: 0}
+    bgResources: {fileID: 0}
+  - bossObjs: {fileID: 0}
+    gimmickObjs: {fileID: 0}
+    bgResources: {fileID: 0}
   playerCharacterPos: {x: 0, y: 0}
   enemyCharacterPos: {x: 0, y: 0}
   deActivableObj: {fileID: 1196064520}
@@ -6233,9 +6258,6 @@ MonoBehaviour:
   getGoodObj: {fileID: 1638764455}
   getGoodAnim: {fileID: 2100326395}
   goodAmountText: {fileID: 681186756}
-  bossObjs: []
-  gimmickObjs: []
-  bgResources: []
   statUIObj: {fileID: 1292796639}
   csComponent: {fileID: 824615374}
   player: {fileID: 1717870245}
@@ -7862,7 +7884,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &1306652336
 SpriteRenderer:
   m_ObjectHideFlags: 0

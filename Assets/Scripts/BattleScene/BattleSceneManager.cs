@@ -25,6 +25,18 @@ public enum GameEndKind
     GameClear
 }
 
+public enum StageKind
+{
+    Tutorial,
+    Stage1,
+    Stage2,
+    Stage3,
+    Stage4,
+    Stage5,
+    Stage6,
+    Stage7
+}
+
 public enum Colors
 {
     Black,
@@ -35,6 +47,23 @@ public enum Colors
 
 public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게임 오버 및 게임 클리어, 재화 관리
 {
+    [System.Serializable]
+    public class StageData
+    {
+        [Tooltip("보스 오브젝트 모음")]
+        public GameObject bossObjs;
+
+        [Tooltip("스테이지 기믹 오브젝트 모음")]
+        public GameObject gimmickObjs;
+
+        [Tooltip("스테이지 배경 리소스 모음")]
+        public Sprite bgResources;
+    }
+
+    [SerializeField]
+    [Tooltip("각 스테이지별 변경될 데이터들")]
+    private StageData[] stageData; 
+
     [HideInInspector]
     public Vector2 playerCharacterPos; //플레이어 포지션
 
@@ -135,18 +164,6 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     private TextMeshProUGUI goodAmountText;
     #endregion
 
-    [SerializeField]
-    [Tooltip("보스 오브젝트 모음")]
-    private GameObject[] bossObjs;
-
-    [SerializeField]
-    [Tooltip("스테이지 기믹 오브젝트 모음")]
-    private GameObject[] gimmickObjs;
-
-    [SerializeField]
-    [Tooltip("스테이지 배경 리소스 모음")]
-    private Sprite[] bgResources;
-
     [Tooltip("스탯(플레이어, 보스) UI 오브젝트")]
     public GameObject statUIObj;
 
@@ -196,6 +213,8 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         mainCam = Camera.main;
         gmInstance = GameManager.Instance;
         bbmInstance = BattleButtonManager.Instance;
+
+        stageData[(int)StageKind.Stage1].bossObjs.SetActive(true);
 
         nowBattleSceneOptionState = BattleOrMainOptionState.None;
 
@@ -436,6 +455,9 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         bbmInstance.ActionButtonSetActive(true);
 
         isIntroducing = false;
+
+        stageData[(int)StageKind.Stage1].gimmickObjs.SetActive(true);
+
         yield return null;
     }
 
