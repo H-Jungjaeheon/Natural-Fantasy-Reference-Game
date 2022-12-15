@@ -6894,6 +6894,7 @@ MonoBehaviour:
   - {r: 1, g: 0.53333336, b: 0.42352942, a: 1}
   plusVector: {x: 0, y: -6, z: 0}
   ownCollider: {fileID: 1159378196}
+  gimmick: {fileID: 1306652340}
 --- !u!1 &1174402841
 GameObject:
   m_ObjectHideFlags: 0
@@ -7879,7 +7880,7 @@ GameObject:
   - component: {fileID: 1306652338}
   - component: {fileID: 1306652340}
   m_Layer: 0
-  m_Name: SlimeBossMapGimmickObj
+  m_Name: Stage1MapGimmickObj
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

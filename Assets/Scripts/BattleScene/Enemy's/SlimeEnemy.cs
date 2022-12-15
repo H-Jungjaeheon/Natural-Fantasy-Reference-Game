@@ -7,6 +7,10 @@ public class SlimeEnemy : BasicUnitScript
     [Tooltip("자신의 피격 범위")]
     private BoxCollider2D ownCollider;
 
+    [SerializeField]
+    [Tooltip("스테이지 1 기믹 컴포넌트")]
+    private WaterFallMachine gimmick;
+
     private Vector2 speedVectorWithPattern = new Vector2(0, 0); //이동이 필요한 패턴 사용 시 사용할 속도 벡터
 
     private Vector2 spawnPos = new Vector2(0, 0); //패턴에 소환하는 오브젝트들 초기 위치 설정 벡터
@@ -676,6 +680,8 @@ public class SlimeEnemy : BasicUnitScript
         nowState = NowState.Dead;
         bsm.NowGetBasicGood += 50;
 
+        gimmick.StopFunction();
+
         animator.SetTrigger("Dead");
         spriteRenderer.sortingOrder = 5;
 
@@ -697,7 +703,6 @@ public class SlimeEnemy : BasicUnitScript
 
         bsm.StartGameEndPanelAnim(false);
 
-        //죽는 애니메이션 재생
         yield return null;
     }
 

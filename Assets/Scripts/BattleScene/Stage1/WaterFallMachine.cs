@@ -43,6 +43,8 @@ public class WaterFallMachine : MonoBehaviour
 
     private bool isWorked; //스위치 작동 여부 판별
 
+    private bool isStop; //기능 정지 여부 판별
+
     private IEnumerator moveCoroutine; //현재 실행중인 스위치를 움직이는 코루틴 
 
     private IEnumerator changeCoroutine; //폭포의 종류 돌아가며 뽑는 코루틴
@@ -64,7 +66,7 @@ public class WaterFallMachine : MonoBehaviour
         transform.DOMoveY(0, 3.5f).SetEase(Ease.OutSine);
 
         while(transform.position.y > 0)
-        { 
+        {
             yield return null;
         }
 
@@ -152,13 +154,20 @@ public class WaterFallMachine : MonoBehaviour
         StartCoroutine(moveCoroutine);
     }
 
+    public void StopFunction()
+    {
+        isStop = true;
+        DOTween.KillAll();
+        StopAllCoroutines();
+    }
+
     /// <summary>
     /// 다른 오브젝트와 충돌했을 때의 처리
     /// </summary>
     /// <param name="collision"> 충돌한 오브젝트 콜라이더 </param>
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (isWorked == false && collision.gameObject.CompareTag("PlayerProjectile"))
+        if (isStop == false && isWorked == false && collision.gameObject.CompareTag("PlayerProjectile"))
         {
             StartCoroutine(Operation());
         }
