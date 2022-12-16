@@ -39,6 +39,11 @@ public class SlimeEnemy : BasicUnitScript
 
         restWaitTime = 1.85f;
 
+        originalDamage = Damage;
+        originalMaxActionCoolTime = maxActionCoolTime;
+        originalRestWaitTime = restWaitTime;
+        originalSpeed = Speed;
+
         StartCoroutine(WaitUntilTheGameStarts());
     }
 

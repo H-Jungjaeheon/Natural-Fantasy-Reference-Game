@@ -8022,7 +8022,6 @@ MonoBehaviour:
   displayColors:
   - {r: 0, g: 0.9083636, b: 1, a: 1}
   - {r: 0, g: 0.4848323, b: 1, a: 1}
-  - {r: 0, g: 1, b: 0.6511245, a: 1}
 --- !u!1 &1333209595
 GameObject:
   m_ObjectHideFlags: 0

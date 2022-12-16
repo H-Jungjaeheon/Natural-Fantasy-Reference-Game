@@ -11,8 +11,7 @@ public enum TagKind
 public enum WaterFallKind
 {
     Water,
-    HotWater,
-    SlimeWater
+    HotWater
 }
 
 public enum SwitchState
@@ -121,8 +120,8 @@ public class WaterFallMachine : MonoBehaviour
 
         while (true)
         {
-            waterFallKind = (waterFallKind == WaterFallKind.SlimeWater) ?
-                waterFallKind = WaterFallKind.Water : waterFallKind + 1; //현재 폭포 순서가 SlimeWater이면, Water로 순서 변경 (아니면 다음 순서의 폭포로 변경)
+            waterFallKind = (waterFallKind == WaterFallKind.HotWater) ?
+                waterFallKind = WaterFallKind.Water : waterFallKind + 1; //현재 폭포 순서가 HotWater이면, Water로 순서 변경 (아니면 다음 순서의 폭포로 변경)
 
             displayObjSR.color = displayColors[(int)waterFallKind];
 
@@ -136,6 +135,8 @@ public class WaterFallMachine : MonoBehaviour
     /// <returns></returns>
     IEnumerator Operation()
     {
+        WaitForSeconds delay = new WaitForSeconds(2);
+
         if (moveCoroutine != null)
         {
             StopCoroutine(moveCoroutine);
@@ -149,7 +150,7 @@ public class WaterFallMachine : MonoBehaviour
         isWorked = true;
         switchSR.color = switchColors[(int)SwitchState.On];
 
-        yield return new WaitForSeconds(2);
+        yield return delay;
 
         GameObject waterfallObj = null;
         Laser nowWaterfallObj;
@@ -163,10 +164,6 @@ public class WaterFallMachine : MonoBehaviour
             case WaterFallKind.HotWater:
                 waterfallObj = objectPoolInstance.GetObject((int)PoolObjKind.HotWaterfall);
                 break;
-
-            case WaterFallKind.SlimeWater:
-                waterfallObj = objectPoolInstance.GetObject((int)PoolObjKind.Waterfall);
-                break;
         }
 
         nowWaterfallObj = waterfallObj.GetComponent<Laser>();
@@ -174,12 +171,15 @@ public class WaterFallMachine : MonoBehaviour
         nowWaterfallObj.onEnablePos.x = Random.Range(-10, 6);
         nowWaterfallObj.onEnablePos.y = 6.75f;
 
-        yield return new WaitForSeconds(2);
+        yield return delay;
         
         moveCoroutine = SwitchUp();
         StartCoroutine(moveCoroutine);
     }
 
+    /// <summary>
+    /// 애니메이션(동작) 작동 중지 함수
+    /// </summary>
     public void StopFunction()
     {
         isStop = true;

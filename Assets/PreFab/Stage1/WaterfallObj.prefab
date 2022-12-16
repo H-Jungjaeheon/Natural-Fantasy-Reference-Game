@@ -259,7 +259,6 @@ MonoBehaviour:
   waitTime: 1.5
   orbitalIndicationObj: {fileID: 2266320784057878786}
   laserAnimationObj: {fileID: 2266320783071583739}
-  targetInRange: []
   launchAngle: 0
   onEnablePos: {x: 0, y: 0}
 --- !u!50 &2266320784107436639
