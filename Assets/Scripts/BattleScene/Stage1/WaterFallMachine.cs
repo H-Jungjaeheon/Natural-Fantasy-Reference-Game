@@ -51,8 +51,11 @@ public class WaterFallMachine : MonoBehaviour
 
     private WaterFallKind waterFallKind; //현재 폭포의 종류
 
+    private ObjectPool objectPoolInstance; //오브젝트 풀 싱글톤 인스턴스
+
     void Start()
     {
+        objectPoolInstance = ObjectPool.Instance;
         moveCoroutine = SwitchDown();
         StartCoroutine(moveCoroutine);
     }
@@ -142,11 +145,34 @@ public class WaterFallMachine : MonoBehaviour
             StopCoroutine(changeCoroutine);
         }
 
-        //waterFallKind (현재 뽑힌 폭포의 종류에 따라서 폭포 소환)
-
         isDrawing = false;
         isWorked = true;
         switchSR.color = switchColors[(int)SwitchState.On];
+
+        yield return new WaitForSeconds(2);
+
+        GameObject waterfallObj = null;
+        Laser nowWaterfallObj;
+
+        switch (waterFallKind)
+        {
+            case WaterFallKind.Water:
+                waterfallObj = objectPoolInstance.GetObject((int)PoolObjKind.Waterfall);
+                break;
+
+            case WaterFallKind.HotWater:
+                waterfallObj = objectPoolInstance.GetObject((int)PoolObjKind.HotWaterfall);
+                break;
+
+            case WaterFallKind.SlimeWater:
+                waterfallObj = objectPoolInstance.GetObject((int)PoolObjKind.Waterfall);
+                break;
+        }
+
+        nowWaterfallObj = waterfallObj.GetComponent<Laser>();
+
+        nowWaterfallObj.onEnablePos.x = Random.Range(-10, 6);
+        nowWaterfallObj.onEnablePos.y = 6.75f;
 
         yield return new WaitForSeconds(2);
         

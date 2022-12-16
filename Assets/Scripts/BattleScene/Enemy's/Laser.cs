@@ -139,15 +139,48 @@ public class Laser : MonoBehaviour
     {
         if (collision.CompareTag("Player") && (dmgLimit == DmgLimit.Player || dmgLimit == DmgLimit.All))
         {
-            targetInRange.Add(collision.gameObject);
+
         }
         else if (collision.CompareTag("Enemy") && (dmgLimit == DmgLimit.Enemy || dmgLimit == DmgLimit.All))
         {
-            targetInRange.Add(collision.gameObject);
+
+        }
+        else
+        {
+            return;
+        }
+
+        targetInRange.Add(collision.gameObject);
+
+        BasicUnitScript busComponent = collision.GetComponent<BasicUnitScript>();
+
+        if (effectKind == EffectKind.SlowEffect)
+        {
+            busComponent.SlowDebuff(true, 60);
+        }
+        else if (effectKind == EffectKind.BurnEffect)
+        {
+
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision) => targetInRange.Remove(collision.gameObject);
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Enemy"))
+        {
+            BasicUnitScript busComponent = collision.GetComponent<BasicUnitScript>();
+            if (effectKind == EffectKind.SlowEffect)
+            {
+                busComponent.SlowDebuff(false, 0);
+            }
+            else if (effectKind == EffectKind.BurnEffect)
+            {
+
+            }
+
+            targetInRange.Remove(collision.gameObject);
+        }
+    }
 
     private void ReturnToObjPool() => ObjectPool.Instance.ReturnObject(gameObject, (int)thisBulletPoolObjKind);
 }
