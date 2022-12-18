@@ -8,12 +8,7 @@ public class BossHitParticle : MonoBehaviour
     [Tooltip("파티클 시스템 컴포넌트")]
     private ParticleSystem particle;
 
-    WaitForSeconds endDealy;
-
-    private void Start()
-    {
-        endDealy = new WaitForSeconds(particle.startLifetime);
-    }
+    WaitForSeconds endDealy = new WaitForSeconds(2);
 
     private void OnEnable()
     {

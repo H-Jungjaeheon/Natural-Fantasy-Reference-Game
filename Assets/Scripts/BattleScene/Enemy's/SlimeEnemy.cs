@@ -109,51 +109,52 @@ public class SlimeEnemy : BasicUnitScript
 
         if (nowState == NowState.Standingby)
         {
-            int behaviorProbability = Random.Range(1, 101);
+            StartCoroutine(ThornSkill());
+            //int behaviorProbability = Random.Range(1, 101);
 
-            if (behaviorProbability <= 20)
-            {
-                if (Energy <= MaxEnergy / 3 && restLimitTurn >= maxRestLimitTurn)
-                {
-                    restLimitTurn = 0;
-                    nowCoroutine = Resting();
-                    StartCoroutine(nowCoroutine);
-                }
-                else
-                {
-                    behaviorProbability = Random.Range(1, 101);
-                    if (behaviorProbability <= 20)
-                    {
-                        nowCoroutine = GoToAttack(false);
-                        StartCoroutine(nowCoroutine);
-                    }
-                    else if (behaviorProbability <= 60)
-                    {
-                        nowCoroutine = HowitzerAttack();
-                        StartCoroutine(nowCoroutine);
-                    }
-                    else if (behaviorProbability <= 100)
-                    {
-                        nowCoroutine = LaserAttack();
-                        StartCoroutine(nowCoroutine);
-                    }
-                }
-            }
-            else if (behaviorProbability <= 55)
-            {
-                nowCoroutine = GoToAttack(true);
-                StartCoroutine(nowCoroutine);
-            }
-            else if (behaviorProbability <= 80)
-            {
-                nowCoroutine = GoToAttack(false);
-                StartCoroutine(nowCoroutine);
-            }
-            else if (behaviorProbability <= 100)
-            {
-                nowCoroutine = ShootBullet();
-                StartCoroutine(nowCoroutine);
-            }
+            //if (behaviorProbability <= 20)
+            //{
+            //    if (Energy <= MaxEnergy / 3 && restLimitTurn >= maxRestLimitTurn)
+            //    {
+            //        restLimitTurn = 0;
+            //        nowCoroutine = Resting();
+            //        StartCoroutine(nowCoroutine);
+            //    }
+            //    else
+            //    {
+            //        behaviorProbability = Random.Range(1, 101);
+            //        if (behaviorProbability <= 20)
+            //        {
+            //            nowCoroutine = GoToAttack(false);
+            //            StartCoroutine(nowCoroutine);
+            //        }
+            //        else if (behaviorProbability <= 60)
+            //        {
+            //            nowCoroutine = HowitzerAttack();
+            //            StartCoroutine(nowCoroutine);
+            //        }
+            //        else if (behaviorProbability <= 100)
+            //        {
+            //            nowCoroutine = LaserAttack();
+            //            StartCoroutine(nowCoroutine);
+            //        }
+            //    }
+            //}
+            //else if (behaviorProbability <= 55)
+            //{
+            //    nowCoroutine = GoToAttack(true);
+            //    StartCoroutine(nowCoroutine);
+            //}
+            //else if (behaviorProbability <= 80)
+            //{
+            //    nowCoroutine = GoToAttack(false);
+            //    StartCoroutine(nowCoroutine);
+            //}
+            //else if (behaviorProbability <= 100)
+            //{
+            //    nowCoroutine = ShootBullet();
+            //    StartCoroutine(nowCoroutine);
+            //}
 
             restLimitTurn++;
         }
@@ -504,7 +505,7 @@ public class SlimeEnemy : BasicUnitScript
         Vector2 nowOffset = new Vector2(0, 0);
 
         float nowOffsetY = -1.84f;
-        float nowAttackPosX = -19;
+        int nowAttackPosX = -20;
 
         nowState = NowState.Attacking;
         Energy -= 15;
@@ -533,7 +534,7 @@ public class SlimeEnemy : BasicUnitScript
 
         for (int nowCount = 0; nowCount < 3; nowCount++)
         {
-            nowAttackPosX += 9.5f;
+            nowAttackPosX += 10;
 
             rangePos.x = nowAttackPosX;
             attackPos.x = nowAttackPosX;
