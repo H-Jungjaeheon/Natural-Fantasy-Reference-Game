@@ -95,7 +95,7 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     private bool isHpDiminishedProduction;
 
-    private bool isInvincibility; //현재 무적인지 판별
+    protected bool isInvincibility; //현재 무적인지 판별
 
     public bool IsInvincibility
     {
@@ -312,6 +312,10 @@ public abstract class BasicUnitScript : MonoBehaviour
     [Tooltip("몽환 게이지 표시 텍스트")]
     protected TextMeshProUGUI dreamyFigureText;
     #endregion
+
+    [SerializeField]
+    [Tooltip("파티클(이펙트) 생성 위치")]
+    protected Vector3 particlePos;
 
     protected const int maxGoodGetCount = 15;
 

@@ -13,7 +13,8 @@ public enum PoolObjKind
     SlimePoisonWaterfall,
     RangeDisplay,
     Waterfall,
-    HotWaterfall
+    HotWaterfall,
+    BossHitParticle
 }
 
 public class ObjectPool : Singleton<ObjectPool>

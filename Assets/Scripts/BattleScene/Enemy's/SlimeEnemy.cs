@@ -194,6 +194,11 @@ public class SlimeEnemy : BasicUnitScript
     public override void Hit(float damage, bool isDefending)
     {
         base.Hit(damage, isDefending);
+        if (isInvincibility == false && isDefending == false)
+        {
+            GameObject hitParticle = objectPoolInstance.GetObject((int)PoolObjKind.BossHitParticle);
+            hitParticle.transform.position = transform.position + particlePos; //현재 파티클 스폰 위치(오브젝트 위치 + 설정한 유닛 고유 파티클 생성 위치) 
+        }
     }
 
     /// <summary>

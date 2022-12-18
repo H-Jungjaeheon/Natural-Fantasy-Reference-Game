@@ -3951,10 +3951,10 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.35812664, y: -3.7971945}
+  m_Offset: {x: -0.35812664, y: -3.9023752}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -3965,7 +3965,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 18.52357, y: 3.1344032}
+  m_Size: {x: 18.52357, y: 2.924042}
   m_EdgeRadius: 0
 --- !u!50 &710298927
 Rigidbody2D:
@@ -5414,6 +5414,7 @@ MonoBehaviour:
   - {fileID: 6768952220245747530, guid: a984d3a094fcc2c4ab10b1f6060467da, type: 3}
   - {fileID: 2266320784107436611, guid: 7f05a9b2198cbe44bb9674e964370e13, type: 3}
   - {fileID: 5085652454348276345, guid: d5e024e4c4607574689a5f9417e1d4d0, type: 3}
+  - {fileID: 8351829919536778410, guid: 59d05ea8fb6662b4fa3f994226eac3fb, type: 3}
 --- !u!4 &951784404
 Transform:
   m_ObjectHideFlags: 0
@@ -6883,6 +6884,7 @@ MonoBehaviour:
   hpText: {fileID: 2039948097}
   energyText: {fileID: 1174402843}
   dreamyFigureText: {fileID: 503119707}
+  particlePos: {x: 0, y: -2, z: 0}
   startPos_Vector: {x: 0, y: 0}
   rigid: {fileID: 1159378195}
   attackRangeObjComponent: {fileID: 541266945}
@@ -9804,6 +9806,7 @@ MonoBehaviour:
   hpText: {fileID: 1092541587}
   energyText: {fileID: 548842203}
   dreamyFigureText: {fileID: 1333209597}
+  particlePos: {x: 0, y: 0, z: 0}
   startPos_Vector: {x: 0, y: 0}
   rigid: {fileID: 1717870243}
   attackRangeObjComponent: {fileID: 693950549}
