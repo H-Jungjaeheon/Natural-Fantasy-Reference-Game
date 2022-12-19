@@ -288,7 +288,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isDontDestroyOnLoad: 1
   gold: 0
-  statLevels: 000000000000000000000000
+  statLevels: 00000000000000000000000000000000
   nowSceneState: 0
 --- !u!4 &13168010
 Transform:

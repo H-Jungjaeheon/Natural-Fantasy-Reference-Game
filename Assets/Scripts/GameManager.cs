@@ -5,8 +5,8 @@ public enum UpgradeableStatKind
     Hp,
     Damage,
     Energy,
+    CoolTime,
     TotalStats
-    //CoolTime,
 }
 
 public enum NowSceneState
@@ -50,15 +50,8 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
-    private int reduceCoolTimeLevel;
-    public int ReduceCoolTimeLevel 
-    {
-        get { return reduceCoolTimeLevel; }
-        set { reduceCoolTimeLevel = value; }
-    }
-
-    //[HideInInspector]
-    public int[] statLevels = new int[(int)UpgradeableStatKind.TotalStats];
+    [HideInInspector]
+    public int[] statLevels;
     #endregion
 
     [HideInInspector]
@@ -75,5 +68,7 @@ public class GameManager : Singleton<GameManager>
             DontDestroyOnLoad(gameObject);
             instance = this;
         }
+
+        statLevels = new int[(int)UpgradeableStatKind.TotalStats];
     }
 }

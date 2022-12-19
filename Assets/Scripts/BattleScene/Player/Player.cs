@@ -224,25 +224,21 @@ public class Player : BasicUnitScript
     protected override void StartSetting()
     {
         var gameManagerIns = GameManager.Instance;
-        int energyPerLevel = gameManagerIns.statLevels[(int)UpgradeableStatKind.Energy] * 3; //레벨당 기력 증가식 (최대 30 증가)
-        int maxHpPerLevel = (int)MaxHp / 10 * (gameManagerIns.statLevels[(int)UpgradeableStatKind.Hp]); //레벨당 체력 증가식 (최대 100% 증가)
-        int damagePerLevel = Damage * gameManagerIns.statLevels[(int)UpgradeableStatKind.Damage] / 2; //레벨당 공격력 증가식 (최대 500% 증가)
-        float maxActionCoolTimePerLevel = (gameManagerIns.ReduceCoolTimeLevel * 0.1f); //레벨당 최대 쿨타임 차감식 (임시)
 
         InitializationAttackRangeSize = new Vector2(1.1f, 2.68f);
         InitializationAttackRangeOffset = new Vector2(0.18f, -0.08f);
 
-        maxActionCoolTime -= maxActionCoolTimePerLevel;
-        MaxHp += maxHpPerLevel;
-        MaxEnergy += energyPerLevel;
-        Damage += damagePerLevel;
+        MaxHp += (int)MaxHp / 10 * (gameManagerIns.statLevels[(int)UpgradeableStatKind.Hp]); //레벨당 체력 증가식 (최대 100% 증가)
+        Damage += Damage * gameManagerIns.statLevels[(int)UpgradeableStatKind.Damage] / 2; //레벨당 공격력 증가식 (최대 500% 증가)
+        MaxEnergy += gameManagerIns.statLevels[(int)UpgradeableStatKind.Energy] * 3; //레벨당 기력 증가식 (최대 30 증가)
+        maxActionCoolTime -= (gameManagerIns.statLevels[(int)UpgradeableStatKind.CoolTime] * 0.15f); //레벨당 최대 쿨타임 차감식 (임시);
 
         restWaitTime = 1.25f;
         maxNaturePassiveCount = 5;
 
         isResurrectionOpportunityExists = true;
 
-        nextPropertyIndex = (int)NowPlayerProperty.FlameProperty;//Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
+        nextPropertyIndex = Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
         nowPropertyImage.sprite = nowPropertyIconImages[(int)nowProperty];
 
         Energy = MaxEnergy;
