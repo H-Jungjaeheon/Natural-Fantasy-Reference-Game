@@ -3,7 +3,8 @@ using UnityEngine;
 public enum ChangeBattleUIAnim
 {
     Rest,
-    Faint
+    Faint,
+    SlowDebuff
 }
 
 public class BattleUIObj : MonoBehaviour

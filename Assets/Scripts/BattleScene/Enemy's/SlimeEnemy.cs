@@ -109,7 +109,7 @@ public class SlimeEnemy : BasicUnitScript
 
         if (nowState == NowState.Standingby)
         {
-            StartCoroutine(ThornSkill());
+            StartCoroutine(TrapSkill());
             //int behaviorProbability = Random.Range(1, 101);
 
             //if (behaviorProbability <= 20)
@@ -676,7 +676,15 @@ public class SlimeEnemy : BasicUnitScript
 
         battleUIAnimator.SetBool("NowResting", false);
         animator.SetBool("Resting", false);
-        battleUIObjScript.BattleUIObjSetActiveFalse();
+
+        if (isSlowing)
+        {
+            battleUIAnimator.SetBool("NowSlowing", true);
+        }
+        else
+        {
+            battleUIObjScript.BattleUIObjSetActiveFalse();
+        }
 
         nowActionCoolTime = maxActionCoolTime;
         WaitingTimeStart();
@@ -742,7 +750,15 @@ public class SlimeEnemy : BasicUnitScript
 
         animator.SetBool("Fainting", false);
         battleUIAnimator.SetBool("NowFainting", false);
-        battleUIObjScript.BattleUIObjSetActiveFalse();
+
+        if (isSlowing)
+        {
+            battleUIAnimator.SetBool("NowSlowing", true);
+        }
+        else
+        {
+            battleUIObjScript.BattleUIObjSetActiveFalse();
+        }
 
         Energy = MaxEnergy; 
         WaitingTimeStart();

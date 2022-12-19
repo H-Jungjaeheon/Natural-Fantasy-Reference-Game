@@ -768,8 +768,16 @@ public class Player : BasicUnitScript
             nowRestingCount += 1;
         }
 
-        battleUIObjScript.BattleUIObjSetActiveFalse();
         battleUIAnimator.SetBool("NowResting", false);
+
+        if (isSlowing)
+        {
+            battleUIAnimator.SetBool("NowSlowing", true);
+        }
+        else
+        {
+            battleUIObjScript.BattleUIObjSetActiveFalse();
+        }
 
         nowState = NowState.Standingby;
 
@@ -1206,9 +1214,17 @@ public class Player : BasicUnitScript
 
         yield return new WaitForSeconds(5); //나중에 매개변수로 레벨에 따라서 기절 시간 넣기
 
-        battleUIObjScript.BattleUIObjSetActiveFalse();
         animator.SetBool("Stuning", false);
         battleUIAnimator.SetBool("NowFainting", false);
+
+        if (isSlowing)
+        {
+            battleUIAnimator.SetBool("NowSlowing", true);
+        }
+        else
+        {
+            battleUIObjScript.BattleUIObjSetActiveFalse();
+        }
 
         Energy += 8; //나중에 매개변수로 레벨에 따라서 기력 차는 양 증가
         nowActionCoolTime = maxActionCoolTime;

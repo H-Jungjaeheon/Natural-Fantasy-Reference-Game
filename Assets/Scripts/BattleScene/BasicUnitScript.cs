@@ -313,6 +313,10 @@ public abstract class BasicUnitScript : MonoBehaviour
     protected TextMeshProUGUI dreamyFigureText;
     #endregion
 
+    protected bool isSlowing; //디버프 : 이동속도 감소 효과 판별
+
+    protected bool isImmunity; //현재 디버프 면역 상태인지 판별
+
     [SerializeField]
     [Tooltip("파티클(이펙트) 생성 위치")]
     protected Vector3 particlePos;
@@ -570,22 +574,25 @@ public abstract class BasicUnitScript : MonoBehaviour
     /// </summary>
     public void BurnDamageStart()
     {
-        if (nowBurnDamageStack == 5 || nowBurnDamageLimitTime >= maxStackableOverlapTime)
+        if (isImmunity == false)
         {
-            return;
-        }
+            if (nowBurnDamageStack == 5 || nowBurnDamageLimitTime >= maxStackableOverlapTime)
+            {
+                return;
+            }
 
-        nowBurnDamageStack++;
-        nowBurnDamageLimitTime = 0;
+            nowBurnDamageStack++;
+            nowBurnDamageLimitTime = 0;
 
-        maxStackableOverlapTime = 10 - nowBurnDamageStack; //현재 스택에 따른 화상 효과 중첩 가능 제한 시간
-        maxBurnDamageLimitTime = 15 + nowBurnDamageStack; //스택이 높을 수록 화상 지속시간 증가
+            maxStackableOverlapTime = 10 - nowBurnDamageStack; //현재 스택에 따른 화상 효과 중첩 가능 제한 시간
+            maxBurnDamageLimitTime = 15 + nowBurnDamageStack; //스택이 높을 수록 화상 지속시간 증가
 
-        if (nowBurnDamageStack == 1)
-        {
-            isBurning = true;
-            spriteRenderer.color = stateColors[(int)StateColor.BurningColor];
-            StartCoroutine(Burning());
+            if (nowBurnDamageStack == 1)
+            {
+                isBurning = true;
+                spriteRenderer.color = stateColors[(int)StateColor.BurningColor];
+                StartCoroutine(Burning());
+            }
         }
     }
 
@@ -596,13 +603,30 @@ public abstract class BasicUnitScript : MonoBehaviour
     /// <param name="percentage"> 이동속도 감소 % 수치 </param>
     public void SlowDebuff(bool isDebuffOn, int percentage)
     {
-        if (isDebuffOn)
+        if (isImmunity == false)
         {
-            Speed = (originalSpeed - originalSpeed * percentage / 100);
-        }
-        else
-        {
-            Speed = originalSpeed;
+            if (isDebuffOn)
+            {
+                isSlowing = true;
+
+                battleUIObjScript.BattleUIObjSetActiveTrue(ChangeBattleUIAnim.SlowDebuff);
+                battleUIAnimator.SetBool("NowSlowing", true);
+
+                Speed = (originalSpeed - originalSpeed * percentage / 100);
+            }
+            else
+            {
+                isSlowing = false;
+
+                if (nowState != NowState.Fainting && nowState != NowState.Resting)
+                {
+                    battleUIObjScript.BattleUIObjSetActiveFalse();
+                }
+
+                battleUIAnimator.SetBool("NowSlowing", false);
+
+                Speed = originalSpeed;
+            }
         }
     }
 
