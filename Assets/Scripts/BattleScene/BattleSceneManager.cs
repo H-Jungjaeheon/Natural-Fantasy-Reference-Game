@@ -56,8 +56,8 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         [Tooltip("스테이지 기믹 오브젝트 모음")]
         public GameObject gimmickObjs;
 
-        [Tooltip("스테이지 배경 리소스 모음")]
-        public Sprite bgResources;
+        [Tooltip("스테이지 배경 오브젝트 모음")]
+        public GameObject bgResources;
     }
 
     [SerializeField]

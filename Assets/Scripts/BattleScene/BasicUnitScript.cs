@@ -630,6 +630,9 @@ public abstract class BasicUnitScript : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 재화 지급 함수(보스)
+    /// </summary>
     public virtual void GetBasicGood() //후에 보스별로 주는 재화량 다르게 하기
     {
         if (nowGoodGetCount < maxGoodGetCount)
