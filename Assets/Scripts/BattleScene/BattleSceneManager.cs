@@ -179,7 +179,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     [HideInInspector]
     public NowGameState nowGameState;
 
-    private BattleOrMainOptionState nowBattleSceneOptionState;
+    private OptionPage nowBattleSceneOptionState;
 
     private Camera mainCam;
 
@@ -216,11 +216,11 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
         stageData[(int)StageKind.Stage1].bossObjs.SetActive(true);
 
-        nowBattleSceneOptionState = BattleOrMainOptionState.None;
+        nowBattleSceneOptionState = OptionPage.None;
 
         gmInstance.nowSceneState = NowSceneState.Ingame;
 
-        nowBattleSceneOptionState = BattleOrMainOptionState.None;
+        nowBattleSceneOptionState = OptionPage.None;
 
         playerCharacterPos = player.transform.position;
 
@@ -236,51 +236,54 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     {
         while (true)
         {
-            if (nowBattleSceneOptionState == BattleOrMainOptionState.SecondPage || nowBattleSceneOptionState == BattleOrMainOptionState.ThirdPage)
+            if (nowBattleSceneOptionState == OptionPage.SecondPage || nowBattleSceneOptionState == OptionPage.ThirdPage || nowBattleSceneOptionState == OptionPage.FourthPage)
             {
-                StartCoroutine(PressEscToGamePausePageChange());
+                if (nowBattleSceneOptionState != OptionPage.SecondPage)
+                {
+                    StartCoroutine(PressEscToGamePausePageChange());
+                }
                 break;
             }
             else if (Input.GetKeyDown(KeyCode.Escape) && nowGameState != NowGameState.GameEnd && nowGameState != NowGameState.GameReady)
             {
-                if (nowBattleSceneOptionState == BattleOrMainOptionState.None)
+                if (nowBattleSceneOptionState == OptionPage.None)
                 {
-                    gamePauseObj[(int)BattleOrMainOptionState.FirstPage].SetActive(true);
+                    gamePauseObj[(int)OptionPage.FirstPage].SetActive(true);
                 }
                 else
                 {
-                    gamePauseObj[(int)BattleOrMainOptionState.FirstPage].SetActive(false);
+                    gamePauseObj[(int)OptionPage.FirstPage].SetActive(false);
                 }
 
                 yield return null;
 
-                Time.timeScale = (nowBattleSceneOptionState == BattleOrMainOptionState.None) ? 0 : 1;
-                nowBattleSceneOptionState = (nowBattleSceneOptionState == BattleOrMainOptionState.None) ? BattleOrMainOptionState.FirstPage : BattleOrMainOptionState.None;
+                Time.timeScale = (nowBattleSceneOptionState == OptionPage.None) ? 0 : 1;
+                nowBattleSceneOptionState = (nowBattleSceneOptionState == OptionPage.None) ? OptionPage.FirstPage : OptionPage.None;
                 nowGameState = (nowGameState == NowGameState.Playing) ? NowGameState.Pausing : NowGameState.Playing;
             }
             yield return null;
         }
     }
 
+    /// <summary>
+    /// 옵션 창 띄울 때 ESC 작동
+    /// </summary>
+    /// <returns></returns>
     IEnumerator PressEscToGamePausePageChange()
     {
         while (true)
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                if (nowBattleSceneOptionState == BattleOrMainOptionState.SecondPage)
-                {
-                    gamePauseObj[(int)BattleOrMainOptionState.SecondPage].SetActive(false);
-                    gamePauseObj[(int)BattleOrMainOptionState.FirstPage].SetActive(true);
-                }
-                else if (nowBattleSceneOptionState == BattleOrMainOptionState.ThirdPage)
-                {
-                    gamePauseObj[(int)BattleOrMainOptionState.ThirdPage].SetActive(false);
-                    gamePauseObj[(int)BattleOrMainOptionState.FirstPage].SetActive(true);
-                }
-                nowBattleSceneOptionState = BattleOrMainOptionState.FirstPage;
+                gamePauseObj[(int)nowBattleSceneOptionState].SetActive(false);
+                gamePauseObj[(int)OptionPage.FirstPage].SetActive(true);
+                
+                nowBattleSceneOptionState = OptionPage.FirstPage;
+
                 yield return null;
+
                 StartCoroutine(GamePauseObjOnOrOff());
+
                 break;
             }
             yield return null;
@@ -289,18 +292,21 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
     public void PressToGamePausePageChangeButton(int nowChange)
     {
-        for (int nowIndex = (int)BattleOrMainOptionState.FirstPage; nowIndex < (int)BattleOrMainOptionState.PageCount; nowIndex++)
+        bool isNowPage = false;
+
+        for (int nowIndex = (int)OptionPage.FirstPage; nowIndex < (int)OptionPage.PageCount; nowIndex++)
         {
-            if (nowIndex == nowChange)
-            {
-                gamePauseObj[nowIndex].SetActive(true);
-            }
-            else
-            {
-                gamePauseObj[nowIndex].SetActive(false);
-            }
+            isNowPage = (nowIndex == nowChange); //현재 인덱스가 현재 페이지 인덱스와 일치한다면, 현재 인덱스 페이지 활성화(다르다면, 비활성화)
+
+            gamePauseObj[nowIndex].SetActive(isNowPage);
         }
-        nowBattleSceneOptionState = (BattleOrMainOptionState)nowChange;
+
+        nowBattleSceneOptionState = (OptionPage)nowChange;
+
+        if (nowChange == (int)OptionPage.FirstPage)
+        {
+            StartCoroutine(GamePauseObjOnOrOff());
+        }
     }
 
     /// <summary>
@@ -425,7 +431,6 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
             yield return null;
         }
 
-
         while (introducingTheStageImage.rectTransform.anchoredPosition.x < 1910)
         {
             yield return null;
@@ -461,6 +466,11 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         yield return null;
     }
 
+    public void GameExit(string changeSceneName)
+    {
+        StartCoroutine(SceneChangeFaidOut(changeSceneName));
+    }
+
     IEnumerator SceneChangeFaidOut(string changeSceneName)
     {
         nowColor = colors[(int)Colors.Black];
@@ -471,7 +481,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         faidImage.transform.SetAsLastSibling();
         faidObj.SetActive(true);
 
-        while (nowAlpha < 3)
+        while (nowAlpha < 1)
         {
             nowColor.a = nowAlpha;
             faidImage.color = nowColor;

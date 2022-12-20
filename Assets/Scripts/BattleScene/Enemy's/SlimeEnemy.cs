@@ -45,7 +45,6 @@ public class SlimeEnemy : BasicUnitScript
         originalSpeed = Speed;
 
         StartCoroutine(WaitUntilTheGameStarts());
-        SlowDebuff(true, 80);
     }
 
     /// <summary>
