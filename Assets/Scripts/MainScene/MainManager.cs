@@ -83,7 +83,7 @@ public class MainManager : Singleton<MainManager>
 
     private void Start()
     {
-        GameManager.Instance.nowSceneState = NowSceneState.Main;
+        GameManager.Instance.nowScene = SceneKind.Main;
         nowMainOptionState = OptionPage.None;
         nowScreenState = ScreenState.MainScreen;
         

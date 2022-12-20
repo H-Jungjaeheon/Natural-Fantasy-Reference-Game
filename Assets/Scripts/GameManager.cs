@@ -9,7 +9,7 @@ public enum UpgradeableStatKind
     TotalStats
 }
 
-public enum NowSceneState
+public enum SceneKind
 {
     Title,
     Main,
@@ -43,7 +43,7 @@ public class GameManager : Singleton<GameManager>
                 value = 999999999;
             }
             gold = value;
-            if (nowSceneState == NowSceneState.Main)
+            if (nowScene == SceneKind.Main)
             {
                 MainManager.Instance.BasicGoodsTextFixed();
             }
@@ -55,7 +55,7 @@ public class GameManager : Singleton<GameManager>
     #endregion
 
     [HideInInspector]
-    public NowSceneState nowSceneState;
+    public SceneKind nowScene;
 
     public void Awake()
     {

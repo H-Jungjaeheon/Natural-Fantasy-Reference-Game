@@ -19,12 +19,6 @@ public enum NowGameState
     GameEnd
 }
 
-public enum GameEndKind
-{
-    GameOver,
-    GameClear
-}
-
 public enum StageKind
 {
     Tutorial,
@@ -65,10 +59,10 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     private StageData[] stageData; 
 
     [HideInInspector]
-    public Vector2 playerCharacterPos; //플레이어 포지션
+    public Vector2 playerCharacterPos; //플레이어 시작 포지션
 
     [HideInInspector]
-    public Vector2 enemyCharacterPos; //적 포지션
+    public Vector2 enemyCharacterPos; //적 시작 포지션
 
     private int nowGetBasicGood; //현재 스테이지에서 얻은 재화 개수
 
@@ -87,8 +81,8 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     private GameObject[] gamePauseObj;
 
     [SerializeField]
-    [Tooltip("게임 종료 판넬 오브젝트")]
-    private GameObject[] gameEndObj;
+    [Tooltip("게임종료 시 띄울 판넬 오브젝트")]
+    private GameObject gameEndObj;
 
     #region 화면 페이드(Fade) 연출 관련
     [Header("화면 페이드(Fade) 연출 관련")]
@@ -144,8 +138,6 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     [SerializeField]
     [Tooltip("재화 획득 표기 오브젝트")]
     private GameObject obtainObj;
-
-    private GameEndKind gameEndKind;
     #endregion
 
     #region 재화 획득 애니메이션 관련 
@@ -183,17 +175,9 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
     private Camera mainCam;
 
-    private WaitForSeconds oneSecondDelay = new WaitForSeconds(1);
-
-    private WaitForSeconds zeroPointFiveDelay = new WaitForSeconds(0.5f);
-
     private GameManager gmInstance;
 
     private BattleButtonManager bbmInstance;
-
-    private Vector3 startAnimCamMoveSpeed = new Vector3(7, 0, 0);
-
-    private Vector3 camTargetPos;
 
     public void Awake()
     {
@@ -214,11 +198,9 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         gmInstance = GameManager.Instance;
         bbmInstance = BattleButtonManager.Instance;
 
-        stageData[(int)StageKind.Stage1].bossObjs.SetActive(true);
+        stageData[(int)StageKind.Stage1].bossObjs.SetActive(true); //나중에 게임 매니저에서 현재 선택한 스테이지 인덱스 받아서 실행하기
 
-        nowBattleSceneOptionState = OptionPage.None;
-
-        gmInstance.nowSceneState = NowSceneState.Ingame;
+        gmInstance.nowScene = SceneKind.Ingame;
 
         nowBattleSceneOptionState = OptionPage.None;
 
@@ -246,14 +228,9 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
             }
             else if (Input.GetKeyDown(KeyCode.Escape) && nowGameState != NowGameState.GameEnd && nowGameState != NowGameState.GameReady)
             {
-                if (nowBattleSceneOptionState == OptionPage.None)
-                {
-                    gamePauseObj[(int)OptionPage.FirstPage].SetActive(true);
-                }
-                else
-                {
-                    gamePauseObj[(int)OptionPage.FirstPage].SetActive(false);
-                }
+                bool isNonePage = (nowBattleSceneOptionState == OptionPage.None); //현재 아무 페이지도 띄우고 있지 않다면 참(띄우고 있다면 거짓)
+
+                gamePauseObj[(int)OptionPage.FirstPage].SetActive(isNonePage); //아무 페이지도 띄우고 있지 않은 상태로 ESC키를 누르면 옵션(1페이지)창 띄우기(띄우고 있다면 옵션창 닫기)
 
                 yield return null;
 
@@ -315,6 +292,8 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     /// <returns></returns>
     IEnumerator StartFaidAnim()
     {
+        WaitForSeconds animDelay = new WaitForSeconds(1f);
+
         nowColor = colors[(int)Colors.Black];
         nowAlpha = 1;
 
@@ -328,7 +307,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         nowColor.a = 1;
         faidImage.color = nowColor;
 
-        yield return oneSecondDelay;
+        yield return animDelay;
 
         while (nowAlpha > 0)
         {
@@ -338,7 +317,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
             yield return null;
         }
 
-        yield return oneSecondDelay;
+        yield return animDelay;
 
         introCoroutine = IntroAnim();
         StartCoroutine(introCoroutine);
@@ -360,8 +339,8 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
                     duration = 0.25f;
                 }
 
-                introducingTheStageImage.rectTransform.DOAnchorPosX(1920, duration);
-                introducingTheStageText.rectTransform.DOAnchorPosX(-1920, duration);
+                introducingTheStageImage.rectTransform.DOAnchorPosX(1920f, duration);
+                introducingTheStageText.rectTransform.DOAnchorPosX(-1920f, duration);
 
                 StartCoroutine(EndIntroAnim());
                 break;
@@ -376,6 +355,9 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     /// <returns></returns>
     IEnumerator IntroAnim()
     {
+        Vector3 camMoveSpeed = new Vector3(7f, 0f, 0f);
+        Vector3 camTargetPos = new Vector3(4f, 0.5f, -10f);
+
         isIntroducing = true;
 
         StartCoroutine(IntroSkip());
@@ -385,14 +367,10 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
         while (mainCam.transform.position.x < 4f)
         {
-            mainCam.transform.position += startAnimCamMoveSpeed * Time.deltaTime;
+            mainCam.transform.position += camMoveSpeed * Time.deltaTime;
             mainCam.orthographicSize -= Time.deltaTime * 3.5f;
             yield return null;
         }
-
-        camTargetPos.x = 4f;
-        camTargetPos.y = 0.5f;
-        camTargetPos.z = -10;
 
         mainCam.transform.position = camTargetPos;
         mainCam.orthographicSize = 7.5f;
@@ -405,24 +383,27 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
             yield return null;
         }
 
-        introducingTheStageImage.rectTransform.DOAnchorPosX(0, 0.3f);
-        introducingTheStageText.rectTransform.DOAnchorPosX(0, 0.3f);
+        introducingTheStageImage.rectTransform.DOAnchorPosX(0f, 0.3f);
+        introducingTheStageText.rectTransform.DOAnchorPosX(0f, 0.3f);
 
         while (introducingTheStageImage.rectTransform.anchoredPosition.x < 0)
         {
             yield return null;
         }
 
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(3f);
 
-        introducingTheStageImage.rectTransform.DOAnchorPosX(1920, 0.25f);
-        introducingTheStageText.rectTransform.DOAnchorPosX(-1920, 0.25f);
+        introducingTheStageImage.rectTransform.DOAnchorPosX(1920f, 0.25f);
+        introducingTheStageText.rectTransform.DOAnchorPosX(-1920f, 0.25f);
 
         StartCoroutine(EndIntroAnim());
     }
 
     IEnumerator EndIntroAnim()
     {
+        Vector3 camMoveSpeed = new Vector3(7f, 0f, 0f);
+        Vector3 camTargetPos = new Vector3(0f, 0.5f, -10f);
+
         while (nowAlpha > 0)
         {
             nowAlpha -= Time.deltaTime * 3;
@@ -438,19 +419,15 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
         while (mainCam.transform.position.x > 0) //카메라 확대에서 원래 시야만큼 돌리기
         {
-            mainCam.transform.position -= startAnimCamMoveSpeed * (Time.deltaTime * 3);
+            mainCam.transform.position -= camMoveSpeed * (Time.deltaTime * 3);
             mainCam.orthographicSize += Time.deltaTime * 10.5f;
             yield return null;
         }
 
-        camTargetPos.x = 0;
-        camTargetPos.y = 0.5f;
-        camTargetPos.z = -10;
-
         mainCam.transform.position = camTargetPos;
         mainCam.orthographicSize = 9.5f;
 
-        yield return oneSecondDelay;
+        yield return new WaitForSeconds(1f);
 
         faidObj.SetActive(false);
         nowGameState = NowGameState.Playing;
@@ -462,20 +439,16 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         isIntroducing = false;
 
         stageData[(int)StageKind.Stage1].gimmickObjs.SetActive(true);
-
-        yield return null;
     }
 
-    public void GameExit(string changeSceneName)
+    public void GameExit() => StartCoroutine(SceneChangeFaidOut(SceneKind.Main));
+    
+    IEnumerator SceneChangeFaidOut(SceneKind changeScene)
     {
-        StartCoroutine(SceneChangeFaidOut(changeSceneName));
-    }
-
-    IEnumerator SceneChangeFaidOut(string changeSceneName)
-    {
-        nowColor = colors[(int)Colors.Black];
         WaitForSecondsRealtime faidDelay = new WaitForSecondsRealtime(0.01f);
         float nowAlphaPlusPerSecond = 0.025f;
+
+        nowColor = colors[(int)Colors.Black];
         nowAlpha = 0;
 
         faidImage.transform.SetAsLastSibling();
@@ -491,7 +464,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         }
 
         Time.timeScale = 1;
-        SceneManager.LoadScene(changeSceneName);
+        SceneManager.LoadScene((int)changeScene);
     }
 
     /// <summary>
@@ -501,7 +474,6 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     public void StartGameEndPanelAnim(bool isGameOver)
     {
         nowGameState = NowGameState.GameEnd;
-        gameEndKind = isGameOver ? GameEndKind.GameOver : GameEndKind.GameClear;
 
         if (isGameOver)
         {
@@ -538,9 +510,9 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         faidObj.SetActive(true);
         faidImage.color = nowColor;
 
-        gameEndObj[(int)GameEndKind.GameOver].SetActive(true);
+        gameEndObj.SetActive(true);
 
-        yield return zeroPointFiveDelay;
+        yield return new WaitForSeconds(0.5f);
 
         nowColor = colors[(int)Colors.Red];
 
@@ -586,10 +558,10 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
             yield return null;
         }
 
-        gameEndObj[(int)GameEndKind.GameOver].SetActive(true);
+        gameEndObj.SetActive(true);
         gameOverText.text = "Stage 1 Clear!";
 
-        yield return oneSecondDelay;
+        yield return new WaitForSeconds(1f);
 
         while (nowAlpha > 0)
         {
@@ -606,20 +578,22 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
     IEnumerator SameEndAnim() //게임 종료 판넬 애니메이션 (공통)
     {
+        WaitForSeconds animDelay = new WaitForSeconds(1f);
+
         nowColor = colors[(int)Colors.White];
 
         nowAlpha = 0;
 
-        yield return zeroPointFiveDelay;
+        yield return new WaitForSeconds(0.5f);
 
         gameOverText.transform.DOLocalMoveY(300, 0.5f);
         obtainText.text = $"획득한 몽환의 구슬 : {NowGetBasicGood}개";
 
-        yield return oneSecondDelay;
+        yield return animDelay;
 
         obtainObj.SetActive(true);
 
-        yield return oneSecondDelay;
+        yield return animDelay;
 
         nowColor = colors[(int)Colors.White];
 
@@ -634,11 +608,14 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
                     StartCoroutine(EndFaidAnim());
                     yield break;
                 }
+
                 nowAlpha += Time.deltaTime * 0.5f;
                 nowColor.a = nowAlpha;
                 guideText.color = nowColor;
+
                 yield return null;
             }
+
             while (nowAlpha > 0)
             {
                 if (Input.anyKeyDown)
@@ -646,6 +623,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
                     StartCoroutine(EndFaidAnim());
                     yield break;
                 }
+
                 nowAlpha -= Time.deltaTime * 0.8f;
                 nowColor.a = nowAlpha;
                 guideText.color = nowColor;
@@ -682,6 +660,8 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
     IEnumerator EndGetGoodAnim()
     {
+        WaitForSeconds animDelay = new WaitForSeconds(1f);
+
         if (NowGetBasicGood > 0)
         {
             nowColor = colors[(int)Colors.Yellow];
@@ -691,13 +671,13 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
             getGoodObj.transform.DOLocalMoveY(-15, 0.7f);
 
-            yield return oneSecondDelay;
+            yield return animDelay;
 
             getGoodAnim.SetFloat("NowAnimSpeed", 1);
 
             goodAmountText.text = $"+{NowGetBasicGood}";
 
-            yield return zeroPointFiveDelay;
+            yield return new WaitForSeconds(0.5f);
 
             goodAmountText.color = nowColor;
 
@@ -709,7 +689,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
             goodAmountText.fontSize = 40;
 
-            yield return oneSecondDelay;
+            yield return animDelay;
 
             getGoodObj.transform.DOLocalMoveY(-150, 0.5f).SetEase(Ease.InBack);
 
@@ -723,10 +703,8 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
             gmInstance.Gold += NowGetBasicGood;
         }
 
-        yield return oneSecondDelay;
+        yield return animDelay;
 
-        SceneManager.LoadScene("Main");
-
-        yield return null;
+        SceneManager.LoadScene((int)SceneKind.Main);
     }
 }
