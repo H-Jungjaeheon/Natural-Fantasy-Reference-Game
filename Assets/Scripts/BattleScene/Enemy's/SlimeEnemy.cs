@@ -45,6 +45,7 @@ public class SlimeEnemy : BasicUnitScript
         originalSpeed = Speed;
 
         StartCoroutine(WaitUntilTheGameStarts());
+        SlowDebuff(true, 80);
     }
 
     /// <summary>
@@ -109,7 +110,7 @@ public class SlimeEnemy : BasicUnitScript
 
         if (nowState == NowState.Standingby)
         {
-            StartCoroutine(TrapSkill());
+            StartCoroutine(ThornSkill());
             //int behaviorProbability = Random.Range(1, 101);
 
             //if (behaviorProbability <= 20)
@@ -510,6 +511,10 @@ public class SlimeEnemy : BasicUnitScript
         nowState = NowState.Attacking;
         Energy -= 15;
         Damage *= 2;
+
+        SlowDebuff(false, 0); //버프 해제(슬로우)
+        nowBurnDamageLimitTime = maxBurnDamageLimitTime; //버프 해제(화상)
+        isImmunity = true;
 
         //바닥으로 들어가는 애니메이션 재생
         while (true)
