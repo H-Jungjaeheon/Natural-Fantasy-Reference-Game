@@ -120,44 +120,39 @@ public class SlimeEnemy : BasicUnitScript
                 {
                     restLimitTurn = 0;
                     nowCoroutine = Resting();
-                    StartCoroutine(nowCoroutine);
                 }
                 else
                 {
                     behaviorProbability = Random.Range(1, 101);
+
                     if (behaviorProbability <= 20)
                     {
                         nowCoroutine = GoToAttack(false);
-                        StartCoroutine(nowCoroutine);
                     }
                     else if (behaviorProbability <= 60)
                     {
                         nowCoroutine = HowitzerAttack();
-                        StartCoroutine(nowCoroutine);
                     }
                     else if (behaviorProbability <= 100)
                     {
                         nowCoroutine = LaserAttack();
-                        StartCoroutine(nowCoroutine);
                     }
                 }
             }
             else if (behaviorProbability <= 55)
             {
                 nowCoroutine = GoToAttack(true);
-                StartCoroutine(nowCoroutine);
             }
             else if (behaviorProbability <= 80)
             {
                 nowCoroutine = GoToAttack(false);
-                StartCoroutine(nowCoroutine);
             }
             else if (behaviorProbability <= 100)
             {
                 nowCoroutine = ShootBullet();
-                StartCoroutine(nowCoroutine);
             }
 
+            StartCoroutine(nowCoroutine);
             restLimitTurn++;
         }
     }
@@ -183,14 +178,7 @@ public class SlimeEnemy : BasicUnitScript
 
         animator.SetBool("Moving", false);
 
-        if (isBasicCloseAttack)
-        {
-            nowCoroutine = Attacking(true, nowAttackCount_I, 0.65f); //기본공격 실행
-        }
-        else
-        {
-            nowCoroutine = DefenselessCloseAttack(); //내려찍기 공격 실행
-        }
+        nowCoroutine = (isBasicCloseAttack) ? Attacking(true, nowAttackCount_I, 0.65f) : DefenselessCloseAttack(); //isBasicCloseAttack이 참이면, nowCoroutine에 현재 실행할 기본 근접공격 코루틴 저장(거짓이면, 내려찍기 공격 코루틴 저장)
         StartCoroutine(nowCoroutine);
     }
 
@@ -687,10 +675,6 @@ public class SlimeEnemy : BasicUnitScript
         rigid.velocity = Vector2.zero;
         rigid.gravityScale = 0;
 
-        //battleUIAnimator.SetBool("NowFainting", false);
-        //battleUIObjScript.BattleUIObjSetActiveFalse();
-
-        //battleUIAnimator.SetBool("NowResting", false);
         battleUIObjScript.BattleUIObjSetActiveFalse();
 
         ActionCoolTimeBarSetActive(false);
@@ -706,15 +690,6 @@ public class SlimeEnemy : BasicUnitScript
     /// <returns></returns>
     protected override IEnumerator Fainting()
     {
-        while (true)
-        {
-            if (nowState == NowState.Standingby || nowState == NowState.Defensing)
-            {
-                break;
-            }
-            yield return null;
-        }
-
         nowState = NowState.Fainting;
 
         battleUIObjScript.BattleUIObjSetActiveTrue(ChangeBattleUIAnim.Faint);

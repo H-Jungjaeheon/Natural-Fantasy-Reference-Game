@@ -142,7 +142,7 @@ public abstract class BasicUnitScript : MonoBehaviour
                 if (value <= 0 && isResurrectionReady == false)
                 {
                     hp = 0;
-                    StopAllCoroutines();
+                    //StopAllCoroutines();
                     StartCoroutine(Dead());
                 }
                 else
@@ -189,8 +189,7 @@ public abstract class BasicUnitScript : MonoBehaviour
             
             if (value <= 0)
             {
-                nowCoroutine = Fainting();
-                StartCoroutine(nowCoroutine);
+                StartCoroutine(WaitForFaint());
             }
         }
     }
@@ -530,6 +529,17 @@ public abstract class BasicUnitScript : MonoBehaviour
     protected abstract IEnumerator Fainting();
 
     protected abstract IEnumerator Resting();
+
+    private IEnumerator WaitForFaint()
+    {
+        while (nowState != NowState.Standingby && nowState != NowState.Defensing)
+        {
+            yield return null;
+        }
+
+        nowCoroutine = Fainting();
+        StartCoroutine(nowCoroutine);
+    }
 
     /// <summary>
     /// 공격 범위 변경

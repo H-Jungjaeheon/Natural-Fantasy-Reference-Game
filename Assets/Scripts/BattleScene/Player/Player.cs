@@ -392,7 +392,7 @@ public class Player : BasicUnitScript
             }
             yield return null;
         }
-
+        
         nowState = NowState.ChangingProperties;
 
         NowChangePropertyCoolTime = 0;
@@ -465,7 +465,7 @@ public class Player : BasicUnitScript
         {
             DreamyFigure -= 10;
             StopCoroutine(propertyTimeCount); //실행중인 속성 지속시간 세는 코루틴 중지 (중복 실행 방지)
-            StartCoroutine(ChangeProperty(false)); //true
+            StartCoroutine(ChangeProperty(false));
         }
     }
 
@@ -551,9 +551,11 @@ public class Player : BasicUnitScript
                     isAlreadyShake = true;
                     CamShake.CamShakeMod(true, 1.1f);
                 }
+
                 rangeInDeflectAbleObj[nowIndex].GetComponent<EnemysBullet>().Reflex(BulletState.Deflecting);
             }
         }
+
         yield return new WaitForSeconds(0.25f);
         
         animator.SetBool("Paring", false);
@@ -672,7 +674,9 @@ public class Player : BasicUnitScript
             }
 
             animator.SetBool("JumpIntermediateMotion", false);
+
             CamShake.JumpStop(false);
+
             transform.position = startPos;
             rigid.velocity = Vector2.zero;
             rigid.gravityScale = 0;
@@ -782,6 +786,7 @@ public class Player : BasicUnitScript
             transform.position += movetransform * Time.deltaTime;
             yield return null;
         }
+
         transform.position = targettransform; //이동 완료
 
         animator.SetBool("Moving", false);
@@ -829,6 +834,7 @@ public class Player : BasicUnitScript
                 StartCoroutine(timingObj.pressSpace(true));
                 isFail = true;
             }
+
             nowdelayTime += Time.deltaTime;
             yield return null;
         }
@@ -852,7 +858,6 @@ public class Player : BasicUnitScript
                 if (rangeInEnemy[nowIndex] != null)
                 {
                     var unitScriptComponenet = rangeInEnemy[nowIndex].GetComponent<BasicUnitScript>();
-
                     bool isDefence = (unitScriptComponenet.nowState == NowState.Defensing && unitScriptComponenet.nowDefensivePosition == DefensePos.Left) ? true : false;
 
                     unitScriptComponenet.Hit(CurrentRandomDamage(Damage), isDefence);
@@ -866,6 +871,7 @@ public class Player : BasicUnitScript
                     if (isToBurn == false && nowProperty == NowPlayerProperty.FlameProperty)
                     {
                         unitScriptComponenet.BurnDamageStart();
+
                         if (nowIndex == maxEnemyIndex)
                         {
                             isToBurn = true;
@@ -1152,15 +1158,6 @@ public class Player : BasicUnitScript
     /// <returns></returns>
     protected override IEnumerator Fainting()
     {
-        while (true)
-        {
-            if (nowState == NowState.Standingby || nowState == NowState.Defensing)
-            {
-                break;
-            }
-            yield return null;
-        }
-
         nowState = NowState.Fainting;
 
         if (nowDefensivePosition == DefensePos.Left || nowDefensivePosition == DefensePos.Right)
