@@ -274,6 +274,10 @@ public abstract class BasicUnitScript : MonoBehaviour
     protected float nowGiveBurnDamageTime;
 
     protected float maxGiveBurnDamageTime;
+
+    [SerializeField]
+    [Tooltip("화상 이펙트 오브젝트")]
+    private GameObject burnEffect;
     #endregion
 
     #region 이동속도 감소 디버프 관련 변수 모음
@@ -449,14 +453,8 @@ public abstract class BasicUnitScript : MonoBehaviour
     protected IEnumerator ChangeToBasicColor()
     {
         yield return changeToBasicColorDelay;
-        if (isBurning)
-        {
-            spriteRenderer.color = stateColors[(int)StateColor.BurningColor];
-        }
-        else
-        {
-            spriteRenderer.color = stateColors[(int)StateColor.BasicColor];
-        }
+
+        spriteRenderer.color = (isBurning) ? stateColors[(int)StateColor.BurningColor] : stateColors[(int)StateColor.BasicColor];
     }
 
     /// <summary>
@@ -559,6 +557,9 @@ public abstract class BasicUnitScript : MonoBehaviour
             if (nowBurnDamageLimitTime >= maxBurnDamageLimitTime || Hp <= 0)
             {
                 isBurning = false;
+
+                burnEffect.SetActive(isBurning);
+
                 spriteRenderer.color = stateColors[(int)StateColor.BasicColor];
                 nowBurnDamageStack = 0;
                 nowBurnDamageLimitTime = 0;
@@ -590,6 +591,9 @@ public abstract class BasicUnitScript : MonoBehaviour
             if (nowBurnDamageStack == 1)
             {
                 isBurning = true;
+
+                burnEffect.SetActive(isBurning);
+
                 spriteRenderer.color = stateColors[(int)StateColor.BurningColor];
                 StartCoroutine(Burning());
             }

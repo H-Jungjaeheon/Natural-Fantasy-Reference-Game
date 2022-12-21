@@ -86,8 +86,7 @@ public class Player : BasicUnitScript
         {
             if (value > maxChangePropertyCoolTime)
             {
-                isChangeProperty = true;
-                StartCoroutine(ChangeProperty(false, false));
+                StartCoroutine(ChangeProperty(false));
             }
             else
             {
@@ -113,11 +112,7 @@ public class Player : BasicUnitScript
             {
                 nowPropertyTimeLimit = maxPropertyTimeLimit;
 
-                if (isResurrectionReady == false)
-                {
-                    isChangeProperty = true;
-                    StartCoroutine(ChangeProperty(true, false));
-                }
+                StartCoroutine(ChangeProperty(true));
             }
             else
             {
@@ -147,8 +142,6 @@ public class Player : BasicUnitScript
     private bool isToBurn;
 
     private bool isGetGood; //재화 획득 여부 판별
-
-    private bool isChangeProperty;
 
     private float maxNaturePassiveCount; //자연 속성 최대 구슬 개수
 
@@ -238,7 +231,7 @@ public class Player : BasicUnitScript
 
         isResurrectionOpportunityExists = true;
 
-        nextPropertyIndex = (int)NowPlayerProperty.TheHolySpiritProperty; //Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
+        nextPropertyIndex = Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
         nowPropertyImage.sprite = nowPropertyIconImages[(int)nowProperty];
 
         Energy = MaxEnergy;
@@ -379,18 +372,10 @@ public class Player : BasicUnitScript
     /// 속성 변경하는 구간 (무적시간, 속성 변경 애니메이션 실행)
     /// </summary>
     /// <param name="isChangeBasicProperty"> 기본 속성으로 변경 유무 </param>
-    /// <param name="isForcedChange"> 속성 강제 변경 유무 </param>
     /// <returns></returns>
-    IEnumerator ChangeProperty(bool isChangeBasicProperty, bool isForcedChange)
+    IEnumerator ChangeProperty(bool isChangeBasicProperty)
     {
         isChangePropertyReady = true;
-
-        NowChangePropertyCoolTime = 0;
-
-        if (isForcedChange)
-        {
-            NowPropertyTimeLimit = 0;
-        }
 
         WaitingTimeEnd();
         ActionCoolTimeBarSetActive(false);
@@ -404,12 +389,11 @@ public class Player : BasicUnitScript
             yield return null;
         }
 
-        if (isForcedChange == false)
-        {
-            NowPropertyTimeLimit = 0;
-        }
-
         nowState = NowState.ChangingProperties;
+
+        NowChangePropertyCoolTime = 0;
+        NowPropertyTimeLimit = 0;
+
         Invincibility(true);
         hpText.color = hpTextColors[(int)NowStatUIState.Invincibility];
 
@@ -462,14 +446,8 @@ public class Player : BasicUnitScript
 
         Invincibility(false);
 
-        if (nowProperty == NowPlayerProperty.TheHolySpiritProperty)
-        {
-            hpText.color = hpTextColors[(int)NowStatUIState.Shield];
-        }
-        else
-        {
-            hpText.color = hpTextColors[(int)NowStatUIState.Basic];
-        }
+        hpText.color = (nowProperty == NowPlayerProperty.TheHolySpiritProperty) ?
+            hpTextColors[(int)NowStatUIState.Shield] : hpTextColors[(int)NowStatUIState.Basic]; //현재 바뀐 속성이 성령 속성이면 체력 텍스트 색 방어막 상태 색으로 변경
 
         battleButtonManagerInstance.ActionButtonSetActive(true);
 
@@ -483,7 +461,7 @@ public class Player : BasicUnitScript
         {
             DreamyFigure -= 10;
             StopCoroutine(propertyTimeCount); //실행중인 속성 지속시간 세는 코루틴 중지 (중복 실행 방지)
-            StartCoroutine(ChangeProperty(false, true));
+            StartCoroutine(ChangeProperty(false)); //true
         }
     }
 
@@ -506,9 +484,8 @@ public class Player : BasicUnitScript
                     NowChangePropertyCoolTime += Time.deltaTime;
                 }
 
-                if (isChangeProperty)
+                if (isChangePropertyReady)
                 {
-                    isChangeProperty = false;
                     break;
                 }
             }
@@ -1227,6 +1204,7 @@ public class Player : BasicUnitScript
         }
 
         Energy += 8; //나중에 매개변수로 레벨에 따라서 기력 차는 양 증가
+
         nowActionCoolTime = maxActionCoolTime;
 
         if (isChangePropertyReady == false && Hp > 0)
