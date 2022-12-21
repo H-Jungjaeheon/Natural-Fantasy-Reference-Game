@@ -44,6 +44,9 @@ public class SlimeEnemy : BasicUnitScript
         originalRestWaitTime = restWaitTime;
         originalSpeed = Speed;
 
+        plusVector = new Vector3(0f, -6f, 0f);
+        particlePos = new Vector3(0f, -2f, 0f);
+
         StartCoroutine(WaitUntilTheGameStarts());
     }
 
@@ -161,10 +164,11 @@ public class SlimeEnemy : BasicUnitScript
 
     IEnumerator GoToAttack(bool isBasicCloseAttack)
     {
-        Vector3 Targettransform = new Vector3(0, transform.position.y); //목표 위치
+        Vector3 Targettransform = new Vector3((isBasicCloseAttack) ? bsm.playerCharacterPos.x + 5.5f : bsm.playerCharacterPos.x + 8,
+            transform.position.y); //목표 위치
 
         nowState = NowState.Attacking;
-        Targettransform.x = (isBasicCloseAttack) ? bsm.playerCharacterPos.x + 5.5f : bsm.playerCharacterPos.x + 8;
+
         Energy -= (isBasicCloseAttack) ? 2 : 3;
 
         animator.SetBool("Moving", true);
@@ -174,6 +178,7 @@ public class SlimeEnemy : BasicUnitScript
             transform.position -= movetransform * Time.deltaTime;
             yield return null;
         }
+
         transform.position = Targettransform; //이동 완료
 
         animator.SetBool("Moving", false);
@@ -181,22 +186,23 @@ public class SlimeEnemy : BasicUnitScript
         if (isBasicCloseAttack)
         {
             nowCoroutine = Attacking(true, nowAttackCount_I, 0.65f); //기본공격 실행
-            StartCoroutine(nowCoroutine);
         }
         else
         {
             nowCoroutine = DefenselessCloseAttack(); //내려찍기 공격 실행
-            StartCoroutine(nowCoroutine);
         }
+        StartCoroutine(nowCoroutine);
     }
 
 
     public override void Hit(float damage, bool isDefending)
     {
         base.Hit(damage, isDefending);
+
         if (isInvincibility == false && isDefending == false)
         {
             GameObject hitParticle = objectPoolInstance.GetObject((int)PoolObjKind.BossHitParticle);
+
             hitParticle.transform.position = transform.position + particlePos; //현재 파티클 스폰 위치(오브젝트 위치 + 설정한 유닛 고유 파티클 생성 위치) 
         }
     }
@@ -229,6 +235,7 @@ public class SlimeEnemy : BasicUnitScript
                 {
                     var nowRangeInEnemysComponent = rangeInEnemy[nowIndex].GetComponent<BasicUnitScript>();
                     bool isDefence = (nowRangeInEnemysComponent.nowDefensivePosition == DefensePos.Right && nowRangeInEnemysComponent.nowState == NowState.Defensing) ? true : false;
+                    
                     nowRangeInEnemysComponent.Hit(Damage, isDefence);
                 }
             }
@@ -279,13 +286,13 @@ public class SlimeEnemy : BasicUnitScript
 
         rigid.AddForce(Vector2.down * jumpPower_F * 3, ForceMode2D.Impulse);
 
-        while (transform.position.y > startPos_Vector.y)
+        while (transform.position.y > startPos.y)
         {
             yield return null;
         }
 
         CamShake.CamShakeMod(true, 2f);
-        transform.position = new Vector2(transform.position.x, startPos_Vector.y);
+        transform.position = new Vector2(transform.position.x, startPos.y);
         rigid.velocity = Vector2.zero;
         rigid.gravityScale = 0;
         isPhysicalAttacking = false;
@@ -307,14 +314,14 @@ public class SlimeEnemy : BasicUnitScript
 
         animator.SetBool("Moving", true);
 
-        while (transform.position.x < startPos_Vector.x)
+        while (transform.position.x < startPos.x)
         {
             transform.position += movetransform * Time.deltaTime;
             yield return null;
         }
 
         transform.rotation = Quaternion.identity;
-        transform.position = startPos_Vector;
+        transform.position = startPos;
         nowAttackCount_I = 1;
 
         animator.SetBool("Moving", false);
@@ -472,13 +479,13 @@ public class SlimeEnemy : BasicUnitScript
 
             rigid.AddForce(Vector2.down * jumpPower_F * 6, ForceMode2D.Impulse);
 
-            while (transform.position.y > startPos_Vector.y)
+            while (transform.position.y > startPos.y)
             {
                 yield return null;
             }
 
             CamShake.CamShakeMod(true, 3f);
-            transform.position = new Vector2(startPos_Vector.x, startPos_Vector.y);
+            transform.position = new Vector2(startPos.x, startPos.y);
             rigid.velocity = Vector2.zero;
         }
 
@@ -615,41 +622,6 @@ public class SlimeEnemy : BasicUnitScript
     }
 
     /// <summary>
-    /// 공격 종료 후 처리 함수
-    /// </summary>
-    private void AttackEndSetting()
-    {
-        if (Energy > 0)
-        {
-            WaitingTimeStart();
-        }
-        else
-        {
-            nowState = NowState.Standingby;
-        }
-    }
-
-    /// <summary>
-    /// 공격 후의 세팅
-    /// </summary>
-    private void WaitingTimeStart()
-    {
-        nowState = NowState.Standingby;
-
-        if (Hp > 0)
-        {
-            isWaiting = true;
-            
-            if (nowActionCoolTime < maxActionCoolTime)
-            {
-                ActionCoolTimeBarSetActive(true);
-            }
-
-            StartCoroutine(UISetting());
-        }
-    }
-
-    /// <summary>
     /// 휴식 함수
     /// </summary>
     /// <returns></returns>
@@ -699,6 +671,11 @@ public class SlimeEnemy : BasicUnitScript
     /// <returns></returns>
     protected override IEnumerator Dead()
     {
+        if (nowCoroutine != null)
+        {
+            StopCoroutine(nowCoroutine);
+        }
+
         nowState = NowState.Dead;
         bsm.NowGetBasicGood += 50;
 
@@ -710,18 +687,13 @@ public class SlimeEnemy : BasicUnitScript
         rigid.velocity = Vector2.zero;
         rigid.gravityScale = 0;
 
-        battleUIAnimator.SetBool("NowFainting", false);
-        battleUIObjScript.BattleUIObjSetActiveFalse();
+        //battleUIAnimator.SetBool("NowFainting", false);
+        //battleUIObjScript.BattleUIObjSetActiveFalse();
 
-        battleUIAnimator.SetBool("NowResting", false);
+        //battleUIAnimator.SetBool("NowResting", false);
         battleUIObjScript.BattleUIObjSetActiveFalse();
 
         ActionCoolTimeBarSetActive(false);
-
-        if (nowCoroutine != null)
-        {
-            StopCoroutine(nowCoroutine);
-        }
 
         bsm.StartGameEndPanelAnim(false);
 

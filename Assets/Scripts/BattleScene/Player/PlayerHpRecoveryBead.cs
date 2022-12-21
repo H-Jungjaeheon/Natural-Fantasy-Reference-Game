@@ -90,7 +90,6 @@ public class PlayerHpRecoveryBead : MonoBehaviour
         nowDeleteTimeLimit = 0;
 
         OP.ReturnObject(gameObject, (int)PoolObjKind.PlayerHpRecoveryBead);
-        Player.isSpawnNatureBead = false;
         Player.NowNaturePassiveCount = 0;
     }
 

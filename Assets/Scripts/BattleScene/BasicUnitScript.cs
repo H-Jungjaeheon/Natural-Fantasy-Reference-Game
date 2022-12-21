@@ -97,7 +97,7 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     protected bool isInvincibility; //현재 무적인지 판별
 
-    public bool IsInvincibility
+    public bool IsInvincibility //현재 무적인지 판별 변수 프로퍼티
     {
         get
         {
@@ -142,6 +142,7 @@ public abstract class BasicUnitScript : MonoBehaviour
                 if (value <= 0 && isResurrectionReady == false)
                 {
                     hp = 0;
+                    StopAllCoroutines();
                     StartCoroutine(Dead());
                 }
                 else
@@ -321,16 +322,14 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     protected bool isImmunity; //현재 디버프 면역 상태인지 판별
 
-    [SerializeField]
-    [Tooltip("파티클(이펙트) 생성 위치")]
-    protected Vector3 particlePos;
+    protected Vector3 particlePos; //타격 시 파티클(이펙트) 생성 위치
 
-    protected const int maxGoodGetCount = 15;
+    protected const int maxGoodGetCount = 15; //최대 재화 획득 가능 횟수
 
-    protected int nowGoodGetCount;
+    protected int nowGoodGetCount; //현재 재화 획득 횟수
 
     [HideInInspector]
-    public Vector2 startPos_Vector;
+    public Vector2 startPos;
 
     protected Camera Cam;
 
@@ -369,9 +368,9 @@ public abstract class BasicUnitScript : MonoBehaviour
     [Tooltip("상태에 따른 유닛 색 모음")]
     public Color[] stateColors;
 
-    [SerializeField]
-    [Tooltip("데미지 텍스트 스폰 위치 정밀 조정(자신 위치에서 더해줌)")]
-    protected Vector3 plusVector;
+    protected Vector3 plusVector; //데미지 텍스트 스폰 위치 정밀 조정(자신 위치에서 더해줌)
+
+    protected WaitForSeconds changeToBasicColorDelay = new WaitForSeconds(0.1f); //공격에 맞았을 시 색 변경 딜레이
 
     protected bool isResurrectionReady; //부활 준비 여부 판별
     #endregion
@@ -382,7 +381,6 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     protected BattleButtonManager battleButtonManagerInstance; //배틀 버튼 매니저 싱글톤 인스턴스
 
-    protected WaitForSeconds changeToBasicColorDelay;
 
     protected virtual void Awake()
     {
@@ -402,7 +400,7 @@ public abstract class BasicUnitScript : MonoBehaviour
         objectPoolInstance = ObjectPool.Instance;
         battleButtonManagerInstance = BattleButtonManager.Instance;
 
-        startPos_Vector = transform.position; //시작 위치 저장
+        startPos = transform.position; //시작 위치 저장
         movetransform.x = Speed; //시작 이동속도로 움직임 벡터 X값 저장
 
         nowAttackCount_I = 1;
@@ -410,8 +408,6 @@ public abstract class BasicUnitScript : MonoBehaviour
         maxGiveBurnDamageTime = 4; //화상 효과 최대 데미지 횟수
         maxStackableOverlapTime = 10; //화상 효과 중첩 가능 제한시간 초기화
         maxBurnDamageLimitTime = 15; //화상 효과 지속시간 증가 초기화
-
-        changeToBasicColorDelay = new WaitForSeconds(0.1f);
     }
 
     protected abstract void StartSetting();
@@ -444,6 +440,26 @@ public abstract class BasicUnitScript : MonoBehaviour
         }
 
         damageText.GetComponent<DamageText>().TextCustom(nowTextState, transform.position + plusVector, damage);
+    }
+
+    /// <summary>
+    /// 공격 후 공격 쿨타임 실행 함수
+    /// </summary>
+    protected virtual void WaitingTimeStart()
+    {
+        nowState = NowState.Standingby;
+
+        if (Hp > 0)
+        {
+            isWaiting = true;
+
+            if (nowActionCoolTime < maxActionCoolTime)
+            {
+                ActionCoolTimeBarSetActive(true);
+            }
+
+            StartCoroutine(UISetting());
+        }
     }
 
     /// <summary>
@@ -524,6 +540,21 @@ public abstract class BasicUnitScript : MonoBehaviour
     {
         attackRangeObjComponent.size = attackRangeColliderSize;
         attackRangeObjComponent.offset = attackRangeColliderOffset;
+    }
+
+    /// <summary>
+    /// 공격 종료 후 처리 함수
+    /// </summary>
+    protected virtual void AttackEndSetting()
+    {
+        if (Energy > 0)
+        {
+            WaitingTimeStart();
+        }
+        else
+        {
+            nowState = NowState.Standingby;
+        }
     }
 
     protected void Invincibility(bool isInvincibilityOn) => IsInvincibility = isInvincibilityOn; //무적 ON or OFF

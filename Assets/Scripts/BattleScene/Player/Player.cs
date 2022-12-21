@@ -76,13 +76,13 @@ public class Player : BasicUnitScript
 
     private float nowChangePropertyCoolTime; //현재 속성 변경 시간
 
-    public float NowChangePropertyCoolTime
+    public float NowChangePropertyCoolTime //현재 속성 변경 시간 프로퍼티
     {
         get
         {
             return nowChangePropertyCoolTime;
         }
-        set
+        protected set
         {
             if (value > maxChangePropertyCoolTime)
             {
@@ -103,12 +103,15 @@ public class Player : BasicUnitScript
 
     private float nowPropertyTimeLimit; // 현재 속성 남은 지속시간
 
-    public float NowPropertyTimeLimit
+    public float NowPropertyTimeLimit //현재 속성 남은 지속시간 프로퍼티
     {
-        get { return nowPropertyTimeLimit; }
-        set
+        get 
         {
-            if (value > maxPropertyTimeLimit && isResurrectionReady == false && nowState != NowState.Resurrection && nowState != NowState.Attacking && nowState != NowState.Jumping)
+            return nowPropertyTimeLimit;
+        }
+        protected set
+        {
+            if (value > maxPropertyTimeLimit && isResurrectionReady == false)
             {
                 nowPropertyTimeLimit = maxPropertyTimeLimit;
 
@@ -117,6 +120,7 @@ public class Player : BasicUnitScript
             else
             {
                 nowPropertyTimeLimit = value;
+
                 if (isChangePropertyReady || nowProperty != NowPlayerProperty.BasicProperty)
                 {
                     nowPropertyLimitTimeImage.fillAmount = (maxPropertyTimeLimit - NowPropertyTimeLimit) / maxPropertyTimeLimit;
@@ -135,26 +139,27 @@ public class Player : BasicUnitScript
     public NowPlayerProperty nowProperty; //현재 속성 상태
     #endregion
 
-    private bool isResurrectionOpportunityExists; //부활 조건
+    private bool isResurrectionOpportunityExists; //부활 조건 판별(부활 전적 유무)
 
-    private bool angelPropertyBuffing;
+    private bool angelPropertyBuffing; //천사 속성 버프 지속중 판별
 
-    private bool isToBurn;
+    private bool isToBurn; //화상 효과 입혔는지 판별(기본공격)
 
     private bool isGetGood; //재화 획득 여부 판별
 
-    private float maxNaturePassiveCount; //자연 속성 최대 구슬 개수
+    private float maxNaturePassiveCount; //회복구슬 생성 쿨타임
 
-    private float nowNaturePassiveCount; //자연 속성 현재 구슬 개수
-    public float NowNaturePassiveCount
+    private float nowNaturePassiveCount; //현재 회복구슬 생성 쿨타임
+
+    public float NowNaturePassiveCount //현재 회복구슬 생성 쿨타임 프로퍼티
     {
         get { return nowNaturePassiveCount; }
         set
         {
             if (value >= maxNaturePassiveCount)
             {
-                isSpawnNatureBead = true;
                 objectPoolInstance.GetObject((int)PoolObjKind.PlayerHpRecoveryBead);
+                nowNaturePassiveCount = 0;
             }
             else
             {
@@ -162,9 +167,6 @@ public class Player : BasicUnitScript
             }
         }
     }
-
-    [HideInInspector]
-    public bool isSpawnNatureBead;
 
     [SerializeField]
     [Tooltip("현재 플레이어 속성 아이콘")]
@@ -241,6 +243,8 @@ public class Player : BasicUnitScript
         originalMaxActionCoolTime = maxActionCoolTime;
         originalRestWaitTime = restWaitTime;
         originalSpeed = Speed;
+
+        plusVector = new Vector3(0f, 0f, 0f);
 
         propertyTimeCount = CountDownPropertyTimes();
         StartCoroutine(propertyTimeCount);
@@ -575,8 +579,6 @@ public class Player : BasicUnitScript
         {
             transform.rotation = Quaternion.identity;
         }
-
-        yield return null;
     }
 
     /// <summary>
@@ -622,7 +624,7 @@ public class Player : BasicUnitScript
     /// <summary>
     /// 공격 후 공격 쿨타임 실행 함수
     /// </summary>
-    private void WaitingTimeStart()
+    protected override void WaitingTimeStart()
     {
         nowState = NowState.Standingby;
 
@@ -660,7 +662,7 @@ public class Player : BasicUnitScript
             animator.SetTrigger("Jumping");
             StartCoroutine(JumpDelay());
         }
-        else if (nowState == NowState.Jumping && transform.position.y < startPos_Vector.y)
+        else if (nowState == NowState.Jumping && transform.position.y < startPos.y)
         {
             nowState = NowState.Standingby;
 
@@ -671,7 +673,7 @@ public class Player : BasicUnitScript
 
             animator.SetBool("JumpIntermediateMotion", false);
             CamShake.JumpStop(false);
-            transform.position = startPos_Vector;
+            transform.position = startPos;
             rigid.velocity = Vector2.zero;
             rigid.gravityScale = 0;
         }
@@ -887,6 +889,7 @@ public class Player : BasicUnitScript
         if (isLastAttack == false && isFail == false && isComplete)
         {
             nowAttackCount++;
+
             switch (nowAttackCount) //공격 실행 애니메이션 시작
             {
                 case 2:
@@ -945,25 +948,21 @@ public class Player : BasicUnitScript
         transform.rotation = Quaternion.Euler(0, 180, 0);
 
         animator.SetBool("Moving", true);
-        while (transform.position.x > startPos_Vector.x)
+
+        while (transform.position.x > startPos.x)
         {
             transform.position -= movetransform * Time.deltaTime;
             yield return null;
         }
+
         transform.rotation = Quaternion.identity;
-        transform.position = startPos_Vector;
+        transform.position = startPos;
+
         nowAttackCount_I = 1;
 
         animator.SetBool("Moving", false);
 
-        if (Energy > 0)
-        {
-            WaitingTimeStart();
-        }
-        else
-        {
-            nowState = NowState.Standingby;
-        }
+        AttackEndSetting();
     }
 
     /// <summary>
@@ -1026,14 +1025,7 @@ public class Player : BasicUnitScript
 
         animator.SetBool("FirstSkill", false);
 
-        if (Energy > 0)
-        {
-            WaitingTimeStart();
-        }
-        else
-        {
-            nowState = NowState.Standingby;
-        }
+        AttackEndSetting();
     }
 
     /// <summary>
@@ -1242,18 +1234,19 @@ public class Player : BasicUnitScript
         switch (nowProperty)
         {
             case NowPlayerProperty.NatureProperty:
-                while (nowProperty == NowPlayerProperty.NatureProperty)
+
+                NowNaturePassiveCount = 0;
+
+                while (maxPropertyTimeLimit > nowPropertyTimeLimit)
                 {
-                    if (isSpawnNatureBead == false && nowProperty == NowPlayerProperty.NatureProperty)
-                    {
-                        NowNaturePassiveCount += Time.deltaTime;
-                    }
+                    NowNaturePassiveCount += Time.deltaTime;
                     yield return null;
                 }
-                NowNaturePassiveCount = 0;
+
                 break;
 
             case NowPlayerProperty.ForceProperty:
+
                 int enhancedDamage = (int)(Damage / 2f);
                 float reducedMaxActionCoolTime = maxActionCoolTime / 5;
 
@@ -1267,6 +1260,7 @@ public class Player : BasicUnitScript
 
                 Damage -= enhancedDamage;
                 maxActionCoolTime += reducedMaxActionCoolTime;
+
                 break;
 
             case NowPlayerProperty.TheHolySpiritProperty:
@@ -1295,6 +1289,7 @@ public class Player : BasicUnitScript
                 unitShieldHpBars.fillAmount = ShieldHp_F / maxShieldHp_F;
                 hpText.color = hpTextColors[(int)NowStatUIState.Invincibility];
                 hpText.text = $"{(Hp):N0}/{(MaxHp):N0}";
+
                 break;
         }
     }
