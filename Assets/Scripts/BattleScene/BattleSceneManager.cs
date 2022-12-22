@@ -89,11 +89,11 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
     [SerializeField]
     [Tooltip("페이드에 쓰일 오브젝트")]
-    private GameObject faidObj;
+    private GameObject fadeObj;
 
     [SerializeField]
     [Tooltip("페이드에 쓰일 이미지")]
-    private Image faidImage;
+    private Image fadeImage;
 
     [SerializeField]
     [Tooltip("색 모음")]
@@ -303,9 +303,9 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
         nowGameState = NowGameState.GameReady;
 
-        faidObj.SetActive(true);
+        fadeObj.SetActive(true);
         nowColor.a = 1;
-        faidImage.color = nowColor;
+        fadeImage.color = nowColor;
 
         yield return animDelay;
 
@@ -313,7 +313,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         {
             nowAlpha -= Time.deltaTime;
             nowColor.a = nowAlpha;
-            faidImage.color = nowColor;
+            fadeImage.color = nowColor;
             yield return null;
         }
 
@@ -379,7 +379,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         {
             nowAlpha += Time.deltaTime * 3;
             nowColor.a = nowAlpha;
-            faidImage.color = nowColor;
+            fadeImage.color = nowColor;
             yield return null;
         }
 
@@ -408,7 +408,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         {
             nowAlpha -= Time.deltaTime * 3;
             nowColor.a = nowAlpha;
-            faidImage.color = nowColor;
+            fadeImage.color = nowColor;
             yield return null;
         }
 
@@ -429,7 +429,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
         yield return new WaitForSeconds(1f);
 
-        faidObj.SetActive(false);
+        fadeObj.SetActive(false);
         nowGameState = NowGameState.Playing;
 
         statUIObj.SetActive(true);
@@ -451,13 +451,13 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         nowColor = colors[(int)Colors.Black];
         nowAlpha = 0;
 
-        faidImage.transform.SetAsLastSibling();
-        faidObj.SetActive(true);
+        fadeImage.transform.SetAsLastSibling();
+        fadeObj.SetActive(true);
 
         while (nowAlpha < 1)
         {
             nowColor.a = nowAlpha;
-            faidImage.color = nowColor;
+            fadeImage.color = nowColor;
 
             nowAlpha += nowAlphaPlusPerSecond;
             yield return faidDelay;
@@ -507,8 +507,8 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         yield return null;
 
         deActivableObj.SetActive(false);
-        faidObj.SetActive(true);
-        faidImage.color = nowColor;
+        fadeObj.SetActive(true);
+        fadeImage.color = nowColor;
 
         gameEndObj.SetActive(true);
 
@@ -518,13 +518,13 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
         while (nowAlpha > 0)
         {
-            faidImage.color = nowColor;
+            fadeImage.color = nowColor;
             nowColor.a = nowAlpha;
             nowAlpha -= Time.deltaTime;
             yield return null;
         }
 
-        faidObj.SetActive(false);
+        fadeObj.SetActive(false);
 
         StartCoroutine(SameEndAnim());
     }
@@ -534,7 +534,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         nowColor = colors[(int)Colors.White];
         nowAlpha = 0;
 
-        faidObj.SetActive(true);
+        fadeObj.SetActive(true);
 
         while (nowAlpha < 1)
         {
@@ -544,7 +544,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
             }
 
             nowColor.a = nowAlpha;
-            faidImage.color = nowColor;
+            fadeImage.color = nowColor;
 
             if (nowAlpha < 0.4f)
             {
@@ -565,13 +565,13 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
         while (nowAlpha > 0)
         {
-            faidImage.color = nowColor;
+            fadeImage.color = nowColor;
             nowColor.a = nowAlpha;
             nowAlpha -= Time.deltaTime;
             yield return null;
         }
 
-        faidObj.SetActive(false);
+        fadeObj.SetActive(false);
 
         StartCoroutine(SameEndAnim());
     }
@@ -639,14 +639,14 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
         yield return null;
 
-        faidObj.SetActive(true);
-        faidImage.color = nowColor;
+        fadeObj.SetActive(true);
+        fadeImage.color = nowColor;
 
         while (true)
         {
             nowAlpha += Time.deltaTime;
             nowColor.a = nowAlpha;
-            faidImage.color = nowColor;
+            fadeImage.color = nowColor;
 
             if (nowAlpha > 1)
             {

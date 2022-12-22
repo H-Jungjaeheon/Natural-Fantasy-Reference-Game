@@ -42,7 +42,7 @@ public class MainManager : Singleton<MainManager>
 
     [SerializeField]
     [Tooltip("페이드 아웃 오브젝트")]
-    private GameObject faidOutObj;
+    private GameObject fadeOutObj;
 
     [SerializeField]
     [Tooltip("일시정지 창 오브젝트들")]
@@ -50,11 +50,11 @@ public class MainManager : Singleton<MainManager>
 
     [SerializeField]
     [Tooltip("페이드 아웃 이미지")]
-    private Image faidOutImage;
+    private Image fadeOutImage;
 
     [SerializeField]
     [Tooltip("페이드 아웃 이미지 컬러")]
-    private Color faidOutImageColor;
+    private Color fadeOutImageColor;
 
     [SerializeField]
     [Tooltip("기본 재화 텍스트")]
@@ -66,7 +66,7 @@ public class MainManager : Singleton<MainManager>
 
     private bool isFading;
 
-    WaitForSeconds faidDelay = new WaitForSeconds(1);
+    WaitForSeconds fadeDelay = new WaitForSeconds(1);
 
     public void Awake()
     {
@@ -190,28 +190,28 @@ public class MainManager : Singleton<MainManager>
 
     IEnumerator StartFaidAnim()
     {
-        Color color = faidOutImageColor;
+        Color color = fadeOutImageColor;
         float nowImageAlpha = 1;
 
         isFading = true;
 
-        faidOutObj.SetActive(true);
-        faidOutImageColor.a = 1;
-        faidOutImage.color = faidOutImageColor;
+        fadeOutObj.SetActive(true);
+        fadeOutImageColor.a = 1;
+        fadeOutImage.color = fadeOutImageColor;
 
-        yield return faidDelay;
+        yield return fadeDelay;
 
         while (nowImageAlpha > 0)
         {
             nowImageAlpha -= Time.deltaTime;
             color.a = nowImageAlpha;
-            faidOutImage.color = color;
+            fadeOutImage.color = color;
             yield return null;
         }
 
         isFading = false;
 
-        faidOutObj.SetActive(false);
+        fadeOutObj.SetActive(false);
     }
 
     public void BasicGoodsTextFixed() => basicGoodsText.text = $"{GameManager.Instance.Gold}";
@@ -273,22 +273,22 @@ public class MainManager : Singleton<MainManager>
 
     IEnumerator MoveToStageAnim()
     {
-        Color color = faidOutImageColor;
+        Color color = fadeOutImageColor;
         float nowImageAlpha = 0;
 
-        faidOutObj.SetActive(true);
-        faidOutImageColor.a = 0;
-        faidOutImage.color = faidOutImageColor;
+        fadeOutObj.SetActive(true);
+        fadeOutImageColor.a = 0;
+        fadeOutImage.color = fadeOutImageColor;
 
         while (nowImageAlpha < 1)
         {
             nowImageAlpha += Time.deltaTime;
             color.a = nowImageAlpha;
-            faidOutImage.color = color;
+            fadeOutImage.color = color;
             yield return null;
         }
 
-        yield return faidDelay;
+        yield return fadeDelay;
 
         SceneManager.LoadScene("BattleScene");
     }

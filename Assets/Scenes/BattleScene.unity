@@ -3387,7 +3387,7 @@ GameObject:
   m_Component:
   - component: {fileID: 552721697}
   m_Layer: 5
-  m_Name: FaidObj
+  m_Name: FadeObj
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7289,8 +7289,8 @@ MonoBehaviour:
   - {fileID: 43297572}
   - {fileID: 4727054}
   gameEndObj: {fileID: 91805706}
-  faidObj: {fileID: 552721696}
-  faidImage: {fileID: 2033419077}
+  fadeObj: {fileID: 552721696}
+  fadeImage: {fileID: 2033419077}
   colors:
   - {r: 0, g: 0, b: 0, a: 1}
   - {r: 1, g: 1, b: 1, a: 1}
@@ -8064,8 +8064,7 @@ MonoBehaviour:
   hpText: {fileID: 2039948097}
   energyText: {fileID: 1174402843}
   dreamyFigureText: {fileID: 503119707}
-  particlePos: {x: 0, y: -2, z: 0}
-  startPos_Vector: {x: 0, y: 0}
+  startPos: {x: 0, y: 0}
   rigid: {fileID: 1159378195}
   attackRangeObjComponent: {fileID: 541266945}
   battleUIObjScript: {fileID: 838858993}
@@ -8076,7 +8075,6 @@ MonoBehaviour:
   - {r: 1, g: 1, b: 1, a: 1}
   - {r: 1, g: 0, b: 0, a: 1}
   - {r: 1, g: 0.53333336, b: 0.42352942, a: 1}
-  plusVector: {x: 0, y: -6, z: 0}
   ownCollider: {fileID: 1159378196}
   gimmick: {fileID: 1306652340}
 --- !u!1 &1174402841
@@ -11071,8 +11069,7 @@ MonoBehaviour:
   hpText: {fileID: 1092541587}
   energyText: {fileID: 548842203}
   dreamyFigureText: {fileID: 1333209597}
-  particlePos: {x: 0, y: 0, z: 0}
-  startPos_Vector: {x: 0, y: 0}
+  startPos: {x: 0, y: 0}
   rigid: {fileID: 1717870243}
   attackRangeObjComponent: {fileID: 693950549}
   battleUIObjScript: {fileID: 1934224821}
@@ -11083,10 +11080,8 @@ MonoBehaviour:
   - {r: 1, g: 1, b: 1, a: 1}
   - {r: 1, g: 0, b: 0, a: 1}
   - {r: 1, g: 0.53333336, b: 0.42352942, a: 1}
-  plusVector: {x: 0, y: 0, z: 0}
   unitShieldHpBars: {fileID: 1902801556}
   nowProperty: 0
-  isSpawnNatureBead: 0
   nowPropertyImage: {fileID: 693409020}
   nowPropertyLimitTimeImage: {fileID: 1355490199}
   nowPropertyIconImages:
@@ -13424,7 +13419,7 @@ GameObject:
   - component: {fileID: 2033419078}
   - component: {fileID: 2033419077}
   m_Layer: 5
-  m_Name: FaidImage
+  m_Name: FadeImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

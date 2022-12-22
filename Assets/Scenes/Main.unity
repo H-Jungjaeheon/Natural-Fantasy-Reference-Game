@@ -289,7 +289,7 @@ MonoBehaviour:
   isDontDestroyOnLoad: 1
   gold: 0
   statLevels: 00000000000000000000000000000000
-  nowSceneState: 0
+  nowScene: 0
 --- !u!4 &13168010
 Transform:
   m_ObjectHideFlags: 0
@@ -2010,7 +2010,7 @@ GameObject:
   - component: {fileID: 371832752}
   - component: {fileID: 371832751}
   m_Layer: 5
-  m_Name: FaidImage
+  m_Name: FadeImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6159,13 +6159,13 @@ MonoBehaviour:
   stgaeSelectObj: {fileID: 118908005}
   admissionCheckObj: {fileID: 670455606}
   upgradeSystemObj: {fileID: 1538586365}
-  faidOutObj: {fileID: 1769432468}
+  fadeOutObj: {fileID: 1769432468}
   gamePauseObj:
   - {fileID: 1657311100}
   - {fileID: 570704612}
   - {fileID: 1051492993}
-  faidOutImage: {fileID: 371832751}
-  faidOutImageColor: {r: 0, g: 0, b: 0, a: 1}
+  fadeOutImage: {fileID: 371832751}
+  fadeOutImageColor: {r: 0, g: 0, b: 0, a: 1}
   basicGoodsText: {fileID: 1374427473}
   contentGuidanceTexts:
   - {fileID: 1715839437}
@@ -8880,7 +8880,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1769432469}
   m_Layer: 5
-  m_Name: FaidObj
+  m_Name: FadeObj
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
