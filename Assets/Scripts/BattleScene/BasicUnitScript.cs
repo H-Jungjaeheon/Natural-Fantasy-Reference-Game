@@ -142,7 +142,6 @@ public abstract class BasicUnitScript : MonoBehaviour
                 if (value <= 0 && isResurrectionReady == false)
                 {
                     hp = 0;
-                    //StopAllCoroutines();
                     StartCoroutine(Dead());
                 }
                 else
@@ -221,8 +220,7 @@ public abstract class BasicUnitScript : MonoBehaviour
         }
     }
 
-    [HideInInspector]
-    public const float maxDreamyFigure = 20; //최대 몽환 게이지
+    private const float maxDreamyFigure = 20; //최대 몽환 게이지
 
     [Tooltip("공격력")]
     [SerializeField]
@@ -530,7 +528,7 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     protected abstract IEnumerator Resting();
 
-    private IEnumerator WaitForFaint()
+    IEnumerator WaitForFaint()
     {
         while (nowState != NowState.Standingby && nowState != NowState.Defensing)
         {

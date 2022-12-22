@@ -718,7 +718,7 @@ public class SlimeEnemy : BasicUnitScript
     /// 몸으로 공격하는 패턴일 때 피격 판정
     /// </summary>
     /// <param name="collision"></param>
-    private void OnTriggerEnter2D(Collider2D collision)
+    void OnTriggerEnter2D(Collider2D collision)
     {
         if (isPhysicalAttacking && collision.gameObject.CompareTag("Player"))
         {

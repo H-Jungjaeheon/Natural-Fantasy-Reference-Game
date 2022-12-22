@@ -206,7 +206,7 @@ public class Player : BasicUnitScript
     private Color[] propertyColors;
     #endregion
 
-    private void Update()
+    void Update()
     {
         Deflect();
         Defense();
@@ -505,7 +505,7 @@ public class Player : BasicUnitScript
     /// <summary>
     /// 패링 실행 함수
     /// </summary>
-    private void Deflect()
+    void Deflect()
     {
         if (Input.GetKeyDown(KeyCode.Space) && nowState == NowState.Defensing)
         {
@@ -931,7 +931,7 @@ public class Player : BasicUnitScript
     /// </summary>
     /// <param name="nowPlayerDamage"> 현재 플레이어 데미지 </param>
     /// <returns></returns>
-    private float CurrentRandomDamage(float nowPlayerDamage)
+    float CurrentRandomDamage(float nowPlayerDamage)
     {
         int randDamage = Random.Range(-1, 2); //랜덤 데미지 증감
 
@@ -1000,7 +1000,7 @@ public class Player : BasicUnitScript
     /// 검기 발사 스킬 함수
     /// </summary>
     /// <returns></returns>
-    private IEnumerator SwordAuraSkill()
+    IEnumerator SwordAuraSkill()
     {
         float nowDelayTime = 0;
         float maxDelayTime = 0.6f;
@@ -1058,7 +1058,7 @@ public class Player : BasicUnitScript
     /// 부활 실행 함수
     /// </summary>
     /// <returns></returns>
-    private IEnumerator Resurrection()
+    IEnumerator Resurrection()
     {
         int recoveryFixedValue = 20;
         int ResurrectionStatsValueSharingValue = 5;
@@ -1121,7 +1121,7 @@ public class Player : BasicUnitScript
     /// 천사 속성 버프 or 버프 해제
     /// </summary>
     /// <param name="isBuffing"> 버프 걸기 판별 (버프를 걸어주는가?) </param>
-    private void AngelPropertyBuff(bool isBuffing)
+    void AngelPropertyBuff(bool isBuffing)
     {
         angelPropertyBuffing = isBuffing;
 
@@ -1133,7 +1133,7 @@ public class Player : BasicUnitScript
     /// 성령 속성 버프 or 버프 해제
     /// </summary>
     /// <param name="isBuffing"> 버프 걸기 판별 (버프를 걸어주는가?) </param>
-    private void TheHolySpiritPropertyBuff(bool isBuffing)
+    void TheHolySpiritPropertyBuff(bool isBuffing)
     {
         maxActionCoolTime = isBuffing ? maxActionCoolTime - (maxActionCoolTime / 4) : originalMaxActionCoolTime;
         restWaitTime = isBuffing ? restWaitTime - (originalRestWaitTime / 5) : originalRestWaitTime;
@@ -1144,7 +1144,7 @@ public class Player : BasicUnitScript
     /// 성령 속성 디버프 or 디버프 해제
     /// </summary>
     /// <param name="isDeBuffing"> 디버프 걸기 판별 (디버프를 걸어주는가?) </param>
-    private void TheHolySpiritPropertyDeBuff(bool isDeBuffing)
+    void TheHolySpiritPropertyDeBuff(bool isDeBuffing)
     {
         maxActionCoolTime = isDeBuffing ? maxActionCoolTime + (maxActionCoolTime / 4) : originalMaxActionCoolTime;
         restWaitTime = isDeBuffing ? restWaitTime + (originalRestWaitTime / 5) : originalRestWaitTime;
@@ -1219,7 +1219,7 @@ public class Player : BasicUnitScript
     /// 속성 패시브 효과 실행 함수
     /// </summary>
     /// <returns></returns>
-    private IEnumerator PropertyPassiveAbilityStart()
+    IEnumerator PropertyPassiveAbilityStart()
     {
         NowChangePropertyCoolTime = 0;
 

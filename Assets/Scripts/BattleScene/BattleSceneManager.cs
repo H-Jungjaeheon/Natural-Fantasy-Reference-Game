@@ -101,7 +101,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
     private Color nowColor; //이미지에 적용할 색
 
-    float nowAlpha; //이미지에 적용할 알파값
+    private float nowAlpha; //이미지에 적용할 알파값
     #endregion
 
     #region 스테이지 시작 연출 관련
@@ -192,7 +192,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         }
     }
 
-    private void Start()
+    void Start()
     {
         mainCam = Camera.main;
         gmInstance = GameManager.Instance;
@@ -232,6 +232,13 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
                 gamePauseObj[(int)OptionPage.FirstPage].SetActive(isNonePage); //아무 페이지도 띄우고 있지 않은 상태로 ESC키를 누르면 옵션(1페이지)창 띄우기(띄우고 있다면 옵션창 닫기)
 
+                fadeObj.SetActive(isNonePage);
+
+                nowAlpha = 0.698f;
+                nowColor.a = nowAlpha;
+
+                fadeImage.color = nowColor;
+
                 yield return null;
 
                 Time.timeScale = (nowBattleSceneOptionState == OptionPage.None) ? 0 : 1;
@@ -251,7 +258,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         while (true)
         {
             if (Input.GetKeyDown(KeyCode.Escape))
-            {
+            { 
                 gamePauseObj[(int)nowBattleSceneOptionState].SetActive(false);
                 gamePauseObj[(int)OptionPage.FirstPage].SetActive(true);
                 
@@ -267,6 +274,10 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         }
     }
 
+    /// <summary>
+    /// 일시정지 버튼들 페이지 세팅 코루틴
+    /// </summary>
+    /// <param name="nowChange"> 현재 변경할 페이지 인덱스 </param>
     public void PressToGamePausePageChangeButton(int nowChange)
     {
         bool isNowPage = false;
@@ -443,24 +454,22 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
     public void GameExit() => StartCoroutine(SceneChangeFaidOut(SceneKind.Main));
     
+    /// <summary>
+    /// 페이드 아웃 효과 후 씬 변경 코루틴
+    /// </summary>
+    /// <param name="changeScene"> 변경될 씬 종류 </param>
+    /// <returns></returns>
     IEnumerator SceneChangeFaidOut(SceneKind changeScene)
     {
-        WaitForSecondsRealtime faidDelay = new WaitForSecondsRealtime(0.01f);
-        float nowAlphaPlusPerSecond = 0.025f;
+        fadeObj.transform.SetAsLastSibling();
 
-        nowColor = colors[(int)Colors.Black];
-        nowAlpha = 0;
-
-        fadeImage.transform.SetAsLastSibling();
-        fadeObj.SetActive(true);
-
-        while (nowAlpha < 1)
+        while (nowAlpha <= 1)
         {
             nowColor.a = nowAlpha;
             fadeImage.color = nowColor;
 
-            nowAlpha += nowAlphaPlusPerSecond;
-            yield return faidDelay;
+            nowAlpha += Time.unscaledDeltaTime;
+            yield return null;
         }
 
         Time.timeScale = 1;
@@ -528,7 +537,11 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
         StartCoroutine(SameEndAnim());
     }
-
+    
+    /// <summary>
+    /// 보스 사망 시 실행하는 코루틴(화면 연출, 텍스트 세팅, 결과 화면 띄우기)
+    /// </summary>
+    /// <returns></returns>
     IEnumerator BossDeadAnim()
     {
         nowColor = colors[(int)Colors.White];
@@ -576,7 +589,11 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         StartCoroutine(SameEndAnim());
     }
 
-    IEnumerator SameEndAnim() //게임 종료 판넬 애니메이션 (공통)
+    /// <summary>
+    /// 게임 종료 판넬 애니메이션(게임 오버, 게임 클리어 공통)
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator SameEndAnim()
     {
         WaitForSeconds animDelay = new WaitForSeconds(1f);
 
@@ -632,6 +649,10 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         }
     }
 
+    /// <summary>
+    /// 종료 시 페이드 애니메이션(효과)
+    /// </summary>
+    /// <returns></returns>
     IEnumerator EndFaidAnim()
     {
         nowColor = colors[(int)Colors.Black];
@@ -658,15 +679,16 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         StartCoroutine(EndGetGoodAnim());
     }
 
+    /// <summary>
+    /// 재화 획득 애니메이션 실행 코루틴
+    /// </summary>
+    /// <returns></returns>
     IEnumerator EndGetGoodAnim()
     {
         WaitForSeconds animDelay = new WaitForSeconds(1f);
 
         if (NowGetBasicGood > 0)
         {
-            nowColor = colors[(int)Colors.Yellow];
-            nowAlpha = 1;
-
             getGoodObj.SetActive(true);
 
             getGoodObj.transform.DOLocalMoveY(-15, 0.7f);
@@ -678,6 +700,8 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
             goodAmountText.text = $"+{NowGetBasicGood}";
 
             yield return new WaitForSeconds(0.5f);
+
+            nowColor = colors[(int)Colors.Yellow];
 
             goodAmountText.color = nowColor;
 
@@ -692,6 +716,8 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
             yield return animDelay;
 
             getGoodObj.transform.DOLocalMoveY(-150, 0.5f).SetEase(Ease.InBack);
+            
+            nowAlpha = 1;
 
             while (nowAlpha > 0)
             {
