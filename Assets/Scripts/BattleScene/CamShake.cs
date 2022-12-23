@@ -172,12 +172,15 @@ public class CamShake : MonoBehaviour
     {
         rigid.AddForce(Vector2.up * jumpCamPower_F, ForceMode2D.Impulse);
         rigid.gravityScale = setJumpCamGravityScale_F; 
+
         yield return new WaitForSeconds(0.7f);
+        
         while (rigid.gravityScale >= 0.2f)
         {
             rigid.gravityScale -= Time.deltaTime * 3.5f;
             yield return null;
         }
+
         rigid.gravityScale = 1.5f;
     }
 

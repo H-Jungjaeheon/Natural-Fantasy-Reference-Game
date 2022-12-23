@@ -1135,8 +1135,8 @@ public class Player : BasicUnitScript
     /// <param name="isBuffing"> 버프 걸기 판별 (버프를 걸어주는가?) </param>
     void TheHolySpiritPropertyBuff(bool isBuffing)
     {
-        maxActionCoolTime = isBuffing ? maxActionCoolTime - (maxActionCoolTime / 4) : originalMaxActionCoolTime;
-        restWaitTime = isBuffing ? restWaitTime - (originalRestWaitTime / 5) : originalRestWaitTime;
+        maxActionCoolTime = isBuffing ? maxActionCoolTime - (int)(maxActionCoolTime / 4) : originalMaxActionCoolTime;
+        restWaitTime = isBuffing ? restWaitTime - (int)(originalRestWaitTime / 5) : originalRestWaitTime;
         Damage = isBuffing ? (int)(Damage * 1.5f) : originalDamage;
     }
 
@@ -1146,8 +1146,8 @@ public class Player : BasicUnitScript
     /// <param name="isDeBuffing"> 디버프 걸기 판별 (디버프를 걸어주는가?) </param>
     void TheHolySpiritPropertyDeBuff(bool isDeBuffing)
     {
-        maxActionCoolTime = isDeBuffing ? maxActionCoolTime + (maxActionCoolTime / 4) : originalMaxActionCoolTime;
-        restWaitTime = isDeBuffing ? restWaitTime + (originalRestWaitTime / 5) : originalRestWaitTime;
+        maxActionCoolTime = isDeBuffing ? maxActionCoolTime + (int)(maxActionCoolTime / 4) : originalMaxActionCoolTime;
+        restWaitTime = isDeBuffing ? restWaitTime + (int)(originalRestWaitTime / 5) : originalRestWaitTime;
         Damage = isDeBuffing ? (int)(Damage / 1.5f) : originalDamage;
         Speed = isDeBuffing ? Speed / 1.25f : originalSpeed;
     }
