@@ -8,6 +8,10 @@ public class SlimeEnemy : BasicUnitScript
     private BoxCollider2D ownCollider;
 
     [SerializeField]
+    [Tooltip("사망 시 띄울 이펙트 오브젝트")]
+    private GameObject deadEffectObj;
+
+    [SerializeField]
     [Tooltip("스테이지 1 기믹 컴포넌트")]
     private WaterFallMachine gimmick;
 
@@ -681,7 +685,9 @@ public class SlimeEnemy : BasicUnitScript
 
         bsm.StartGameEndPanelAnim(false);
 
-        yield return null;
+        yield return new WaitForSeconds(0.5f);
+
+        deadEffectObj.SetActive(true);
     }
 
     /// <summary>

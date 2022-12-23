@@ -223,10 +223,10 @@ public class Player : BasicUnitScript
         InitializationAttackRangeSize = new Vector2(1.1f, 2.68f);
         InitializationAttackRangeOffset = new Vector2(0.18f, -0.08f);
 
-        MaxHp += (int)MaxHp / 10 * (gameManagerIns.statLevels[(int)UpgradeableStatKind.Hp]); //레벨당 체력 증가식 (최대 100% 증가)
-        Damage += Damage * gameManagerIns.statLevels[(int)UpgradeableStatKind.Damage] / 2; //레벨당 공격력 증가식 (최대 500% 증가)
+        MaxHp += (MaxHp * gameManagerIns.statLevels[(int)UpgradeableStatKind.Hp]) * 0.1f; //레벨당 체력 증가식 (최대 100% 증가)
+        Damage += (int)(Damage * gameManagerIns.statLevels[(int)UpgradeableStatKind.Damage] * 0.5f); //레벨당 공격력 증가식 (최대 500% 증가)
         MaxEnergy += gameManagerIns.statLevels[(int)UpgradeableStatKind.Energy] * 3; //레벨당 기력 증가식 (최대 30 증가)
-        maxActionCoolTime -= (gameManagerIns.statLevels[(int)UpgradeableStatKind.CoolTime] * 0.15f); //레벨당 최대 쿨타임 차감식 (임시);
+        maxActionCoolTime -= (gameManagerIns.statLevels[(int)UpgradeableStatKind.CoolTime] * 0.15f); //레벨당 최대 쿨타임 차감식;
 
         restWaitTime = 1.25f;
         maxNaturePassiveCount = 5;
@@ -1135,8 +1135,9 @@ public class Player : BasicUnitScript
     /// <param name="isBuffing"> 버프 걸기 판별 (버프를 걸어주는가?) </param>
     void TheHolySpiritPropertyBuff(bool isBuffing)
     {
-        maxActionCoolTime = isBuffing ? maxActionCoolTime - (int)(maxActionCoolTime / 4) : originalMaxActionCoolTime;
-        restWaitTime = isBuffing ? restWaitTime - (int)(originalRestWaitTime / 5) : originalRestWaitTime;
+        maxActionCoolTime = isBuffing ? maxActionCoolTime - (int)(maxActionCoolTime * 0.25f) : originalMaxActionCoolTime;
+        print(maxActionCoolTime);
+        restWaitTime = isBuffing ? restWaitTime - (int)(originalRestWaitTime * 0.2f) : originalRestWaitTime;
         Damage = isBuffing ? (int)(Damage * 1.5f) : originalDamage;
     }
 
@@ -1146,10 +1147,10 @@ public class Player : BasicUnitScript
     /// <param name="isDeBuffing"> 디버프 걸기 판별 (디버프를 걸어주는가?) </param>
     void TheHolySpiritPropertyDeBuff(bool isDeBuffing)
     {
-        maxActionCoolTime = isDeBuffing ? maxActionCoolTime + (int)(maxActionCoolTime / 4) : originalMaxActionCoolTime;
-        restWaitTime = isDeBuffing ? restWaitTime + (int)(originalRestWaitTime / 5) : originalRestWaitTime;
-        Damage = isDeBuffing ? (int)(Damage / 1.5f) : originalDamage;
-        Speed = isDeBuffing ? Speed / 1.25f : originalSpeed;
+        maxActionCoolTime = isDeBuffing ? maxActionCoolTime + (int)(maxActionCoolTime * 0.25f) : originalMaxActionCoolTime;
+        restWaitTime = isDeBuffing ? restWaitTime + (int)(originalRestWaitTime * 0.2f) : originalRestWaitTime;
+        Damage = isDeBuffing ? (int)(Damage * 0.5f) : originalDamage;
+        Speed = isDeBuffing ? Speed * 0.25f : originalSpeed;
     }
 
     /// <summary>
@@ -1244,8 +1245,8 @@ public class Player : BasicUnitScript
 
             case NowPlayerProperty.ForceProperty:
 
-                int enhancedDamage = (int)(Damage / 2f);
-                float reducedMaxActionCoolTime = maxActionCoolTime / 5;
+                int enhancedDamage = (int)(Damage * 0.5f);
+                float reducedMaxActionCoolTime = maxActionCoolTime * 0.2f;
 
                 maxActionCoolTime -= reducedMaxActionCoolTime;
                 Damage += enhancedDamage;
