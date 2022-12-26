@@ -1136,9 +1136,8 @@ public class Player : BasicUnitScript
     void TheHolySpiritPropertyBuff(bool isBuffing)
     {
         maxActionCoolTime = isBuffing ? maxActionCoolTime - (int)(maxActionCoolTime * 0.25f) : originalMaxActionCoolTime;
-        print(maxActionCoolTime);
         restWaitTime = isBuffing ? restWaitTime - (int)(originalRestWaitTime * 0.2f) : originalRestWaitTime;
-        Damage = isBuffing ? (int)(Damage * 1.5f) : originalDamage;
+        Damage = isBuffing ? (int)(originalDamage * 1.5f) : originalDamage;
     }
 
     /// <summary>
@@ -1150,7 +1149,7 @@ public class Player : BasicUnitScript
         maxActionCoolTime = isDeBuffing ? maxActionCoolTime + (int)(maxActionCoolTime * 0.25f) : originalMaxActionCoolTime;
         restWaitTime = isDeBuffing ? restWaitTime + (int)(originalRestWaitTime * 0.2f) : originalRestWaitTime;
         Damage = isDeBuffing ? (int)(Damage * 0.5f) : originalDamage;
-        Speed = isDeBuffing ? Speed * 0.25f : originalSpeed;
+        Speed = isDeBuffing ? originalSpeed * 0.8f : originalSpeed;
     }
 
     /// <summary>
