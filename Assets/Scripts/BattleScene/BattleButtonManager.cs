@@ -92,7 +92,7 @@ public class BattleButtonManager : Singleton<BattleButtonManager>
 
             if (isScrollInitialization) //초기화 매개변수가 참일때 스킬 스크롤 초기화
             {
-                content.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, 20, 0);
+                content.GetComponent<RectTransform>().anchoredPosition = new Vector3(0f, 20f, 0f);
             }
         }
 

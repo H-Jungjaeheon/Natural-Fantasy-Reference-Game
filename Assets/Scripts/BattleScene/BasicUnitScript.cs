@@ -23,6 +23,7 @@ public enum NowState
     Attacking,
     ChangingProperties,
     Resurrection,
+    ChangePhase,
     Dead
 }
 
@@ -41,6 +42,13 @@ public enum NowEnemyProperty
     EvilSpirit,
     Angel,
     PropertyTotalNumber
+}
+
+public enum BossPhase
+{
+    PhaseOne = 1,
+    PhaseTwo = 2,
+    PhaseThree = 3
 }
 
 public abstract class BasicUnitScript : MonoBehaviour
@@ -95,7 +103,7 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     private bool isHpDiminishedProduction;
 
-    protected bool isInvincibility; //현재 무적인지 판별
+    private bool isInvincibility; //현재 무적인지 판별
 
     public bool IsInvincibility //현재 무적인지 판별 변수 프로퍼티
     {
@@ -416,27 +424,30 @@ public abstract class BasicUnitScript : MonoBehaviour
     /// <param name="isDefending"> 현재 들어온 공격의 방어 성공 유무 </param>
     public virtual void Hit(float damage, bool isDefending)
     {
-        var damageText = objectPoolInstance.GetObject((int)PoolObjKind.DamageText); //데미지 텍스트 소환(오브젝트 풀)
-        TextState nowTextState = TextState.Blocking; //현재 데미지 텍스트 상태
-
-        if (isInvincibility == false)
+        if (hp > 0)
         {
-            if (isDefending)
-            {
-                Energy -= 1;
-                DreamyFigure += 1;
-            }
-            else
-            {
-                spriteRenderer.color = stateColors[(int)StateColor.HitColor]; //맞았을 때의 효과 : 색 변경
-                Hp -= damage;
-                DreamyFigure += 2;
-                StartCoroutine(ChangeToBasicColor());
-                nowTextState = TextState.BasicDamage;
-            }
-        }
+            var damageText = objectPoolInstance.GetObject((int)PoolObjKind.DamageText); //데미지 텍스트 소환(오브젝트 풀)
+            TextState nowTextState = TextState.Blocking; //현재 데미지 텍스트 상태
 
-        damageText.GetComponent<DamageText>().TextCustom(nowTextState, transform.position + plusVector, damage);
+            if (isInvincibility == false)
+            {
+                if (isDefending)
+                {
+                    Energy -= 1;
+                    DreamyFigure += 1;
+                }
+                else
+                {
+                    spriteRenderer.color = stateColors[(int)StateColor.HitColor]; //맞았을 때의 효과 : 색 변경
+                    Hp -= damage;
+                    DreamyFigure += 2;
+                    StartCoroutine(ChangeToBasicColor());
+                    nowTextState = TextState.BasicDamage;
+                }
+            }
+
+            damageText.GetComponent<DamageText>().TextCustom(nowTextState, transform.position + plusVector, damage);
+        }
     }
 
     /// <summary>
@@ -446,7 +457,7 @@ public abstract class BasicUnitScript : MonoBehaviour
     {
         nowState = NowState.Standingby;
 
-        if (Hp > 0)
+        if (Hp > 0 && Energy > 0)
         {
             isWaiting = true;
 
@@ -548,21 +559,6 @@ public abstract class BasicUnitScript : MonoBehaviour
     {
         attackRangeObjComponent.size = attackRangeColliderSize;
         attackRangeObjComponent.offset = attackRangeColliderOffset;
-    }
-
-    /// <summary>
-    /// 공격 종료 후 처리 함수
-    /// </summary>
-    protected virtual void AttackEndSetting()
-    {
-        if (Energy > 0)
-        {
-            WaitingTimeStart();
-        }
-        else
-        {
-            nowState = NowState.Standingby;
-        }
     }
 
     protected void Invincibility(bool isInvincibilityOn) => IsInvincibility = isInvincibilityOn; //무적 ON or OFF

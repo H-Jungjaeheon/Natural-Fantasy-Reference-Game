@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using System.IO;
 
 public class SlimeEnemy : BasicUnitScript
 {
@@ -15,15 +16,23 @@ public class SlimeEnemy : BasicUnitScript
     [Tooltip("스테이지 1 기믹 컴포넌트")]
     private WaterFallMachine gimmick;
 
-    private Vector2 speedVectorWithPattern = new Vector2(0, 0); //이동이 필요한 패턴 사용 시 사용할 속도 벡터
+    private BossPhase nowPhase = BossPhase.PhaseOne; //현재 보스 페이즈
 
-    private Vector2 spawnPos = new Vector2(0, 0); //패턴에 소환하는 오브젝트들 초기 위치 설정 벡터
+    private Vector2 speedVector = new Vector2(0f, 0f); //이동이 필요한 패턴 사용 시 사용할 속도 벡터
+
+    private Vector2 spawnPos = new Vector2(0f, 0f); //패턴에 소환하는 오브젝트들 초기 위치 설정 벡터
 
     private bool isPhysicalAttacking; //특정 패턴 사용 시 몸체 충돌 데미지 판정 판별 변수
+
+    private bool isChangePhase;
 
     private int restLimitTurn;
 
     private const int maxRestLimitTurn = 3;
+
+    private string[] pattonText; //텍스트로 불러온 패턴 번호들
+
+    private int pattonCount; //현재 패턴 사용 횟수
 
     /// <summary>
     /// 게임 처음 세팅
@@ -34,6 +43,8 @@ public class SlimeEnemy : BasicUnitScript
         nowDefensivePosition = DefensePos.None;
 
         isWaiting = true;
+
+        pattonText = PattonText();
 
         bsm.enemyCharacterPos = transform.position;
         bsm.enemy = gameObject;
@@ -52,6 +63,16 @@ public class SlimeEnemy : BasicUnitScript
         particlePos = new Vector3(0f, -2f, 0f);
 
         StartCoroutine(WaitUntilTheGameStarts());
+    }
+
+    private string[] PattonText()
+    {
+        string[] path;
+        int randIndex = Random.Range(1, 4);
+
+        path = File.ReadAllText($"{Application.dataPath}/BossPattonTexts/SlimeBossPhase{(int)nowPhase}Patton{randIndex}.txt").Split(','); //보스 패턴 텍스트 가져오기 (현재 페이즈에 맞는 텍스트 파일 : 3가지 경우 중 랜덤)
+
+        return path;
     }
 
     /// <summary>
@@ -87,11 +108,20 @@ public class SlimeEnemy : BasicUnitScript
 
                 nowActionCoolTime += Time.deltaTime;
 
-                if (nowActionCoolTime >= maxActionCoolTime)
+                if (nowActionCoolTime >= maxActionCoolTime || isChangePhase)
                 {
                     WaitingTimeEnd();
                     ActionCoolTimeBarSetActive(false);
-                    RandBehaviorStart(); //랜덤 행동
+
+                    if (isChangePhase == false)
+                    {
+                        RandBehaviorStart(); //랜덤 행동
+                    }
+                    else
+                    {
+                        StartCoroutine(ChangePhase()); //페이즈 변경 애니메이션 코루틴
+                    }
+
                     break;
                 }
             }
@@ -100,64 +130,80 @@ public class SlimeEnemy : BasicUnitScript
     }
 
     /// <summary>
+    /// 페이즈 변경하는 구간
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator ChangePhase()
+    {
+        nowState = NowState.ChangePhase;
+
+        //hpText.color = hpTextColors[(int)NowStatUIState.Invincibility];
+        
+        yield return new WaitForSeconds(6f); //페이즈 변경 애니메이션 종료까지 대기
+
+        isChangePhase = false;
+        IsInvincibility = false;
+
+        nowCoroutine = ThornSkill();
+        StartCoroutine(nowCoroutine);
+
+        pattonText = PattonText();
+    }
+
+    /// <summary>
     /// 보스 랜덤 공격 뽑기
     /// </summary>
     public void RandBehaviorStart()
     {
-        // StartCoroutine(Resting()); //- 휴식
-        // StartCoroutine(GoToAttack(true)); //- 기본 근접 공격
-        // StartCoroutine(GoToAttack(false)); //- 방어 불가 스킬 근접 공격
-        // StartCoroutine(ShootBullet()); //- 원거리 총알 발사 공격
-        // StartCoroutine(HowitzerAttack()); //- 3연 곡사포 공격
-        // StartCoroutine(LaserAttack()); //- 레이저 발사 공격
-        // StartCoroutine(TrapSkill()); //트랩 설치(2페이즈)
-        // StartCoroutine(RainSkill()); //독 폭포 패턴(2페이즈)
-        // StartCoroutine(ThornSkill()); //가시 패턴(2페이즈, 궁극기)
-
         if (nowState == NowState.Standingby)
         {
-            int behaviorProbability = Random.Range(1, 101);
+            int randIndex = Random.Range(0, 2);
 
-            if (behaviorProbability <= 20)
+            if (Energy < MaxEnergy * 0.5f && restLimitTurn >= maxRestLimitTurn && randIndex == 1)
             {
-                if (Energy <= MaxEnergy / 3 && restLimitTurn >= maxRestLimitTurn)
+                nowCoroutine = Resting(); //휴식
+                restLimitTurn = 0;
+            }
+            else
+            {
+                switch (int.Parse(pattonText[pattonCount]))
                 {
-                    restLimitTurn = 0;
-                    nowCoroutine = Resting();
+                    case 0:
+                        nowCoroutine = GoToAttack(true); //기본 근접 공격
+                        break;
+                    case 1:
+                        nowCoroutine = GoToAttack(false); //내려찍기 공격
+                        break;
+                    case 2:
+                        nowCoroutine = ShootBullet(); //총알 발사 공격
+                        break;
+                    case 3:
+                        nowCoroutine = HowitzerAttack(); //3연속 곡사포 공격
+                        break;
+                    case 4:
+                        nowCoroutine = LaserAttack(); //레이저 발사 공격
+                        break;
+                    case 5:
+                        nowCoroutine = TrapSkill(); //디버프 함정 설치(2페이즈)
+                        break;
+                    case 6:
+                        nowCoroutine = RainSkill(); //독 폭포 공격(2페이즈)
+                        break;
+                    case 7:
+                        nowCoroutine = ThornSkill(); //주먹 변형 패턴(2페이즈)
+                        break;
                 }
-                else
-                {
-                    behaviorProbability = Random.Range(1, 101);
-
-                    if (behaviorProbability <= 20)
-                    {
-                        nowCoroutine = GoToAttack(false);
-                    }
-                    else if (behaviorProbability <= 60)
-                    {
-                        nowCoroutine = HowitzerAttack();
-                    }
-                    else if (behaviorProbability <= 100)
-                    {
-                        nowCoroutine = LaserAttack();
-                    }
-                }
-            }
-            else if (behaviorProbability <= 55)
-            {
-                nowCoroutine = GoToAttack(true);
-            }
-            else if (behaviorProbability <= 80)
-            {
-                nowCoroutine = GoToAttack(false);
-            }
-            else if (behaviorProbability <= 100)
-            {
-                nowCoroutine = ShootBullet();
+                pattonCount++;
             }
 
             StartCoroutine(nowCoroutine);
             restLimitTurn++;
+
+            if (pattonCount == pattonText.Length)
+            {
+                pattonText = PattonText();
+                pattonCount = 0;
+            }
         }
     }
 
@@ -191,11 +237,18 @@ public class SlimeEnemy : BasicUnitScript
     {
         base.Hit(damage, isDefending);
 
-        if (isInvincibility == false && isDefending == false)
+        if (IsInvincibility == false && isDefending == false)
         {
             GameObject hitParticle = objectPoolInstance.GetObject((int)PoolObjKind.BossHitParticle);
 
             hitParticle.transform.position = transform.position + particlePos; //현재 파티클 스폰 위치(오브젝트 위치 + 설정한 유닛 고유 파티클 생성 위치) 
+        }
+
+        if (Hp <= maxHp * 0.5f && nowPhase == BossPhase.PhaseOne)
+        {
+            IsInvincibility = true;
+            isChangePhase = true;
+            nowPhase = BossPhase.PhaseTwo;
         }
     }
 
@@ -257,11 +310,11 @@ public class SlimeEnemy : BasicUnitScript
         rigid.AddForce(Vector2.up * jumpPower_F, ForceMode2D.Impulse);
         rigid.gravityScale = setJumpGravityScale_F;
 
-        speedVectorWithPattern.x = 5.5f; //점프하며 플레이어 위치에 다가갈 스피드
+        speedVector.x = 5.5f; //점프하며 플레이어 위치에 다가갈 스피드
 
         while (transform.position.x >= bsm.playerCharacterPos.x) //플레이어 시작 x값까지 움직임
         {
-            transform.position -= (Vector3)speedVectorWithPattern * Time.deltaTime;
+            transform.position -= (Vector3)speedVector * Time.deltaTime;
             yield return null;
         }
 
@@ -269,7 +322,7 @@ public class SlimeEnemy : BasicUnitScript
 
         rigid.gravityScale = -0.7f;
 
-        speedVectorWithPattern.x = 0;
+        speedVector.x = 0f;
 
         animator.SetBool("Jumping", false);
         animator.SetBool("SlappingDown", true);
@@ -302,7 +355,7 @@ public class SlimeEnemy : BasicUnitScript
     /// <returns></returns>
     IEnumerator Return()
     {
-        transform.rotation = Quaternion.Euler(0, 180, 0);
+        transform.rotation = Quaternion.Euler(0f, 180f, 0f);
 
         animator.SetBool("Moving", true);
 
@@ -318,7 +371,7 @@ public class SlimeEnemy : BasicUnitScript
 
         animator.SetBool("Moving", false);
 
-        AttackEndSetting();
+        WaitingTimeStart();
     }
 
     /// <summary>
@@ -345,7 +398,7 @@ public class SlimeEnemy : BasicUnitScript
 
         animator.SetBool("FrontShoot", false);
 
-        AttackEndSetting();
+        WaitingTimeStart();
     }
 
     /// <summary>
@@ -360,7 +413,7 @@ public class SlimeEnemy : BasicUnitScript
         Energy -= 3;
 
         animator.SetBool("HowitzerAttack", true);
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(2f);
         animator.SetBool("HowitzerAttack", false);
 
         for (int nowLaunchCount = 0; nowLaunchCount < 3; nowLaunchCount++)
@@ -369,7 +422,7 @@ public class SlimeEnemy : BasicUnitScript
             yield return launchDelay;
         }
 
-        AttackEndSetting();
+        WaitingTimeStart();
     }
 
     /// <summary>
@@ -413,7 +466,7 @@ public class SlimeEnemy : BasicUnitScript
 
         yield return launchDelay;
 
-        AttackEndSetting();
+        WaitingTimeStart();
     }
 
     /// <summary>
@@ -441,7 +494,7 @@ public class SlimeEnemy : BasicUnitScript
             yield return shootDelay;
         }
 
-        AttackEndSetting();
+        WaitingTimeStart();
     }
 
     /// <summary>
@@ -453,7 +506,7 @@ public class SlimeEnemy : BasicUnitScript
         nowState = NowState.Attacking;
         Energy -= 6;
 
-        yield return new WaitForSeconds(1); //점프 전 대기 시간
+        yield return new WaitForSeconds(1f); //점프 전 대기 시간
 
         for (int nowIndex = 0; nowIndex < 2; nowIndex++)
         {   
@@ -489,7 +542,7 @@ public class SlimeEnemy : BasicUnitScript
         nowWaterfallObj.onEnablePos.x = Random.Range(-10, 6);
         nowWaterfallObj.onEnablePos.y = 6.75f;
 
-        AttackEndSetting();
+        WaitingTimeStart();
     }
 
     /// <summary>
@@ -498,9 +551,9 @@ public class SlimeEnemy : BasicUnitScript
     /// <returns></returns>
     IEnumerator ThornSkill()
     {
-        Vector2 rangePos = new Vector2(0, -0.5f);
-        Vector2 attackPos = new Vector2(0, 5.1f);
-        Vector2 nowOffset = new Vector2(0, 0);
+        Vector2 rangePos = new Vector2(0f, -0.5f);
+        Vector2 attackPos = new Vector2(0f, 5.1f);
+        Vector2 nowOffset = new Vector2(0f, 0f);
 
         float nowOffsetY = -1.84f;
         int nowAttackPosX = -20;
@@ -610,7 +663,7 @@ public class SlimeEnemy : BasicUnitScript
             yield return null;
         }
 
-        AttackEndSetting();
+        WaitingTimeStart();
     }
 
     /// <summary>
@@ -637,7 +690,7 @@ public class SlimeEnemy : BasicUnitScript
                 break;
             }
             yield return RestWaitTime;
-            Energy += 1;
+            Energy += 1f;
             nowRestingCount += 1;
         }
 
@@ -702,7 +755,7 @@ public class SlimeEnemy : BasicUnitScript
         battleUIAnimator.SetBool("NowFainting", true);
         animator.SetBool("Fainting", true);
 
-        yield return new WaitForSeconds(8);
+        yield return new WaitForSeconds(8f);
 
         animator.SetBool("Fainting", false);
         battleUIAnimator.SetBool("NowFainting", false);

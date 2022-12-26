@@ -284,36 +284,39 @@ public class Player : BasicUnitScript
         var damageText = objectPoolInstance.GetObject((int)PoolObjKind.DamageText); //데미지 텍스트 소환(오브젝트 풀)
         TextState nowTextState = TextState.Blocking; //현재 데미지 텍스트 상태
 
-        if (IsInvincibility == false)
+        if (Hp > 0)
         {
-            if (ShieldHp_F > 0 && !isDefending)
+            if (IsInvincibility == false)
             {
-                ShieldHp_F -= 1;
-            }
-            else if (isDefending)
-            {
-                Energy -= 1;
-                DreamyFigure += 1;
-                animator.SetTrigger("DefenceIntermediateMotion");
-            }
-            else
-            {
-                spriteRenderer.color = stateColors[(int)StateColor.HitColor]; //맞았을 때의 효과 : 색 변경
-
-                if (nowProperty == NowPlayerProperty.ForceProperty)
+                if (ShieldHp_F > 0 && !isDefending)
                 {
-                    damage *= 2;
+                    ShieldHp_F -= 1;
                 }
-                nowTextState = TextState.BasicDamage; //나중에 치명타 추가되면 치명타 조건 구분해서 넣기
+                else if (isDefending)
+                {
+                    Energy -= 1;
+                    DreamyFigure += 1;
+                    animator.SetTrigger("DefenceIntermediateMotion");
+                }
+                else
+                {
+                    spriteRenderer.color = stateColors[(int)StateColor.HitColor]; //맞았을 때의 효과 : 색 변경
 
-                Hp -= damage;
+                    if (nowProperty == NowPlayerProperty.ForceProperty)
+                    {
+                        damage *= 2;
+                    }
+                    nowTextState = TextState.BasicDamage; //나중에 치명타 추가되면 치명타 조건 구분해서 넣기
 
-                DreamyFigure += 2;
-                StartCoroutine(ChangeToBasicColor());
+                    Hp -= damage;
+
+                    DreamyFigure += 2;
+                    StartCoroutine(ChangeToBasicColor());
+                }
             }
-        }
 
-        damageText.GetComponent<DamageText>().TextCustom(nowTextState, transform.position + plusVector, damage);
+            damageText.GetComponent<DamageText>().TextCustom(nowTextState, transform.position + plusVector, damage);
+        }
     }
 
     /// <summary>
@@ -380,9 +383,6 @@ public class Player : BasicUnitScript
     IEnumerator ChangeProperty(bool isChangeBasicProperty)
     {
         isChangePropertyReady = true;
-
-        WaitingTimeEnd();
-        ActionCoolTimeBarSetActive(false);
 
         while (true)
         {
@@ -968,7 +968,7 @@ public class Player : BasicUnitScript
 
         animator.SetBool("Moving", false);
 
-        AttackEndSetting();
+        WaitingTimeStart();
     }
 
     /// <summary>
@@ -1031,7 +1031,7 @@ public class Player : BasicUnitScript
 
         animator.SetBool("FirstSkill", false);
 
-        AttackEndSetting();
+        WaitingTimeStart();
     }
 
     /// <summary>
