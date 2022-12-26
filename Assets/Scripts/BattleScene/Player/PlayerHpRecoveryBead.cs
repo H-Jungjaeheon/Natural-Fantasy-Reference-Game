@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerHpRecoveryBead : MonoBehaviour
@@ -52,6 +50,7 @@ public class PlayerHpRecoveryBead : MonoBehaviour
         else
         {
             int randomSpawnXPosition = Random.Range(-7, 16);
+
             transform.position = new Vector2(randomSpawnXPosition, -1);
             nowYPos = -0.75f;
         }
@@ -88,9 +87,9 @@ public class PlayerHpRecoveryBead : MonoBehaviour
     private void DeleteSetting()
     {
         nowDeleteTimeLimit = 0;
+        Player.NowNaturePassiveCount = 0;
 
         OP.ReturnObject(gameObject, (int)PoolObjKind.PlayerHpRecoveryBead);
-        Player.NowNaturePassiveCount = 0;
     }
 
     private void DeterminePlayerProperties()

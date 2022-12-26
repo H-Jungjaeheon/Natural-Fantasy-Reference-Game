@@ -74,7 +74,7 @@ public class Player : BasicUnitScript
     #region 속성 관련 변수
     private float maxChangePropertyCoolTime = 35; //최대 속성 변경 시간
 
-    private float nowChangePropertyCoolTime; //현재 속성 변경 시간
+    public float nowChangePropertyCoolTime; //현재 속성 변경 시간
 
     public float NowChangePropertyCoolTime //현재 속성 변경 시간 프로퍼티
     {
@@ -233,7 +233,7 @@ public class Player : BasicUnitScript
 
         isResurrectionOpportunityExists = true;
 
-        nextPropertyIndex = Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
+        nextPropertyIndex = (int)NowPlayerProperty.NatureProperty;//Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
         nowPropertyImage.sprite = nowPropertyIconImages[(int)nowProperty];
 
         Energy = MaxEnergy;
@@ -394,6 +394,8 @@ public class Player : BasicUnitScript
         }
         
         nowState = NowState.ChangingProperties;
+
+        WaitingTimeEnd();
 
         NowChangePropertyCoolTime = 0;
         NowPropertyTimeLimit = 0;
@@ -600,13 +602,15 @@ public class Player : BasicUnitScript
                 if (nowActionCoolTime >= maxActionCoolTime || isChangePropertyReady)
                 {
                     WaitingTimeEnd();
+
                     ActionCoolTimeBarSetActive(false);
 
-                    if (isChangePropertyReady == false)
+                    if (isChangePropertyReady == false && (nowState == NowState.Standingby || nowState == NowState.Defensing))
                     {
                         battleButtonManagerInstance.ActionButtonSetActive(true);
                         battleButtonManagerInstance.ButtonsPageChange(true, false);
                     }
+
                     break;
                 }
             }
@@ -746,7 +750,9 @@ public class Player : BasicUnitScript
                 Energy = MaxEnergy;
                 break;
             }
+
             yield return RestWaitTime;
+            
             Energy += 1;
             nowRestingCount += 1;
         }
@@ -1149,7 +1155,7 @@ public class Player : BasicUnitScript
         maxActionCoolTime = isDeBuffing ? maxActionCoolTime + (int)(maxActionCoolTime * 0.25f) : originalMaxActionCoolTime;
         restWaitTime = isDeBuffing ? restWaitTime + (int)(originalRestWaitTime * 0.2f) : originalRestWaitTime;
         Damage = isDeBuffing ? (int)(Damage * 0.5f) : originalDamage;
-        Speed = isDeBuffing ? originalSpeed * 0.8f : originalSpeed;
+        Speed = isDeBuffing ? originalSpeed * 0.7f : originalSpeed;
     }
 
     /// <summary>

@@ -11320,6 +11320,7 @@ MonoBehaviour:
   - {r: 1, g: 0, b: 0, a: 1}
   - {r: 1, g: 0.53333336, b: 0.42352942, a: 1}
   unitShieldHpBars: {fileID: 1902801556}
+  nowChangePropertyCoolTime: 0
   nowProperty: 0
   nowPropertyImage: {fileID: 693409020}
   nowPropertyLimitTimeImage: {fileID: 1355490199}
