@@ -351,7 +351,7 @@ public class Player : BasicUnitScript
                 if (nowDefensivePosition == DefensePos.Left && !Input.GetKey(KeyCode.A) || nowDefensivePosition == DefensePos.Right && !Input.GetKey(KeyCode.D)
                     || nowDefensivePosition == DefensePos.Up && !Input.GetKey(KeyCode.W))
                 {
-                    string nowDefenceAnimName = (nowDefensivePosition == DefensePos.Up) ? "Defence(Top)" : "Defence(Left&Right)";
+                    string nowDefenceAnimName = (nowDefensivePosition == DefensePos.Up) ? "Defence(Top)" : defenceLR;
 
                     animator.SetBool(nowDefenceAnimName, false);
                     ReleaseDefense();
@@ -367,7 +367,7 @@ public class Player : BasicUnitScript
     /// <param name="setRotation"> 현재 방어 캐릭터 로테이션 값 </param>
     protected override void SetDefensing(DefensePos nowDefensePos, float setRotation)
     {
-        string nowDefenceAnimName = (nowDefensePos == DefensePos.Up) ? "Defence(Top)" : "Defence(Left&Right)";
+        string nowDefenceAnimName = (nowDefensePos == DefensePos.Up) ? "Defence(Top)" : defenceLR;
 
         animator.SetBool(nowDefenceAnimName, true);
         nowState = NowState.Defensing;
@@ -540,7 +540,7 @@ public class Player : BasicUnitScript
         ChangeAttackRange(new Vector2(0.85f, 2.68f), new Vector2(0.06f, -0.08f));
 
         animator.SetBool("Paring", true);
-        animator.SetBool("Defence(Left&Right)", false);
+        animator.SetBool(defenceLR, false);
 
         yield return new WaitForSeconds(0.15f);
         
@@ -665,7 +665,7 @@ public class Player : BasicUnitScript
 
             rigid.AddForce(Vector2.up * jumpPower_F, ForceMode2D.Impulse);
             rigid.gravityScale = setJumpGravityScale_F - 0.5f;
-            animator.SetTrigger("Jumping");
+            animator.SetTrigger(jumping);
             StartCoroutine(JumpDelay());
         }
         else if (nowState == NowState.Jumping && transform.position.y < startPos.y)
@@ -785,7 +785,7 @@ public class Player : BasicUnitScript
     {
         Vector3 targettransform = new Vector3(bsm.enemyCharacterPos.x - 5.5f, transform.position.y); //목표 위치
 
-        animator.SetBool("Moving", true);
+        animator.SetBool(moving, true);
 
         while (transform.position.x < targettransform.x) //이동중
         {
@@ -795,9 +795,9 @@ public class Player : BasicUnitScript
 
         transform.position = targettransform; //이동 완료
 
-        animator.SetBool("Moving", false);
+        animator.SetBool(moving, false);
         StartCoroutine(Attacking(false, nowAttackCount_I, 0.2f, 0.2f)); //첫번째 공격 실행
-        animator.SetTrigger("BasicAttack");
+        animator.SetTrigger(basicAttack);
     }
 
     /// <summary>
@@ -959,7 +959,7 @@ public class Player : BasicUnitScript
     {
         transform.rotation = Quaternion.Euler(0, 180, 0);
 
-        animator.SetBool("Moving", true);
+        animator.SetBool(moving, true);
 
         while (transform.position.x > startPos.x)
         {
@@ -972,7 +972,7 @@ public class Player : BasicUnitScript
 
         nowAttackCount_I = 1;
 
-        animator.SetBool("Moving", false);
+        animator.SetBool(moving, false);
 
         WaitingTimeStart();
     }
@@ -1168,14 +1168,14 @@ public class Player : BasicUnitScript
 
         if (nowDefensivePosition == DefensePos.Left || nowDefensivePosition == DefensePos.Right)
         {
-            animator.SetBool("Defence(Left&Right)", false);
+            animator.SetBool(defenceLR, false);
         }
         else if (nowDefensivePosition == DefensePos.Up)
         {
             animator.SetBool("Defence(Top)", false);
         }
 
-        animator.SetBool("Stuning", true);
+        animator.SetBool(fainting, true);
         nowDefensivePosition = DefensePos.None;
         battleButtonManagerInstance.ActionButtonSetActive(false);
 
@@ -1186,7 +1186,7 @@ public class Player : BasicUnitScript
 
         yield return new WaitForSeconds(5); //나중에 매개변수로 레벨에 따라서 기절 시간 넣기
 
-        animator.SetBool("Stuning", false);
+        animator.SetBool(fainting, false);
         battleUIAnimator.SetBool("NowFainting", false);
 
         if (isSlowing)

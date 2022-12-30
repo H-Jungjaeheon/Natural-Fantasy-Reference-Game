@@ -364,6 +364,22 @@ public abstract class BasicUnitScript : MonoBehaviour
     protected Animator battleUIAnimator;
     #endregion
 
+    #region 애니메이션 이름 모음
+    protected const string moving = "Moving";
+
+    protected const string resting = "Resting";
+
+    protected const string basicAttack = "BasicAttack";
+
+    protected const string jumping = "Jumping";
+
+    protected const string dead = "Dead";
+
+    protected const string fainting = "Fainting";
+
+    protected const string defenceLR = "Defence(Left&Right)";
+    #endregion
+
     #region 피해 요소 모음
     [Header("피해 요소 모음")]
     [SerializeField]

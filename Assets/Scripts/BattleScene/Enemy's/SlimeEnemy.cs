@@ -216,7 +216,7 @@ public class SlimeEnemy : BasicUnitScript
 
         Energy -= (isBasicCloseAttack) ? 2 : 3;
 
-        animator.SetBool("Moving", true);
+        animator.SetBool(moving, true);
 
         while (transform.position.x > Targettransform.x) //이동중
         {
@@ -226,7 +226,7 @@ public class SlimeEnemy : BasicUnitScript
 
         transform.position = Targettransform; //이동 완료
 
-        animator.SetBool("Moving", false);
+        animator.SetBool(moving, false);
 
         nowCoroutine = (isBasicCloseAttack) ? Attacking(true, nowAttackCount_I, 0.65f) : DefenselessCloseAttack(); //isBasicCloseAttack이 참이면, nowCoroutine에 현재 실행할 기본 근접공격 코루틴 저장(거짓이면, 내려찍기 공격 코루틴 저장)
         StartCoroutine(nowCoroutine);
@@ -263,7 +263,7 @@ public class SlimeEnemy : BasicUnitScript
     {
         float nowdelayTime = 0;
 
-        animator.SetTrigger("BasicAttack");
+        animator.SetTrigger(basicAttack);
 
         while (nowdelayTime < delayTime) //공격 준비 동작
         {
@@ -303,7 +303,7 @@ public class SlimeEnemy : BasicUnitScript
     {
         WaitForSeconds defenselessCloseAttackDelay = new WaitForSeconds(0.3f);
 
-        animator.SetBool("Jumping", true);
+        animator.SetBool(jumping, true);
 
         yield return new WaitForSeconds(0.5f); //점프 전 대기 시간
 
@@ -324,7 +324,7 @@ public class SlimeEnemy : BasicUnitScript
 
         speedVector.x = 0f;
 
-        animator.SetBool("Jumping", false);
+        animator.SetBool(jumping, false);
         animator.SetBool("SlappingDown", true);
 
         yield return defenselessCloseAttackDelay; //내려찍기 준비시간
@@ -357,7 +357,7 @@ public class SlimeEnemy : BasicUnitScript
     {
         transform.rotation = Quaternion.Euler(0f, 180f, 0f);
 
-        animator.SetBool("Moving", true);
+        animator.SetBool(moving, true);
 
         while (transform.position.x < startPos.x)
         {
@@ -369,7 +369,7 @@ public class SlimeEnemy : BasicUnitScript
         transform.position = startPos;
         nowAttackCount_I = 1;
 
-        animator.SetBool("Moving", false);
+        animator.SetBool(moving, false);
 
         WaitingTimeStart();
     }
@@ -680,7 +680,7 @@ public class SlimeEnemy : BasicUnitScript
 
         battleUIObjScript.BattleUIObjSetActiveTrue(ChangeBattleUIAnim.Rest);
         battleUIAnimator.SetBool("NowResting", true);
-        animator.SetBool("Resting", true);
+        animator.SetBool(resting, true);
 
         while (nowRestingCount < 2)
         {
@@ -695,7 +695,7 @@ public class SlimeEnemy : BasicUnitScript
         }
 
         battleUIAnimator.SetBool("NowResting", false);
-        animator.SetBool("Resting", false);
+        animator.SetBool(resting, false);
 
         if (isSlowing)
         {
@@ -726,7 +726,7 @@ public class SlimeEnemy : BasicUnitScript
 
         gimmick.StopFunction();
 
-        animator.SetTrigger("Dead");
+        animator.SetTrigger(dead);
         spriteRenderer.sortingOrder = 5;
 
         rigid.velocity = Vector2.zero;
@@ -753,11 +753,11 @@ public class SlimeEnemy : BasicUnitScript
 
         battleUIObjScript.BattleUIObjSetActiveTrue(ChangeBattleUIAnim.Faint);
         battleUIAnimator.SetBool("NowFainting", true);
-        animator.SetBool("Fainting", true);
+        animator.SetBool(fainting, true);
 
         yield return new WaitForSeconds(8f);
 
-        animator.SetBool("Fainting", false);
+        animator.SetBool(fainting, false);
         battleUIAnimator.SetBool("NowFainting", false);
 
         if (isSlowing)

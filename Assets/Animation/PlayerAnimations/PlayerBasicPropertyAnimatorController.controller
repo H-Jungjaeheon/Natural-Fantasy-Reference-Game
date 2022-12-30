@@ -141,7 +141,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 2
-    m_ConditionEvent: Stuning
+    m_ConditionEvent: Fainting
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -1498945330341146913}
@@ -194,7 +194,7 @@ AnimatorStateTransition:
     m_ConditionEvent: Defence(Left&Right)
     m_EventTreshold: 0
   - m_ConditionMode: 2
-    m_ConditionEvent: Stuning
+    m_ConditionEvent: Fainting
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1648735046189374860}
@@ -322,7 +322,7 @@ AnimatorStateTransition:
     m_ConditionEvent: Defence(Top)
     m_EventTreshold: 0
   - m_ConditionMode: 2
-    m_ConditionEvent: Stuning
+    m_ConditionEvent: Fainting
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 8254793272248623059}
@@ -477,7 +477,7 @@ AnimatorStateTransition:
     m_ConditionEvent: Defence(Left&Right)
     m_EventTreshold: 0
   - m_ConditionMode: 2
-    m_ConditionEvent: Stuning
+    m_ConditionEvent: Fainting
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1648735046189374860}
@@ -535,7 +535,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Stuning
+    m_ConditionEvent: Fainting
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1421633213339592471}
@@ -662,12 +662,6 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: Stuning
-    m_Type: 4
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 0}
   - m_Name: Jumping
     m_Type: 9
     m_DefaultFloat: 0
@@ -682,6 +676,12 @@ AnimatorController:
     m_Controller: {fileID: 0}
   - m_Name: DefenceIntermediateMotion
     m_Type: 9
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 0}
+  - m_Name: Fainting
+    m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
@@ -926,7 +926,7 @@ AnimatorStateTransition:
     m_ConditionEvent: Defence(Top)
     m_EventTreshold: 0
   - m_ConditionMode: 2
-    m_ConditionEvent: Stuning
+    m_ConditionEvent: Fainting
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 8254793272248623059}
