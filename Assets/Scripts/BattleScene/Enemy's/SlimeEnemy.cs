@@ -679,7 +679,7 @@ public class SlimeEnemy : BasicUnitScript
         nowState = NowState.Resting;
 
         battleUIObjScript.BattleUIObjSetActiveTrue(ChangeBattleUIAnim.Rest);
-        battleUIAnimator.SetBool("NowResting", true);
+        battleUIAnimator.SetBool(nowResting, true);
         animator.SetBool(resting, true);
 
         while (nowRestingCount < 2)
@@ -694,12 +694,12 @@ public class SlimeEnemy : BasicUnitScript
             nowRestingCount += 1;
         }
 
-        battleUIAnimator.SetBool("NowResting", false);
+        battleUIAnimator.SetBool(nowResting, false);
         animator.SetBool(resting, false);
 
         if (isSlowing)
         {
-            battleUIAnimator.SetBool("NowSlowing", true);
+            battleUIAnimator.SetBool(nowSlowing, true);
         }
         else
         {
@@ -752,17 +752,17 @@ public class SlimeEnemy : BasicUnitScript
         nowState = NowState.Fainting;
 
         battleUIObjScript.BattleUIObjSetActiveTrue(ChangeBattleUIAnim.Faint);
-        battleUIAnimator.SetBool("NowFainting", true);
+        battleUIAnimator.SetBool(nowFainting, true);
         animator.SetBool(fainting, true);
 
         yield return new WaitForSeconds(8f);
 
         animator.SetBool(fainting, false);
-        battleUIAnimator.SetBool("NowFainting", false);
+        battleUIAnimator.SetBool(nowFainting, false);
 
         if (isSlowing)
         {
-            battleUIAnimator.SetBool("NowSlowing", true);
+            battleUIAnimator.SetBool(nowSlowing, true);
         }
         else
         {

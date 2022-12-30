@@ -206,6 +206,22 @@ public class Player : BasicUnitScript
     private Color[] propertyColors;
     #endregion
 
+    #region 플레이어 애니메이션 이름 모음
+    protected const string firstSkill = "FirstSkill";
+
+    protected const string basicThirdAttackHitActionCompleat = "BasicThirdAttackHitActionCompleat";
+
+    protected const string basicSecondAttackHitActionCompleat = "BasicSecondAttackHitActionCompleat";
+
+    protected const string jumpIntermediateMotion = "JumpIntermediateMotion";
+
+    protected const string paring = "Paring";
+
+    protected const string defenceIntermediateMotion = "DefenceIntermediateMotion";
+
+    protected const string defenceT = "Defence(Top)";
+    #endregion
+
     void Update()
     {
         Deflect();
@@ -233,7 +249,7 @@ public class Player : BasicUnitScript
 
         isResurrectionOpportunityExists = true;
 
-        nextPropertyIndex = (int)NowPlayerProperty.NatureProperty;//Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
+        nextPropertyIndex = (int)NowPlayerProperty.FlameProperty;//Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
         nowPropertyImage.sprite = nowPropertyIconImages[(int)nowProperty];
 
         Energy = MaxEnergy;
@@ -296,7 +312,7 @@ public class Player : BasicUnitScript
                 {
                     Energy -= 1;
                     DreamyFigure += 1;
-                    animator.SetTrigger("DefenceIntermediateMotion");
+                    animator.SetTrigger(defenceIntermediateMotion);
                 }
                 else
                 {
@@ -351,7 +367,7 @@ public class Player : BasicUnitScript
                 if (nowDefensivePosition == DefensePos.Left && !Input.GetKey(KeyCode.A) || nowDefensivePosition == DefensePos.Right && !Input.GetKey(KeyCode.D)
                     || nowDefensivePosition == DefensePos.Up && !Input.GetKey(KeyCode.W))
                 {
-                    string nowDefenceAnimName = (nowDefensivePosition == DefensePos.Up) ? "Defence(Top)" : defenceLR;
+                    string nowDefenceAnimName = (nowDefensivePosition == DefensePos.Up) ? defenceT : defenceLR;
 
                     animator.SetBool(nowDefenceAnimName, false);
                     ReleaseDefense();
@@ -367,7 +383,7 @@ public class Player : BasicUnitScript
     /// <param name="setRotation"> 현재 방어 캐릭터 로테이션 값 </param>
     protected override void SetDefensing(DefensePos nowDefensePos, float setRotation)
     {
-        string nowDefenceAnimName = (nowDefensePos == DefensePos.Up) ? "Defence(Top)" : defenceLR;
+        string nowDefenceAnimName = (nowDefensePos == DefensePos.Up) ? defenceT : defenceLR;
 
         animator.SetBool(nowDefenceAnimName, true);
         nowState = NowState.Defensing;
@@ -539,7 +555,7 @@ public class Player : BasicUnitScript
 
         ChangeAttackRange(new Vector2(0.85f, 2.68f), new Vector2(0.06f, -0.08f));
 
-        animator.SetBool("Paring", true);
+        animator.SetBool(paring, true);
         animator.SetBool(defenceLR, false);
 
         yield return new WaitForSeconds(0.15f);
@@ -560,7 +576,7 @@ public class Player : BasicUnitScript
 
         yield return new WaitForSeconds(0.25f);
         
-        animator.SetBool("Paring", false);
+        animator.SetBool(paring, false);
         
         InitializationAttackRange();
 
@@ -677,7 +693,7 @@ public class Player : BasicUnitScript
                 battleButtonManagerInstance.ActionButtonSetActive(true);
             }
 
-            animator.SetBool("JumpIntermediateMotion", false);
+            animator.SetBool(jumpIntermediateMotion, false);
 
             CamShake.JumpStop(false);
 
@@ -701,7 +717,7 @@ public class Player : BasicUnitScript
             yield return null;
         }
 
-        animator.SetBool("JumpIntermediateMotion", true);
+        animator.SetBool(jumpIntermediateMotion, true);
         rigid.gravityScale = setJumpGravityScale_F * 1.5f;
     }
 
@@ -741,7 +757,7 @@ public class Player : BasicUnitScript
         WaitForSeconds RestWaitTime = new WaitForSeconds(restWaitTime);
 
         battleUIObjScript.BattleUIObjSetActiveTrue(ChangeBattleUIAnim.Rest);
-        battleUIAnimator.SetBool("NowResting", true);
+        battleUIAnimator.SetBool(nowResting, true);
 
         while (3 > nowRestingCount)
         {
@@ -757,11 +773,11 @@ public class Player : BasicUnitScript
             nowRestingCount += 1;
         }
 
-        battleUIAnimator.SetBool("NowResting", false);
+        battleUIAnimator.SetBool(nowResting, false);
 
         if (isSlowing)
         {
-            battleUIAnimator.SetBool("NowSlowing", true);
+            battleUIAnimator.SetBool(nowSlowing, true);
         }
         else
         {
@@ -906,11 +922,11 @@ public class Player : BasicUnitScript
             {
                 case 2:
                     StartCoroutine(Attacking(false, nowAttackCount, 0.2f, 0.25f));
-                    animator.SetTrigger("BasicSecondAttackHitActionCompleat");
+                    animator.SetTrigger(basicSecondAttackHitActionCompleat);
                     break;
                 case 3:
                     StartCoroutine(Attacking(true, nowAttackCount, 0.35f, 0));
-                    animator.SetTrigger("BasicThirdAttackHitActionCompleat");
+                    animator.SetTrigger(basicThirdAttackHitActionCompleat);
                     break;
             }
         }
@@ -996,7 +1012,7 @@ public class Player : BasicUnitScript
             {
                 case 1:
                     StartCoroutine(SwordAuraSkill());
-                    animator.SetBool("FirstSkill", true);
+                    animator.SetBool(firstSkill, true);
                     break;
             }
         }
@@ -1035,7 +1051,7 @@ public class Player : BasicUnitScript
 
         yield return new WaitForSeconds(0.3f);
 
-        animator.SetBool("FirstSkill", false);
+        animator.SetBool(firstSkill, false);
 
         WaitingTimeStart();
     }
@@ -1172,7 +1188,7 @@ public class Player : BasicUnitScript
         }
         else if (nowDefensivePosition == DefensePos.Up)
         {
-            animator.SetBool("Defence(Top)", false);
+            animator.SetBool(defenceT, false);
         }
 
         animator.SetBool(fainting, true);
@@ -1182,16 +1198,16 @@ public class Player : BasicUnitScript
         yield return new WaitForSeconds(0.2f);
 
         battleUIObjScript.BattleUIObjSetActiveTrue(ChangeBattleUIAnim.Faint);
-        battleUIAnimator.SetBool("NowFainting", true);
+        battleUIAnimator.SetBool(nowFainting, true);
 
         yield return new WaitForSeconds(5); //나중에 매개변수로 레벨에 따라서 기절 시간 넣기
 
         animator.SetBool(fainting, false);
-        battleUIAnimator.SetBool("NowFainting", false);
+        battleUIAnimator.SetBool(nowFainting, false);
 
         if (isSlowing)
         {
-            battleUIAnimator.SetBool("NowSlowing", true);
+            battleUIAnimator.SetBool(nowSlowing, true);
         }
         else
         {
