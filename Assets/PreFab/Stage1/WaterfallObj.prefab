@@ -251,7 +251,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 301c7027246396846be20079cc0928ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thisBulletPoolObjKind: 7
+  thisBulletPoolObjKind: 9
   effectKind: 2
   dmgLimit: 1
   damage: 1

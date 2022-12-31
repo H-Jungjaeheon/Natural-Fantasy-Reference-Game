@@ -68,7 +68,7 @@ public class SlimeEnemy : BasicUnitScript
     private string[] PattonText()
     {
         string[] path;
-        int randIndex = Random.Range(1, 4);
+        int randIndex = Random.Range(1, 3);
 
         path = File.ReadAllText($"{Application.dataPath}/BossPattonTexts/SlimeBossPhase{(int)nowPhase}Patton{randIndex}.txt").Split(','); //보스 패턴 텍스트 가져오기 (현재 페이즈에 맞는 텍스트 파일 : 3가지 경우 중 랜덤)
 
@@ -158,6 +158,7 @@ public class SlimeEnemy : BasicUnitScript
         if (nowState == NowState.Standingby)
         {
             int randIndex = Random.Range(0, 2);
+            int nowPattonIndex = 0;
 
             if (Energy < MaxEnergy * 0.5f && restLimitTurn >= maxRestLimitTurn && randIndex == 1)
             {
@@ -166,34 +167,41 @@ public class SlimeEnemy : BasicUnitScript
             }
             else
             {
-                switch (int.Parse(pattonText[pattonCount]))
+                if (int.TryParse(pattonText[pattonCount], out nowPattonIndex))
                 {
-                    case 0:
-                        nowCoroutine = GoToAttack(true); //기본 근접 공격
-                        break;
-                    case 1:
-                        nowCoroutine = GoToAttack(false); //내려찍기 공격
-                        break;
-                    case 2:
-                        nowCoroutine = ShootBullet(); //총알 발사 공격
-                        break;
-                    case 3:
-                        nowCoroutine = HowitzerAttack(); //3연속 곡사포 공격
-                        break;
-                    case 4:
-                        nowCoroutine = LaserAttack(); //레이저 발사 공격
-                        break;
-                    case 5:
-                        nowCoroutine = TrapSkill(); //디버프 함정 설치(2페이즈)
-                        break;
-                    case 6:
-                        nowCoroutine = RainSkill(); //독 폭포 공격(2페이즈)
-                        break;
-                    case 7:
-                        nowCoroutine = ThornSkill(); //주먹 변형 패턴(2페이즈)
-                        break;
+                    switch (nowPattonIndex)
+                    {
+                        case 0:
+                            nowCoroutine = GoToAttack(true); //기본 근접 공격
+                            break;
+                        case 1:
+                            nowCoroutine = GoToAttack(false); //내려찍기 공격
+                            break;
+                        case 2:
+                            nowCoroutine = ShootBullet(); //총알 발사 공격
+                            break;
+                        case 3:
+                            nowCoroutine = HowitzerAttack(); //3연속 곡사포 공격
+                            break;
+                        case 4:
+                            nowCoroutine = LaserAttack(); //레이저 발사 공격
+                            break;
+                        case 5:
+                            nowCoroutine = TrapSkill(); //디버프 함정 설치(2페이즈)
+                            break;
+                        case 6:
+                            nowCoroutine = RainSkill(); //독 폭포 공격(2페이즈)
+                            break;
+                        case 7:
+                            nowCoroutine = ThornSkill(); //주먹 변형 패턴(2페이즈)
+                            break;
+                    }
+                    pattonCount++;
                 }
-                pattonCount++;
+                else
+                {
+                    RandBehaviorStart();
+                }
             }
 
             StartCoroutine(nowCoroutine);
@@ -201,8 +209,8 @@ public class SlimeEnemy : BasicUnitScript
 
             if (pattonCount == pattonText.Length)
             {
-                pattonText = PattonText();
                 pattonCount = 0;
+                pattonText = PattonText();
             }
         }
     }
@@ -662,6 +670,9 @@ public class SlimeEnemy : BasicUnitScript
 
             yield return null;
         }
+
+        isImmunity = false;
+        nowBurnDamageLimitTime = 0;
 
         WaitingTimeStart();
     }

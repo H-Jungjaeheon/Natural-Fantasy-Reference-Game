@@ -33,7 +33,6 @@ public class PlayerHpRecoveryBead : MonoBehaviour
     private void Update()
     {
         DeleteTimeLimit();
-        DeterminePlayerProperties();
         FloatingEffect();
     }
 
@@ -63,7 +62,7 @@ public class PlayerHpRecoveryBead : MonoBehaviour
     {
         nowDeleteTimeLimit += Time.deltaTime;
 
-        if (nowDeleteTimeLimit >= maxDeleteTimeLimit)
+        if (nowDeleteTimeLimit >= maxDeleteTimeLimit || Player.nowProperty != NowPlayerProperty.NatureProperty)
         {
             DeleteSetting();
         }
@@ -90,13 +89,5 @@ public class PlayerHpRecoveryBead : MonoBehaviour
         Player.NowNaturePassiveCount = 0;
 
         OP.ReturnObject(gameObject, (int)PoolObjKind.PlayerHpRecoveryBead);
-    }
-
-    private void DeterminePlayerProperties()
-    {
-        if (Player.nowProperty != NowPlayerProperty.NatureProperty)
-        {
-            DeleteSetting();
-        }
     }
 }

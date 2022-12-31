@@ -873,14 +873,20 @@ public class Player : BasicUnitScript
                     break;
             }
 
+            bool isDefence = false;
+
+            maxEnemyIndex = rangeInEnemy.Count - 1;
+
             for (int nowIndex = 0; nowIndex < rangeInEnemy.Count; nowIndex++)
             {
-                maxEnemyIndex = rangeInEnemy.Count - 1;
-
                 if (rangeInEnemy[nowIndex] != null)
                 {
                     var unitScriptComponenet = rangeInEnemy[nowIndex].GetComponent<BasicUnitScript>();
-                    bool isDefence = (unitScriptComponenet.nowState == NowState.Defensing && unitScriptComponenet.nowDefensivePosition == DefensePos.Left) ? true : false;
+                    
+                    if (unitScriptComponenet.nowState == NowState.Defensing && unitScriptComponenet.nowDefensivePosition == DefensePos.Left)
+                    {
+                        isDefence = true;
+                    }
 
                     unitScriptComponenet.Hit(CurrentRandomDamage(Damage), isDefence);
 
@@ -1256,7 +1262,7 @@ public class Player : BasicUnitScript
 
                 NowNaturePassiveCount = 0;
 
-                while (maxPropertyTimeLimit > nowPropertyTimeLimit)
+                while (nowProperty == NowPlayerProperty.NatureProperty)
                 {
                     NowNaturePassiveCount += Time.deltaTime;
                     yield return null;
