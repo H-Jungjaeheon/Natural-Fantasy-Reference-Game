@@ -81,7 +81,7 @@ public class SwordAura : MonoBehaviour
         bsm = BattleSceneManager.Instance;
         gm = GameManager.Instance;
 
-        playerScript = bsm.player.GetComponent<Player>();
+        playerScript = bsm.player;
 
         spawnPlusVector = new Vector2(2.5f, 0);
         movingPlusVector = new Vector3(speed, 0, 0);
@@ -127,7 +127,7 @@ public class SwordAura : MonoBehaviour
             
             busComponent.Hit(nowDamage, false);
 
-            busComponent.GetBasicGood(); //재화 획득
+            playerScript.GetBasicGood(); //재화 획득
 
             if (isEnemyHit == false) //적에게 처음 닿았을 시
             {

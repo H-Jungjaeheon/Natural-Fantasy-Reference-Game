@@ -2,70 +2,13 @@ using System.Collections;
 using UnityEngine;
 using System.IO;
 
-public class SlimeEnemy : BasicUnitScript
+public class SlimeEnemy : Enemy, IChangePhase
 {
-    [SerializeField]
-    [Tooltip("자신의 피격 범위")]
-    private BoxCollider2D ownCollider;
-
-    [SerializeField]
-    [Tooltip("사망 시 띄울 이펙트 오브젝트")]
-    private GameObject deadEffectObj;
-
     [SerializeField]
     [Tooltip("스테이지 1 기믹 컴포넌트")]
     private WaterFallMachine gimmick;
 
-    private BossPhase nowPhase = BossPhase.PhaseOne; //현재 보스 페이즈
-
-    private Vector2 speedVector = new Vector2(0f, 0f); //이동이 필요한 패턴 사용 시 사용할 속도 벡터
-
-    private Vector2 spawnPos = new Vector2(0f, 0f); //패턴에 소환하는 오브젝트들 초기 위치 설정 벡터
-
-    private bool isPhysicalAttacking; //특정 패턴 사용 시 몸체 충돌 데미지 판정 판별 변수
-
-    private bool isChangePhase;
-
-    private int restLimitTurn;
-
-    private const int maxRestLimitTurn = 3;
-
-    private string[] pattonText; //텍스트로 불러온 패턴 번호들
-
-    private int pattonCount; //현재 패턴 사용 횟수
-
-    /// <summary>
-    /// 게임 처음 세팅
-    /// </summary>
-    protected override void StartSetting()
-    {
-        nowState = NowState.Standingby;
-        nowDefensivePosition = DefensePos.None;
-
-        isWaiting = true;
-
-        pattonText = PattonText();
-
-        bsm.enemyCharacterPos = transform.position;
-        bsm.enemy = gameObject;
-
-        Energy = MaxEnergy;
-        Hp = MaxHp;
-
-        restWaitTime = 1.85f;
-
-        originalDamage = Damage;
-        originalMaxActionCoolTime = maxActionCoolTime;
-        originalRestWaitTime = restWaitTime;
-        originalSpeed = Speed;
-
-        plusVector = new Vector3(0f, -6f, 0f);
-        particlePos = new Vector3(0f, -2f, 0f);
-
-        StartCoroutine(WaitUntilTheGameStarts());
-    }
-
-    private string[] PattonText()
+    protected override string[] PattonText()
     {
         string[] path;
         int randIndex = Random.Range(1, 3);
@@ -73,24 +16,6 @@ public class SlimeEnemy : BasicUnitScript
         path = File.ReadAllText($"{Application.dataPath}/BossPattonTexts/SlimeBossPhase{(int)nowPhase}Patton{randIndex}.txt").Split(','); //보스 패턴 텍스트 가져오기 (현재 페이즈에 맞는 텍스트 파일 : 3가지 경우 중 랜덤)
 
         return path;
-    }
-
-    /// <summary>
-    /// 오프닝 시간동안 대기
-    /// </summary>
-    /// <returns></returns>
-    IEnumerator WaitUntilTheGameStarts()
-    {
-        while (true)
-        {
-            if (bsm.nowGameState == NowGameState.Playing)
-            {
-                actionCoolTimeObj.SetActive(true);
-                WaitingTimeStart();
-                break;
-            }
-            yield return null;
-        }
     }
 
     /// <summary>
@@ -130,10 +55,10 @@ public class SlimeEnemy : BasicUnitScript
     }
 
     /// <summary>
-    /// 페이즈 변경하는 구간
+    /// 페이즈 변경하는 구간 
     /// </summary>
     /// <returns></returns>
-    IEnumerator ChangePhase()
+    public IEnumerator ChangePhase()
     {
         nowState = NowState.ChangePhase;
 
@@ -153,7 +78,7 @@ public class SlimeEnemy : BasicUnitScript
     /// <summary>
     /// 보스 랜덤 공격 뽑기
     /// </summary>
-    public void RandBehaviorStart()
+    protected override void RandBehaviorStart()
     {
         if (nowState == NowState.Standingby)
         {
@@ -236,7 +161,7 @@ public class SlimeEnemy : BasicUnitScript
 
         animator.SetBool(moving, false);
 
-        nowCoroutine = (isBasicCloseAttack) ? Attacking(true, nowAttackCount_I, 0.65f) : DefenselessCloseAttack(); //isBasicCloseAttack이 참이면, nowCoroutine에 현재 실행할 기본 근접공격 코루틴 저장(거짓이면, 내려찍기 공격 코루틴 저장)
+        nowCoroutine = (isBasicCloseAttack) ? Attacking(true, nowAttackCount, 0.65f) : DefenselessCloseAttack(); //isBasicCloseAttack이 참이면, nowCoroutine에 현재 실행할 기본 근접공격 코루틴 저장(거짓이면, 내려찍기 공격 코루틴 저장)
         StartCoroutine(nowCoroutine);
     }
 
@@ -375,7 +300,7 @@ public class SlimeEnemy : BasicUnitScript
 
         transform.rotation = Quaternion.identity;
         transform.position = startPos;
-        nowAttackCount_I = 1;
+        nowAttackCount = 1;
 
         animator.SetBool(moving, false);
 

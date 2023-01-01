@@ -107,7 +107,7 @@ public abstract class BasicUnitScript : MonoBehaviour
     [HideInInspector]
     public List<GameObject> rangeInDeflectAbleObj = new List<GameObject>(); //튕겨내기 범위 내의 오브젝트 리스트
 
-    protected int nowAttackCount_I; //연속공격 시 현재 공격 횟수
+    protected int nowAttackCount; //연속공격 시 현재 공격 횟수
     #endregion
 
     #region 스탯 (공통)
@@ -330,6 +330,10 @@ public abstract class BasicUnitScript : MonoBehaviour
     protected Rigidbody2D rigid;
 
     [SerializeField]
+    [Tooltip("자신의 피격 범위")]
+    protected BoxCollider2D ownCollider;
+
+    [SerializeField]
     [Tooltip("자신의 공격 범위 콜라이더")]
     protected BoxCollider2D attackRangeObjComponent;
 
@@ -419,7 +423,7 @@ public abstract class BasicUnitScript : MonoBehaviour
         startPos = transform.position; //시작 위치 저장
         movetransform.x = Speed; //시작 이동속도로 움직임 벡터 X값 저장
 
-        nowAttackCount_I = 1;
+        nowAttackCount = 1;
         nowActionCoolTime = 0;
         maxGiveBurnDamageTime = 4; //화상 효과 최대 데미지 횟수
         maxStackableOverlapTime = 10; //화상 효과 중첩 가능 제한시간 초기화
@@ -513,16 +517,13 @@ public abstract class BasicUnitScript : MonoBehaviour
         unitLightHpBars.fillAmount = lightHp / MaxHp;
     }
 
-    /// <summary>
-    /// 방어 해제 시 실행 함수
-    /// </summary>
-    protected void ReleaseDefense()
-    {
-        nowDefensivePosition = DefensePos.None;
-        nowState = NowState.Standingby;
-    }
-
     protected abstract IEnumerator UISetting();
+
+    /// <summary>
+    /// 행동 대기 쿨타임 바 UI 활성화 여부
+    /// </summary>
+    /// <param name="SetActive"> 활성화 여부(false면 비활성화) </param>
+    protected void ActionCoolTimeBarSetActive(bool SetActive) => actionCoolTimeObj.SetActive(SetActive);
 
     protected virtual void WaitingTimeEnd()
     {
@@ -530,23 +531,11 @@ public abstract class BasicUnitScript : MonoBehaviour
         nowActionCoolTime = 0;
     }
 
-    protected virtual void Defense()
-    {
-        
-    }
-
-    protected virtual void SetDefensing(DefensePos nowDefensePos, float setRotation)
-    {
-        
-    }
-
-    protected void ActionCoolTimeBarSetActive(bool SetActive) => actionCoolTimeObj.SetActive(SetActive);
-
     /// <summary>
     /// 무적 상태일 때 UI 표시 효과
     /// </summary>
     /// <param name="isInvincibilityTrue"> 무적 상태에 돌입하는가? </param>
-    protected void InvincibilityEvent(bool isInvincibilityTrue)
+    protected void InvincibilityEvent(bool isInvincibilityTrue) //인터페이스로 뺴놓기! (Invincibility랑 같이 넣기)
     {
         unitHpBarBg.sprite = (isInvincibilityTrue) ? nowStatHpUiBg[(int)NowStatUIState.Invincibility] : nowStatHpUiBg[(int)NowStatUIState.Basic];
         unitHpBar.sprite = (isInvincibilityTrue) ? nowStateHpUi[(int)NowStatUIState.Invincibility] : nowStateHpUi[(int)NowStatUIState.Basic];
@@ -584,7 +573,7 @@ public abstract class BasicUnitScript : MonoBehaviour
         attackRangeObjComponent.offset = attackRangeColliderOffset;
     }
 
-    protected void Invincibility(bool isInvincibilityOn) => IsInvincibility = isInvincibilityOn; //무적 ON or OFF
+    protected void Invincibility(bool isInvincibilityOn) => IsInvincibility = isInvincibilityOn; //무적 ON or OFF (인터페이스로 빼놓기! InvincibilityEvent랑 같이 넣기)
 
     /// <summary>
     /// 공격 범위 콜라이더 요소들 수정(크기, 오프셋)

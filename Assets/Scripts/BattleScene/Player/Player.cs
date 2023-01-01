@@ -30,7 +30,7 @@ public enum NowStatUIState
     Shield
 }
 
-public class Player : BasicUnitScript
+public class Player : BasicUnitScript, IDefense
 {
     #region 쉴드 관련 변수 / 오브젝트
     private float shieldHp_F;
@@ -245,7 +245,7 @@ public class Player : BasicUnitScript
 
         isResurrectionOpportunityExists = true;
 
-        nextPropertyIndex = (int)NowPlayerProperty.FlameProperty;//Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
+        nextPropertyIndex = Random.Range((int)NowPlayerProperty.NatureProperty, (int)NowPlayerProperty.PropertyTotalNumber);
         nowPropertyImage.sprite = nowPropertyIconImages[(int)nowProperty];
 
         Energy = MaxEnergy;
@@ -284,6 +284,15 @@ public class Player : BasicUnitScript
         {
             ActionCoolTimeBarSetActive(false);
         }
+    }
+
+    /// <summary>
+    /// 방어 해제 시 실행 함수
+    /// </summary>
+    public void ReleaseDefense()
+    {
+        nowDefensivePosition = DefensePos.None;
+        nowState = NowState.Standingby;
     }
 
     /// <summary>
@@ -334,7 +343,7 @@ public class Player : BasicUnitScript
     /// <summary>
     /// 방어 실행
     /// </summary>
-    protected override void Defense()
+    public void Defense()
     {
         if (bsm.nowGameState == NowGameState.Playing)
         {
@@ -377,7 +386,7 @@ public class Player : BasicUnitScript
     /// </summary>
     /// <param name="nowDefensePos"> 현재 방어 위치 상태 </param>
     /// <param name="setRotation"> 현재 방어 캐릭터 로테이션 값 </param>
-    protected override void SetDefensing(DefensePos nowDefensePos, float setRotation)
+    public void SetDefensing(DefensePos nowDefensePos, float setRotation)
     {
         string nowDefenceAnimName = (nowDefensePos == DefensePos.Up) ? defenceT : defenceLR;
 
@@ -808,7 +817,7 @@ public class Player : BasicUnitScript
         transform.position = targettransform; //이동 완료
 
         animator.SetBool(moving, false);
-        StartCoroutine(Attacking(false, nowAttackCount_I, 0.2f, 0.2f)); //첫번째 공격 실행
+        StartCoroutine(Attacking(false, nowAttackCount, 0.2f, 0.2f)); //첫번째 공격 실행
         animator.SetTrigger(basicAttack);
     }
 
@@ -988,7 +997,7 @@ public class Player : BasicUnitScript
         transform.rotation = Quaternion.identity;
         transform.position = startPos;
 
-        nowAttackCount_I = 1;
+        nowAttackCount = 1;
 
         animator.SetBool(moving, false);
 
@@ -1306,7 +1315,7 @@ public class Player : BasicUnitScript
     /// <summary>
     /// 재화 지급 함수(보스)
     /// </summary>
-    public virtual void GetBasicGood() //후에 보스별로 주는 재화량 다르게 하기
+    public void GetBasicGood() //후에 보스별로 주는 재화량 다르게 하기
     {
         if (nowGoodGetCount < maxGoodGetCount)
         {

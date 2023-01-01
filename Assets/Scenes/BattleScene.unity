@@ -8173,8 +8173,15 @@ MonoBehaviour:
   hpText: {fileID: 2039948097}
   energyText: {fileID: 1174402843}
   dreamyFigureText: {fileID: 503119707}
+  nowStateHpUi:
+  - {fileID: 21300000, guid: 6423da6c070610549aea10ce4571bf2a, type: 3}
+  - {fileID: 21300000, guid: 6423da6c070610549aea10ce4571bf2a, type: 3}
+  nowStatHpUiBg:
+  - {fileID: 21300000, guid: 3d42d60fa3df5a2489fa6d5d77a320e4, type: 3}
+  - {fileID: 21300000, guid: 3d42d60fa3df5a2489fa6d5d77a320e4, type: 3}
   startPos: {x: 0, y: 0}
   rigid: {fileID: 1159378195}
+  ownCollider: {fileID: 1159378196}
   attackRangeObjComponent: {fileID: 541266945}
   battleUIObjScript: {fileID: 838858993}
   animator: {fileID: 1159378194}
@@ -8184,7 +8191,6 @@ MonoBehaviour:
   - {r: 1, g: 1, b: 1, a: 1}
   - {r: 1, g: 0, b: 0, a: 1}
   - {r: 1, g: 0.53333336, b: 0.42352942, a: 1}
-  ownCollider: {fileID: 1159378196}
   deadEffectObj: {fileID: 962530250}
   gimmick: {fileID: 1306652340}
 --- !u!1 &1174402841
@@ -11308,8 +11314,15 @@ MonoBehaviour:
   hpText: {fileID: 1092541587}
   energyText: {fileID: 548842203}
   dreamyFigureText: {fileID: 1333209597}
+  nowStateHpUi:
+  - {fileID: 21300000, guid: 7a23ab8fc5510514b94245acf4dd6044, type: 3}
+  - {fileID: 21300000, guid: 6cfd3f7eab1f6e147b7e9ed41738596a, type: 3}
+  nowStatHpUiBg:
+  - {fileID: 21300000, guid: 0d798ffd2428cd043841758b9a14597f, type: 3}
+  - {fileID: 21300000, guid: cb7d05c1cbb6aa84f942618504db97d4, type: 3}
   startPos: {x: 0, y: 0}
   rigid: {fileID: 1717870243}
+  ownCollider: {fileID: 1717870244}
   attackRangeObjComponent: {fileID: 693950549}
   battleUIObjScript: {fileID: 1934224821}
   animator: {fileID: 1717870246}
@@ -11320,7 +11333,6 @@ MonoBehaviour:
   - {r: 1, g: 0, b: 0, a: 1}
   - {r: 1, g: 0.53333336, b: 0.42352942, a: 1}
   unitShieldHpBars: {fileID: 1902801556}
-  nowChangePropertyCoolTime: 0
   nowProperty: 0
   nowPropertyImage: {fileID: 693409020}
   nowPropertyLimitTimeImage: {fileID: 1355490199}
@@ -11331,12 +11343,6 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 441f70fc7af0ef64e9d14720e3cdafe7, type: 3}
   - {fileID: 21300000, guid: 2fd95d5be0356814f835f3e30fc4f631, type: 3}
   - {fileID: 21300000, guid: 04dadd18cab83314fb8fe6ed3adbc3e6, type: 3}
-  nowStateHpUi:
-  - {fileID: 21300000, guid: 7a23ab8fc5510514b94245acf4dd6044, type: 3}
-  - {fileID: 21300000, guid: 6cfd3f7eab1f6e147b7e9ed41738596a, type: 3}
-  nowStatHpUiBg:
-  - {fileID: 21300000, guid: 0d798ffd2428cd043841758b9a14597f, type: 3}
-  - {fileID: 21300000, guid: cb7d05c1cbb6aa84f942618504db97d4, type: 3}
   timingObj: {fileID: 1585697085}
   hpTextColors:
   - {r: 1, g: 0, b: 0, a: 1}
