@@ -74,7 +74,7 @@ public class Player : BasicUnitScript
     #region 속성 관련 변수
     private float maxChangePropertyCoolTime = 35; //최대 속성 변경 시간
 
-    public float nowChangePropertyCoolTime; //현재 속성 변경 시간
+    private float nowChangePropertyCoolTime; //현재 속성 변경 시간
 
     public float NowChangePropertyCoolTime //현재 속성 변경 시간 프로퍼티
     {
@@ -139,6 +139,10 @@ public class Player : BasicUnitScript
     public NowPlayerProperty nowProperty; //현재 속성 상태
     #endregion
 
+    protected const int maxGoodGetCount = 15; //최대 재화 획득 가능 횟수(튜토리얼 플레이어에겐 필요 X)
+
+    protected int nowGoodGetCount; //현재 재화 획득 횟수(튜토리얼 플레이어에겐 필요 X)
+
     private bool isResurrectionOpportunityExists; //부활 조건 판별(부활 전적 유무)
 
     private bool angelPropertyBuffing; //천사 속성 버프 지속중 판별
@@ -179,14 +183,6 @@ public class Player : BasicUnitScript
     [SerializeField]
     [Tooltip("플레이어 속성 아이콘 스프라이트 모음")]
     private Sprite[] nowPropertyIconImages;
-
-    [SerializeField]
-    [Tooltip("상태에 따른 체력바 스프라이트 모음")]
-    private Sprite[] nowStateHpUi;
-
-    [SerializeField]
-    [Tooltip("상태에 따른 체력바 배경 스프라이트 모음")]
-    private Sprite[] nowStatHpUiBg;
 
     [SerializeField]
     [Tooltip("히트 액션 타이밍 표시 오브젝트")]
@@ -1164,7 +1160,6 @@ public class Player : BasicUnitScript
     void TheHolySpiritPropertyBuff(bool isBuffing)
     {
         maxActionCoolTime = isBuffing ? maxActionCoolTime - (int)(maxActionCoolTime * 0.25f) : originalMaxActionCoolTime;
-        restWaitTime = isBuffing ? restWaitTime - (int)(originalRestWaitTime * 0.2f) : originalRestWaitTime;
         Damage = isBuffing ? (int)(originalDamage * 1.5f) : originalDamage;
     }
 
@@ -1175,7 +1170,6 @@ public class Player : BasicUnitScript
     void TheHolySpiritPropertyDeBuff(bool isDeBuffing)
     {
         maxActionCoolTime = isDeBuffing ? maxActionCoolTime + (int)(maxActionCoolTime * 0.25f) : originalMaxActionCoolTime;
-        restWaitTime = isDeBuffing ? restWaitTime + (int)(originalRestWaitTime * 0.2f) : originalRestWaitTime;
         Damage = isDeBuffing ? (int)(Damage * 0.5f) : originalDamage;
         Speed = isDeBuffing ? originalSpeed * 0.7f : originalSpeed;
     }
@@ -1231,16 +1225,6 @@ public class Player : BasicUnitScript
         }
 
         WaitingTimeStart();
-    }
-
-    /// <summary>
-    /// 무적 상태일 때 UI 표시 효과
-    /// </summary>
-    /// <param name="isInvincibilityTrue"> 무적 상태에 돌입하는가? </param>
-    protected override void InvincibilityEvent(bool isInvincibilityTrue)
-    {
-        unitHpBarBg.sprite = (isInvincibilityTrue) ? nowStatHpUiBg[(int)NowStatUIState.Invincibility] : nowStatHpUiBg[(int)NowStatUIState.Basic];
-        unitHpBar.sprite = (isInvincibilityTrue) ? nowStateHpUi[(int)NowStatUIState.Invincibility] : nowStateHpUi[(int)NowStatUIState.Basic];
     }
 
     /// <summary>
@@ -1316,6 +1300,19 @@ public class Player : BasicUnitScript
                 hpText.text = $"{(Hp):N0}/{(MaxHp):N0}";
 
                 break;
+        }
+    }
+
+    /// <summary>
+    /// 재화 지급 함수(보스)
+    /// </summary>
+    public virtual void GetBasicGood() //후에 보스별로 주는 재화량 다르게 하기
+    {
+        if (nowGoodGetCount < maxGoodGetCount)
+        {
+            int nowGetRandGood = Random.Range(5, 11);
+            bsm.NowGetBasicGood += nowGetRandGood;
+            nowGoodGetCount++;
         }
     }
 }

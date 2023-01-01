@@ -34,28 +34,11 @@ public enum StateColor
     BurningColor
 }
 
-public enum NowEnemyProperty
-{
-    Mutant,
-    Guardian,
-    Rot,
-    EvilSpirit,
-    Angel,
-    PropertyTotalNumber
-}
-
-public enum BossPhase
-{
-    PhaseOne = 1,
-    PhaseTwo = 2,
-    PhaseThree = 3
-}
-
 public abstract class BasicUnitScript : MonoBehaviour
 {
     #region 공격 쿨타임 관련 변수 (공통)
     [Header("공격 쿨타임 관련 변수")]
-    [Tooltip("쿨타임 바들 오브젝트")]
+    [Tooltip("쿨타임 바 오브젝트")]
     [SerializeField]
     protected GameObject actionCoolTimeObj;
 
@@ -71,9 +54,9 @@ public abstract class BasicUnitScript : MonoBehaviour
     [SerializeField]
     protected Vector2 actionCoolTimeObjPlusPos;
 
-    protected float nowActionCoolTime; //현재 쿨타임
+    protected float nowActionCoolTime; //현재 행동 쿨타임
 
-    public float maxActionCoolTime;
+    public float maxActionCoolTime; //최대 행동 쿨타임
 
     #endregion
 
@@ -91,7 +74,7 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     protected Vector3 movetransform; //이동을 위해 더해줄 Vector값
 
-    protected float restWaitTime;
+    protected float restWaitTime; //휴식 사용 시 채워질 때의 딜레이
 
     [HideInInspector]
     public DefensePos nowDefensivePosition; //현재 방어 위치
@@ -101,7 +84,7 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     protected bool isWaiting; //대기중
 
-    private bool isHpDiminishedProduction;
+    private bool isHpDiminishedProduction; //체력 줄어드는 효과 실행중인지 판별
 
     private bool isInvincibility; //현재 무적인지 판별
 
@@ -168,7 +151,7 @@ public abstract class BasicUnitScript : MonoBehaviour
         }
     }
 
-    protected float lightHp;
+    protected float lightHp; //체력 줄어드는 애니메이션 연출용 체력
 
     [Tooltip("최대 체력")]
     [SerializeField]
@@ -265,7 +248,7 @@ public abstract class BasicUnitScript : MonoBehaviour
     #endregion
 
     #region 화상 관련 변수
-    protected bool isBurning;
+    protected bool isBurning; //화상 효과 지속 중인지 판별
 
     protected int nowBurnDamageStack; //현재 중첩된 스택
 
@@ -277,9 +260,9 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     protected float maxStackableOverlapTime; //스택 중첩 가능 시간
 
-    protected float nowGiveBurnDamageTime;
+    protected float nowGiveBurnDamageTime; //현재 화상 데미지 간격
 
-    protected float maxGiveBurnDamageTime;
+    protected float maxGiveBurnDamageTime; //최대 화상 데미지 간격
 
     [SerializeField]
     [Tooltip("화상 이펙트 오브젝트")]
@@ -321,6 +304,14 @@ public abstract class BasicUnitScript : MonoBehaviour
     [SerializeField]
     [Tooltip("몽환 게이지 표시 텍스트")]
     protected TextMeshProUGUI dreamyFigureText;
+
+    [SerializeField]
+    [Tooltip("상태에 따른 체력바 스프라이트 모음")]
+    protected Sprite[] nowStateHpUi;
+
+    [SerializeField]
+    [Tooltip("상태에 따른 체력바 배경 스프라이트 모음")]
+    protected Sprite[] nowStatHpUiBg;
     #endregion
 
     protected bool isSlowing; //디버프 : 이동속도 감소 효과 판별
@@ -329,14 +320,10 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     protected Vector3 particlePos; //타격 시 파티클(이펙트) 생성 위치
 
-    protected const int maxGoodGetCount = 15; //최대 재화 획득 가능 횟수
-
-    protected int nowGoodGetCount; //현재 재화 획득 횟수
-
     [HideInInspector]
-    public Vector2 startPos;
+    public Vector2 startPos; //유닛 시작 위치 저장
 
-    protected Camera Cam;
+    protected Camera Cam; //메인 카메라 컴포넌트
 
     [SerializeField]
     [Tooltip("자신의 리지드바디")]
@@ -346,9 +333,9 @@ public abstract class BasicUnitScript : MonoBehaviour
     [Tooltip("자신의 공격 범위 콜라이더")]
     protected BoxCollider2D attackRangeObjComponent;
 
-    protected Vector2 InitializationAttackRangeSize;
+    protected Vector2 InitializationAttackRangeSize; //공격 범위 콜라이더 사이즈
 
-    protected Vector2 InitializationAttackRangeOffset;
+    protected Vector2 InitializationAttackRangeOffset; //공격 범위 콜라이더 오프셋
 
     [SerializeField]
     [Tooltip("현재 상태 표시해주는 UI 오브젝트 스크립트")]
@@ -526,6 +513,9 @@ public abstract class BasicUnitScript : MonoBehaviour
         unitLightHpBars.fillAmount = lightHp / MaxHp;
     }
 
+    /// <summary>
+    /// 방어 해제 시 실행 함수
+    /// </summary>
     protected void ReleaseDefense()
     {
         nowDefensivePosition = DefensePos.None;
@@ -552,9 +542,14 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     protected void ActionCoolTimeBarSetActive(bool SetActive) => actionCoolTimeObj.SetActive(SetActive);
 
-    protected virtual void InvincibilityEvent(bool isInvincibilityTrue)
+    /// <summary>
+    /// 무적 상태일 때 UI 표시 효과
+    /// </summary>
+    /// <param name="isInvincibilityTrue"> 무적 상태에 돌입하는가? </param>
+    protected void InvincibilityEvent(bool isInvincibilityTrue)
     {
-        
+        unitHpBarBg.sprite = (isInvincibilityTrue) ? nowStatHpUiBg[(int)NowStatUIState.Invincibility] : nowStatHpUiBg[(int)NowStatUIState.Basic];
+        unitHpBar.sprite = (isInvincibilityTrue) ? nowStateHpUi[(int)NowStatUIState.Invincibility] : nowStateHpUi[(int)NowStatUIState.Basic];
     }
 
     protected abstract IEnumerator Dead();
@@ -563,6 +558,10 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     protected abstract IEnumerator Resting();
 
+    /// <summary>
+    /// 기절 조건 충족 시 기절 가능 상태 되기까지 대기
+    /// </summary>
+    /// <returns></returns>
     IEnumerator WaitForFaint()
     {
         while (nowState != NowState.Standingby && nowState != NowState.Defensing)
@@ -587,6 +586,9 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     protected void Invincibility(bool isInvincibilityOn) => IsInvincibility = isInvincibilityOn; //무적 ON or OFF
 
+    /// <summary>
+    /// 공격 범위 콜라이더 요소들 수정(크기, 오프셋)
+    /// </summary>
     protected void InitializationAttackRange()
     {
         attackRangeObjComponent.size = InitializationAttackRangeSize;
@@ -690,19 +692,6 @@ public abstract class BasicUnitScript : MonoBehaviour
 
                 Speed = originalSpeed;
             }
-        }
-    }
-
-    /// <summary>
-    /// 재화 지급 함수(보스)
-    /// </summary>
-    public virtual void GetBasicGood() //후에 보스별로 주는 재화량 다르게 하기
-    {
-        if (nowGoodGetCount < maxGoodGetCount)
-        {
-            int nowGetRandGood = Random.Range(5, 11);
-            bsm.NowGetBasicGood += nowGetRandGood;
-            nowGoodGetCount++;
         }
     }
 }
