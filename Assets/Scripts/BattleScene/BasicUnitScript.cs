@@ -34,6 +34,13 @@ public enum StateColor
     BurningColor
 }
 
+public enum NowStatUIState
+{
+    Basic,
+    Invincibility,
+    Shield
+}
+
 public abstract class BasicUnitScript : MonoBehaviour
 {
     #region 공격 쿨타임 관련 변수 (공통)
@@ -314,6 +321,13 @@ public abstract class BasicUnitScript : MonoBehaviour
     protected Sprite[] nowStatHpUiBg;
     #endregion
 
+    #region 체력 텍스트 색 값들
+    [Header("체력 텍스트 색 값들")]
+    [SerializeField]
+    [Tooltip("체력 텍스트 색 모음")]
+    protected Color[] hpTextColors;
+    #endregion
+
     protected bool isSlowing; //디버프 : 이동속도 감소 효과 판별
 
     protected bool isImmunity; //현재 디버프 면역 상태인지 판별
@@ -538,7 +552,10 @@ public abstract class BasicUnitScript : MonoBehaviour
     protected void InvincibilityEvent(bool isInvincibilityTrue) //인터페이스로 뺴놓기! (Invincibility랑 같이 넣기)
     {
         unitHpBarBg.sprite = (isInvincibilityTrue) ? nowStatHpUiBg[(int)NowStatUIState.Invincibility] : nowStatHpUiBg[(int)NowStatUIState.Basic];
+
         unitHpBar.sprite = (isInvincibilityTrue) ? nowStateHpUi[(int)NowStatUIState.Invincibility] : nowStateHpUi[(int)NowStatUIState.Basic];
+
+        hpText.color = (isInvincibilityTrue) ? hpTextColors[(int)NowStatUIState.Invincibility] : hpTextColors[(int)NowStatUIState.Basic];
     }
 
     protected abstract IEnumerator Dead();

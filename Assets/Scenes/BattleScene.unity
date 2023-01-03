@@ -8177,8 +8177,11 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 6423da6c070610549aea10ce4571bf2a, type: 3}
   - {fileID: 21300000, guid: 6423da6c070610549aea10ce4571bf2a, type: 3}
   nowStatHpUiBg:
-  - {fileID: 21300000, guid: 3d42d60fa3df5a2489fa6d5d77a320e4, type: 3}
-  - {fileID: 21300000, guid: 3d42d60fa3df5a2489fa6d5d77a320e4, type: 3}
+  - {fileID: 21300000, guid: bb1084180cf61db46bde5a245965462e, type: 3}
+  - {fileID: 21300000, guid: ce66445b15e209744b648764d52c3aa1, type: 3}
+  hpTextColors:
+  - {r: 1, g: 0, b: 0, a: 1}
+  - {r: 0, g: 0.8980392, b: 1, a: 1}
   startPos: {x: 0, y: 0}
   rigid: {fileID: 1159378195}
   ownCollider: {fileID: 1159378196}
@@ -11320,6 +11323,10 @@ MonoBehaviour:
   nowStatHpUiBg:
   - {fileID: 21300000, guid: 0d798ffd2428cd043841758b9a14597f, type: 3}
   - {fileID: 21300000, guid: cb7d05c1cbb6aa84f942618504db97d4, type: 3}
+  hpTextColors:
+  - {r: 1, g: 0, b: 0, a: 1}
+  - {r: 0, g: 0.8980392, b: 1, a: 1}
+  - {r: 0.33333334, g: 0.33333334, b: 0.33333334, a: 1}
   startPos: {x: 0, y: 0}
   rigid: {fileID: 1717870243}
   ownCollider: {fileID: 1717870244}
@@ -11344,10 +11351,6 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 2fd95d5be0356814f835f3e30fc4f631, type: 3}
   - {fileID: 21300000, guid: 04dadd18cab83314fb8fe6ed3adbc3e6, type: 3}
   timingObj: {fileID: 1585697085}
-  hpTextColors:
-  - {r: 1, g: 0, b: 0, a: 1}
-  - {r: 0, g: 0.8980392, b: 1, a: 1}
-  - {r: 0.33333334, g: 0.33333334, b: 0.33333334, a: 1}
   propertyColors:
   - {r: 0.41509432, g: 0.41509432, b: 0.41509432, a: 1}
   - {r: 0.14173192, g: 0.8584906, b: 0.14173192, a: 1}

@@ -23,13 +23,6 @@ public enum PropertyColor
     White
 }
 
-public enum NowStatUIState
-{
-    Basic,
-    Invincibility,
-    Shield
-}
-
 public class Player : BasicUnitScript, IDefense
 {
     #region 쉴드 관련 변수 / 오브젝트
@@ -187,13 +180,6 @@ public class Player : BasicUnitScript, IDefense
     [SerializeField]
     [Tooltip("히트 액션 타이밍 표시 오브젝트")]
     private HitActionTiming timingObj;
-
-    #region 체력 텍스트 색 값들
-    [Header("체력 텍스트 색 값들")]
-    [SerializeField]
-    [Tooltip("체력 텍스트 색 모음")]
-    private Color[] hpTextColors;
-    #endregion
 
     #region 속성 상징 색
     [Header("속성 상징 색 모음")]
@@ -422,7 +408,6 @@ public class Player : BasicUnitScript, IDefense
         NowPropertyTimeLimit = 0;
 
         Invincibility(true);
-        hpText.color = hpTextColors[(int)NowStatUIState.Invincibility];
 
         battleButtonManagerInstance.ActionButtonSetActive(false);
         transform.rotation = Quaternion.identity;
@@ -430,6 +415,7 @@ public class Player : BasicUnitScript, IDefense
         if (isChangeBasicProperty)
         {
             nowProperty = NowPlayerProperty.BasicProperty;
+
             if(nowProperty == NowPlayerProperty.TheHolySpiritProperty)
             {
                 hpText.text = $"{(Hp):N0}/{(MaxHp):N0}";
@@ -1097,7 +1083,6 @@ public class Player : BasicUnitScript, IDefense
         int ResurrectionStatsValueSharingValue = 5;
 
         Invincibility(true); //현재 무적 상태 : 참
-        hpText.color = hpTextColors[(int)NowStatUIState.Invincibility];
 
         while (nowState != NowState.Standingby) //플레이어 상태가 대기 상태일 때까지 대기
         {
@@ -1147,7 +1132,6 @@ public class Player : BasicUnitScript, IDefense
 
         AngelPropertyBuff(false);
         Invincibility(false);
-        hpText.color = hpTextColors[(int)NowStatUIState.Basic];
     }
 
     /// <summary>

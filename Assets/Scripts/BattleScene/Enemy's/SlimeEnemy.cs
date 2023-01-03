@@ -62,12 +62,11 @@ public class SlimeEnemy : Enemy, IChangePhase
     {
         nowState = NowState.ChangePhase;
 
-        //hpText.color = hpTextColors[(int)NowStatUIState.Invincibility];
-        
         yield return new WaitForSeconds(6f); //페이즈 변경 애니메이션 종료까지 대기
 
         isChangePhase = false;
-        IsInvincibility = false;
+
+        Invincibility(false);
 
         nowCoroutine = ThornSkill();
         StartCoroutine(nowCoroutine);
@@ -179,7 +178,7 @@ public class SlimeEnemy : Enemy, IChangePhase
 
         if (Hp <= maxHp * 0.5f && nowPhase == BossPhase.PhaseOne)
         {
-            IsInvincibility = true;
+            Invincibility(true);
             isChangePhase = true;
             nowPhase = BossPhase.PhaseTwo;
         }
