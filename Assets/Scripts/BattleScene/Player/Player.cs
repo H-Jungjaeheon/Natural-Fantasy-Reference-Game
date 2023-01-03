@@ -903,7 +903,7 @@ public class Player : BasicUnitScript, IDefense
         while (maxLinkedAttacksLimitTime > nowattacktime) //연공 타이밍 계산
         {
             nowattacktime += Time.deltaTime;
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space) && isFail == false)
             {
                 StartCoroutine(timingObj.pressSpace(false));
                 isComplete = true;
@@ -1030,7 +1030,7 @@ public class Player : BasicUnitScript, IDefense
 
         while (nowDelayTime < maxDelayTime)
         {
-            if (Input.GetKeyDown(KeyCode.Space) && isInputSpace)
+            if (Input.GetKeyDown(KeyCode.Space) && isInputSpace == false)
             {
                 if (nowDelayTime > 0.4f && nowDelayTime < 0.55f)
                 {

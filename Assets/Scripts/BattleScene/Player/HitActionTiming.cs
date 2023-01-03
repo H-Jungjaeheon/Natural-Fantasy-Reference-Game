@@ -8,35 +8,28 @@ public class HitActionTiming : MonoBehaviour
     private GameObject barObj;
 
     [SerializeField]
+    [Tooltip("성공 타이밍 애니메이션 오브젝트")]
+    private GameObject animObj;
+
+    [SerializeField]
     [Tooltip("타이밍 표시 바 애니메이터")]
     private Animator animator;
 
     private Vector2 barStartPos; //현재 타이밍 표시 바 시작 초기화 위치
 
-    private Vector2 plusVector = new Vector2(0, 0);
+    private Vector2 plusVector = new Vector2(0, 0); //움직임을 위한 벡터값
 
     private const float maxDistance = 1.1f; //현재 타이밍 표시 바 최대 X값
 
+    private const string successAnim = "PlayerTimingUISuccessAnimation"; //타이밍 맞추기 성공 UI 연출 애니메이션 이름
+
     IEnumerator movingCoroutine; //현재 실행중인 타이밍 바 움직이는 코루틴
 
-    private const string successAnim = "PlayerTimingUISuccessAnimation";
-
-    WaitForSeconds delay = new WaitForSeconds(0.25f);
+    WaitForSeconds delay = new WaitForSeconds(0.3f); //성공 애니메이션 딜레이
 
     private void Awake()
     {
         barStartPos = new Vector2(barObj.transform.localPosition.x, barObj.transform.localPosition.y);
-    }
-
-    private void OnEnable()
-    {
-        animator.speed = 0;
-        animator.Play(successAnim, -1, 0f);
-
-        barObj.transform.localPosition = barStartPos;
-
-        movingCoroutine = barMoving();
-        StartCoroutine(movingCoroutine);
     }
 
     /// <summary>
@@ -47,6 +40,11 @@ public class HitActionTiming : MonoBehaviour
     {
         plusVector.x = nowSpeed;
         gameObject.SetActive(true);
+
+        barObj.transform.localPosition = barStartPos;
+
+        movingCoroutine = barMoving();
+        StartCoroutine(movingCoroutine);
     }
 
     /// <summary>
@@ -57,21 +55,17 @@ public class HitActionTiming : MonoBehaviour
     {
         StopCoroutine(movingCoroutine);
 
-        animator.speed = 1;
+        gameObject.SetActive(false);
 
-        if (isFail)
+        if (isFail == false)
         {
-            animator.Play(successAnim);
-        }
-        else
-        {
+            animObj.SetActive(true);
             animator.Play(successAnim);
         }
 
         yield return delay;
 
-        gameObject.SetActive(false); //나중에 실패 or 성공 연출 나오면 실패 연출 실행 후 끄기
-        yield return null;
+        animObj.SetActive(false);
     }
 
     /// <summary>
@@ -85,8 +79,6 @@ public class HitActionTiming : MonoBehaviour
             barObj.transform.Translate(plusVector * Time.deltaTime);
             yield return null;
         }
-
-        //yield return delay;
 
         gameObject.SetActive(false); //나중에 실패 연출 나오면 실패 연출 실행 후 끄기
     }
