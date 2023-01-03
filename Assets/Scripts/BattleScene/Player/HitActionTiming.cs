@@ -7,6 +7,10 @@ public class HitActionTiming : MonoBehaviour
     [Tooltip("현재 타이밍 표시 바 오브젝트")]
     private GameObject barObj;
 
+    [SerializeField]
+    [Tooltip("타이밍 표시 바 애니메이터")]
+    private Animator animator;
+
     private Vector2 barStartPos; //현재 타이밍 표시 바 시작 초기화 위치
 
     private Vector2 plusVector = new Vector2(0, 0);
@@ -15,7 +19,9 @@ public class HitActionTiming : MonoBehaviour
 
     IEnumerator movingCoroutine; //현재 실행중인 타이밍 바 움직이는 코루틴
 
-    //WaitForSeconds delay = new WaitForSeconds(0.5f);
+    private const string successAnim = "PlayerTimingUISuccessAnimation";
+
+    WaitForSeconds delay = new WaitForSeconds(0.25f);
 
     private void Awake()
     {
@@ -24,6 +30,9 @@ public class HitActionTiming : MonoBehaviour
 
     private void OnEnable()
     {
+        animator.speed = 0;
+        animator.Play(successAnim, -1, 0f);
+
         barObj.transform.localPosition = barStartPos;
 
         movingCoroutine = barMoving();
@@ -48,16 +57,18 @@ public class HitActionTiming : MonoBehaviour
     {
         StopCoroutine(movingCoroutine);
 
+        animator.speed = 1;
+
         if (isFail)
         {
-            
+            animator.Play(successAnim);
         }
         else
         {
-            
+            animator.Play(successAnim);
         }
 
-        //yield return delay;
+        yield return delay;
 
         gameObject.SetActive(false); //나중에 실패 or 성공 연출 나오면 실패 연출 실행 후 끄기
         yield return null;

@@ -1024,16 +1024,27 @@ public class Player : BasicUnitScript, IDefense
         float nowDelayTime = 0;
         float maxDelayTime = 0.6f;
         bool isFailEnchant = true;
+        bool isInputSpace = false;
 
         timingObj.HitActionTimingStart(7);
 
         while (nowDelayTime < maxDelayTime)
         {
-            if (Input.GetKeyDown(KeyCode.Space) && nowDelayTime > 0.4f && nowDelayTime < 0.55f)
+            if (Input.GetKeyDown(KeyCode.Space) && isInputSpace)
             {
-                StartCoroutine(timingObj.pressSpace(false));
-                isFailEnchant = false;
+                if (nowDelayTime > 0.4f && nowDelayTime < 0.55f)
+                {
+                    StartCoroutine(timingObj.pressSpace(false));
+                    isFailEnchant = false;
+                }
+                else
+                {
+                    StartCoroutine(timingObj.pressSpace(true));
+                }
+
+                isInputSpace = true;
             }
+
             nowDelayTime += Time.deltaTime;
             yield return null;
         }
