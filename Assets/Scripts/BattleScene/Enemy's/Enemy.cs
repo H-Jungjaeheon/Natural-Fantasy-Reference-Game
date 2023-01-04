@@ -68,7 +68,6 @@ public abstract class Enemy : BasicUnitScript
         originalSpeed = Speed;
 
         plusVector = new Vector3(0f, -6f, 0f);
-        particlePos = new Vector3(0f, -2f, 0f);
 
         StartCoroutine(WaitUntilTheGameStarts());
     }

@@ -125,7 +125,7 @@ public class SwordAura : MonoBehaviour
         {
             int nowDamage = (isEnchanted) ? enchantedDamage : damage; //최종 대미지 판별(강화 실패 : 기본 대미지, 강화 성공 : 강화 대미지)
             
-            busComponent.Hit(nowDamage, false);
+            busComponent.Hit(nowDamage, false, EffectType.Shock);
 
             playerScript.GetBasicGood(); //재화 획득
 

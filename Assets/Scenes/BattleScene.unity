@@ -8156,7 +8156,7 @@ MonoBehaviour:
   nowState: 0
   rangeInEnemy: []
   rangeInDeflectAbleObj: []
-  hp: 70
+  hp: 130
   maxHp: 130
   energy: 30
   maxEnergy: 30
@@ -8183,6 +8183,7 @@ MonoBehaviour:
   hpTextColors:
   - {r: 1, g: 0, b: 0, a: 1}
   - {r: 0, g: 0.8980392, b: 1, a: 1}
+  particlePos: {x: 0, y: -5.5, z: 0}
   startPos: {x: 0, y: 0}
   rigid: {fileID: 1159378195}
   ownCollider: {fileID: 1159378196}
@@ -11433,6 +11434,7 @@ MonoBehaviour:
   - {r: 1, g: 0, b: 0, a: 1}
   - {r: 0, g: 0.8980392, b: 1, a: 1}
   - {r: 0.33333334, g: 0.33333334, b: 0.33333334, a: 1}
+  particlePos: {x: 0, y: 0, z: 0}
   startPos: {x: 0, y: 0}
   rigid: {fileID: 1717870243}
   ownCollider: {fileID: 1717870244}

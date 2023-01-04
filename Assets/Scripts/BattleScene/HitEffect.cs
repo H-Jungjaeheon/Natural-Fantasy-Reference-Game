@@ -17,6 +17,10 @@ public class HitEffect : MonoBehaviour
     [Tooltip("이펙트 애니메이터")]
     private Animator animator;
 
+    private Vector3 nowRotation = new Vector3(0, 0, 0);
+
+    private int rotationZ;
+
     #region 이펙트 애니메이션 트리거 문자열
     private const string slashAnim = "StartSlash";
 
@@ -39,12 +43,21 @@ public class HitEffect : MonoBehaviour
         switch (effectType)
         {
             case EffectType.Slash:
+                
+                rotationZ = Random.Range(0, 360);
+
+                nowRotation.z = rotationZ;
                 animator.SetTrigger(slashAnim);
                 break;
+
             case EffectType.Shock:
+
+                nowRotation.z = 0;
                 animator.SetTrigger(shockAnim);
                 break;
         }
+
+        transform.rotation = Quaternion.Euler(nowRotation);
     }
 
     public void ReturnToObjPool() => ObjectPool.Instance.ReturnObject(gameObject, (int)PoolObjKind.HitEffects);

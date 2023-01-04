@@ -81,12 +81,12 @@ public class EnemysHowitzerBullet : MonoBehaviour
             if (hitObjsUnitScript.nowDefensivePosition == DefensePos.Up)
             {
                 CamShake.CamShakeMod(true, 1.5f);
-                hitObjsUnitScript.Hit(damage, true);
+                hitObjsUnitScript.Hit(damage, true, EffectType.Defense);
             }
             else
             {
                 CamShake.CamShakeMod(false, 2f);
-                hitObjsUnitScript.Hit(damage, false); //대각선
+                hitObjsUnitScript.Hit(damage, false, EffectType.Shock); //대각선
             }
             //원형으로 터지는 애니메이션 실행 후 풀로 보내기 (코루틴)
             ReturnToObjPool();

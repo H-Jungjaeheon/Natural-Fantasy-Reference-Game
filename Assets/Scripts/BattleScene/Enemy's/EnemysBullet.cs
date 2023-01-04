@@ -80,19 +80,19 @@ public class EnemysBullet : MonoBehaviour
             if (hitObjsUnitScript.nowDefensivePosition == DefensePos.Right)
             {
                 CamShake.CamShakeMod(true, 1.5f);
-                hitObjsUnitScript.Hit(damage, true);
+                hitObjsUnitScript.Hit(damage, true, EffectType.Defense);
             }
             else
             {
                 CamShake.CamShakeMod(false,  2f);
-                hitObjsUnitScript.Hit(damage, false); //대각선
+                hitObjsUnitScript.Hit(damage, false, EffectType.Shock); //대각선
             }
             ReturnToObjPool();
         }
         else if (collision.CompareTag("Enemy") && nowBulletState == BulletState.Deflecting)
         {
             CamShake.CamShakeMod(false, 2f); //대각선
-            hitObjsUnitScript.Hit(damage, false);
+            hitObjsUnitScript.Hit(damage, false, EffectType.Shock);
             ReturnToObjPool();
         }
         else if (collision.CompareTag("ObjDestroy"))

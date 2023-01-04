@@ -332,6 +332,7 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     protected bool isImmunity; //현재 디버프 면역 상태인지 판별
 
+    [SerializeField]
     protected Vector3 particlePos; //타격 시 파티클(이펙트) 생성 위치
 
     [HideInInspector]
@@ -457,6 +458,8 @@ public abstract class BasicUnitScript : MonoBehaviour
         {
             var damageText = objectPoolInstance.GetObject((int)PoolObjKind.DamageText); //데미지 텍스트 소환(오브젝트 풀)
             var hitEffect = objectPoolInstance.GetObject((int)PoolObjKind.HitEffects); //타격 이펙트 소환(오브젝트 풀)
+
+            hitEffect.transform.position = transform.position + particlePos;
 
             HitEffect nowHitEffect = hitEffect.GetComponent<HitEffect>();
 
