@@ -451,17 +451,29 @@ public abstract class BasicUnitScript : MonoBehaviour
     /// </summary>
     /// <param name="damage"> 들어온 데미지 </param>
     /// <param name="isDefending"> 현재 들어온 공격의 방어 성공 유무 </param>
-    public virtual void Hit(float damage, bool isDefending)
+    public virtual void Hit(float damage, bool isDefending, EffectType effectType)
     {
         if (hp > 0)
         {
             var damageText = objectPoolInstance.GetObject((int)PoolObjKind.DamageText); //데미지 텍스트 소환(오브젝트 풀)
+            var hitEffect = objectPoolInstance.GetObject((int)PoolObjKind.HitEffects); //타격 이펙트 소환(오브젝트 풀)
+
+            HitEffect nowHitEffect = hitEffect.GetComponent<HitEffect>();
+
             TextState nowTextState = TextState.Blocking; //현재 데미지 텍스트 상태
+
+            switch (effectType)
+            {
+                case EffectType.Shock:
+                    nowHitEffect.effectType = EffectType.Shock;
+                    break;
+            }
 
             if (isInvincibility == false)
             {
                 if (isDefending)
                 {
+                    nowHitEffect.effectType = EffectType.Defense;
                     Energy -= 1;
                     DreamyFigure += 1;
                 }

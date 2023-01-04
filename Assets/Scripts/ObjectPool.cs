@@ -14,7 +14,8 @@ public enum PoolObjKind
     RangeDisplay,
     Waterfall,
     HotWaterfall,
-    BossHitParticle
+    BossHitParticle,
+    HitEffects
 }
 
 public class ObjectPool : Singleton<ObjectPool>
