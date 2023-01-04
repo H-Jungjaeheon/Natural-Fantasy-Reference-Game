@@ -165,9 +165,9 @@ public class SlimeEnemy : Enemy, IChangePhase
     }
 
 
-    public override void Hit(float damage, bool isDefending)
+    public override void Hit(float damage, bool isDefending, EffectType effectType)
     {
-        base.Hit(damage, isDefending);
+        base.Hit(damage, isDefending, effectType);
 
         if (IsInvincibility == false && isDefending == false)
         {
@@ -213,7 +213,7 @@ public class SlimeEnemy : Enemy, IChangePhase
                     var nowRangeInEnemysComponent = rangeInEnemy[nowIndex].GetComponent<BasicUnitScript>();
                     bool isDefence = (nowRangeInEnemysComponent.nowDefensivePosition == DefensePos.Right && nowRangeInEnemysComponent.nowState == NowState.Defensing) ? true : false;
                     
-                    nowRangeInEnemysComponent.Hit(Damage, isDefence);
+                    nowRangeInEnemysComponent.Hit(Damage, isDefence, EffectType.Shock);
                 }
             }
         }
@@ -717,7 +717,7 @@ public class SlimeEnemy : Enemy, IChangePhase
         if (isPhysicalAttacking && collision.gameObject.CompareTag("Player"))
         {
             CamShake.CamShakeMod(false, 2f);
-            collision.gameObject.GetComponent<BasicUnitScript>().Hit(Damage + Mathf.Round(Damage / 2), false);
+            collision.gameObject.GetComponent<BasicUnitScript>().Hit(Damage + Mathf.Round(Damage / 2), false, EffectType.Shock);
         }
     }
 

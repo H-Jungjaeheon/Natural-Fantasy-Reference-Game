@@ -628,7 +628,7 @@ public abstract class BasicUnitScript : MonoBehaviour
             {
                 if (isInvincibility == false)
                 {
-                    Hit(1, false);
+                    Hit(1, false, EffectType.Shock);
                 }
                 nowGiveBurnDamageTime = 0;
             }

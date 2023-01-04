@@ -286,17 +286,29 @@ public class Player : BasicUnitScript, IDefense
     /// </summary>
     /// <param name="damage"> 받을 데미지 </param>
     /// <param name="isDefending"> 방어중인지 판별 </param>
-    public override void Hit(float damage, bool isDefending)
+    public override void Hit(float damage, bool isDefending, EffectType effectType)
     {
-        var damageText = objectPoolInstance.GetObject((int)PoolObjKind.DamageText); //데미지 텍스트 소환(오브젝트 풀)
-        TextState nowTextState = TextState.Blocking; //현재 데미지 텍스트 상태
-
         if (Hp > 0)
         {
+            var damageText = objectPoolInstance.GetObject((int)PoolObjKind.DamageText); //데미지 텍스트 소환(오브젝트 풀)
+            var hitEffect = objectPoolInstance.GetObject((int)PoolObjKind.HitEffects); //타격 이펙트 소환(오브젝트 풀)
+
+            HitEffect nowHitEffect = hitEffect.GetComponent<HitEffect>();
+
+            TextState nowTextState = TextState.Blocking; //현재 데미지 텍스트 상태
+
+            switch (effectType)
+            {
+                case EffectType.Shock:
+                    nowHitEffect.effectType = EffectType.Shock;
+                    break;
+            }
+
             if (IsInvincibility == false)
             {
                 if (ShieldHp_F > 0 && !isDefending)
                 {
+                    nowHitEffect.effectType = EffectType.Defense;
                     ShieldHp_F -= 1;
                 }
                 else if (isDefending)
@@ -879,7 +891,7 @@ public class Player : BasicUnitScript, IDefense
                         isDefence = true;
                     }
 
-                    unitScriptComponenet.Hit(CurrentRandomDamage(Damage), isDefence);
+                    unitScriptComponenet.Hit(CurrentRandomDamage(Damage), isDefence, EffectType.Slash);
 
                     if (isGetGood == false)
                     {

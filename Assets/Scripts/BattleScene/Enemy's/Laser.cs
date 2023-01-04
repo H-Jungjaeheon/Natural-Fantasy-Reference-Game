@@ -120,7 +120,7 @@ public class Laser : MonoBehaviour
                 {
                     BasicUnitScript hitObjsUnitScript = targetInRange[nowIndex].GetComponent<BasicUnitScript>();
 
-                    hitObjsUnitScript.Hit(damage, false);
+                    hitObjsUnitScript.Hit(damage, false, EffectType.Shock);
 
                     if (isCameraShaking == false)
                     {
