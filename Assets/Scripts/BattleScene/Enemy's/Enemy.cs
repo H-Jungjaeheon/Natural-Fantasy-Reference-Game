@@ -92,5 +92,8 @@ public abstract class Enemy : BasicUnitScript
 
     protected abstract string[] PattonText();
 
+    /// <summary>
+    /// 보스 행동 실행 함수
+    /// </summary>
     protected abstract void RandBehaviorStart();
 }

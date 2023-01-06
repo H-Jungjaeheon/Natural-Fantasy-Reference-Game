@@ -8,12 +8,16 @@ public class SlimeEnemy : Enemy, IChangePhase
     [Tooltip("스테이지 1 기믹 컴포넌트")]
     private WaterFallMachine gimmick;
 
+    /// <summary>
+    /// 보스 패턴 텍스트 가져오기 (현재 페이즈에 맞는 텍스트 파일 : 2가지 경우 중 랜덤)
+    /// </summary>
+    /// <returns></returns>
     protected override string[] PattonText()
     {
         string[] path;
         int randIndex = Random.Range(1, 3);
 
-        path = File.ReadAllText($"{Application.dataPath}/BossPattonTexts/SlimeBossPhase{(int)nowPhase}Patton{randIndex}.txt").Split(','); //보스 패턴 텍스트 가져오기 (현재 페이즈에 맞는 텍스트 파일 : 3가지 경우 중 랜덤)
+        path = File.ReadAllText($"{Application.dataPath}/BossPattonTexts/SlimeBoss/SlimeBossPhase{(int)nowPhase}Patton{randIndex}.txt").Split(',');
 
         return path;
     }
@@ -75,14 +79,14 @@ public class SlimeEnemy : Enemy, IChangePhase
     }
 
     /// <summary>
-    /// 보스 랜덤 공격 뽑기
+    /// 보스 행동 실행 함수
     /// </summary>
     protected override void RandBehaviorStart()
     {
         if (nowState == NowState.Standingby)
         {
             int randIndex = Random.Range(0, 2);
-            int nowPattonIndex = 0;
+            int nowPattonIndex;
 
             if (Energy < MaxEnergy * 0.5f && restLimitTurn >= maxRestLimitTurn && randIndex == 1)
             {
@@ -160,7 +164,7 @@ public class SlimeEnemy : Enemy, IChangePhase
 
         animator.SetBool(moving, false);
 
-        nowCoroutine = (isBasicCloseAttack) ? Attacking(true, nowAttackCount, 0.65f) : DefenselessCloseAttack(); //isBasicCloseAttack이 참이면, nowCoroutine에 현재 실행할 기본 근접공격 코루틴 저장(거짓이면, 내려찍기 공격 코루틴 저장)
+        nowCoroutine = (isBasicCloseAttack) ? Attacking(true, 1, 0.65f) : DefenselessCloseAttack(); //isBasicCloseAttack이 참이면, nowCoroutine에 현재 실행할 기본 근접공격 코루틴 저장(거짓이면, 내려찍기 공격 코루틴 저장)
         StartCoroutine(nowCoroutine);
     }
 
@@ -188,8 +192,8 @@ public class SlimeEnemy : Enemy, IChangePhase
     /// 공격 함수
     /// </summary>
     /// <param name="isLastAttack"> 마지막 차례의 공격인지 판별 </param>
-    /// <param name="nowAttackCount_I"></param>
-    /// <param name="delayTime"></param>
+    /// <param name="nowAttackCount_I"> 현재 공격 회차 </param>
+    /// <param name="delayTime"> 공격 준비 동작 시간 </param>
     /// <returns></returns>
     IEnumerator Attacking(bool isLastAttack, int nowAttackCount_I, float delayTime)
     {
@@ -299,7 +303,6 @@ public class SlimeEnemy : Enemy, IChangePhase
 
         transform.rotation = Quaternion.identity;
         transform.position = startPos;
-        nowAttackCount = 1;
 
         animator.SetBool(moving, false);
 

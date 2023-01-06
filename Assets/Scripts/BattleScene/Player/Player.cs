@@ -815,7 +815,7 @@ public class Player : BasicUnitScript, IDefense
         transform.position = targettransform; //이동 완료
 
         animator.SetBool(moving, false);
-        StartCoroutine(Attacking(false, nowAttackCount, 0.2f, 0.2f)); //첫번째 공격 실행
+        StartCoroutine(Attacking(false, 1, 0.2f, 0.2f)); //첫번째 공격 실행
         animator.SetTrigger(basicAttack);
     }
 
@@ -994,8 +994,6 @@ public class Player : BasicUnitScript, IDefense
 
         transform.rotation = Quaternion.identity;
         transform.position = startPos;
-
-        nowAttackCount = 1;
 
         animator.SetBool(moving, false);
 

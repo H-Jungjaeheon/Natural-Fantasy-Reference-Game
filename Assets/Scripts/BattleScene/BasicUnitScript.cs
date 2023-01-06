@@ -114,7 +114,6 @@ public abstract class BasicUnitScript : MonoBehaviour
     [HideInInspector]
     public List<GameObject> rangeInDeflectAbleObj = new List<GameObject>(); //튕겨내기 범위 내의 오브젝트 리스트
 
-    protected int nowAttackCount; //연속공격 시 현재 공격 횟수
     #endregion
 
     #region 스탯 (공통)
@@ -438,7 +437,6 @@ public abstract class BasicUnitScript : MonoBehaviour
         startPos = transform.position; //시작 위치 저장
         movetransform.x = Speed; //시작 이동속도로 움직임 벡터 X값 저장
 
-        nowAttackCount = 1;
         nowActionCoolTime = 0;
         maxGiveBurnDamageTime = 4; //화상 효과 최대 데미지 횟수
         maxStackableOverlapTime = 10; //화상 효과 중첩 가능 제한시간 초기화

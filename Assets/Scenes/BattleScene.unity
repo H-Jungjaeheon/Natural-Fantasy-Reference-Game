@@ -8149,7 +8149,7 @@ MonoBehaviour:
   nullActionCoolTimeImage: {fileID: 154340400}
   actionCoolTimeImage: {fileID: 1074118521}
   actionCoolTimeObjPlusPos: {x: 0, y: -2.1}
-  maxActionCoolTime: 3.1
+  maxActionCoolTime: 3
   setJumpGravityScale_F: 2
   jumpPower_F: 22
   nowDefensivePosition: 0
