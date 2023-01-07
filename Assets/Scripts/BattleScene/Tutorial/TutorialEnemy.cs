@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using System.IO;
+using System.Text;
 
 public class TutorialEnemy : Enemy
 {
@@ -14,14 +15,14 @@ public class TutorialEnemy : Enemy
     /// 보스 패턴 텍스트 가져오기 (현재 페이즈에 맞는 텍스트 파일 : 2가지 경우 중 랜덤)
     /// </summary>
     /// <returns></returns>
-    protected override string[] PattonText()
+    protected override void PattonText()
     {
-        string[] path;
         int randIndex = Random.Range(1, 3);
 
-        path = File.ReadAllText($"{Application.dataPath}/BossPattonTexts/TutorialBoss/TutorialBossPhase{(int)nowPhase}Patton{randIndex}.txt").Split(',');
+        sb = new StringBuilder($"{Application.dataPath}/BossPattonTexts/TutorialBoss/TutorialBossPhase", 100);
+        sb.Append($"{(int)nowPhase}Patton{randIndex}.txt");
 
-        return path;
+        pattonText = File.ReadAllText(sb.ToString()).Split(',');
     }
 
     protected override IEnumerator CoolTimeRunning()
@@ -94,7 +95,7 @@ public class TutorialEnemy : Enemy
             if (pattonCount == pattonText.Length)
             {
                 pattonCount = 0;
-                pattonText = PattonText();
+                PattonText();
             }
         }
     }
@@ -217,8 +218,8 @@ public class TutorialEnemy : Enemy
 
         var bullet = objectPoolInstance.GetObject((int)PoolObjKind.TutorialEnemyBullet);
 
-        bulletPos.x = 6;
-        bulletPos.y = -1.65f;
+        bulletPos.x = 7.5f;
+        bulletPos.y = 0f;
 
         bullet.transform.position = bulletPos;
 
@@ -240,12 +241,12 @@ public class TutorialEnemy : Enemy
 
         animator.SetBool("FrontShoot", true);
 
-        yield return new WaitForSeconds(0.7f);
+        yield return new WaitForSeconds(1.5f);
 
         var swordAura = objectPoolInstance.GetObject((int)PoolObjKind.TutorialEnemySwordAura);
 
-        bulletPos.x = 6;
-        bulletPos.y = -1.65f;
+        bulletPos.x = 7.8f;
+        bulletPos.y = -0.75f;
 
         swordAura.transform.position = bulletPos;
 

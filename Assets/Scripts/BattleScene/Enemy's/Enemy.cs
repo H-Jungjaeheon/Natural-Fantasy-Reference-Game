@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using System.Text;
 
 public enum BossPhase
 {
@@ -38,6 +39,8 @@ public abstract class Enemy : BasicUnitScript
 
     protected string[] pattonText; //텍스트로 불러온 패턴 번호들
 
+    protected StringBuilder sb; //패턴 시드 파일 경로 검색에 쓰일 스트링 빌더
+
     protected int pattonCount; //현재 패턴 사용 횟수
 
     protected BossPhase nowPhase = BossPhase.PhaseOne; //현재 보스 페이즈
@@ -52,7 +55,7 @@ public abstract class Enemy : BasicUnitScript
 
         isWaiting = true;
 
-        pattonText = PattonText();
+        PattonText();
 
         bsm.enemyCharacterPos = transform.position;
         bsm.enemy = gameObject;
@@ -92,7 +95,7 @@ public abstract class Enemy : BasicUnitScript
     /// 보스 패턴 텍스트 가져오기 (현재 페이즈에 맞는 텍스트 파일 : 2가지 경우 중 랜덤)
     /// </summary>
     /// <returns></returns>
-    protected abstract string[] PattonText();
+    protected abstract void PattonText();
 
     /// <summary>
     /// 보스 행동 실행 함수

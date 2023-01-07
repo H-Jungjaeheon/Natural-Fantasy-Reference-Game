@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using System.IO;
+using System.Text;
 
 public class SlimeEnemy : Enemy, IChangePhase
 {
@@ -11,17 +12,18 @@ public class SlimeEnemy : Enemy, IChangePhase
     protected override void StartSetting()
     {
         base.StartSetting();
+        
         plusVector = new Vector3(0f, -6f, 0f);
     }
 
-    protected override string[] PattonText()
+    protected override void PattonText()
     {
-        string[] path;
         int randIndex = Random.Range(1, 3);
+        
+        sb = new StringBuilder($"{Application.dataPath}/BossPattonTexts/SlimeBoss/SlimeBossPhase", 100);
+        sb.Append($"{(int)nowPhase}Patton{randIndex}.txt");
 
-        path = File.ReadAllText($"{Application.dataPath}/BossPattonTexts/SlimeBoss/SlimeBossPhase{(int)nowPhase}Patton{randIndex}.txt").Split(',');
-
-        return path;
+        pattonText = File.ReadAllText(sb.ToString()).Split(',');
     }
 
     /// <summary>
@@ -77,7 +79,7 @@ public class SlimeEnemy : Enemy, IChangePhase
         nowCoroutine = ThornSkill();
         StartCoroutine(nowCoroutine);
 
-        pattonText = PattonText();
+        PattonText();
     }
 
     /// <summary>
@@ -140,7 +142,7 @@ public class SlimeEnemy : Enemy, IChangePhase
             if (pattonCount == pattonText.Length)
             {
                 pattonCount = 0;
-                pattonText = PattonText();
+                PattonText();
             }
         }
     }
@@ -370,12 +372,12 @@ public class SlimeEnemy : Enemy, IChangePhase
     {
         WaitForSeconds launchDelay = new WaitForSeconds(1f);
         bool isLaunchUp = false;
-        int randLaunch = Random.Range(1, 101);
+        int randLaunch = Random.Range(0, 2);
 
         nowState = NowState.Attacking;
         Energy -= 5;
 
-        if (randLaunch > 49)
+        if (randLaunch == 1)
         {
             isLaunchUp = true;
         }
@@ -390,7 +392,7 @@ public class SlimeEnemy : Enemy, IChangePhase
             Laser nowLaunchEnemyLaser = nowLaunchLaserObj.GetComponent<Laser>();
 
             nowLaunchEnemyLaser.launchAngle = (isLaunchUp) ? 10 : 20;
-            nowLaunchEnemyLaser.onEnablePos.x = (isLaunchUp) ? -4.9f : -4.2f;
+            nowLaunchEnemyLaser.onEnablePos.x = (isLaunchUp) ? -4.1f : -3.45f;
             nowLaunchEnemyLaser.onEnablePos.y = (isLaunchUp) ? 3.75f : 1.33f;
 
             isLaunchUp = (isLaunchUp) ? false : true;

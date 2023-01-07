@@ -25,6 +25,8 @@ public class HitEffect : MonoBehaviour
     private const string slashAnim = "StartSlash";
 
     private const string shockAnim = "StartShock";
+
+    private const string defenseAnim = "StartDefense";
     #endregion
 
     private void OnEnable()
@@ -43,7 +45,6 @@ public class HitEffect : MonoBehaviour
         switch (effectType)
         {
             case EffectType.Slash:
-                
                 rotationZ = Random.Range(0, 360);
 
                 nowRotation.z = rotationZ;
@@ -51,9 +52,15 @@ public class HitEffect : MonoBehaviour
                 break;
 
             case EffectType.Shock:
-
                 nowRotation.z = 0;
-                animator.SetTrigger(shockAnim);
+                //animator.SetTrigger(shockAnim);
+                ReturnToObjPool(); //애니메이션 끝부분에서 실행하는 것으로 수정
+                break;
+
+            case EffectType.Defense:
+                nowRotation.z = 0;
+                //animator.SetTrigger(defenseAnim);
+                ReturnToObjPool(); //애니메이션 끝부분에서 실행하는 것으로 수정
                 break;
         }
 

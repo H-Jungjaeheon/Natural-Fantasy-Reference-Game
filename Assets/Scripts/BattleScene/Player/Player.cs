@@ -295,28 +295,25 @@ public class Player : BasicUnitScript, IDefense
         if (Hp > 0)
         {
             var damageText = objectPoolInstance.GetObject((int)PoolObjKind.DamageText); //데미지 텍스트 소환(오브젝트 풀)
-            var hitEffect = objectPoolInstance.GetObject((int)PoolObjKind.HitEffects); //타격 이펙트 소환(오브젝트 풀)
-
-            HitEffect nowHitEffect = hitEffect.GetComponent<HitEffect>();
-
             TextState nowTextState = TextState.Blocking; //현재 데미지 텍스트 상태
 
-            switch (effectType)
-            {
-                case EffectType.Shock:
-                    nowHitEffect.effectType = EffectType.Shock;
-                    break;
-            }
+            var hitEffect = objectPoolInstance.GetObject((int)PoolObjKind.HitEffects); //타격 이펙트 소환(오브젝트 풀)
+            HitEffect nowHitEffect = hitEffect.GetComponent<HitEffect>();
 
+            nowHitEffect.effectType = effectType;
+            
             if (IsInvincibility == false)
             {
                 if (ShieldHp_F > 0 && !isDefending)
                 {
                     nowHitEffect.effectType = EffectType.Defense;
+                    
                     ShieldHp_F -= 1;
                 }
                 else if (isDefending)
                 {
+                    nowHitEffect.effectType = EffectType.Defense;
+
                     Energy -= 1;
                     DreamyFigure += 1;
                     animator.SetTrigger(defenceIntermediateMotion);
@@ -337,6 +334,8 @@ public class Player : BasicUnitScript, IDefense
                     StartCoroutine(ChangeToBasicColor());
                 }
             }
+
+            hitEffect.transform.position = transform.position + particlePos;
 
             damageText.GetComponent<DamageText>().TextCustom(nowTextState, transform.position + plusVector, damage);
         }

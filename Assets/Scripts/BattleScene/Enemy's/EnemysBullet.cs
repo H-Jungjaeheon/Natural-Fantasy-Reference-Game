@@ -8,6 +8,13 @@ public enum BulletState
 
 public class EnemysBullet : MonoBehaviour
 {
+    #region 총알 필수 요소들
+    [Header("총알 요소들")]
+
+    [SerializeField]
+    [Tooltip("오브젝트 풀의 총알 종류")]
+    private PoolObjKind thisBulletPoolObjKind;
+
     [SerializeField]
     [Tooltip("총알 데미지")]
     private int damage;
@@ -16,47 +23,63 @@ public class EnemysBullet : MonoBehaviour
     [Tooltip("총알 속도")]
     private float speed;
 
+    public BulletState nowBulletState;
+    #endregion
+
+    #region 판별 요소들
+    [Header("판별 요소들")]
+
     [Tooltip("총알 반사 가능한지 판별")]
     public bool isDeflectAble;
 
-    public BulletState nowBulletState;
-
-    public Vector2 moveDirection;
+    [SerializeField]
+    [Tooltip("총알 방어 가능한지 판별")]
+    protected bool isDefendable;
 
     [SerializeField]
-    [Tooltip("오브젝트 풀의 총알 종류")]
-    private PoolObjKind thisBulletPoolObjKind;
+    [Tooltip("총알 회전 효과 여부 판별")]
+    private bool isSpinning;
+    #endregion
+
+    #region 그 외
+    [Header("그 외")]
+
+    [SerializeField]
+    [Tooltip("총알 회전 효과 : 속도 벡터")]
+    private Vector3 basicSpinVector;
+
 
     private Vector3 moveSpeed;
-
-    void Awake()
-    {
-        moveSpeed = new Vector3(speed, 0, 0);
-    }
+    #endregion
 
     private void OnEnable()
     {
+        moveSpeed.x = speed * -1;
         Reflex(BulletState.Firing);
     }
 
     void Update()
     {
         BulletMove();
+
+        if (isSpinning)
+        {
+            AuraSpin();
+        }
     }
 
     private void BulletMove()
     {
-        if (isDeflectAble)
-        {
-            transform.position = (nowBulletState == BulletState.Deflecting) ? transform.position + (Vector3)(moveSpeed * Time.deltaTime) : transform.position - (Vector3)(moveSpeed * Time.deltaTime);
-        }
-        else
-        {
-            transform.Translate(moveDirection * (Time.deltaTime * speed));
-        }
+        transform.position += moveSpeed * Time.deltaTime;
+
         //position = new Vector2(Mathf.Cos(i * Mathf.Deg2Rad), Mathf.Sin(i * Mathf.Deg2Rad));
         //Fire(position, Vector2.one * 0.2f, (position - transform.position).normalized, 5, 1, Bullet.BulletType.Enemy, system);
     }
+
+    /// <summary>
+    /// 검기 회전 함수
+    /// </summary>
+    private void AuraSpin() => transform.eulerAngles += basicSpinVector * Time.deltaTime;
 
     public void Reflex(BulletState isReflexToPlayer)
     {
@@ -64,6 +87,7 @@ public class EnemysBullet : MonoBehaviour
 
         if (isReflexToPlayer == BulletState.Deflecting)
         {
+            moveSpeed.x *= -1;
             transform.rotation = Quaternion.Euler(0, 0, 180);
         }
         else
@@ -77,7 +101,7 @@ public class EnemysBullet : MonoBehaviour
         BasicUnitScript hitObjsUnitScript = collision.GetComponent<BasicUnitScript>();
         if (collision.CompareTag("Player") && nowBulletState == BulletState.Firing)
         {
-            if (hitObjsUnitScript.nowDefensivePos == DefensePos.Right)
+            if (hitObjsUnitScript.nowDefensivePos == DefensePos.Right && isDefendable)
             {
                 CamShake.CamShakeMod(true, 1.5f);
                 hitObjsUnitScript.Hit(damage, true, EffectType.Defense);

@@ -3345,8 +3345,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isDontDestroyOnLoad: 0
   usePrefabObjs:
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 1160382447699837986, guid: 5c682cbcd9f7a0a44a79002ef2bc764f, type: 3}
+  - {fileID: 87946182145217149, guid: 202822181e3dc7147bb863921cf33211, type: 3}
   - {fileID: 416800877848305474, guid: 85a20b6e84648e44a8811b52283438a6, type: 3}
   - {fileID: 6698261192308821480, guid: 07c5f112eeaa2d64980b6392c9cd7383, type: 3}
   - {fileID: 7600358472687557744, guid: 6fb09c3008d354545b947436931e039b, type: 3}
@@ -8092,7 +8092,7 @@ MonoBehaviour:
   startPos: {x: 0, y: 0}
   rigid: {fileID: 1376002914}
   ownCollider: {fileID: 1376002915}
-  attackRangeCollider: {fileID: 0}
+  attackRangeCollider: {fileID: 1153506941}
   battleUIObjScript: {fileID: 1344392448}
   animator: {fileID: 1376002912}
   battleUIAnimator: {fileID: 1344392449}
