@@ -71,7 +71,7 @@ public abstract class BasicUnitScript : MonoBehaviour
     [Header("현재 행동 관련 변수")]
     [Tooltip("중력값")]
     [SerializeField]
-    protected float setJumpGravityScale_F;
+    protected float setJumpGravityScale;
 
     protected IEnumerator nowCoroutine; //현재 실행중인 코루틴 동작
 
@@ -84,14 +84,14 @@ public abstract class BasicUnitScript : MonoBehaviour
     protected float restWaitTime; //휴식 사용 시 채워질 때의 딜레이
 
     [HideInInspector]
-    public DefensePos nowDefensivePosition; //현재 방어 위치
+    public DefensePos nowDefensivePos; //현재 방어 위치
 
     [HideInInspector]
     public NowState nowState; //현재 행동
 
     protected bool isWaiting; //대기중
 
-    private bool isHpDiminishedProduction; //체력 줄어드는 효과 실행중인지 판별
+    private bool isHpReduction; //체력 줄어드는 효과 실행중인지 판별
 
     private bool isInvincibility; //현재 무적인지 판별
 
@@ -147,9 +147,9 @@ public abstract class BasicUnitScript : MonoBehaviour
                 }
             }
 
-            if (isHpDiminishedProduction == false)
+            if (isHpReduction == false)
             {
-                StartCoroutine(HpDiminishedProduction());
+                StartCoroutine(HpReductionAnim());
             }
 
             hpText.text = $"{(Hp):N0}/{(MaxHp):N0}";
@@ -198,10 +198,6 @@ public abstract class BasicUnitScript : MonoBehaviour
         get { return maxEnergy; }
         set { maxEnergy = value; }
     }
-
-    [Tooltip("몽환 게이지 유무 판별")]
-    [SerializeField]
-    protected bool isHaveDreamyFigure;
 
     [Tooltip("몽환 게이지")]
     [SerializeField]
@@ -349,11 +345,11 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     [SerializeField]
     [Tooltip("자신의 공격 범위 콜라이더")]
-    protected BoxCollider2D attackRangeObjComponent;
+    protected BoxCollider2D attackRangeCollider;
 
-    protected Vector2 InitializationAttackRangeSize; //공격 범위 콜라이더 사이즈
+    protected Vector2 attackRangeSize; //공격 범위 콜라이더 사이즈
 
-    protected Vector2 InitializationAttackRangeOffset; //공격 범위 콜라이더 오프셋
+    protected Vector2 attackRangeOffset; //공격 범위 콜라이더 오프셋
 
     [SerializeField]
     [Tooltip("현재 상태 표시해주는 UI 오브젝트 스크립트")]
@@ -404,7 +400,9 @@ public abstract class BasicUnitScript : MonoBehaviour
 
     protected Vector3 plusVector; //데미지 텍스트 스폰 위치 정밀 조정(자신 위치에서 더해줌)
 
-    protected WaitForSeconds changeToBasicColorDelay = new WaitForSeconds(0.1f); //공격에 맞았을 시 색 변경 딜레이
+    private WaitForSeconds changeToBasicColorDelay = new WaitForSeconds(0.1f); //공격에 맞았을 시 색 변경 딜레이
+
+    private WaitForSeconds hpReductionDelay = new WaitForSeconds(0.6f); //체력 줄어드는 효과 실행 딜레이
 
     protected bool isResurrectionReady; //부활 준비 여부 판별
     #endregion
@@ -508,7 +506,7 @@ public abstract class BasicUnitScript : MonoBehaviour
                 ActionCoolTimeBarSetActive(true);
             }
 
-            StartCoroutine(UISetting());
+            StartCoroutine(CoolTimeRunning());
         }
     }
 
@@ -527,11 +525,13 @@ public abstract class BasicUnitScript : MonoBehaviour
     /// 체력 줄어드는 체력바 효과 함수
     /// </summary>
     /// <returns></returns>
-    protected IEnumerator HpDiminishedProduction()
+    protected IEnumerator HpReductionAnim()
     {
         float nowReductionSpeed = MaxHp / 12;
-        isHpDiminishedProduction = true;
-        yield return new WaitForSeconds(0.6f);
+        isHpReduction = true;
+
+        yield return hpReductionDelay;
+
         while (lightHp > Hp)
         {
             lightHp -= Time.deltaTime * nowReductionSpeed;
@@ -539,12 +539,17 @@ public abstract class BasicUnitScript : MonoBehaviour
             unitLightHpBars.fillAmount = lightHp / MaxHp;
             yield return null;
         }
+
         lightHp = Hp;
-        isHpDiminishedProduction = false;
+        isHpReduction = false;
         unitLightHpBars.fillAmount = lightHp / MaxHp;
     }
 
-    protected abstract IEnumerator UISetting();
+    /// <summary>
+    /// 공격 쿨타임 실행중
+    /// </summary>
+    /// <returns></returns>
+    protected abstract IEnumerator CoolTimeRunning();
 
     /// <summary>
     /// 행동 대기 쿨타임 바 UI 활성화 여부
@@ -552,7 +557,7 @@ public abstract class BasicUnitScript : MonoBehaviour
     /// <param name="SetActive"> 활성화 여부(false면 비활성화) </param>
     protected void ActionCoolTimeBarSetActive(bool SetActive) => actionCoolTimeObj.SetActive(SetActive);
 
-    protected virtual void WaitingTimeEnd()
+    protected void WaitingTimeEnd()
     {
         isWaiting = false;
         nowActionCoolTime = 0;
@@ -599,8 +604,8 @@ public abstract class BasicUnitScript : MonoBehaviour
     /// <param name="attackRangeColliderOffset"> 공격 범위 변경(위치) </param>
     protected void ChangeAttackRange(Vector2 attackRangeColliderSize, Vector2 attackRangeColliderOffset)
     {
-        attackRangeObjComponent.size = attackRangeColliderSize;
-        attackRangeObjComponent.offset = attackRangeColliderOffset;
+        attackRangeCollider.size = attackRangeColliderSize;
+        attackRangeCollider.offset = attackRangeColliderOffset;
     }
 
     protected void Invincibility(bool isInvincibilityOn) => IsInvincibility = isInvincibilityOn; //무적 ON or OFF (인터페이스로 빼놓기! InvincibilityEvent랑 같이 넣기)
@@ -610,8 +615,8 @@ public abstract class BasicUnitScript : MonoBehaviour
     /// </summary>
     protected void InitializationAttackRange()
     {
-        attackRangeObjComponent.size = InitializationAttackRangeSize;
-        attackRangeObjComponent.offset = InitializationAttackRangeOffset;
+        attackRangeCollider.size = attackRangeSize;
+        attackRangeCollider.offset = attackRangeOffset;
     }
 
     /// <summary>

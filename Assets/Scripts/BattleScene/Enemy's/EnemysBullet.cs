@@ -77,7 +77,7 @@ public class EnemysBullet : MonoBehaviour
         BasicUnitScript hitObjsUnitScript = collision.GetComponent<BasicUnitScript>();
         if (collision.CompareTag("Player") && nowBulletState == BulletState.Firing)
         {
-            if (hitObjsUnitScript.nowDefensivePosition == DefensePos.Right)
+            if (hitObjsUnitScript.nowDefensivePos == DefensePos.Right)
             {
                 CamShake.CamShakeMod(true, 1.5f);
                 hitObjsUnitScript.Hit(damage, true, EffectType.Defense);

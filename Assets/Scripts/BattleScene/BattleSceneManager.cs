@@ -19,9 +19,8 @@ public enum NowGameState
     GameEnd
 }
 
-public enum StageKind
+public enum Stage
 {
-    Tutorial,
     Stage1,
     Stage2,
     Stage3,
@@ -52,11 +51,42 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
         [Tooltip("스테이지 배경 오브젝트 모음")]
         public GameObject bgResources;
+
+        [Tooltip("보스 등장 연출 : 이름")]
+        public string bossName;
+
+        [Tooltip("보스 등장 연출 : 설명")]
+        public string explanation;
+
+        [Tooltip("보스 스탯 UI : 초상화")]
+        public Sprite pictureSprite;
+
+        [Tooltip("보스 스탯 UI : 체력바 배경")]
+        public Sprite hpBarSprite;
+
+        [Tooltip("보스 스탯 UI : 스테미너바 배경")]
+        public Sprite enegyBarSprite;
+
+        [Tooltip("보스 몽환 게이지 소유 여부")]
+        public bool isHaveFigure;
+
+        [Tooltip("보스 스탯 UI : 몽환 게이지바 배경")]
+        public Sprite figureBarSprite;
+
+        [Tooltip("현재 보스 속성 아이콘")]
+        public Sprite propertySprite;
+
+        [Tooltip("현재 스테이지 BGM")]
+        public AudioClip stageBgm;
+
+        [Tooltip("플레이어 기본공격 인식 사거리")]
+        public float intersection;
     }
 
-    [SerializeField]
     [Tooltip("각 스테이지별 변경될 데이터들")]
-    private StageData[] stageData; 
+    public StageData[] stageData;
+
+    StageData nowStageData; //현재 스테이지 데이터
 
     [HideInInspector]
     public Vector2 playerCharacterPos; //플레이어 시작 포지션
@@ -108,16 +138,48 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     [Header("스테이지 시작 연출 관련")]
 
     [SerializeField]
-    [Tooltip("스테이지 및 보스 소개 연출 이미지")]
+    [Tooltip("보스 소개 연출 이미지")]
     private Image introducingTheStageImage;
 
     [SerializeField]
-    [Tooltip("스테이지 및 보스 소개 텍스트")]
-    private TextMeshProUGUI introducingTheStageText;
+    [Tooltip("보스 설명 텍스트")]
+    private TextMeshProUGUI explanationText;
+
+    [SerializeField]
+    [Tooltip("보스 이름 텍스트")]
+    private TextMeshProUGUI nameText;
 
     private bool isIntroducing;
 
     private IEnumerator introCoroutine;
+    #endregion
+
+    #region 보스 스탯 UI 관련
+    [Header("보스 스탯 UI 관련")]
+
+    [SerializeField]
+    [Tooltip("보스 스탯 UI : 초상화 이미지")]
+    private Image pictureImg;
+
+    [SerializeField]
+    [Tooltip("보스 스탯 UI : 체력바 이미지")]
+    private Image hpBarImg;
+
+    [SerializeField]
+    [Tooltip("보스 스탯 UI : 스테미너바 이미지")]
+    private Image enegyBarImg;
+
+    [SerializeField]
+    [Tooltip("보스 스탯 UI : 몽환 게이지바 오브젝트")]
+    private GameObject figureBarObj;
+
+    [SerializeField]
+    [Tooltip("보스 스탯 UI : 몽환 게이지바 이미지")]
+    private Image figureBarImg;
+
+    [SerializeField]
+    [Tooltip("보스 스탯 UI : 보스 속성 이미지")]
+    private Image propertyImg;
     #endregion
 
     #region 게임 오버 관련 
@@ -194,11 +256,16 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
     void Start()
     {
+        StartSetting();
+    }
+
+    void StartSetting()
+    {
         mainCam = Camera.main;
         gmInstance = GameManager.Instance;
         bbmInstance = BattleButtonManager.Instance;
 
-        stageData[(int)StageKind.Stage1].bossObjs.SetActive(true); //나중에 게임 매니저에서 현재 선택한 스테이지 인덱스 받아서 실행하기
+        nowStageSetting();
 
         gmInstance.nowScene = SceneKind.Ingame;
 
@@ -208,6 +275,31 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
         StartCoroutine(StartFaidAnim());
         StartCoroutine(GamePauseObjOnOrOff());
+    }
+
+    /// <summary>
+    /// 스테이지 요소들 세팅(현재 스테이지 정보 기반)
+    /// </summary>
+    void nowStageSetting()
+    {
+        nowStageData = stageData[(int)gmInstance.nowStage];
+
+        explanationText.text = nowStageData.explanation;
+        nameText.text = nowStageData.bossName;
+
+        nowStageData.bossObjs.SetActive(true); 
+        nowStageData.bgResources.SetActive(true);
+
+        pictureImg.sprite = nowStageData.pictureSprite;
+        hpBarImg.sprite = nowStageData.hpBarSprite;
+        enegyBarImg.sprite = nowStageData.enegyBarSprite;
+        propertyImg.sprite = nowStageData.propertySprite;
+
+        if (nowStageData.isHaveFigure)
+        {
+            figureBarImg.sprite = nowStageData.figureBarSprite;
+            figureBarObj.SetActive(true);
+        }
     }
 
     /// <summary>
@@ -351,7 +443,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
                 }
 
                 introducingTheStageImage.rectTransform.DOAnchorPosX(1920f, duration);
-                introducingTheStageText.rectTransform.DOAnchorPosX(-1920f, duration);
+                explanationText.rectTransform.DOAnchorPosX(-1920f, duration);
 
                 StartCoroutine(EndIntroAnim());
                 break;
@@ -394,8 +486,8 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
             yield return null;
         }
 
-        introducingTheStageImage.rectTransform.DOAnchorPosX(0f, 0.3f);
-        introducingTheStageText.rectTransform.DOAnchorPosX(0f, 0.3f);
+        introducingTheStageImage.rectTransform.DOAnchorPosX(10f, 0.3f);
+        explanationText.rectTransform.DOAnchorPosX(10f, 0.3f);
 
         while (introducingTheStageImage.rectTransform.anchoredPosition.x < 0)
         {
@@ -405,7 +497,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         yield return new WaitForSeconds(3f);
 
         introducingTheStageImage.rectTransform.DOAnchorPosX(1920f, 0.25f);
-        introducingTheStageText.rectTransform.DOAnchorPosX(-1920f, 0.25f);
+        explanationText.rectTransform.DOAnchorPosX(-1920f, 0.25f);
 
         StartCoroutine(EndIntroAnim());
     }
@@ -449,7 +541,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
         isIntroducing = false;
 
-        stageData[(int)StageKind.Stage1].gimmickObjs.SetActive(true);
+        nowStageData.gimmickObjs.SetActive(true);
     }
 
     public void GameExit() => StartCoroutine(SceneChangeFaidOut(SceneKind.Main));

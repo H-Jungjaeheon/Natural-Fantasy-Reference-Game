@@ -66,6 +66,8 @@ public class MainManager : Singleton<MainManager>
 
     private bool isFading;
 
+    GameManager gmInstance;
+
     WaitForSeconds fadeDelay = new WaitForSeconds(1);
 
     public void Awake()
@@ -83,7 +85,9 @@ public class MainManager : Singleton<MainManager>
 
     private void Start()
     {
-        GameManager.Instance.nowScene = SceneKind.Main;
+        gmInstance = GameManager.Instance;
+
+        gmInstance.nowScene = SceneKind.Main;
         nowMainOptionState = OptionPage.None;
         nowScreenState = ScreenState.MainScreen;
         
@@ -249,13 +253,10 @@ public class MainManager : Singleton<MainManager>
     public void MoveToBattleScene(int StageIndexToEnter)
     {
         nowScreenState = ScreenState.AdmissionCheckScreen;
+
         admissionCheckObj.SetActive(true);
-        switch (StageIndexToEnter)
-        {
-            case 1:
-                //스테이지 1 정보
-                break;
-        }
+
+        gmInstance.nowStage = (Stage)StageIndexToEnter;
     }
 
     public void AdmissionCheck(bool isAdmissionBattle)

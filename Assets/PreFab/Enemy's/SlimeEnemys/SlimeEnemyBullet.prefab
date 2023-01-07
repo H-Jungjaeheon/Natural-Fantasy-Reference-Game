@@ -123,7 +123,7 @@ MonoBehaviour:
   isDeflectAble: 1
   nowBulletState: 0
   moveDirection: {x: 0, y: 0}
-  thisBulletPoolObjKind: 2
+  thisBulletPoolObjKind: 4
 --- !u!61 &3494489338283002504
 BoxCollider2D:
   m_ObjectHideFlags: 0

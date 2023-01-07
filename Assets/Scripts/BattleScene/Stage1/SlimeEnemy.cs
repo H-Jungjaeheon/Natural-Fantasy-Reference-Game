@@ -8,10 +8,12 @@ public class SlimeEnemy : Enemy, IChangePhase
     [Tooltip("스테이지 1 기믹 컴포넌트")]
     private WaterFallMachine gimmick;
 
-    /// <summary>
-    /// 보스 패턴 텍스트 가져오기 (현재 페이즈에 맞는 텍스트 파일 : 2가지 경우 중 랜덤)
-    /// </summary>
-    /// <returns></returns>
+    protected override void StartSetting()
+    {
+        base.StartSetting();
+        plusVector = new Vector3(0f, -6f, 0f);
+    }
+
     protected override string[] PattonText()
     {
         string[] path;
@@ -26,7 +28,7 @@ public class SlimeEnemy : Enemy, IChangePhase
     /// 공격 쿨타임
     /// </summary>
     /// <returns></returns>
-    protected override IEnumerator UISetting()
+    protected override IEnumerator CoolTimeRunning()
     {
         while (true)
         {
@@ -215,7 +217,7 @@ public class SlimeEnemy : Enemy, IChangePhase
                 if (rangeInEnemy[nowIndex] != null)
                 {
                     var nowRangeInEnemysComponent = rangeInEnemy[nowIndex].GetComponent<BasicUnitScript>();
-                    bool isDefence = (nowRangeInEnemysComponent.nowDefensivePosition == DefensePos.Right && nowRangeInEnemysComponent.nowState == NowState.Defensing) ? true : false;
+                    bool isDefence = (nowRangeInEnemysComponent.nowDefensivePos == DefensePos.Right && nowRangeInEnemysComponent.nowState == NowState.Defensing) ? true : false;
                     
                     nowRangeInEnemysComponent.Hit(Damage, isDefence, EffectType.Shock);
                 }
@@ -244,7 +246,7 @@ public class SlimeEnemy : Enemy, IChangePhase
         yield return new WaitForSeconds(0.5f); //점프 전 대기 시간
 
         rigid.AddForce(Vector2.up * jumpPower_F, ForceMode2D.Impulse);
-        rigid.gravityScale = setJumpGravityScale_F;
+        rigid.gravityScale = setJumpGravityScale;
 
         speedVector.x = 5.5f; //점프하며 플레이어 위치에 다가갈 스피드
 
@@ -445,7 +447,7 @@ public class SlimeEnemy : Enemy, IChangePhase
 
         for (int nowIndex = 0; nowIndex < 2; nowIndex++)
         {   
-            rigid.gravityScale = setJumpGravityScale_F;
+            rigid.gravityScale = setJumpGravityScale;
             rigid.AddForce(Vector2.up * 14, ForceMode2D.Impulse);
 
             if (nowIndex == 0)

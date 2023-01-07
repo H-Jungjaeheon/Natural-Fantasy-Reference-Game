@@ -4,6 +4,12 @@ using System.IO;
 
 public class TutorialEnemy : Enemy
 {
+    protected override void StartSetting()
+    {
+        base.StartSetting();
+        plusVector = new Vector3(0.3f, 0f, 0f);
+    }
+
     /// <summary>
     /// 보스 패턴 텍스트 가져오기 (현재 페이즈에 맞는 텍스트 파일 : 2가지 경우 중 랜덤)
     /// </summary>
@@ -18,11 +24,7 @@ public class TutorialEnemy : Enemy
         return path;
     }
 
-    /// <summary>
-    /// 공격 쿨타임
-    /// </summary>
-    /// <returns></returns>
-    protected override IEnumerator UISetting()
+    protected override IEnumerator CoolTimeRunning()
     {
         while (true)
         {
@@ -72,10 +74,10 @@ public class TutorialEnemy : Enemy
                             nowCoroutine = GoToAttack(); //기본 근접 공격
                             break;
                         case 1:
-                            nowCoroutine = GoToAttack(); //총알 발사 공격
+                            nowCoroutine = ShootBullet(); //총알 발사 공격
                             break;
                         case 2:
-                            nowCoroutine = GoToAttack(); //검기 발사 공격(궁극기)
+                            nowCoroutine = ShootSwordAura(); //검기 발사 공격(궁극기)
                             break;
                     }
                     pattonCount++;
@@ -99,7 +101,7 @@ public class TutorialEnemy : Enemy
 
     IEnumerator GoToAttack()
     {
-        Vector2 Targettransform = new Vector2(bsm.playerCharacterPos.x + 5.5f, transform.position.y); //목표 위치
+        Vector2 Targettransform = new Vector2(bsm.playerCharacterPos.x + 3f, transform.position.y); //목표 위치
 
         nowState = NowState.Attacking;
 
@@ -126,12 +128,9 @@ public class TutorialEnemy : Enemy
     {
         base.Hit(damage, isDefending, effectType);
 
-        if (IsInvincibility == false && isDefending == false)
-        {
-            GameObject hitParticle = objectPoolInstance.GetObject((int)PoolObjKind.BossHitParticle);
-
-            hitParticle.transform.position = transform.position + particlePos; //현재 파티클 스폰 위치(오브젝트 위치 + 설정한 유닛 고유 파티클 생성 위치) 
-        }
+        //if (IsInvincibility == false && isDefending == false) //타격 파티클 or 애니메이션 실행
+        //{
+        //}
     }
 
     /// <summary>
@@ -161,7 +160,7 @@ public class TutorialEnemy : Enemy
                 if (rangeInEnemy[nowIndex] != null)
                 {
                     var nowRangeInEnemysComponent = rangeInEnemy[nowIndex].GetComponent<BasicUnitScript>();
-                    bool isDefence = (nowRangeInEnemysComponent.nowDefensivePosition == DefensePos.Right && nowRangeInEnemysComponent.nowState == NowState.Defensing) ? true : false;
+                    bool isDefence = (nowRangeInEnemysComponent.nowDefensivePos == DefensePos.Right && nowRangeInEnemysComponent.nowState == NowState.Defensing) ? true : false;
 
                     nowRangeInEnemysComponent.Hit(Damage, isDefence, EffectType.Shock);
                 }
@@ -207,7 +206,7 @@ public class TutorialEnemy : Enemy
     /// <returns></returns>
     IEnumerator ShootBullet()
     {
-        Vector2 spawnSlimeBulletPosition;
+        Vector2 bulletPos;
 
         nowState = NowState.Attacking;
         Energy -= 2;
@@ -216,12 +215,39 @@ public class TutorialEnemy : Enemy
 
         yield return new WaitForSeconds(0.7f);
 
-        var slimeBullet = objectPoolInstance.GetObject((int)PoolObjKind.SlimeEnemyBullet);
+        var bullet = objectPoolInstance.GetObject((int)PoolObjKind.TutorialEnemyBullet);
 
-        spawnSlimeBulletPosition.x = 6;
-        spawnSlimeBulletPosition.y = -1.65f;
+        bulletPos.x = 6;
+        bulletPos.y = -1.65f;
 
-        slimeBullet.transform.position = spawnSlimeBulletPosition;
+        bullet.transform.position = bulletPos;
+
+        animator.SetBool("FrontShoot", false);
+
+        WaitingTimeStart();
+    }
+
+    /// <summary>
+    /// 검기 발사 공격(궁극기)
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator ShootSwordAura()
+    {
+        Vector2 bulletPos;
+
+        nowState = NowState.Attacking;
+        Energy -= 2;
+
+        animator.SetBool("FrontShoot", true);
+
+        yield return new WaitForSeconds(0.7f);
+
+        var swordAura = objectPoolInstance.GetObject((int)PoolObjKind.TutorialEnemySwordAura);
+
+        bulletPos.x = 6;
+        bulletPos.y = -1.65f;
+
+        swordAura.transform.position = bulletPos;
 
         animator.SetBool("FrontShoot", false);
 

@@ -57,6 +57,9 @@ public class GameManager : Singleton<GameManager>
     [HideInInspector]
     public SceneKind nowScene;
 
+    [Tooltip("현재 스테이지")]
+    public Stage nowStage;
+
     public void Awake()
     {
         if (instance != null)

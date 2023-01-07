@@ -132,6 +132,8 @@ public class Player : BasicUnitScript, IDefense
     public NowPlayerProperty nowProperty; //현재 속성 상태
     #endregion
 
+    private float nowIntersection; //현재 스테이지의 플레이어 기본공격 인식 사거리
+
     protected const int maxGoodGetCount = 15; //최대 재화 획득 가능 횟수(튜토리얼 플레이어에겐 필요 X)
 
     protected int nowGoodGetCount; //현재 재화 획득 횟수(튜토리얼 플레이어에겐 필요 X)
@@ -218,8 +220,10 @@ public class Player : BasicUnitScript, IDefense
     {
         var gameManagerIns = GameManager.Instance;
 
-        InitializationAttackRangeSize = new Vector2(1.1f, 2.68f);
-        InitializationAttackRangeOffset = new Vector2(0.18f, -0.08f);
+        attackRangeSize = new Vector2(1.1f, 2.68f);
+        attackRangeOffset = new Vector2(0.18f, -0.08f);
+
+        nowIntersection = bsm.stageData[(int)gameManagerIns.nowStage].intersection;
 
         MaxHp += (MaxHp * gameManagerIns.statLevels[(int)UpgradeableStatKind.Hp]) * 0.1f; //레벨당 체력 증가식 (최대 100% 증가)
         Damage += (int)(Damage * gameManagerIns.statLevels[(int)UpgradeableStatKind.Damage] * 0.5f); //레벨당 공격력 증가식 (최대 500% 증가)
@@ -277,7 +281,7 @@ public class Player : BasicUnitScript, IDefense
     /// </summary>
     public void ReleaseDefense()
     {
-        nowDefensivePosition = DefensePos.None;
+        nowDefensivePos = DefensePos.None;
         nowState = NowState.Standingby;
     }
 
@@ -360,17 +364,17 @@ public class Player : BasicUnitScript, IDefense
                     SetDefensing(DefensePos.Up, 0);
                 }
 
-                if (nowDefensivePosition != DefensePos.Left)
+                if (nowDefensivePos != DefensePos.Left)
                 {
                     transform.rotation = Quaternion.identity;
                 }
             }
             else if (nowState == NowState.Defensing)
             {
-                if (nowDefensivePosition == DefensePos.Left && !Input.GetKey(KeyCode.A) || nowDefensivePosition == DefensePos.Right && !Input.GetKey(KeyCode.D)
-                    || nowDefensivePosition == DefensePos.Up && !Input.GetKey(KeyCode.W))
+                if (nowDefensivePos == DefensePos.Left && !Input.GetKey(KeyCode.A) || nowDefensivePos == DefensePos.Right && !Input.GetKey(KeyCode.D)
+                    || nowDefensivePos == DefensePos.Up && !Input.GetKey(KeyCode.W))
                 {
-                    string nowDefenceAnimName = (nowDefensivePosition == DefensePos.Up) ? defenceT : defenceLR;
+                    string nowDefenceAnimName = (nowDefensivePos == DefensePos.Up) ? defenceT : defenceLR;
 
                     animator.SetBool(nowDefenceAnimName, false);
                     ReleaseDefense();
@@ -390,7 +394,7 @@ public class Player : BasicUnitScript, IDefense
 
         animator.SetBool(nowDefenceAnimName, true);
         nowState = NowState.Defensing;
-        nowDefensivePosition = nowDefensePos;
+        nowDefensivePos = nowDefensePos;
         transform.rotation = Quaternion.Euler(0, setRotation, 0);
     }
 
@@ -530,11 +534,11 @@ public class Player : BasicUnitScript, IDefense
     {
         if (Input.GetKeyDown(KeyCode.Space) && nowState == NowState.Defensing)
         {
-            if (nowDefensivePosition == DefensePos.Right)
+            if (nowDefensivePos == DefensePos.Right)
             {
                 StartCoroutine(Deflecting(0));
             }
-            else if (nowDefensivePosition == DefensePos.Left)
+            else if (nowDefensivePos == DefensePos.Left)
             {
                 StartCoroutine(Deflecting(180));
             }
@@ -551,7 +555,7 @@ public class Player : BasicUnitScript, IDefense
         bool isAlreadyShake = false;
 
         nowState = NowState.Deflecting;
-        nowDefensivePosition = DefensePos.None;
+        nowDefensivePos = DefensePos.None;
         transform.rotation = Quaternion.Euler(0, setRotation, 0);
 
         battleButtonManagerInstance.ActionButtonSetActive(false);
@@ -604,11 +608,7 @@ public class Player : BasicUnitScript, IDefense
         }
     }
 
-    /// <summary>
-    /// 대기시간 및 UI세팅
-    /// </summary>
-    /// <returns></returns>
-    protected override IEnumerator UISetting() 
+    protected override IEnumerator CoolTimeRunning() 
     {
         while (true)
         {
@@ -663,7 +663,7 @@ public class Player : BasicUnitScript, IDefense
                 battleButtonManagerInstance.ActionButtonSetActive(false);
             }
 
-            StartCoroutine(UISetting());
+            StartCoroutine(CoolTimeRunning());
         }
     }
 
@@ -683,7 +683,7 @@ public class Player : BasicUnitScript, IDefense
             CamShake.JumpStart();
 
             rigid.AddForce(Vector2.up * jumpPower_F, ForceMode2D.Impulse);
-            rigid.gravityScale = setJumpGravityScale_F - 0.5f;
+            rigid.gravityScale = setJumpGravityScale - 0.5f;
             animator.SetTrigger(jumping);
             StartCoroutine(JumpDelay());
         }
@@ -721,7 +721,7 @@ public class Player : BasicUnitScript, IDefense
         }
 
         animator.SetBool(jumpIntermediateMotion, true);
-        rigid.gravityScale = setJumpGravityScale_F * 1.5f;
+        rigid.gravityScale = setJumpGravityScale * 1.5f;
     }
 
     /// <summary>
@@ -802,7 +802,7 @@ public class Player : BasicUnitScript, IDefense
     /// <returns></returns>
     IEnumerator GoToAttack()
     {
-        Vector3 targettransform = new Vector3(bsm.enemyCharacterPos.x - 5.5f, transform.position.y); //목표 위치
+        Vector3 targettransform = new Vector3(bsm.enemyCharacterPos.x - nowIntersection, transform.position.y); //목표 위치
 
         animator.SetBool(moving, true);
 
@@ -886,7 +886,7 @@ public class Player : BasicUnitScript, IDefense
                 {
                     var unitScriptComponenet = rangeInEnemy[nowIndex].GetComponent<BasicUnitScript>();
                     
-                    if (unitScriptComponenet.nowState == NowState.Defensing && unitScriptComponenet.nowDefensivePosition == DefensePos.Left)
+                    if (unitScriptComponenet.nowState == NowState.Defensing && unitScriptComponenet.nowDefensivePos == DefensePos.Left)
                     {
                         isDefence = true;
                     }
@@ -1196,17 +1196,17 @@ public class Player : BasicUnitScript, IDefense
     {
         nowState = NowState.Fainting;
 
-        if (nowDefensivePosition == DefensePos.Left || nowDefensivePosition == DefensePos.Right)
+        if (nowDefensivePos == DefensePos.Left || nowDefensivePos == DefensePos.Right)
         {
             animator.SetBool(defenceLR, false);
         }
-        else if (nowDefensivePosition == DefensePos.Up)
+        else if (nowDefensivePos == DefensePos.Up)
         {
             animator.SetBool(defenceT, false);
         }
 
         animator.SetBool(fainting, true);
-        nowDefensivePosition = DefensePos.None;
+        nowDefensivePos = DefensePos.None;
         battleButtonManagerInstance.ActionButtonSetActive(false);
 
         yield return new WaitForSeconds(0.2f);

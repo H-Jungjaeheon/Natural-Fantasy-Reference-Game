@@ -3,6 +3,8 @@ using UnityEngine;
 
 public enum PoolObjKind
 {
+    TutorialEnemyBullet,
+    TutorialEnemySwordAura,
     PlayerSwordAura,
     PlayerHpRecoveryBead,
     SlimeEnemyBullet,
@@ -27,7 +29,7 @@ public class ObjectPool : Singleton<ObjectPool>
 
     void Start()
     {
-        for (int nowObjIndex = 0; nowObjIndex < usePrefabObjs.Length; nowObjIndex++)
+        for (int nowObjIndex = 2; nowObjIndex < usePrefabObjs.Length; nowObjIndex++)
         {
             objPools.Add(nowObjIndex, new Queue<GameObject>());
             Initialize(1, nowObjIndex);

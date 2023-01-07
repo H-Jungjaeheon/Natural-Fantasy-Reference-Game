@@ -78,7 +78,7 @@ public class EnemysHowitzerBullet : MonoBehaviour
 
         if (collision.CompareTag("Player"))
         {
-            if (hitObjsUnitScript.nowDefensivePosition == DefensePos.Up)
+            if (hitObjsUnitScript.nowDefensivePos == DefensePos.Up)
             {
                 CamShake.CamShakeMod(true, 1.5f);
                 hitObjsUnitScript.Hit(damage, true, EffectType.Defense);

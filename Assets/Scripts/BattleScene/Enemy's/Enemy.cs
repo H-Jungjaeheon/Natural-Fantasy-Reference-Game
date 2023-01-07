@@ -8,7 +8,7 @@ public enum BossPhase
     PhaseThree = 3
 }
 
-public enum NowEnemyProperty
+public enum EnemyProperty
 {
     Mutant,
     Guardian,
@@ -32,9 +32,9 @@ public abstract class Enemy : BasicUnitScript
 
     protected bool isChangePhase; //현재 페이지 변경중인지 판별
 
-    protected const int maxRestLimitTurn = 3;
+    protected const int maxRestLimitTurn = 3; //최대 휴식 턴 딜레이
 
-    protected int restLimitTurn; //휴식 패턴 턴 딜레이
+    protected int restLimitTurn; //현재 휴식 턴 딜레이
 
     protected string[] pattonText; //텍스트로 불러온 패턴 번호들
 
@@ -48,7 +48,7 @@ public abstract class Enemy : BasicUnitScript
     protected override void StartSetting()
     {
         nowState = NowState.Standingby;
-        nowDefensivePosition = DefensePos.None;
+        nowDefensivePos = DefensePos.None;
 
         isWaiting = true;
 
@@ -66,8 +66,6 @@ public abstract class Enemy : BasicUnitScript
         originalMaxActionCoolTime = maxActionCoolTime;
         originalRestWaitTime = restWaitTime;
         originalSpeed = Speed;
-
-        plusVector = new Vector3(0f, -6f, 0f);
 
         StartCoroutine(WaitUntilTheGameStarts());
     }
@@ -90,6 +88,10 @@ public abstract class Enemy : BasicUnitScript
         }
     }
 
+    /// <summary>
+    /// 보스 패턴 텍스트 가져오기 (현재 페이즈에 맞는 텍스트 파일 : 2가지 경우 중 랜덤)
+    /// </summary>
+    /// <returns></returns>
     protected abstract string[] PattonText();
 
     /// <summary>

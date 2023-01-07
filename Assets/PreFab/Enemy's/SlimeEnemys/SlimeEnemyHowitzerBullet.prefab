@@ -122,7 +122,7 @@ MonoBehaviour:
   damage: 4
   speed: 30
   startYPos: 16
-  thisBulletPoolObjKind: 3
+  thisBulletPoolObjKind: 5
   orbitalIndicationObj: {fileID: 7821325870390794358}
 --- !u!70 &7304987078947629021
 CapsuleCollider2D:
