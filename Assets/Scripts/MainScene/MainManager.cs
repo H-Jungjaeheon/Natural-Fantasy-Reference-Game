@@ -97,6 +97,10 @@ public class MainManager : Singleton<MainManager>
         StartCoroutine(ContentGuidanceTextsMove());
     }
 
+    /// <summary>
+    /// ESC 키를 눌렀을 때 이벤트 코루틴 : 1번째 일시정지 화면의 경우
+    /// </summary>
+    /// <returns></returns>
     IEnumerator GamePauseObjOnOrOff()
     {
         while (true)
@@ -146,13 +150,16 @@ public class MainManager : Singleton<MainManager>
         }
     }
 
+    /// <summary>
+    /// ESC 키를 눌렀을 때 이벤트 코루틴 : 2, 3번째 일시정지 화면의 경우
+    /// </summary>
+    /// <returns></returns>
     IEnumerator PressEscToGamePausePageChange()
     {
         while (true)
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-
                 if (nowMainOptionState == OptionPage.SecondPage || nowMainOptionState == OptionPage.ThirdPage)
                 {
                     gamePauseObj[(int)nowMainOptionState].SetActive(false);
@@ -168,6 +175,10 @@ public class MainManager : Singleton<MainManager>
         }
     }
 
+    /// <summary>
+    /// 콘텐츠 안내 텍스트 움직임 효과 코루틴
+    /// </summary>
+    /// <returns></returns>
     IEnumerator ContentGuidanceTextsMove()
     {
         Vector2 textsMoveSpeed; //시작 위치에서 움직일 속도
@@ -222,7 +233,7 @@ public class MainManager : Singleton<MainManager>
 
     public void PressToGamePausePageChangeButton(int nowChange)
     {
-        for (int nowIndex = (int)OptionPage.FirstPage; nowIndex < (int)OptionPage.PageCount; nowIndex++)
+        for (int nowIndex = (int)OptionPage.FirstPage; nowIndex < (int)OptionPage.FourthPage; nowIndex++)
         {
             if (nowIndex == nowChange)
             {
@@ -233,6 +244,7 @@ public class MainManager : Singleton<MainManager>
                 gamePauseObj[nowIndex].SetActive(false);
             }
         }
+
         nowMainOptionState = (OptionPage)nowChange;
     }
 
