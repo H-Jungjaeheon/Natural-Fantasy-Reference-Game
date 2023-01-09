@@ -108,7 +108,7 @@ public class TutorialEnemy : Enemy
 
         Energy -= 2;
 
-        animator.SetBool(moving, true);
+        animator.SetBool(MOVING, true);
 
         while (transform.position.x > Targettransform.x) //이동중
         {
@@ -118,7 +118,7 @@ public class TutorialEnemy : Enemy
 
         transform.position = Targettransform; //이동 완료
 
-        animator.SetBool(moving, false);
+        animator.SetBool(MOVING, false);
 
         nowCoroutine = Attacking(true, 1, 0.65f); //기본 근접공격 코루틴 저장 및 실행
         StartCoroutine(nowCoroutine);
@@ -145,7 +145,7 @@ public class TutorialEnemy : Enemy
     {
         float nowdelayTime = 0;
 
-        animator.SetTrigger(basicAttack);
+        animator.SetTrigger(BASIC_ATTACK);
 
         while (nowdelayTime < delayTime) //공격 준비 동작
         {
@@ -185,7 +185,7 @@ public class TutorialEnemy : Enemy
     {
         transform.rotation = Quaternion.Euler(0f, 180f, 0f);
 
-        animator.SetBool(moving, true);
+        animator.SetBool(MOVING, true);
 
         while (transform.position.x < startPos.x)
         {
@@ -196,7 +196,7 @@ public class TutorialEnemy : Enemy
         transform.rotation = Quaternion.identity;
         transform.position = startPos;
 
-        animator.SetBool(moving, false);
+        animator.SetBool(MOVING, false);
 
         WaitingTimeStart();
     }
@@ -268,8 +268,8 @@ public class TutorialEnemy : Enemy
         nowState = NowState.Resting;
 
         battleUIObjScript.BattleUIObjSetActiveTrue(ChangeBattleUIAnim.Rest);
-        battleUIAnimator.SetBool(nowResting, true);
-        animator.SetBool(resting, true);
+        battleUIAnimator.SetBool(NOW_RESTING, true);
+        animator.SetBool(RESTING, true);
 
         while (nowRestingCount < 2)
         {
@@ -283,12 +283,12 @@ public class TutorialEnemy : Enemy
             nowRestingCount += 1;
         }
 
-        battleUIAnimator.SetBool(nowResting, false);
-        animator.SetBool(resting, false);
+        battleUIAnimator.SetBool(NOW_RESTING, false);
+        animator.SetBool(RESTING, false);
 
         if (isSlowing)
         {
-            battleUIAnimator.SetBool(nowSlowing, true);
+            battleUIAnimator.SetBool(NOW_SLOWING, true);
         }
         else
         {
@@ -313,7 +313,7 @@ public class TutorialEnemy : Enemy
         nowState = NowState.Dead;
         bsm.NowGetBasicGood += 50;
 
-        animator.SetTrigger(dead);
+        animator.SetTrigger(DEAD);
         spriteRenderer.sortingOrder = 5;
 
         rigid.velocity = Vector2.zero;
@@ -339,17 +339,17 @@ public class TutorialEnemy : Enemy
         nowState = NowState.Fainting;
 
         battleUIObjScript.BattleUIObjSetActiveTrue(ChangeBattleUIAnim.Faint);
-        battleUIAnimator.SetBool(nowFainting, true);
-        animator.SetBool(fainting, true);
+        battleUIAnimator.SetBool(NOW_FAINTING, true);
+        animator.SetBool(FAINTING, true);
 
         yield return new WaitForSeconds(8f);
 
-        animator.SetBool(fainting, false);
-        battleUIAnimator.SetBool(nowFainting, false);
+        animator.SetBool(FAINTING, false);
+        battleUIAnimator.SetBool(NOW_FAINTING, false);
 
         if (isSlowing)
         {
-            battleUIAnimator.SetBool(nowSlowing, true);
+            battleUIAnimator.SetBool(NOW_SLOWING, true);
         }
         else
         {

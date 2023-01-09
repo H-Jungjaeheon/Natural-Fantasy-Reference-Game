@@ -191,19 +191,19 @@ public class Player : BasicUnitScript, IDefense
     #endregion
 
     #region 플레이어 애니메이션 이름 모음
-    protected const string firstSkill = "FirstSkill";
+    protected const string FIRST_SKILL = "FirstSkill";
 
-    protected const string basicThirdAttackHitActionCompleat = "BasicThirdAttackHitActionCompleat";
+    protected const string BASIC_THIRDATTACK_HITACTION_COMPLEAT = "BasicThirdAttackHitActionCompleat";
 
-    protected const string basicSecondAttackHitActionCompleat = "BasicSecondAttackHitActionCompleat";
+    protected const string BASIC_SECONDATTACK_HITACTION_COMPLEAT = "BasicSecondAttackHitActionCompleat";
 
-    protected const string jumpIntermediateMotion = "JumpIntermediateMotion";
+    protected const string JUMP_INTERMEDIATE_MOTION = "JumpIntermediateMotion";
 
-    protected const string paring = "Paring";
+    protected const string PARING = "Paring";
 
-    protected const string defenceIntermediateMotion = "DefenceIntermediateMotion";
+    protected const string DEFENCE_INTERMEDIATE_MOTION = "DefenceIntermediateMotion";
 
-    protected const string defenceT = "Defence(Top)";
+    protected const string DEFENCE_T = "Defence(Top)";
     #endregion
 
     void Update()
@@ -316,7 +316,7 @@ public class Player : BasicUnitScript, IDefense
 
                     Energy -= 1;
                     DreamyFigure += 1;
-                    animator.SetTrigger(defenceIntermediateMotion);
+                    animator.SetTrigger(DEFENCE_INTERMEDIATE_MOTION);
                 }
                 else
                 {
@@ -373,7 +373,7 @@ public class Player : BasicUnitScript, IDefense
                 if (nowDefensivePos == DefensePos.Left && !Input.GetKey(KeyCode.A) || nowDefensivePos == DefensePos.Right && !Input.GetKey(KeyCode.D)
                     || nowDefensivePos == DefensePos.Up && !Input.GetKey(KeyCode.W))
                 {
-                    string nowDefenceAnimName = (nowDefensivePos == DefensePos.Up) ? defenceT : defenceLR;
+                    string nowDefenceAnimName = (nowDefensivePos == DefensePos.Up) ? DEFENCE_T : DEFENCE_LR;
 
                     animator.SetBool(nowDefenceAnimName, false);
                     ReleaseDefense();
@@ -389,7 +389,7 @@ public class Player : BasicUnitScript, IDefense
     /// <param name="setRotation"> 현재 방어 캐릭터 로테이션 값 </param>
     public void SetDefensing(DefensePos nowDefensePos, float setRotation)
     {
-        string nowDefenceAnimName = (nowDefensePos == DefensePos.Up) ? defenceT : defenceLR;
+        string nowDefenceAnimName = (nowDefensePos == DefensePos.Up) ? DEFENCE_T : DEFENCE_LR;
 
         animator.SetBool(nowDefenceAnimName, true);
         nowState = NowState.Defensing;
@@ -561,8 +561,8 @@ public class Player : BasicUnitScript, IDefense
 
         ChangeAttackRange(new Vector2(0.85f, 2.68f), new Vector2(0.06f, -0.08f));
 
-        animator.SetBool(paring, true);
-        animator.SetBool(defenceLR, false);
+        animator.SetBool(PARING, true);
+        animator.SetBool(DEFENCE_LR, false);
 
         yield return new WaitForSeconds(0.15f);
         
@@ -582,7 +582,7 @@ public class Player : BasicUnitScript, IDefense
 
         yield return new WaitForSeconds(0.25f);
         
-        animator.SetBool(paring, false);
+        animator.SetBool(PARING, false);
         
         InitializationAttackRange();
 
@@ -683,7 +683,7 @@ public class Player : BasicUnitScript, IDefense
 
             rigid.AddForce(Vector2.up * jumpPower_F, ForceMode2D.Impulse);
             rigid.gravityScale = setJumpGravityScale - 0.5f;
-            animator.SetTrigger(jumping);
+            animator.SetTrigger(JUMPING);
             StartCoroutine(JumpDelay());
         }
         else if (nowState == NowState.Jumping && transform.position.y < startPos.y)
@@ -695,7 +695,7 @@ public class Player : BasicUnitScript, IDefense
                 battleButtonManagerInstance.ActionButtonSetActive(true);
             }
 
-            animator.SetBool(jumpIntermediateMotion, false);
+            animator.SetBool(JUMP_INTERMEDIATE_MOTION, false);
 
             CamShake.JumpStop(false);
 
@@ -719,7 +719,7 @@ public class Player : BasicUnitScript, IDefense
             yield return null;
         }
 
-        animator.SetBool(jumpIntermediateMotion, true);
+        animator.SetBool(JUMP_INTERMEDIATE_MOTION, true);
         rigid.gravityScale = setJumpGravityScale * 1.5f;
     }
 
@@ -759,7 +759,7 @@ public class Player : BasicUnitScript, IDefense
         WaitForSeconds RestWaitTime = new WaitForSeconds(restWaitTime);
 
         battleUIObjScript.BattleUIObjSetActiveTrue(ChangeBattleUIAnim.Rest);
-        battleUIAnimator.SetBool(nowResting, true);
+        battleUIAnimator.SetBool(NOW_RESTING, true);
 
         while (3 > nowRestingCount)
         {
@@ -775,11 +775,11 @@ public class Player : BasicUnitScript, IDefense
             nowRestingCount += 1;
         }
 
-        battleUIAnimator.SetBool(nowResting, false);
+        battleUIAnimator.SetBool(NOW_RESTING, false);
 
         if (isSlowing)
         {
-            battleUIAnimator.SetBool(nowSlowing, true);
+            battleUIAnimator.SetBool(NOW_SLOWING, true);
         }
         else
         {
@@ -803,7 +803,7 @@ public class Player : BasicUnitScript, IDefense
     {
         Vector3 targettransform = new Vector3(bsm.enemyCharacterPos.x - nowIntersection, transform.position.y); //목표 위치
 
-        animator.SetBool(moving, true);
+        animator.SetBool(MOVING, true);
 
         while (transform.position.x < targettransform.x) //이동중
         {
@@ -813,9 +813,9 @@ public class Player : BasicUnitScript, IDefense
 
         transform.position = targettransform; //이동 완료
 
-        animator.SetBool(moving, false);
+        animator.SetBool(MOVING, false);
         StartCoroutine(Attacking(false, 1, 0.2f, 0.2f)); //첫번째 공격 실행
-        animator.SetTrigger(basicAttack);
+        animator.SetTrigger(BASIC_ATTACK);
     }
 
     /// <summary>
@@ -930,11 +930,11 @@ public class Player : BasicUnitScript, IDefense
             {
                 case 2:
                     StartCoroutine(Attacking(false, nowAttackCount, 0.2f, 0.25f));
-                    animator.SetTrigger(basicSecondAttackHitActionCompleat);
+                    animator.SetTrigger(BASIC_SECONDATTACK_HITACTION_COMPLEAT);
                     break;
                 case 3:
                     StartCoroutine(Attacking(true, nowAttackCount, 0.35f, 0));
-                    animator.SetTrigger(basicThirdAttackHitActionCompleat);
+                    animator.SetTrigger(BASIC_THIRDATTACK_HITACTION_COMPLEAT);
                     break;
             }
         }
@@ -983,7 +983,7 @@ public class Player : BasicUnitScript, IDefense
     {
         transform.rotation = Quaternion.Euler(0, 180, 0);
 
-        animator.SetBool(moving, true);
+        animator.SetBool(MOVING, true);
 
         while (transform.position.x > startPos.x)
         {
@@ -994,7 +994,7 @@ public class Player : BasicUnitScript, IDefense
         transform.rotation = Quaternion.identity;
         transform.position = startPos;
 
-        animator.SetBool(moving, false);
+        animator.SetBool(MOVING, false);
 
         WaitingTimeStart();
     }
@@ -1018,7 +1018,7 @@ public class Player : BasicUnitScript, IDefense
             {
                 case 1:
                     StartCoroutine(SwordAuraSkill());
-                    animator.SetBool(firstSkill, true);
+                    animator.SetBool(FIRST_SKILL, true);
                     break;
             }
         }
@@ -1068,7 +1068,7 @@ public class Player : BasicUnitScript, IDefense
 
         yield return new WaitForSeconds(0.3f);
 
-        animator.SetBool(firstSkill, false);
+        animator.SetBool(FIRST_SKILL, false);
 
         WaitingTimeStart();
     }
@@ -1197,30 +1197,30 @@ public class Player : BasicUnitScript, IDefense
 
         if (nowDefensivePos == DefensePos.Left || nowDefensivePos == DefensePos.Right)
         {
-            animator.SetBool(defenceLR, false);
+            animator.SetBool(DEFENCE_LR, false);
         }
         else if (nowDefensivePos == DefensePos.Up)
         {
-            animator.SetBool(defenceT, false);
+            animator.SetBool(DEFENCE_T, false);
         }
 
-        animator.SetBool(fainting, true);
+        animator.SetBool(FAINTING, true);
         nowDefensivePos = DefensePos.None;
         battleButtonManagerInstance.ActionButtonSetActive(false);
 
         yield return new WaitForSeconds(0.2f);
 
         battleUIObjScript.BattleUIObjSetActiveTrue(ChangeBattleUIAnim.Faint);
-        battleUIAnimator.SetBool(nowFainting, true);
+        battleUIAnimator.SetBool(NOW_FAINTING, true);
 
         yield return new WaitForSeconds(5); //나중에 매개변수로 레벨에 따라서 기절 시간 넣기
 
-        animator.SetBool(fainting, false);
-        battleUIAnimator.SetBool(nowFainting, false);
+        animator.SetBool(FAINTING, false);
+        battleUIAnimator.SetBool(NOW_FAINTING, false);
 
         if (isSlowing)
         {
-            battleUIAnimator.SetBool(nowSlowing, true);
+            battleUIAnimator.SetBool(NOW_SLOWING, true);
         }
         else
         {

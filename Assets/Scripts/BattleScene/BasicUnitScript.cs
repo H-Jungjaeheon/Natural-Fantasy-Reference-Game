@@ -366,27 +366,27 @@ public abstract class BasicUnitScript : MonoBehaviour
     #endregion
 
     #region 유닛 기본 애니메이션 이름 모음
-    protected const string moving = "Moving";
+    protected const string MOVING = "Moving";
 
-    protected const string resting = "Resting";
+    protected const string RESTING = "Resting";
 
-    protected const string basicAttack = "BasicAttack";
+    protected const string BASIC_ATTACK = "BasicAttack";
 
-    protected const string jumping = "Jumping";
+    protected const string JUMPING = "Jumping";
 
-    protected const string dead = "Dead";
+    protected const string DEAD = "Dead";
 
-    protected const string fainting = "Fainting";
+    protected const string FAINTING = "Fainting";
 
-    protected const string defenceLR = "Defence(Left&Right)";
+    protected const string DEFENCE_LR = "Defence(Left&Right)";
     #endregion
 
     #region 상태 UI 애니메이션 이름 모음
-    protected const string nowFainting = "NowFainting";
+    protected const string NOW_FAINTING = "NowFainting";
 
-    protected const string nowResting = "NowResting";
+    protected const string NOW_RESTING = "NowResting";
 
-    protected const string nowSlowing = "NowSlowing";
+    protected const string NOW_SLOWING = "NowSlowing";
     #endregion
 
     #region 피해 요소 모음

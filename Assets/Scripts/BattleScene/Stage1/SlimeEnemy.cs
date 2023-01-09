@@ -9,6 +9,18 @@ public class SlimeEnemy : Enemy, IChangePhase
     [Tooltip("스테이지 1 기믹 컴포넌트")]
     private WaterFallMachine gimmick;
 
+    #region 슬라임 스킬 애니메이션 이름 모음
+    protected const string SLAPPING_DOWN = "SlappingDown";
+
+    protected const string FRONT_SHOOT = "FrontShoot";
+
+    protected const string HOWITZER_ATTACK = "HowitzerAttack";
+
+    protected const string LAZER_ATTACK = "LazerAttack";
+
+    protected const string LAZER_ATTACK_END = "LazerAttackEnd";
+    #endregion
+
     protected override void StartSetting()
     {
         base.StartSetting();
@@ -156,7 +168,7 @@ public class SlimeEnemy : Enemy, IChangePhase
 
         Energy -= (isBasicCloseAttack) ? 2 : 3;
 
-        animator.SetBool(moving, true);
+        animator.SetBool(MOVING, true);
 
         while (transform.position.x > Targettransform.x) //이동중
         {
@@ -166,7 +178,7 @@ public class SlimeEnemy : Enemy, IChangePhase
 
         transform.position = Targettransform; //이동 완료
 
-        animator.SetBool(moving, false);
+        animator.SetBool(MOVING, false);
 
         nowCoroutine = (isBasicCloseAttack) ? Attacking(true, 1, 0.65f) : DefenselessCloseAttack(); //isBasicCloseAttack이 참이면, nowCoroutine에 현재 실행할 기본 근접공격 코루틴 저장(거짓이면, 내려찍기 공격 코루틴 저장)
         StartCoroutine(nowCoroutine);
@@ -203,7 +215,7 @@ public class SlimeEnemy : Enemy, IChangePhase
     {
         float nowdelayTime = 0;
 
-        animator.SetTrigger(basicAttack);
+        animator.SetTrigger(BASIC_ATTACK);
 
         while (nowdelayTime < delayTime) //공격 준비 동작
         {
@@ -243,7 +255,7 @@ public class SlimeEnemy : Enemy, IChangePhase
     {
         WaitForSeconds defenselessCloseAttackDelay = new WaitForSeconds(0.3f);
 
-        animator.SetBool(jumping, true);
+        animator.SetBool(JUMPING, true);
 
         yield return new WaitForSeconds(0.5f); //점프 전 대기 시간
 
@@ -264,8 +276,8 @@ public class SlimeEnemy : Enemy, IChangePhase
 
         speedVector.x = 0f;
 
-        animator.SetBool(jumping, false);
-        animator.SetBool("SlappingDown", true);
+        animator.SetBool(JUMPING, false);
+        animator.SetBool(SLAPPING_DOWN, true);
 
         yield return defenselessCloseAttackDelay; //내려찍기 준비시간
 
@@ -281,7 +293,7 @@ public class SlimeEnemy : Enemy, IChangePhase
         rigid.velocity = Vector2.zero;
         rigid.gravityScale = 0;
         isPhysicalAttacking = false;
-        animator.SetBool("SlappingDown", false);
+        animator.SetBool(SLAPPING_DOWN, false);
 
         yield return new WaitForSeconds(1.25f);
 
@@ -297,7 +309,7 @@ public class SlimeEnemy : Enemy, IChangePhase
     {
         transform.rotation = Quaternion.Euler(0f, 180f, 0f);
 
-        animator.SetBool(moving, true);
+        animator.SetBool(MOVING, true);
 
         while (transform.position.x < startPos.x)
         {
@@ -308,7 +320,7 @@ public class SlimeEnemy : Enemy, IChangePhase
         transform.rotation = Quaternion.identity;
         transform.position = startPos;
 
-        animator.SetBool(moving, false);
+        animator.SetBool(MOVING, false);
 
         WaitingTimeStart();
     }
@@ -324,7 +336,7 @@ public class SlimeEnemy : Enemy, IChangePhase
         nowState = NowState.Attacking;
         Energy -= 2;
 
-        animator.SetBool("FrontShoot", true);
+        animator.SetBool(FRONT_SHOOT, true);
 
         yield return new WaitForSeconds(0.7f);
 
@@ -335,7 +347,7 @@ public class SlimeEnemy : Enemy, IChangePhase
 
         slimeBullet.transform.position = spawnSlimeBulletPosition;
 
-        animator.SetBool("FrontShoot", false);
+        animator.SetBool(FRONT_SHOOT, false);
 
         WaitingTimeStart();
     }
@@ -351,9 +363,9 @@ public class SlimeEnemy : Enemy, IChangePhase
         nowState = NowState.Attacking;
         Energy -= 3;
 
-        animator.SetBool("HowitzerAttack", true);
+        animator.SetBool(HOWITZER_ATTACK, true);
         yield return new WaitForSeconds(2f);
-        animator.SetBool("HowitzerAttack", false);
+        animator.SetBool(HOWITZER_ATTACK, false);
 
         for (int nowLaunchCount = 0; nowLaunchCount < 3; nowLaunchCount++)
         {
@@ -382,7 +394,7 @@ public class SlimeEnemy : Enemy, IChangePhase
             isLaunchUp = true;
         }
 
-        animator.SetBool("LazerAttack", true);
+        animator.SetBool(LAZER_ATTACK, true);
 
         yield return launchDelay;
 
@@ -400,8 +412,8 @@ public class SlimeEnemy : Enemy, IChangePhase
             yield return launchDelay;
         }
 
-        animator.SetBool("LazerAttack", false);
-        animator.SetTrigger("LazerAttackEnd");
+        animator.SetBool(LAZER_ATTACK, false);
+        animator.SetTrigger(LAZER_ATTACK_END);
 
         yield return launchDelay;
 
@@ -621,8 +633,8 @@ public class SlimeEnemy : Enemy, IChangePhase
         nowState = NowState.Resting;
 
         battleUIObjScript.BattleUIObjSetActiveTrue(ChangeBattleUIAnim.Rest);
-        battleUIAnimator.SetBool(nowResting, true);
-        animator.SetBool(resting, true);
+        battleUIAnimator.SetBool(NOW_RESTING, true);
+        animator.SetBool(RESTING, true);
 
         while (nowRestingCount < 2)
         {
@@ -636,12 +648,12 @@ public class SlimeEnemy : Enemy, IChangePhase
             nowRestingCount += 1;
         }
 
-        battleUIAnimator.SetBool(nowResting, false);
-        animator.SetBool(resting, false);
+        battleUIAnimator.SetBool(NOW_RESTING, false);
+        animator.SetBool(RESTING, false);
 
         if (isSlowing)
         {
-            battleUIAnimator.SetBool(nowSlowing, true);
+            battleUIAnimator.SetBool(NOW_SLOWING, true);
         }
         else
         {
@@ -668,7 +680,7 @@ public class SlimeEnemy : Enemy, IChangePhase
 
         gimmick.StopFunction();
 
-        animator.SetTrigger(dead);
+        animator.SetTrigger(DEAD);
         spriteRenderer.sortingOrder = 5;
 
         rigid.velocity = Vector2.zero;
@@ -694,17 +706,17 @@ public class SlimeEnemy : Enemy, IChangePhase
         nowState = NowState.Fainting;
 
         battleUIObjScript.BattleUIObjSetActiveTrue(ChangeBattleUIAnim.Faint);
-        battleUIAnimator.SetBool(nowFainting, true);
-        animator.SetBool(fainting, true);
+        battleUIAnimator.SetBool(NOW_FAINTING, true);
+        animator.SetBool(FAINTING, true);
 
         yield return new WaitForSeconds(8f);
 
-        animator.SetBool(fainting, false);
-        battleUIAnimator.SetBool(nowFainting, false);
+        animator.SetBool(FAINTING, false);
+        battleUIAnimator.SetBool(NOW_FAINTING, false);
 
         if (isSlowing)
         {
-            battleUIAnimator.SetBool(nowSlowing, true);
+            battleUIAnimator.SetBool(NOW_SLOWING, true);
         }
         else
         {
