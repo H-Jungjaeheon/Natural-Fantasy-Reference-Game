@@ -11,6 +11,12 @@ public class TutorialEnemy : Enemy
         plusVector = new Vector3(0.3f, 0f, 0f);
     }
 
+    #region 튜토리얼 보스 스킬 애니메이션 이름 모음
+    protected const string FIRING_A_GUN = "FiringAGun";
+
+    protected const string FIRING_SWORD_AURA = "FiringSwordAura";
+    #endregion
+
     /// <summary>
     /// 보스 패턴 텍스트 가져오기 (현재 페이즈에 맞는 텍스트 파일 : 2가지 경우 중 랜덤)
     /// </summary>
@@ -212,7 +218,7 @@ public class TutorialEnemy : Enemy
         nowState = NowState.Attacking;
         Energy -= 2;
 
-        animator.SetBool("FrontShoot", true);
+        animator.SetBool(FIRING_A_GUN, true);
 
         yield return new WaitForSeconds(0.7f);
 
@@ -223,7 +229,7 @@ public class TutorialEnemy : Enemy
 
         bullet.transform.position = bulletPos;
 
-        animator.SetBool("FrontShoot", false);
+        animator.SetBool(FIRING_A_GUN, false);
 
         WaitingTimeStart();
     }
@@ -239,7 +245,7 @@ public class TutorialEnemy : Enemy
         nowState = NowState.Attacking;
         Energy -= 2;
 
-        animator.SetBool("FrontShoot", true);
+        animator.SetBool(FIRING_SWORD_AURA, true);
 
         yield return new WaitForSeconds(1.5f);
 
@@ -250,7 +256,7 @@ public class TutorialEnemy : Enemy
 
         swordAura.transform.position = bulletPos;
 
-        animator.SetBool("FrontShoot", false);
+        animator.SetBool(FIRING_SWORD_AURA, false);
 
         WaitingTimeStart();
     }
@@ -323,7 +329,7 @@ public class TutorialEnemy : Enemy
 
         ActionCoolTimeBarSetActive(false);
 
-        bsm.StartGameEndPanelAnim(false);
+        bsm.StartGameEndPanelAnim(false, new Vector3(0f, 0f, -10f));
 
         yield return new WaitForSeconds(0.5f);
 

@@ -1089,7 +1089,7 @@ public class Player : BasicUnitScript, IDefense
         else //부활이 불가능할 때 (가능 하지만, 천사 속성이 아닐 때 or 부활을 이미 했을 때)
         {
             nowState = NowState.Dead;
-            bsm.StartGameEndPanelAnim(true);
+            bsm.StartGameEndPanelAnim(true, new Vector3(0f, 0f, 0f));
         }
     }
 

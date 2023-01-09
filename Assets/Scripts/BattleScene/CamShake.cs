@@ -70,9 +70,9 @@ public class CamShake : MonoBehaviour
     /// <summary>
     /// 게임 종료 세팅
     /// </summary>
-    public void GameEndSetting()
+    public void GameEndSetting(Vector3 bossPos)
     {
-        StartCoroutine(GameEndCamAnim());
+        StartCoroutine(GameEndCamAnim(bossPos));
         isGameClear = true;
     }
 
@@ -80,13 +80,12 @@ public class CamShake : MonoBehaviour
     /// 게임 종료 카메라 움직임 함수
     /// </summary>
     /// <returns></returns>
-    IEnumerator GameEndCamAnim()
+    IEnumerator GameEndCamAnim(Vector3 nowBossPos)
     {
         Vector3 bossPos = BattleSceneManager.Instance.enemy.transform.position;
 
-        bossPos.y -= 4.6f;
-        bossPos.z = -10;
-
+        bossPos += nowBossPos;
+        
         initialPosition = bossPos;
 
         while (true)

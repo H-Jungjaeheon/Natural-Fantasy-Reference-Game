@@ -22,11 +22,11 @@ public class HitEffect : MonoBehaviour
     private int rotationZ;
 
     #region 이펙트 애니메이션 트리거 문자열
-    private const string slashAnim = "StartSlash";
+    private const string SLASH_ANIM = "StartSlash";
 
-    private const string shockAnim = "StartShock";
+    private const string SHOCK_ANIM = "StartShock";
 
-    private const string defenseAnim = "StartDefense";
+    private const string DEFENSE_ANIM = "StartDefense";
     #endregion
 
     private void OnEnable()
@@ -48,7 +48,7 @@ public class HitEffect : MonoBehaviour
                 rotationZ = Random.Range(0, 360);
 
                 nowRotation.z = rotationZ;
-                animator.SetTrigger(slashAnim);
+                animator.SetTrigger(SLASH_ANIM);
                 break;
 
             case EffectType.Shock:

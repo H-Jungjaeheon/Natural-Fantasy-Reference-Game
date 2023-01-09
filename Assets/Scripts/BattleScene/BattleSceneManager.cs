@@ -572,7 +572,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     /// 게임 마무리 애니메이션 함수
     /// </summary>
     /// <param name="isGameOver"> 게임오버 판별 </param>
-    public void StartGameEndPanelAnim(bool isGameOver)
+    public void StartGameEndPanelAnim(bool isGameOver, Vector3 bossPos)
     {
         nowGameState = NowGameState.GameEnd;
 
@@ -582,7 +582,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         }
         else
         {
-            csComponent.GameEndSetting();
+            csComponent.GameEndSetting(bossPos);
 
             statUIObj.SetActive(false);
             bbmInstance.ActionButtonSetActive(false);

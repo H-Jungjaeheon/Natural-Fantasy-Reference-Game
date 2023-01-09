@@ -690,7 +690,7 @@ public class SlimeEnemy : Enemy, IChangePhase
 
         ActionCoolTimeBarSetActive(false);
 
-        bsm.StartGameEndPanelAnim(false);
+        bsm.StartGameEndPanelAnim(false, new Vector3(0f, -4.6f, -10f));
 
         yield return new WaitForSeconds(0.5f);
 
