@@ -90,12 +90,6 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     StageData nowStageData; //현재 스테이지 데이터
     #endregion
 
-    [HideInInspector]
-    public Vector2 playerCharacterPos; //플레이어 시작 포지션
-
-    [HideInInspector]
-    public Vector2 enemyCharacterPos; //적 시작 포지션
-
     private int nowGetBasicGood; //현재 스테이지에서 얻은 재화 개수
 
     public int NowGetBasicGood
@@ -136,17 +130,23 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     [Tooltip("색 모음")]
     private Color[] colors;
 
-    private Color nowColor; //이미지에 적용할 색
+    [Tooltip("현재 연출할 이미지에 적용할 색")]
+    private Color nowColor; 
 
-    private float nowAlpha; //이미지에 적용할 알파값
+    [Tooltip("현재 연출할 이미지에 적용할 알파값")]
+    private float nowAlpha;
     #endregion
 
     #region 스테이지 시작 연출 관련
     [Header("스테이지 시작 연출 관련")]
 
     [SerializeField]
-    [Tooltip("보스 소개 연출 이미지")]
-    private Image introducingTheStageImage;
+    [Tooltip("보스 소개 연출 오브젝트")]
+    private GameObject introduceObj;
+
+    [SerializeField]
+    [Tooltip("보스 소개 연출 이미지들")]
+    private Image[] introduceImgs;
 
     [SerializeField]
     [Tooltip("보스 설명 텍스트")]
@@ -239,15 +239,27 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     private BattleButtonManager bbmInstance;
     #endregion
 
+    #region 현재 게임의 유닛 정보 모음
+    [Header("현재 게임의 유닛 정보 모음")]
+
     public Player player;
 
     [HideInInspector]
     public GameObject enemy;
 
     [HideInInspector]
+    public Vector2 playerCharacterPos; //플레이어 시작 포지션
+
+    [HideInInspector]
+    public Vector2 enemyCharacterPos; //적 시작 포지션
+    #endregion
+
+    #region 상태(enum) 모음
+    [HideInInspector]
     public NowGameState nowGameState;
 
     private OptionPage nowBattleSceneOptionState;
+    #endregion
 
     public void Awake()
     {
@@ -405,17 +417,15 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     {
         WaitForSeconds animDelay = new WaitForSeconds(1f);
 
+        nowGameState = NowGameState.GameReady;
+
         nowColor = colors[(int)Colors.Black];
         nowAlpha = 1;
 
         bbmInstance.ActionButtonSetActive(false);
-
         statUIObj.SetActive(false);
-
-        nowGameState = NowGameState.GameReady;
-
         fadeObj.SetActive(true);
-        nowColor.a = 1;
+
         fadeImage.color = nowColor;
 
         yield return animDelay;
@@ -440,18 +450,8 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         {
             if (Input.anyKeyDown)
             {
-                float duration = 0;
-
                 StopCoroutine(introCoroutine);
                 DOTween.PauseAll();
-
-                if (introducingTheStageImage.rectTransform.anchoredPosition.x >= -1000) //인트로 애니메이션이 시작된지 얼마 되지 않았다면 이미지 바로 사라짐
-                {
-                    duration = 0.25f;
-                }
-
-                introducingTheStageImage.rectTransform.DOAnchorPosX(1920f, duration);
-                explanationText.rectTransform.DOAnchorPosX(-1920f, duration);
 
                 StartCoroutine(EndIntroAnim());
                 break;
@@ -473,9 +473,6 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
 
         StartCoroutine(IntroSkip());
 
-        nowColor = colors[(int)Colors.Black];
-        nowAlpha = 0;
-
         while (mainCam.transform.position.x < 4f)
         {
             mainCam.transform.position += camMoveSpeed * Time.deltaTime;
@@ -486,26 +483,21 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         mainCam.transform.position = camTargetPos;
         mainCam.orthographicSize = 7.5f;
 
-        while (nowAlpha < 0.55f)
+        nowColor = colors[(int)Colors.White];
+
+        nowColor.a = 0f;
+        nowAlpha = 0f;
+
+        while (nowAlpha < 1f)
         {
-            nowAlpha += Time.deltaTime * 3;
+            nowAlpha += Time.deltaTime * 1.5f;
             nowColor.a = nowAlpha;
-            fadeImage.color = nowColor;
-            yield return null;
-        }
-
-        introducingTheStageImage.rectTransform.DOAnchorPosX(10f, 0.3f);
-        explanationText.rectTransform.DOAnchorPosX(10f, 0.3f);
-
-        while (introducingTheStageImage.rectTransform.anchoredPosition.x < 0)
-        {
+            explanationText.color = nowColor;
+            nameText.color = nowColor;
             yield return null;
         }
 
         yield return new WaitForSeconds(3f);
-
-        introducingTheStageImage.rectTransform.DOAnchorPosX(1920f, 0.25f);
-        explanationText.rectTransform.DOAnchorPosX(-1920f, 0.25f);
 
         StartCoroutine(EndIntroAnim());
     }
@@ -515,24 +507,19 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         Vector3 camMoveSpeed = new Vector3(7f, 0f, 0f);
         Vector3 camTargetPos = new Vector3(0f, 0.5f, -10f);
 
-        while (nowAlpha > 0)
-        {
-            nowAlpha -= Time.deltaTime * 3;
-            nowColor.a = nowAlpha;
-            fadeImage.color = nowColor;
-            yield return null;
-        }
-
-        while (introducingTheStageImage.rectTransform.anchoredPosition.x < 1910)
-        {
-            yield return null;
-        }
+        explanationText.DOFade(0f, 1.5f);
+        nameText.DOFade(0f, 1.5f);
 
         while (mainCam.transform.position.x > 0) //카메라 확대에서 원래 시야만큼 돌리기
         {
-            mainCam.transform.position -= camMoveSpeed * (Time.deltaTime * 3);
-            mainCam.orthographicSize += Time.deltaTime * 10.5f;
+            mainCam.transform.position -= camMoveSpeed * (Time.deltaTime * 2);
+            mainCam.orthographicSize += Time.deltaTime * 7f;
             yield return null;
+        }
+
+        for (int nowIndex = 0; nowIndex < introduceImgs.Length; nowIndex++)
+        {
+            introduceImgs[nowIndex].DOFade(0f, 1.5f);
         }
 
         mainCam.transform.position = camTargetPos;
@@ -541,15 +528,13 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         yield return new WaitForSeconds(1f);
 
         fadeObj.SetActive(false);
-        nowGameState = NowGameState.Playing;
-
         statUIObj.SetActive(true);
-
         bbmInstance.ActionButtonSetActive(true);
+        nowStageData.gimmickObjs.SetActive(true);
+        introduceObj.SetActive(false);
 
         isIntroducing = false;
-
-        nowStageData.gimmickObjs.SetActive(true);
+        nowGameState = NowGameState.Playing;
     }
 
     public void GameExit() => StartCoroutine(SceneChangeFaidOut(SceneKind.Main));

@@ -48,16 +48,16 @@ public class Player : BasicUnitScript, IDefense
                 shieldHp_F = value;
             }
 
-            unitShieldHpBars.fillAmount = ShieldHp_F / maxShieldHp_F;
+            unitShieldHpBars.fillAmount = ShieldHp_F / MAX_SHIELD_HP;
 
             if (value > 0 && nowProperty == NowPlayerProperty.TheHolySpiritProperty)
             {
-                hpText.text = $"{ShieldHp_F}/{maxShieldHp_F}";
+                hpText.text = $"{ShieldHp_F}/{MAX_SHIELD_HP}";
             }
         }
     }
 
-    private const float maxShieldHp_F = 2;
+    private const float MAX_SHIELD_HP = 2;
 
     [SerializeField]
     [Tooltip("유닛 실드 체력바 이미지")]
@@ -134,7 +134,7 @@ public class Player : BasicUnitScript, IDefense
 
     private float nowIntersection; //현재 스테이지의 플레이어 기본공격 인식 사거리
 
-    protected const int maxGoodGetCount = 15; //최대 재화 획득 가능 횟수(튜토리얼 플레이어에겐 필요 X)
+    protected const int MAX_GOOD_GET_COUNT = 15; //최대 재화 획득 가능 횟수(튜토리얼 플레이어에겐 필요 X)
 
     protected int nowGoodGetCount; //현재 재화 획득 횟수(튜토리얼 플레이어에겐 필요 X)
 
@@ -1290,7 +1290,7 @@ public class Player : BasicUnitScript, IDefense
                 ShieldHp_F = 2;
                 TheHolySpiritPropertyBuff(true);
                 
-                unitShieldHpBars.fillAmount = ShieldHp_F / maxShieldHp_F;
+                unitShieldHpBars.fillAmount = ShieldHp_F / MAX_SHIELD_HP;
 
                 while (nowProperty == NowPlayerProperty.TheHolySpiritProperty)
                 {
@@ -1308,7 +1308,7 @@ public class Player : BasicUnitScript, IDefense
                 }
 
                 shieldHp_F = 0;
-                unitShieldHpBars.fillAmount = ShieldHp_F / maxShieldHp_F;
+                unitShieldHpBars.fillAmount = ShieldHp_F / MAX_SHIELD_HP;
                 hpText.color = hpTextColors[(int)NowStatUIState.Invincibility];
                 hpText.text = $"{(Hp):N0}/{(MaxHp):N0}";
 
@@ -1321,7 +1321,7 @@ public class Player : BasicUnitScript, IDefense
     /// </summary>
     public void GetBasicGood() //후에 보스별로 주는 재화량 다르게 하기
     {
-        if (nowGoodGetCount < maxGoodGetCount)
+        if (nowGoodGetCount < MAX_GOOD_GET_COUNT)
         {
             int nowGetRandGood = Random.Range(5, 11);
             bsm.NowGetBasicGood += nowGetRandGood;
