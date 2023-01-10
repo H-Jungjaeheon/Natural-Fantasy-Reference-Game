@@ -40,6 +40,7 @@ public enum Colors
 
 public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게임 오버 및 게임 클리어, 재화 관리
 {
+    #region 스테이지 데이터 관련 모음
     [System.Serializable]
     public class StageData
     {
@@ -87,6 +88,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     public StageData[] stageData;
 
     StageData nowStageData; //현재 스테이지 데이터
+    #endregion
 
     [HideInInspector]
     public Vector2 playerCharacterPos; //플레이어 시작 포지션
@@ -102,6 +104,7 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
         set { nowGetBasicGood = value; }
     }
 
+    #region 게임 정지, 종료시 필요한 오브젝트 모음
     [SerializeField]
     [Tooltip("게임 종료 및 클리어시 비활성화 가능한 오브젝트들")]
     private GameObject deActivableObj;
@@ -113,6 +116,10 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     [SerializeField]
     [Tooltip("게임종료 시 띄울 판넬 오브젝트")]
     private GameObject gameEndObj;
+
+    [Tooltip("스탯(플레이어, 보스) UI 오브젝트")]
+    public GameObject statUIObj;
+    #endregion
 
     #region 화면 페이드(Fade) 연출 관련
     [Header("화면 페이드(Fade) 연출 관련")]
@@ -218,12 +225,19 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     private TextMeshProUGUI goodAmountText;
     #endregion
 
-    [Tooltip("스탯(플레이어, 보스) UI 오브젝트")]
-    public GameObject statUIObj;
+    #region 컴포넌트 모음
+    [Header("컴포넌트 모음")]
 
     [SerializeField]
-    [Tooltip("카메라 흔들림 컴포넌트")]
+    [Tooltip("CamShake 컴포넌트")]
     private CamShake csComponent;
+
+    private Camera mainCam;
+
+    private GameManager gmInstance;
+
+    private BattleButtonManager bbmInstance;
+    #endregion
 
     public Player player;
 
@@ -234,12 +248,6 @@ public class BattleSceneManager : Singleton<BattleSceneManager> //나중에 게�
     public NowGameState nowGameState;
 
     private OptionPage nowBattleSceneOptionState;
-
-    private Camera mainCam;
-
-    private GameManager gmInstance;
-
-    private BattleButtonManager bbmInstance;
 
     public void Awake()
     {
