@@ -157,7 +157,7 @@ public class Player : BasicUnitScript, IDefense
         {
             if (value >= maxNaturePassiveCount)
             {
-                objectPoolInstance.GetObject((int)PoolObjKind.PlayerHpRecoveryBead);
+                op.GetObject((int)PoolObjKind.PlayerHpRecoveryBead);
                 nowNaturePassiveCount = 0;
             }
             else
@@ -182,6 +182,9 @@ public class Player : BasicUnitScript, IDefense
     [SerializeField]
     [Tooltip("히트 액션 타이밍 표시 오브젝트")]
     private HitActionTiming timingObj;
+
+    [Tooltip("배틀 씬 매니저 싱글톤 인스턴스")]
+    private BattleSceneManager bsm;
 
     #region 속성 상징 색
     [Header("속성 상징 색 모음")]
@@ -220,10 +223,12 @@ public class Player : BasicUnitScript, IDefense
     {
         var gameManagerIns = GameManager.Instance;
 
+        bsm = BattleSceneManager.instance;
+
         attackRangeSize = new Vector2(1.1f, 2.68f);
         attackRangeOffset = new Vector2(0.18f, -0.08f);
 
-        nowIntersection = bsm.stageData[(int)gameManagerIns.nowStage].intersection;
+        nowIntersection = bsm.stageDatas[(int)gameManagerIns.nowStage].intersection;
 
         MaxHp += (MaxHp * gameManagerIns.statLevels[(int)UpgradeableStatKind.Hp]) * 0.1f; //레벨당 체력 증가식 (최대 100% 증가)
         Damage += (int)(Damage * gameManagerIns.statLevels[(int)UpgradeableStatKind.Damage] * 0.5f); //레벨당 공격력 증가식 (최대 500% 증가)
@@ -294,10 +299,10 @@ public class Player : BasicUnitScript, IDefense
     {
         if (Hp > 0)
         {
-            var damageText = objectPoolInstance.GetObject((int)PoolObjKind.DamageText); //데미지 텍스트 소환(오브젝트 풀)
+            var damageText = op.GetObject((int)PoolObjKind.DamageText); //데미지 텍스트 소환(오브젝트 풀)
             TextState nowTextState = TextState.Blocking; //현재 데미지 텍스트 상태
 
-            var hitEffect = objectPoolInstance.GetObject((int)PoolObjKind.HitEffects); //타격 이펙트 소환(오브젝트 풀)
+            var hitEffect = op.GetObject((int)PoolObjKind.HitEffects); //타격 이펙트 소환(오브젝트 풀)
             HitEffect nowHitEffect = hitEffect.GetComponent<HitEffect>();
 
             nowHitEffect.effectType = effectType;
@@ -346,7 +351,7 @@ public class Player : BasicUnitScript, IDefense
     /// </summary>
     public void Defense()
     {
-        if (bsm.nowGameState == NowGameState.Playing)
+        if (bm.nowGameState == NowGameState.Playing)
         {
             if (nowState == NowState.Standingby && Hp > 0 && isChangePropertyReady == false)
             {
@@ -424,7 +429,7 @@ public class Player : BasicUnitScript, IDefense
 
         Invincibility(true);
 
-        battleButtonManagerInstance.ActionButtonSetActive(false);
+        bbm.ActionButtonSetActive(false);
         transform.rotation = Quaternion.identity;
 
         if (isChangeBasicProperty)
@@ -477,7 +482,7 @@ public class Player : BasicUnitScript, IDefense
         hpText.color = (nowProperty == NowPlayerProperty.TheHolySpiritProperty) ?
             hpTextColors[(int)NowStatUIState.Shield] : hpTextColors[(int)NowStatUIState.Basic]; //현재 바뀐 속성이 성령 속성이면 체력 텍스트 색 방어막 상태 색으로 변경
 
-        battleButtonManagerInstance.ActionButtonSetActive(true);
+        bbm.ActionButtonSetActive(true);
 
         propertyTimeCount = CountDownPropertyTimes();
         StartCoroutine(propertyTimeCount); 
@@ -501,7 +506,7 @@ public class Player : BasicUnitScript, IDefense
     {
         while (true)
         {
-            if (bsm.nowGameState == NowGameState.Playing && isChangePropertyReady == false && isResurrectionReady == false)
+            if (bm.nowGameState == NowGameState.Playing && isChangePropertyReady == false && isResurrectionReady == false)
             {
                 if (nowProperty != NowPlayerProperty.BasicProperty)
                 {
@@ -557,7 +562,7 @@ public class Player : BasicUnitScript, IDefense
         nowDefensivePos = DefensePos.None;
         transform.rotation = Quaternion.Euler(0, setRotation, 0);
 
-        battleButtonManagerInstance.ActionButtonSetActive(false);
+        bbm.ActionButtonSetActive(false);
 
         ChangeAttackRange(new Vector2(0.85f, 2.68f), new Vector2(0.06f, -0.08f));
 
@@ -593,7 +598,7 @@ public class Player : BasicUnitScript, IDefense
 
         if (isWaiting == false && isChangePropertyReady == false)
         {
-            battleButtonManagerInstance.ActionButtonSetActive(true);
+            bbm.ActionButtonSetActive(true);
         }
 
         if (nowActionCoolTime != 0)
@@ -625,8 +630,8 @@ public class Player : BasicUnitScript, IDefense
 
                     if (isChangePropertyReady == false && (nowState == NowState.Standingby || nowState == NowState.Defensing))
                     {
-                        battleButtonManagerInstance.ActionButtonSetActive(true);
-                        battleButtonManagerInstance.ButtonsPageChange(true, false);
+                        bbm.ActionButtonSetActive(true);
+                        bbm.ButtonsPageChange(true, false);
                     }
 
                     break;
@@ -659,7 +664,7 @@ public class Player : BasicUnitScript, IDefense
             if (nowActionCoolTime < maxActionCoolTime)
             {
                 ActionCoolTimeBarSetActive(true);
-                battleButtonManagerInstance.ActionButtonSetActive(false);
+                bbm.ActionButtonSetActive(false);
             }
 
             StartCoroutine(CoolTimeRunning());
@@ -671,13 +676,13 @@ public class Player : BasicUnitScript, IDefense
     /// </summary>
     private void Jump()
     {
-        if (bsm.nowGameState == NowGameState.Playing && isChangePropertyReady == false && nowState == NowState.Standingby && Input.GetKey(KeyCode.Space) && Hp > 0)
+        if (bm.nowGameState == NowGameState.Playing && isChangePropertyReady == false && nowState == NowState.Standingby && Input.GetKey(KeyCode.Space) && Hp > 0)
         {
             nowState = NowState.Jumping;
 
             transform.rotation = Quaternion.Euler(0, 0, 0);
 
-            battleButtonManagerInstance.ActionButtonSetActive(false);
+            bbm.ActionButtonSetActive(false);
 
             CamShake.JumpStart();
 
@@ -692,7 +697,7 @@ public class Player : BasicUnitScript, IDefense
 
             if (isWaiting == false && isChangePropertyReady == false)
             {
-                battleButtonManagerInstance.ActionButtonSetActive(true);
+                bbm.ActionButtonSetActive(true);
             }
 
             animator.SetBool(JUMP_INTERMEDIATE_MOTION, false);
@@ -731,7 +736,7 @@ public class Player : BasicUnitScript, IDefense
         if (nowState == NowState.Standingby)
         {
             nowState = NowState.Attacking;
-            battleButtonManagerInstance.ActionButtonSetActive(false);
+            bbm.ActionButtonSetActive(false);
             StartCoroutine(GoToAttack());
         }
     }
@@ -744,7 +749,7 @@ public class Player : BasicUnitScript, IDefense
         if (nowState == NowState.Standingby)
         {
             nowState = NowState.Resting;
-            battleButtonManagerInstance.ActionButtonSetActive(false);
+            bbm.ActionButtonSetActive(false);
             StartCoroutine(Resting());
         }
     }
@@ -790,8 +795,8 @@ public class Player : BasicUnitScript, IDefense
 
         if (isChangePropertyReady == false)
         {
-            battleButtonManagerInstance.ActionButtonSetActive(true);
-            battleButtonManagerInstance.ButtonsPageChange(true, false);
+            bbm.ActionButtonSetActive(true);
+            bbm.ButtonsPageChange(true, false);
         }
     }
 
@@ -801,7 +806,7 @@ public class Player : BasicUnitScript, IDefense
     /// <returns></returns>
     IEnumerator GoToAttack()
     {
-        Vector3 targettransform = new Vector3(bsm.enemyCharacterPos.x - nowIntersection, transform.position.y); //목표 위치
+        Vector3 targettransform = new Vector3(bm.enemyCharacterPos.x - nowIntersection, transform.position.y); //목표 위치
 
         animator.SetBool(MOVING, true);
 
@@ -1011,8 +1016,8 @@ public class Player : BasicUnitScript, IDefense
             nowState = NowState.Attacking;
             Energy -= nowUseSkillNeedEnergy;
 
-            battleButtonManagerInstance.ButtonsPageChange(true, false);
-            battleButtonManagerInstance.ActionButtonSetActive(false);
+            bbm.ButtonsPageChange(true, false);
+            bbm.ActionButtonSetActive(false);
 
             switch (nowUseSkillIndex)
             {
@@ -1058,7 +1063,7 @@ public class Player : BasicUnitScript, IDefense
             yield return null;
         }
 
-        var swordAuraObj = objectPoolInstance.GetObject((int)PoolObjKind.PlayerSwordAura);
+        var swordAuraObj = op.GetObject((int)PoolObjKind.PlayerSwordAura);
         var swordAuraObjComponent = swordAuraObj.GetComponent<SwordAura>();
 
         if (isFailEnchant == false)
@@ -1089,7 +1094,7 @@ public class Player : BasicUnitScript, IDefense
         else //부활이 불가능할 때 (가능 하지만, 천사 속성이 아닐 때 or 부활을 이미 했을 때)
         {
             nowState = NowState.Dead;
-            bsm.StartGameEndPanelAnim(true, new Vector3(0f, 0f, 0f));
+            bm.StartGameEndPanelAnim(true, new Vector3(0f, 0f, 0f));
         }
     }
 
@@ -1113,7 +1118,7 @@ public class Player : BasicUnitScript, IDefense
         AngelPropertyBuff(true);
         ActionCoolTimeBarSetActive(false);
 
-        battleButtonManagerInstance.ActionButtonSetActive(false);
+        bbm.ActionButtonSetActive(false);
 
         while (true)
         {
@@ -1142,8 +1147,8 @@ public class Player : BasicUnitScript, IDefense
         nowActionCoolTime = maxActionCoolTime;
         WaitingTimeStart();
 
-        battleButtonManagerInstance.ActionButtonSetActive(true);
-        battleButtonManagerInstance.ButtonsPageChange(true, false);
+        bbm.ActionButtonSetActive(true);
+        bbm.ButtonsPageChange(true, false);
 
         while (maxPropertyTimeLimit > NowPropertyTimeLimit)
         {
@@ -1206,7 +1211,7 @@ public class Player : BasicUnitScript, IDefense
 
         animator.SetBool(FAINTING, true);
         nowDefensivePos = DefensePos.None;
-        battleButtonManagerInstance.ActionButtonSetActive(false);
+        bbm.ActionButtonSetActive(false);
 
         yield return new WaitForSeconds(0.2f);
 
@@ -1233,8 +1238,8 @@ public class Player : BasicUnitScript, IDefense
 
         if (isChangePropertyReady == false && Hp > 0)
         {
-            battleButtonManagerInstance.ActionButtonSetActive(true);
-            battleButtonManagerInstance.ButtonsPageChange(true, false);
+            bbm.ActionButtonSetActive(true);
+            bbm.ButtonsPageChange(true, false);
         }
 
         WaitingTimeStart();

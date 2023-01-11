@@ -21,6 +21,17 @@ public class CamShake : MonoBehaviour
     [Tooltip("부모 오브젝트의 리지드바디(점프 속도 제어용)")]
     private Rigidbody2D rigid;
 
+    [Tooltip("게임 매니저 싱글톤 인스턴스")]
+    private GameManager gm;
+
+    [SerializeField]
+    [Tooltip("배틀 씬 매니저 싱글톤 인스턴스")]
+    private BattleSceneManager bsm;
+
+    [SerializeField]
+    [Tooltip("튜토리얼 배틀 매니저 싱글톤 인스턴스")]
+    private TutorialBattleManager tbm;
+
     [SerializeField]
     private PostProcessVolume PPV;
 
@@ -82,7 +93,7 @@ public class CamShake : MonoBehaviour
     /// <returns></returns>
     IEnumerator GameEndCamAnim(Vector3 nowBossPos)
     {
-        Vector3 bossPos = BattleSceneManager.Instance.enemy.transform.position;
+        Vector3 bossPos = BattleSceneManager.instance.enemy.transform.position;
 
         bossPos += nowBossPos;
         
@@ -196,7 +207,15 @@ public class CamShake : MonoBehaviour
         for (int nowShakeCount = 0; nowShakeCount < 11; nowShakeCount++)
         {
             nowCamPos.x = shakeAmount * multiplication;
-            nowCamPos.y = (BattleSceneManager.Instance.player.nowState == NowState.Jumping) ? initialPosition.y : objStartPosition.y;
+
+            if (gm.nowStage == Stage.Tutorial)
+            {
+                nowCamPos.y = (tbm.tutorialPlayer.nowState == NowState.Jumping) ? initialPosition.y : objStartPosition.y;
+            }
+            else
+            {
+                nowCamPos.y = (bsm.player.nowState == NowState.Jumping) ? initialPosition.y : objStartPosition.y;
+            }
 
             rigid.transform.position = nowCamPos;
 

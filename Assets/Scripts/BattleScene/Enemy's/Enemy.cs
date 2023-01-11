@@ -57,8 +57,8 @@ public abstract class Enemy : BasicUnitScript
 
         PattonText();
 
-        bsm.enemyCharacterPos = transform.position;
-        bsm.enemy = gameObject;
+        bm.enemyCharacterPos = transform.position;
+        bm.enemy = gameObject;
 
         Energy = MaxEnergy;
         Hp = MaxHp;
@@ -81,7 +81,7 @@ public abstract class Enemy : BasicUnitScript
     {
         while (true)
         {
-            if (bsm.nowGameState == NowGameState.Playing)
+            if (bm.nowGameState == NowGameState.Playing)
             {
                 actionCoolTimeObj.SetActive(true);
                 WaitingTimeStart();

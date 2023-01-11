@@ -42,8 +42,6 @@ public class BattleButtonManager : Singleton<BattleButtonManager>
 
     public ButtonPage nowButtonPage;
 
-    private Player playerComponent;
-
     public void Awake()
     {
         if (instance != null)
@@ -67,10 +65,13 @@ public class BattleButtonManager : Singleton<BattleButtonManager>
     /// </summary>
     private void StartSetting()
     {
-        playerComponent = BattleSceneManager.Instance.player;
         SkillChooseButton.onClick.AddListener(() => ButtonsPageChange(false, true));
         OutSkillChooseButton.onClick.AddListener(() => ButtonsPageChange(true, false));
-        SkillButtons[(int)Skills.FirstSkill].onClick.AddListener(() => playerComponent.SkillUse(1, 5));
+
+        if (GameManager.Instance.nowStage != Stage.Tutorial)
+        {
+            SkillButtons[(int)Skills.FirstSkill].onClick.AddListener(() => BattleSceneManager.instance.player.SkillUse(1, 5));
+        }
     }
 
     public void ActionButtonSetActive(bool setActive) => buttonObj.SetActive(setActive);

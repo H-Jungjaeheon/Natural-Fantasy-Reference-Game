@@ -8,6 +8,7 @@ public class TutorialEnemy : Enemy
     protected override void StartSetting()
     {
         base.StartSetting();
+
         plusVector = new Vector3(0.3f, 0f, 0f);
     }
 
@@ -35,7 +36,7 @@ public class TutorialEnemy : Enemy
     {
         while (true)
         {
-            if (bsm.nowGameState == NowGameState.Playing && isWaiting)
+            if (bm.nowGameState == NowGameState.Playing && isWaiting)
             {
                 actionCoolTimeObj.transform.position = transform.position + (Vector3)actionCoolTimeObjPlusPos;
                 actionCoolTimeImage.fillAmount = nowActionCoolTime / maxActionCoolTime;
@@ -108,7 +109,7 @@ public class TutorialEnemy : Enemy
 
     IEnumerator GoToAttack()
     {
-        Vector2 Targettransform = new Vector2(bsm.playerCharacterPos.x + 3f, transform.position.y); //목표 위치
+        Vector2 Targettransform = new Vector2(bm.playerCharacterPos.x + 3f, transform.position.y); //목표 위치
 
         nowState = NowState.Attacking;
 
@@ -222,7 +223,7 @@ public class TutorialEnemy : Enemy
 
         yield return new WaitForSeconds(0.7f);
 
-        var bullet = objectPoolInstance.GetObject((int)PoolObjKind.TutorialEnemyBullet);
+        var bullet = op.GetObject((int)PoolObjKind.TutorialEnemyBullet);
 
         bulletPos.x = 7.5f;
         bulletPos.y = 0f;
@@ -249,7 +250,7 @@ public class TutorialEnemy : Enemy
 
         yield return new WaitForSeconds(1.5f);
 
-        var swordAura = objectPoolInstance.GetObject((int)PoolObjKind.TutorialEnemySwordAura);
+        var swordAura = op.GetObject((int)PoolObjKind.TutorialEnemySwordAura);
 
         bulletPos.x = 7.8f;
         bulletPos.y = -0.75f;
@@ -317,7 +318,6 @@ public class TutorialEnemy : Enemy
         }
 
         nowState = NowState.Dead;
-        bsm.NowGetBasicGood += 50;
 
         animator.SetTrigger(DEAD);
         spriteRenderer.sortingOrder = 5;
@@ -329,7 +329,7 @@ public class TutorialEnemy : Enemy
 
         ActionCoolTimeBarSetActive(false);
 
-        bsm.StartGameEndPanelAnim(false, new Vector3(0f, 0f, -10f));
+        bm.StartGameEndPanelAnim(false, new Vector3(0f, 0f, -10f));
 
         yield return new WaitForSeconds(0.5f);
 

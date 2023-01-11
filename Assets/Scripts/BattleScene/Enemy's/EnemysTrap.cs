@@ -27,7 +27,7 @@ public class EnemysTrap : MonoBehaviour
 
     private void Start()
     {
-        player = BattleSceneManager.Instance.player;
+        player = BattleSceneManager.instance.player;
         deleteDelay = new WaitForSeconds(deleteTime);
     }
 

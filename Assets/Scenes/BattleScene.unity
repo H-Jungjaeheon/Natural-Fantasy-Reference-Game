@@ -934,7 +934,7 @@ MonoBehaviour:
   m_text: "\uC801\uB4E4\uC744 \uAD00\uD1B5\uD558\uB294\n\uAC80\uAE30\uB97C \uBC1C\uC0AC\uD55C\uB2E4."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3ee4c3128ff499145bbf0fcc6946f212, type: 2}
-  m_sharedMaterial: {fileID: 7794740675150224420, guid: 3ee4c3128ff499145bbf0fcc6946f212, type: 2}
+  m_sharedMaterial: {fileID: 0}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -997,7 +997,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &61514744
@@ -1599,6 +1599,36 @@ RectTransform:
   m_AnchoredPosition: {x: 875.0001, y: -500.00006}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 1, y: 0}
+--- !u!1 &200750738
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 200750739}
+  m_Layer: 0
+  m_Name: Test
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &200750739
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 200750738}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &236219512
 GameObject:
   m_ObjectHideFlags: 0
@@ -7129,10 +7159,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC774\uACC4\uC758 \uC804\uC9C0\uC804\uB2A5\uD55C \uC655"
+  m_text: "\uC774\uACC4 \uC0DD\uBA85\uCCB4 \uC2E4\uD5D8"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3ee4c3128ff499145bbf0fcc6946f212, type: 2}
-  m_sharedMaterial: {fileID: 7794740675150224420, guid: 3ee4c3128ff499145bbf0fcc6946f212, type: 2}
+  m_sharedMaterial: {fileID: 4766037314759211916, guid: 3ee4c3128ff499145bbf0fcc6946f212, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -7591,8 +7621,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c45a53ad6f76cf48a92103a221ed9e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isDontDestroyOnLoad: 0
-  stageData:
+  deActivableObj: {fileID: 1196064520}
+  gamePauseObj:
+  - {fileID: 1107882879}
+  - {fileID: 698365943}
+  - {fileID: 43297572}
+  - {fileID: 4727054}
+  gameEndObj: {fileID: 91805706}
+  statUIObj: {fileID: 1292796639}
+  fadeObj: {fileID: 552721696}
+  fadeImage: {fileID: 2033419077}
+  colors:
+  - {r: 0, g: 0, b: 0, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 0, b: 0, a: 1}
+  - {r: 1, g: 0.9451673, b: 0, a: 1}
+  introduceObj: {fileID: 909924008}
+  introduceImgs:
+  - {fileID: 321536362}
+  - {fileID: 402361044}
+  explanationText: {fileID: 1044097791}
+  nameText: {fileID: 2021355675}
+  pictureImg: {fileID: 1788169641}
+  hpBarImg: {fileID: 409947379}
+  enegyBarImg: {fileID: 1060942145}
+  figureBarObj: {fileID: 950782648}
+  figureBarImg: {fileID: 1856635140}
+  propertyImg: {fileID: 238389821}
+  csComponent: {fileID: 824615374}
+  enemy: {fileID: 0}
+  playerCharacterPos: {x: 0, y: 0}
+  enemyCharacterPos: {x: 0, y: 0}
+  nowGameState: 0
+  stageDatas:
   - bossObjs: {fileID: 0}
     gimmickObjs: {fileID: 0}
     bgResources: {fileID: 0}
@@ -7622,8 +7683,8 @@ MonoBehaviour:
   - bossObjs: {fileID: 1159378193}
     gimmickObjs: {fileID: 1306652335}
     bgResources: {fileID: 965243319}
-    bossName: "\uC0DD\uBA85\uCCB4 \uACB0\uD569 \uC2E4\uD5D8 \u03B1 - 2"
-    explanation: "\uC774\uACC4 \uC5F0\uAD6C\uC77C\uC9C0 008"
+    bossName: "\uC0DD\uBA85 \uC735\uD569 \uC2E4\uD5D8 004"
+    explanation: "\uC774\uACC4 \uC0DD\uBA85\uCCB4 \uC2E4\uD5D8 \u03B1 - 3"
     pictureSprite: {fileID: 21300000, guid: d3d6978b5dfc7dd44a6e2f91a5c9c690, type: 3}
     hpBarSprite: {fileID: 21300000, guid: f8bb474a09bc2b342bf14321d1476421, type: 3}
     enegyBarSprite: {fileID: 21300000, guid: 407c4635dc336b3408c197b89575593b, type: 3}
@@ -7631,7 +7692,7 @@ MonoBehaviour:
     figureBarSprite: {fileID: 21300000, guid: 74e90623349589540865c84e66279ef8, type: 3}
     propertySprite: {fileID: 21300000, guid: 6b518c5c061537040af57a07accce324, type: 3}
     stageBgm: {fileID: 0}
-    intersection: 5.5
+    intersection: 5
   - bossObjs: {fileID: 0}
     gimmickObjs: {fileID: 0}
     bgResources: {fileID: 0}
@@ -7671,59 +7732,7 @@ MonoBehaviour:
     propertySprite: {fileID: 0}
     stageBgm: {fileID: 0}
     intersection: 0
-  - bossObjs: {fileID: 0}
-    gimmickObjs: {fileID: 0}
-    bgResources: {fileID: 0}
-    bossName: 
-    explanation: 
-    pictureSprite: {fileID: 0}
-    hpBarSprite: {fileID: 0}
-    enegyBarSprite: {fileID: 0}
-    isHaveFigure: 0
-    figureBarSprite: {fileID: 0}
-    propertySprite: {fileID: 0}
-    stageBgm: {fileID: 0}
-    intersection: 0
-  - bossObjs: {fileID: 0}
-    gimmickObjs: {fileID: 0}
-    bgResources: {fileID: 0}
-    bossName: 
-    explanation: 
-    pictureSprite: {fileID: 0}
-    hpBarSprite: {fileID: 0}
-    enegyBarSprite: {fileID: 0}
-    isHaveFigure: 0
-    figureBarSprite: {fileID: 0}
-    propertySprite: {fileID: 0}
-    stageBgm: {fileID: 0}
-    intersection: 0
-  deActivableObj: {fileID: 1196064520}
-  gamePauseObj:
-  - {fileID: 1107882879}
-  - {fileID: 698365943}
-  - {fileID: 43297572}
-  - {fileID: 4727054}
-  gameEndObj: {fileID: 91805706}
-  statUIObj: {fileID: 1292796639}
-  fadeObj: {fileID: 552721696}
-  fadeImage: {fileID: 2033419077}
-  colors:
-  - {r: 0, g: 0, b: 0, a: 1}
-  - {r: 1, g: 1, b: 1, a: 1}
-  - {r: 1, g: 0, b: 0, a: 1}
-  - {r: 1, g: 0.9451673, b: 0, a: 1}
-  introduceObj: {fileID: 909924008}
-  introduceImgs:
-  - {fileID: 321536362}
-  - {fileID: 402361044}
-  explanationText: {fileID: 1044097791}
-  nameText: {fileID: 2021355675}
-  pictureImg: {fileID: 1788169641}
-  hpBarImg: {fileID: 409947379}
-  enegyBarImg: {fileID: 1060942145}
-  figureBarObj: {fileID: 950782648}
-  figureBarImg: {fileID: 1856635140}
-  propertyImg: {fileID: 238389821}
+  player: {fileID: 1717870245}
   gameOverText: {fileID: 3235513}
   obtainText: {fileID: 534060973}
   guideText: {fileID: 584295875}
@@ -7731,12 +7740,6 @@ MonoBehaviour:
   getGoodObj: {fileID: 1638764455}
   getGoodAnim: {fileID: 2100326395}
   goodAmountText: {fileID: 681186756}
-  csComponent: {fileID: 824615374}
-  player: {fileID: 1717870245}
-  enemy: {fileID: 0}
-  playerCharacterPos: {x: 0, y: 0}
-  enemyCharacterPos: {x: 0, y: 0}
-  nowGameState: 0
 --- !u!4 &1076351709
 Transform:
   m_ObjectHideFlags: 0
@@ -8183,8 +8186,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "(\uD0C8\uC8FC \uC2DC \uBCF4\uC0C1\uC744 \uC5BB\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4!)"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 3ee4c3128ff499145bbf0fcc6946f212, type: 2}
-  m_sharedMaterial: {fileID: 7794740675150224420, guid: 3ee4c3128ff499145bbf0fcc6946f212, type: 2}
+  m_fontAsset: {fileID: 0}
+  m_sharedMaterial: {fileID: 0}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -8512,6 +8515,7 @@ MonoBehaviour:
   - {r: 1, g: 1, b: 1, a: 1}
   - {r: 1, g: 0, b: 0, a: 1}
   - {r: 1, g: 0.53333336, b: 0.42352942, a: 1}
+  bm: {fileID: 1076351708}
   deadEffectObj: {fileID: 962530250}
   gimmick: {fileID: 1306652340}
 --- !u!1 &1174402841
@@ -11764,6 +11768,7 @@ MonoBehaviour:
   - {r: 1, g: 1, b: 1, a: 1}
   - {r: 1, g: 0, b: 0, a: 1}
   - {r: 1, g: 0.53333336, b: 0.42352942, a: 1}
+  bm: {fileID: 1076351708}
   unitShieldHpBars: {fileID: 1902801556}
   nowProperty: 0
   nowPropertyImage: {fileID: 693409020}
@@ -11900,7 +11905,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 11
+  m_SortingOrder: 16
   m_TargetDisplay: 0
 --- !u!1 &1771899612
 GameObject:
@@ -13228,7 +13233,7 @@ MonoBehaviour:
   m_text: "\uBABD\uD658 \uAC80\uAE30 \uBC1C\uC0AC"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3ee4c3128ff499145bbf0fcc6946f212, type: 2}
-  m_sharedMaterial: {fileID: 7794740675150224420, guid: 3ee4c3128ff499145bbf0fcc6946f212, type: 2}
+  m_sharedMaterial: {fileID: 0}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -13291,7 +13296,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &1912717795
@@ -14135,7 +14140,7 @@ MonoBehaviour:
   m_text: 5
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3ee4c3128ff499145bbf0fcc6946f212, type: 2}
-  m_sharedMaterial: {fileID: 7794740675150224420, guid: 3ee4c3128ff499145bbf0fcc6946f212, type: 2}
+  m_sharedMaterial: {fileID: 0}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -14198,7 +14203,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &2023656833
@@ -14778,7 +14783,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 10
+  m_SortingOrder: 15
   m_Sprite: {fileID: -670471729381708657, guid: f9c794e893312c646bf2f2187a8de87c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

@@ -78,7 +78,7 @@ public class SwordAura : MonoBehaviour
     /// </summary>
     private void StartSetting()
     {
-        bsm = BattleSceneManager.Instance;
+        bsm = BattleSceneManager.instance;
         gm = GameManager.Instance;
 
         playerScript = bsm.player;

@@ -407,12 +407,20 @@ public abstract class BasicUnitScript : MonoBehaviour
     protected bool isResurrectionReady; //부활 준비 여부 판별
     #endregion
 
-    protected ObjectPool objectPoolInstance; //오브젝트 풀 싱글톤 인스턴스
+    #region 싱글톤 인스턴스 모음
+    [Tooltip("게임 매니저 싱글톤 인스턴스")]
+    protected GameManager gm;
 
-    protected BattleSceneManager bsm; //배틀 씬 매니저 싱글톤 인스턴스
+    [Tooltip("오브젝트 풀 싱글톤 인스턴스")]
+    protected ObjectPool op;
 
-    protected BattleButtonManager battleButtonManagerInstance; //배틀 버튼 매니저 싱글톤 인스턴스
+    [SerializeField]
+    [Tooltip("배틀 매니저 컴포넌트")]
+    protected BattleManager bm;
 
+    [Tooltip("배틀 버튼 매니저 싱글톤 인스턴스")]
+    protected BattleButtonManager bbm;
+    #endregion
 
     protected virtual void Awake()
     {
@@ -428,9 +436,9 @@ public abstract class BasicUnitScript : MonoBehaviour
     {
         Cam = Camera.main;
 
-        bsm = BattleSceneManager.Instance;
-        objectPoolInstance = ObjectPool.Instance;
-        battleButtonManagerInstance = BattleButtonManager.Instance;
+        gm = GameManager.Instance;
+        op = ObjectPool.Instance;
+        bbm = BattleButtonManager.Instance;
 
         startPos = transform.position; //시작 위치 저장
         movetransform.x = Speed; //시작 이동속도로 움직임 벡터 X값 저장
@@ -452,10 +460,10 @@ public abstract class BasicUnitScript : MonoBehaviour
     {
         if (hp > 0)
         {
-            var damageText = objectPoolInstance.GetObject((int)PoolObjKind.DamageText); //데미지 텍스트 소환(오브젝트 풀)
+            var damageText = op.GetObject((int)PoolObjKind.DamageText); //데미지 텍스트 소환(오브젝트 풀)
             TextState nowTextState = TextState.Blocking; //현재 데미지 텍스트 상태
 
-            var hitEffect = objectPoolInstance.GetObject((int)PoolObjKind.HitEffects); //타격 이펙트 소환(오브젝트 풀)
+            var hitEffect = op.GetObject((int)PoolObjKind.HitEffects); //타격 이펙트 소환(오브젝트 풀)
             HitEffect nowHitEffect = hitEffect.GetComponent<HitEffect>();
 
             nowHitEffect.effectType = effectType;

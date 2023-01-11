@@ -24,7 +24,7 @@ public class SlimeEnemy : Enemy, IChangePhase
     protected override void StartSetting()
     {
         base.StartSetting();
-        
+
         plusVector = new Vector3(0f, -6f, 0f);
     }
 
@@ -46,7 +46,7 @@ public class SlimeEnemy : Enemy, IChangePhase
     {
         while (true)
         {
-            if (bsm.nowGameState == NowGameState.Playing && isWaiting)
+            if (bm.nowGameState == NowGameState.Playing && isWaiting)
             {
                 actionCoolTimeObj.transform.position = transform.position + (Vector3)actionCoolTimeObjPlusPos;
                 actionCoolTimeImage.fillAmount = nowActionCoolTime / maxActionCoolTime;
@@ -161,7 +161,7 @@ public class SlimeEnemy : Enemy, IChangePhase
 
     IEnumerator GoToAttack(bool isBasicCloseAttack)
     {
-        Vector3 Targettransform = new Vector3((isBasicCloseAttack) ? bsm.playerCharacterPos.x + 5.5f : bsm.playerCharacterPos.x + 8,
+        Vector3 Targettransform = new Vector3((isBasicCloseAttack) ? bm.playerCharacterPos.x + 5.5f : bm.playerCharacterPos.x + 8,
             transform.position.y); //목표 위치
 
         nowState = NowState.Attacking;
@@ -191,7 +191,7 @@ public class SlimeEnemy : Enemy, IChangePhase
 
         if (IsInvincibility == false && isDefending == false)
         {
-            GameObject hitParticle = objectPoolInstance.GetObject((int)PoolObjKind.BossHitParticle);
+            GameObject hitParticle = op.GetObject((int)PoolObjKind.BossHitParticle);
 
             hitParticle.transform.position = transform.position + particlePos; //현재 파티클 스폰 위치(오브젝트 위치 + 설정한 유닛 고유 파티클 생성 위치) 
         }
@@ -264,7 +264,7 @@ public class SlimeEnemy : Enemy, IChangePhase
 
         speedVector.x = 5.5f; //점프하며 플레이어 위치에 다가갈 스피드
 
-        while (transform.position.x >= bsm.playerCharacterPos.x) //플레이어 시작 x값까지 움직임
+        while (transform.position.x >= bm.playerCharacterPos.x) //플레이어 시작 x값까지 움직임
         {
             transform.position -= (Vector3)speedVector * Time.deltaTime;
             yield return null;
@@ -340,7 +340,7 @@ public class SlimeEnemy : Enemy, IChangePhase
 
         yield return new WaitForSeconds(0.7f);
 
-        var slimeBullet = objectPoolInstance.GetObject((int)PoolObjKind.SlimeEnemyBullet);
+        var slimeBullet = op.GetObject((int)PoolObjKind.SlimeEnemyBullet);
 
         spawnSlimeBulletPosition.x = 6;
         spawnSlimeBulletPosition.y = -1.65f;
@@ -369,7 +369,7 @@ public class SlimeEnemy : Enemy, IChangePhase
 
         for (int nowLaunchCount = 0; nowLaunchCount < 3; nowLaunchCount++)
         {
-            objectPoolInstance.GetObject((int)PoolObjKind.SlimeEnemyHowitzerBullet);
+            op.GetObject((int)PoolObjKind.SlimeEnemyHowitzerBullet);
             yield return launchDelay;
         }
 
@@ -400,7 +400,7 @@ public class SlimeEnemy : Enemy, IChangePhase
 
         for (int nowLaunchCount = 0; nowLaunchCount < 2; nowLaunchCount++)
         {
-            GameObject nowLaunchLaserObj = objectPoolInstance.GetObject((int)PoolObjKind.SlimeEnemyLaser);
+            GameObject nowLaunchLaserObj = op.GetObject((int)PoolObjKind.SlimeEnemyLaser);
             Laser nowLaunchEnemyLaser = nowLaunchLaserObj.GetComponent<Laser>();
 
             nowLaunchEnemyLaser.launchAngle = (isLaunchUp) ? 10 : 20;
@@ -436,7 +436,7 @@ public class SlimeEnemy : Enemy, IChangePhase
 
         for (int nowIndex = 0; nowIndex < 2; nowIndex++)
         {
-            var trapObj = objectPoolInstance.GetObject((int)PoolObjKind.SlimeEnemyTrap);
+            var trapObj = op.GetObject((int)PoolObjKind.SlimeEnemyTrap);
 
             spawnPos.x = 8.5f;
             spawnPos.y = 1.2f;
@@ -487,7 +487,7 @@ public class SlimeEnemy : Enemy, IChangePhase
 
         rigid.gravityScale = 0;
 
-        GameObject waterfallObj = objectPoolInstance.GetObject((int)PoolObjKind.SlimePoisonWaterfall);
+        GameObject waterfallObj = op.GetObject((int)PoolObjKind.SlimePoisonWaterfall);
         Laser nowWaterfallObj = waterfallObj.GetComponent<Laser>();
 
         nowWaterfallObj.onEnablePos.x = Random.Range(-10, 6);
@@ -547,7 +547,7 @@ public class SlimeEnemy : Enemy, IChangePhase
 
             transform.position = attackPos;
 
-            var displayObj = objectPoolInstance.GetObject((int)PoolObjKind.RangeDisplay);
+            var displayObj = op.GetObject((int)PoolObjKind.RangeDisplay);
             displayObj.transform.position = rangePos;
 
             displayObj.GetComponent<RangeDisplayObj>().OnEnableSetting(new Vector2(6.8f, 5.5f), 1.5f);
@@ -676,7 +676,7 @@ public class SlimeEnemy : Enemy, IChangePhase
         }
 
         nowState = NowState.Dead;
-        bsm.NowGetBasicGood += 50;
+        BattleSceneManager.instance.NowGetBasicGood += 50;
 
         gimmick.StopFunction();
 
@@ -690,7 +690,7 @@ public class SlimeEnemy : Enemy, IChangePhase
 
         ActionCoolTimeBarSetActive(false);
 
-        bsm.StartGameEndPanelAnim(false, new Vector3(0f, -4.6f, -10f));
+        bm.StartGameEndPanelAnim(false, new Vector3(0f, -4.6f, -10f));
 
         yield return new WaitForSeconds(0.5f);
 

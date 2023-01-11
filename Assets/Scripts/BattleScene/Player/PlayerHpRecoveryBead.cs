@@ -27,7 +27,7 @@ public class PlayerHpRecoveryBead : MonoBehaviour
     {
         maxDeleteTimeLimit = 5;
         OP = ObjectPool.Instance;
-        Player = BattleSceneManager.Instance.player;
+        Player = BattleSceneManager.instance.player;
     }
 
     private void Update()
