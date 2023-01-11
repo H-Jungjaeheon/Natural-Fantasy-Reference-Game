@@ -111,8 +111,6 @@ public class TutorialPlayer : BasicUnitScript, IDefense
     public NowPlayerProperty nowProperty; //현재 속성 상태
     #endregion
 
-    private float nowIntersection; //현재 스테이지의 플레이어 기본공격 인식 사거리
-
     private bool isResurrectionOpportunityExists; //부활 조건 판별(부활 전적 유무)
 
     private bool angelPropertyBuffing; //천사 속성 버프 지속중 판별
@@ -189,12 +187,8 @@ public class TutorialPlayer : BasicUnitScript, IDefense
     /// </summary>
     protected override void StartSetting()
     {
-        var gameManagerIns = GameManager.Instance;
-
         attackRangeSize = new Vector2(1.1f, 2.68f);
         attackRangeOffset = new Vector2(0.18f, -0.08f);
-
-        nowIntersection = bsm.stageData[(int)gameManagerIns.nowStage].intersection;
 
         restWaitTime = 1.25f;
         maxNaturePassiveCount = 5;
@@ -767,7 +761,7 @@ public class TutorialPlayer : BasicUnitScript, IDefense
     /// <returns></returns>
     IEnumerator GoToAttack()
     {
-        Vector3 targettransform = new Vector3(bsm.enemyCharacterPos.x - nowIntersection, transform.position.y); //목표 위치
+        Vector3 targettransform = new Vector3(bsm.enemyCharacterPos.x - 3, transform.position.y); //목표 위치
 
         animator.SetBool(MOVING, true);
 

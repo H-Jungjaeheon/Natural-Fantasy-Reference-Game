@@ -23,7 +23,12 @@ public enum PoolObjKind
 public class ObjectPool : Singleton<ObjectPool>
 {
     [SerializeField]
+    [Tooltip("오브젝트풀을 사용할 오브젝트들(prefab)")]
     private GameObject[] usePrefabObjs;
+
+    [SerializeField]
+    [Tooltip("현재 사용할 오브젝트들 판별")]
+    private bool[] isUseObj;
 
     private Dictionary<int, Queue<GameObject>> objPools = new Dictionary<int, Queue<GameObject>>();
 
@@ -31,8 +36,11 @@ public class ObjectPool : Singleton<ObjectPool>
     {
         for (int nowObjIndex = 0; nowObjIndex < usePrefabObjs.Length; nowObjIndex++)
         {
-            objPools.Add(nowObjIndex, new Queue<GameObject>());
-            Initialize(1, nowObjIndex);
+            if (isUseObj[nowObjIndex])
+            {
+                objPools.Add(nowObjIndex, new Queue<GameObject>());
+                Initialize(1, nowObjIndex);
+            }
         }
     }
 

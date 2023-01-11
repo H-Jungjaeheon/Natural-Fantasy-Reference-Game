@@ -21,6 +21,7 @@ public enum NowGameState
 
 public enum Stage
 {
+    Tutorial,
     Stage1,
     Stage2,
     Stage3,

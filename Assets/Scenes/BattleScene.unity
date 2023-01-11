@@ -6670,6 +6670,7 @@ MonoBehaviour:
   - {fileID: 5085652454348276345, guid: d5e024e4c4607574689a5f9417e1d4d0, type: 3}
   - {fileID: 8351829919536778410, guid: 59d05ea8fb6662b4fa3f994226eac3fb, type: 3}
   - {fileID: 202131089166353103, guid: a42cd067cd3d1854a8c977a4ffa56944, type: 3}
+  isUseObj: 000001010101010101010101010101
 --- !u!4 &951784404
 Transform:
   m_ObjectHideFlags: 0
@@ -7592,6 +7593,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isDontDestroyOnLoad: 0
   stageData:
+  - bossObjs: {fileID: 0}
+    gimmickObjs: {fileID: 0}
+    bgResources: {fileID: 0}
+    bossName: 
+    explanation: 
+    pictureSprite: {fileID: 0}
+    hpBarSprite: {fileID: 0}
+    enegyBarSprite: {fileID: 0}
+    isHaveFigure: 0
+    figureBarSprite: {fileID: 0}
+    propertySprite: {fileID: 0}
+    stageBgm: {fileID: 0}
+    intersection: 0
   - bossObjs: {fileID: 1159378193}
     gimmickObjs: {fileID: 1306652335}
     bgResources: {fileID: 965243319}
@@ -7618,19 +7632,6 @@ MonoBehaviour:
     propertySprite: {fileID: 21300000, guid: 6b518c5c061537040af57a07accce324, type: 3}
     stageBgm: {fileID: 0}
     intersection: 5.5
-  - bossObjs: {fileID: 0}
-    gimmickObjs: {fileID: 0}
-    bgResources: {fileID: 0}
-    bossName: 
-    explanation: 
-    pictureSprite: {fileID: 0}
-    hpBarSprite: {fileID: 0}
-    enegyBarSprite: {fileID: 0}
-    isHaveFigure: 0
-    figureBarSprite: {fileID: 0}
-    propertySprite: {fileID: 0}
-    stageBgm: {fileID: 0}
-    intersection: 0
   - bossObjs: {fileID: 0}
     gimmickObjs: {fileID: 0}
     bgResources: {fileID: 0}
@@ -7783,7 +7784,7 @@ MonoBehaviour:
   gold: 0
   statLevels: 000000000000000000000000
   nowScene: 0
-  nowStage: 0
+  nowStage: 1
 --- !u!4 &1088394778
 Transform:
   m_ObjectHideFlags: 0
